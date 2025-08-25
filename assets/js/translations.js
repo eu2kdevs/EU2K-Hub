@@ -47,7 +47,7 @@ class TranslationManager {
     async loadTranslations(language) {
         try {
             // Simple approach: always try from root
-            const response = await fetch(`/assets/translations/${language}.json`);
+            const response = await fetch(`/EU2K-Hub/assets/translations/${language}.json`);
             if (!response.ok) {
                 throw new Error(`Failed to load translations for ${language}`);
             }
