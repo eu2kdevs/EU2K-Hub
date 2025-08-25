@@ -92,7 +92,9 @@
         rect.style.backgroundPosition = 'center';
         rect.style.backgroundColor = 'transparent';
         const titleSpan = card.querySelector('.news-label > span:first-child');
-        titleSpan.textContent = item.data.title;
+        let title = item.data.title.substring(0, 30);
+        if (item.data.title.length > 30) title += '...';
+        titleSpan.textContent = title;
         const descSpan = card.querySelector('.news-label > span.desc');
         let desc = item.data.desc.substring(0, 60);
         if (item.data.desc.length > 60) desc += '...';
@@ -126,7 +128,9 @@
         // Only update text elements if they exist (for cards with labels)
         const titleSpan = container.querySelector('.event-label-text > span:first-child');
         if (titleSpan) {
-          titleSpan.textContent = item.data.title;
+          let title = item.data.title.substring(0, 30);
+          if (item.data.title.length > 30) title += '...';
+          titleSpan.textContent = title;
         }
 
         const descSpan = container.querySelector('.event-label-text > span.desc');
