@@ -124,7 +124,7 @@ body {
   background: var(--main-bg);
   border-radius: 32px;
   margin: 22px 22px 22px 0;
-  padding: 0 15px 40px 40px;
+  padding: 0 15px 20px 40px;
   height: calc(100vh - 64px);
   display: flex;
   flex-direction: column;
