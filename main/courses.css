@@ -1,0 +1,775 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+  color-scheme: dark;
+  --md-sys-color-primary: rgb(155 212 160);
+  --md-sys-color-surface-tint: rgb(155 212 160);
+  --md-sys-color-on-primary: rgb(0 57 21);
+  --md-sys-color-primary-container: rgb(27 81 41);
+  --md-sys-color-on-primary-container: rgb(182 241 187);
+  --md-sys-color-secondary: rgb(157 212 158);
+  --md-sys-color-on-secondary: rgb(2 57 19);
+  --md-sys-color-secondary-container: rgb(30 81 39);
+  --md-sys-color-on-secondary-container: rgb(184 241 185);
+  --md-sys-color-tertiary: rgb(154 212 162);
+  --md-sys-color-on-tertiary: rgb(0 57 23);
+  --md-sys-color-tertiary-container: rgb(25 81 42);
+  --md-sys-color-on-tertiary-container: rgb(181 241 189);
+  --md-sys-color-error: rgb(255 179 178);
+  --md-sys-color-on-error: rgb(86 29 32);
+  --md-sys-color-error-container: rgb(115 51 53);
+  --md-sys-color-on-error-container: rgb(255 218 217);
+  --md-sys-color-background: rgb(16 21 16);
+  --md-sys-color-on-background: rgb(224 228 220);
+  --md-sys-color-surface: rgb(16 21 16);
+  --md-sys-color-on-surface: rgb(224 228 220);
+  --md-sys-color-surface-variant: rgb(65 73 65);
+  --md-sys-color-on-surface-variant: rgb(193 201 190);
+  --md-sys-color-outline: rgb(139 147 137);
+  --md-sys-color-outline-variant: rgb(65 73 65);
+  --md-sys-color-shadow: rgb(0 0 0);
+  --md-sys-color-scrim: rgb(0 0 0);
+  --md-sys-color-inverse-surface: rgb(224 228 220);
+  --md-sys-color-inverse-on-surface: rgb(45 50 44);
+  --md-sys-color-inverse-primary: rgb(53 105 63);
+  --md-sys-color-primary-fixed: rgb(182 241 187);
+  --md-sys-color-on-primary-fixed: rgb(0 33 9);
+  --md-sys-color-primary-fixed-dim: rgb(155 212 160);
+  --md-sys-color-on-primary-fixed-variant: rgb(27 81 41);
+  --md-sys-color-secondary-fixed: rgb(184 241 185);
+  --md-sys-color-on-secondary-fixed: rgb(0 33 8);
+  --md-sys-color-secondary-fixed-dim: rgb(157 212 158);
+  --md-sys-color-on-secondary-fixed-variant: rgb(30 81 39);
+  --md-sys-color-tertiary-fixed: rgb(181 241 189);
+  --md-sys-color-on-tertiary-fixed: rgb(0 33 11);
+  --md-sys-color-tertiary-fixed-dim: rgb(154 212 162);
+  --md-sys-color-on-tertiary-fixed-variant: rgb(25 81 42);
+  --md-sys-color-surface-dim: rgb(16 21 16);
+  --md-sys-color-surface-bright: rgb(54 58 53);
+  --md-sys-color-surface-container-lowest: rgb(11 15 11);
+  --md-sys-color-surface-container-low: rgb(24 29 24);
+  --md-sys-color-surface-container: rgb(28 33 28);
+  --md-sys-color-surface-container-high: rgb(38 43 38);
+  --md-sys-color-surface-container-highest: rgb(49 54 49);
+  --sidebar-bg: #101510;
+  --main-bg: #0b0f0b;
+  --surface-bg: #101510;
+  --card-bg: #232823;
+  --red: #ff0000;
+  --green-btn: #2d3a2d;
+  --green-btn-arrow: #b6c6b6;
+  --blue-btn: #06494B;
+  --blue-btn-arrow: #8CD5DC;
+  --text-main: #e3e3e3;
+  --text-secondary: #a0a0a0;
+  --border-radius: 32px;
+  --card-radius: 32px;
+  --news-radius: 20px;
+  --sidebar-width: 76px;
+  --transition: 0.2s cubic-bezier(.4, 0, .2, 1);
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--surface-bg);
+  color: var(--text-main);
+  font-family: 'Roboto', Arial, sans-serif;
+  min-height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.app-bg {
+  position: relative;
+  min-height: 100vh;
+  min-width: 100vw;
+  width: calc(100vw - var(--sidebar-width) - 44px);
+  height: 100vh;
+  background: var(--surface-bg);
+  display: flex;
+  flex-direction: row;
+}
+
+.sidebar {
+  background: #101510;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 0;
+  border-radius: 32px 0 0 32px;
+  min-width: var(--sidebar-width);
+  width: var(--sidebar-width);
+  height: calc(100vh - 44px);
+  margin-top: 22px;
+  margin-bottom: 22px;
+  z-index: 2;
+  position: relative;
+}
+
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 0;
+}
+
+.main-content {
+  background: var(--main-bg);
+  border-radius: 32px;
+  margin: 22px 22px 22px 0;
+  padding: 0;
+  height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
+  max-width: calc(100% - 22px);
+  overflow-y: auto;
+  position: relative;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  width: 64px;
+  padding: 0;
+  border-radius: 16px;
+  transition: var(--transition);
+  position: relative;
+}
+
+.nav-item:hover .nav-icon-container {
+  background-color: #232823;
+}
+
+.nav-item.active .nav-icon-container {
+  background-color: var(--green-btn);
+}
+
+.nav-item span {
+  color: #C1C9BE;
+}
+
+.nav-item.active span {
+  color: #D4E8D1;
+}
+
+.nav-icon {
+  filter: brightness(0) saturate(100%) invert(85%) sepia(6%) saturate(466%) hue-rotate(60deg) brightness(95%) contrast(86%);
+}
+
+.nav-item.active .nav-icon {
+  filter: brightness(0) saturate(100%) invert(94%) sepia(11%) saturate(309%) hue-rotate(61deg) brightness(94%) contrast(90%);
+}
+
+.nav-icon-container {
+  width: 56px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  transition: var(--transition);
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Courses specific styles */
+.courses-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px;
+  text-align: center;
+  padding-top: 120px;
+  /* Lejjebb tolás */
+}
+
+.courses-block-icon {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 20px;
+}
+
+.courses-title {
+  color: #E0E4DB;
+  font-size: 2.5rem;
+  font-weight: 500;
+  margin: 0 0 24px 0;
+}
+
+.courses-description {
+  color: #E0E4DB;
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 0 40px 0;
+}
+
+.feedback-button {
+  background: #1C211C;
+  border: none;
+  border-radius: 32px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 80px;
+  margin-bottom: 20px;
+}
+
+.feedback-button:hover {
+  border-radius: 16px;
+}
+
+.feedback-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.feedback-text {
+  color: #C1C9BE;
+  font-size: 1rem;
+  font-weight: 540;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.main-content:hover::-webkit-scrollbar-thumb {
+  background: #232823;
+}
+
+.main-content.scrolling::-webkit-scrollbar-thumb {
+  background: #232823;
+}
+
+@media (max-width: 1200px) {
+  .courses-block-icon {
+    width: 100px;
+    height: 100px;
+  }
+
+  .courses-title {
+    font-size: 2rem;
+  }
+
+  .courses-description {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .main-content {
+    padding: 0 8px 32px 32px;
+  }
+
+  .sidebar {
+    margin-left: 8px;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main-content {
+    border-radius: 32px;
+    margin: 8px;
+    box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container);
+  }
+
+  .main-area {
+    margin-left: 0;
+  }
+
+  .courses-container {
+    padding: 20px;
+  }
+
+  .courses-block-icon {
+    width: 140px;
+    height: 140px;
+  }
+
+  .courses-title {
+    font-size: 1.8rem;
+  }
+}
+
+/* Feedback Popup */
+.feedback-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  /* Nincs sötétítés */
+  display: flex;
+  opacity: 0;
+  animation: fadeIn 0.2s ease-out forwards;
+  /* Megjelenési animáció */
+}
+
+.feedback-popup-overlay.closing {
+  animation: fadeOut 0.2s ease-in forwards;
+  /* Bezárási animáció */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px) translateY(20px) scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(0) translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(20px) translateY(20px) scale(0.9);
+  }
+}
+
+.feedback-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  display: flex;
+  align-items: flex-end;
+  /* Alsó részhez igazítás */
+  justify-content: flex-end;
+  /* Jobb oldalhoz igazítás */
+  z-index: 2000;
+  pointer-events: none;
+  /* Átlátszó háttér nem blokkolja a kattintásokat */
+}
+
+.feedback-popup {
+  background: #1C211C;
+  border-radius: 32px;
+  padding: 20px 20px 30px 20px;
+  width: 350px;
+  max-width: 350px;
+  max-height: 600px;
+  overflow-y: auto;
+  position: relative;
+  margin: 36px;
+  pointer-events: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transform-origin: bottom right;
+}
+
+/* Header */
+.feedback-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-left: 8px;
+  padding-top: 8px;
+}
+
+.feedback-popup-header .feedback-popup-icon {
+  margin-right: 12px;
+}
+
+.feedback-popup-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.feedback-popup-title {
+  color: #C1C9BE;
+  font-size: 1.4rem;
+  font-weight: 400;
+  flex: 1;
+}
+
+/* Bezáró gomb */
+.feedback-close-btn {
+  background: #81BE75;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 0;
+}
+
+.feedback-close-btn:hover {
+  border-radius: 14px;
+}
+
+.feedback-close-icon {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) saturate(100%) invert(12%) sepia(25%) saturate(1500%) hue-rotate(80deg) brightness(95%) contrast(95%);
+  /* #20381B */
+}
+
+/* Input textbox */
+.feedback-input-container {
+  margin-bottom: 6px;
+  position: relative;
+}
+
+.feedback-input {
+  width: 100%;
+  min-height: 120px;
+  background: #2C412C;
+  border: none;
+  border-radius: 32px;
+  padding: 20px 20px 30px 20px;
+  color: #CDFFC5;
+  font-size: 0.95rem;
+  font-family: 'Roboto', sans-serif;
+  resize: none;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.feedback-input::placeholder {
+  color: rgba(205, 255, 197, 0.6);
+}
+
+.feedback-input-limit {
+  color: rgba(205, 255, 197, 0.6);
+  font-size: 0.8rem;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  pointer-events: none;
+}
+
+/* Kategória section */
+.feedback-category-section {
+  margin-bottom: 16px;
+}
+
+.feedback-category-container {
+  background: #2C412C;
+  border-radius: 32px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.feedback-category-header {
+  margin-bottom: 16px;
+}
+
+.feedback-category-title {
+  color: #CDFFC5;
+  font-size: 0.95rem;
+  font-weight: 300;
+}
+
+.feedback-category-buttons {
+  display: flex;
+  flex-direction: row;
+  /* Egymás mellett */
+  gap: 12px;
+}
+
+.feedback-category-btn {
+  background: #2B4D2B;
+  /* Nem kiválasztott kategória */
+  border: none;
+  border-radius: 32px;
+  /* 32px lekerekítettség */
+  padding: 50px 16px;
+  /* Még magasabb gombok hogy elférjen a pipa */
+  color: #AACF9C;
+  /* Nem kiválasztott szöveg */
+  font-size: 0.85rem;
+  /* Még kisebb szöveg */
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Középre igazítás */
+  position: relative;
+  flex: 1;
+  /* Egyenlő szélesség */
+  min-height: 120px;
+  /* Még nagyobb minimum magasság hogy elférjen a pipa */
+  text-align: center;
+}
+
+.feedback-category-btn.active {
+  background: #20381B;
+  /* Kiválasztott kategória háttere */
+  color: #81BE75;
+  /* Kiválasztott szöveg */
+}
+
+.feedback-category-check {
+  opacity: 0;
+  transition: var(--transition);
+  background: #81BE75;
+  /* Zöld háttér */
+  border-radius: 50%;
+  /* Kör alakú háttér */
+  width: 24px;
+  /* Kisebb méret */
+  height: 24px;
+  /* Kisebb méret */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 12px;
+  /* Több hely felett */
+  right: 12px;
+  /* Több hely mellett */
+}
+
+.feedback-category-btn.active .feedback-category-check {
+  opacity: 1;
+}
+
+.feedback-category-btn:hover {
+  border-radius: 22px;
+  /* 22px hover effekt */
+}
+
+.feedback-check-icon {
+  width: 14px;
+  /* Kisebb ikon */
+  height: 14px;
+  /* Kisebb ikon */
+  filter: brightness(0) saturate(100%) invert(12%) sepia(25%) saturate(1500%) hue-rotate(80deg) brightness(95%) contrast(95%);
+  /* #20381B színű ikon */
+}
+
+/* Info chip */
+.feedback-category-info {
+  background: #81BE75;
+  /* Info notice háttere */
+  border-radius: 32px;
+  /* 32px lekerekítettség */
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 6px;
+  /* 6px gap a küldés gombig */
+}
+
+.feedback-info-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  filter: brightness(0) saturate(100%) invert(12%) sepia(25%) saturate(1500%) hue-rotate(80deg) brightness(95%) contrast(95%);
+}
+
+.feedback-category-info span {
+  color: #20381B;
+  /* Info ikon színe */
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Cím input és küldés gomb container */
+.feedback-bottom-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* Kevesebb hely a küldés gomb és cím között */
+  margin-bottom: 16px;
+  /* Ugyanannyi hely alul mint a jobb oldalon (popup padding) */
+}
+
+/* Cím input */
+.feedback-title-container {
+  background: #2C412C;
+  /* Kategória kártya színe */
+  border-radius: 32px;
+  /* 32px lekerekítettség */
+  padding: 18px 16px;
+  /* Kicsit kisebb padding */
+  flex: 1;
+  /* Kitölti a rendelkezésre álló helyet */
+}
+
+.feedback-title-input {
+  background: transparent;
+  border: none;
+  color: #CDFFC5;
+  /* Kategória szöveg */
+  font-size: 0.9rem;
+  /* Kisebb szöveg */
+  width: 100%;
+  outline: none;
+  font-family: 'Roboto', sans-serif;
+}
+
+.feedback-title-input::placeholder {
+  color: rgba(205, 255, 197, 0.6);
+  /* Cím placeholder átlátszóbb */
+}
+
+/* Küldés gomb */
+.feedback-send-btn {
+  width: 80px;
+  /* Kicsit nagyobb gomb */
+  height: 80px;
+  /* Kicsit nagyobb gomb */
+  background: #3D563D;
+  /* Küldés gomb háttere */
+  flex-shrink: 0;
+  /* Nem zsugorodik */
+  border: none;
+  border-radius: 52px;
+  /* 52px alap lekerekítettség */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.feedback-send-btn:hover {
+  border-radius: 32px;
+  /* 32px hover effekt */
+}
+
+.feedback-send-icon {
+  width: 40px;
+  /* Kicsit nagyobb ikon */
+  height: 40px;
+  /* Kicsit nagyobb ikon */
+  filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(300%) hue-rotate(80deg) brightness(110%) contrast(90%);
+  /* AACF9C színű ikon */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .feedback-popup {
+    width: 320px;
+    /* Még kisebb mobil szélesség */
+    padding: 16px;
+    /* Kisebb padding */
+    max-height: 450px;
+    /* Kisebb mobil magasság */
+    margin: 10px;
+    /* Kisebb margin mobil nézetben */
+  }
+
+  .feedback-send-btn {
+    width: 56px;
+    /* Nagyobb mobil gomb */
+    height: 56px;
+    /* Nagyobb mobil gomb */
+  }
+
+  .feedback-category-btn {
+    padding: 16px 12px;
+    /* Kisebb padding mobil nézetben */
+    font-size: 0.8rem;
+    /* Még kisebb szöveg mobil nézetben */
+  }
+}
+
+.feedback-send-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Feedback Toast */
+.feedback-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #81BE75;
+  color: #20381B;
+  padding: 16px 24px;
+  border-radius: 32px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  z-index: 3000;
+  opacity: 0;
+  transform: translateX(100px);
+  transition: all 0.3s ease;
+}
+
+.feedback-toast.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.feedback-toast.hide {
+  opacity: 0;
+  transform: translateX(100px);
+}
+
+.feedback-toast.error {
+  background: #ff6b6b;
+  color: white;
+}

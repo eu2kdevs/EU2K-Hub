@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kurzusok</title>
+  <link rel="stylesheet" href="courses.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "@material/web/": "https://esm.run/@material/web/"
+      }
+    }
+  </script>
+  <script type="module">
+    import '@material/web/all.js';
+    import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
+
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+  <script type="module">
+    import '@material/web/all.js';
+    import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
+  
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
+      authDomain: "eu2k-hub.firebaseapp.com",
+      projectId: "eu2k-hub",
+      storageBucket: "eu2k-hub.firebasestorage.app",
+      messagingSenderId: "560244867055",
+      appId: "1:560244867055:web:3cd51b85baead94989001a",
+      measurementId: "G-2JDPR089WD"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+</head>
+<body>
+  <div class="app-bg">
+    <aside class="sidebar">
+      <nav class="nav-menu">
+        <a class="nav-item" href="/main/index.html">
+          <div class="nav-icon-container">
+            <img src="/assets/home_icon.svg" class="nav-icon" alt="Otthon">
+          </div>
+          <span>Otthon</span>
+        </a>
+        <a class="nav-item" href="/main/qr-code.html">
+          <div class="nav-icon-container">
+            <img src="/assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
+          </div>
+          <span>QR-Kód</span>
+        </a>
+        <a class="nav-item" href="/main/youhub.html">
+          <div class="nav-icon-container">
+            <img src="/assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
+          </div>
+          <span>YouHub</span>
+        </a>
+        <a class="nav-item active" href="/main/courses.html">
+          <div class="nav-icon-container">
+            <img src="/assets/courses_icon.svg" class="nav-icon" alt="Kurzusok">
+          </div>
+          <span>Kurzusok</span>
+        </a>
+      </nav>
+    </aside>
+    <main class="main-area">
+      <div class="main-content">
+        <div class="courses-container">
+      </div>
+    </main>
+  </div>
+</body>
+</html>

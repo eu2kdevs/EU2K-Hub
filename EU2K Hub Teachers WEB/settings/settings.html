@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <title>Beállítások</title>
+  <link rel="stylesheet" href="settings.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "@material/web/": "https://esm.run/@material/web/"
+      }
+    }
+  </script>
+  <script type="module">
+    import '@material/web/all.js';
+    import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
+
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+  <script type="module">
+    import '@material/web/all.js';
+    import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
+  
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
+      authDomain: "eu2k-hub.firebaseapp.com",
+      projectId: "eu2k-hub",
+      storageBucket: "eu2k-hub.firebasestorage.app",
+      messagingSenderId: "560244867055",
+      appId: "1:560244867055:web:3cd51b85baead94989001a",
+      measurementId: "G-2JDPR089WD"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+</head>
+<body>
+  <nav>
+    <a href="#general" data-page="general" class="active">⚙️ Általános</a>
+    <a href="#notifications" data-page="notifications">🔔 Értesítések</a>
+    <a href="#statistics" data-page="statistics">📊 Statisztikák és Teljesítmény</a>
+    <a href="#community" data-page="community">👥 Közösség</a>
+    <a href="#events" data-page="events">📅 Események és Naptár</a>
+    <a href="#messages" data-page="messages">💬 Üzenetek</a>
+  </nav>
+
+  <main>
+    <div id="general" class="page active">
+      <div class="card">
+        <h2>⚙️ Weboldal bétaverziójának használata</h2>
+        <div class="toggle">
+          <label for="betaToggle">Béta mód</label>
+          <input type="checkbox" id="betaToggle" checked />
+        </div>
+      </div>
+      <div class="card">
+        <h2>🌐 Nyelv</h2>
+        <label><input type="radio" name="lang" checked /> 🇭🇺 Magyar</label><br />
+        <label><input type="radio" name="lang" /> 🇬🇧 English</label>
+      </div>
+      <div class="card">
+        <h2>✨ Verzió és Infó</h2>
+        <p>🌱 Verzió: 1.0</p>
+        <p>©️Csatorna: Béta</p>
+        <p>🎨 UI: Material 3 Expressive</p>
+        <p>🛠️ Készítette: Turóczi Ádám (7.E)</p>
+        <p>Mögötte áll még: EU2K Devs, EU2K DÖK</p>
+        <p>🏫 Európa 2000 Gimnázium tulajdona.</p>
+      </div>
+    </div>
+
+    <div id="notifications" class="page">
+      <div class="card">
+        <h2>🔔 Értesítések</h2>
+        <div class="toggle">
+          <label>Email értesítések</label>
+          <input type="checkbox" checked />
+        </div>
+        <div class="toggle">
+          <label>Push értesítések</label>
+          <input type="checkbox" />
+        </div>
+      </div>
+    </div>
+
+    <div id="statistics" class="page">
+      <div class="card">
+        <h2>📊 Teljesítmény statisztikák</h2>
+        <p>Itt jelennek meg a statisztikák a tanulásodról... 📈</p>
+      </div>
+    </div>
+
+    <div id="community" class="page">
+      <div class="card">
+        <h2>👥 Közösségi funkciók</h2>
+        <p>Kurzusok, csoporttagságok és még sok más... 🤝</p>
+      </div>
+    </div>
+
+    <div id="events" class="page">
+      <div class="card">
+        <h2>📅 Események és naptár</h2>
+        <p>Naptár szinkronizálás és eseménykezelés.</p>
+      </div>
+    </div>
+
+    <div id="messages" class="page">
+      <div class="card">
+        <h2>💬 Privát üzenetek</h2>
+        <p>Itt láthatod az üzeneteidet. 💌</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const navLinks = document.querySelectorAll("nav a");
+    const pages = document.querySelectorAll(".page");
+
+    function showPage(pageId) {
+      pages.forEach(p => p.classList.remove("active"));
+      navLinks.forEach(l => l.classList.remove("active"));
+      const targetPage = document.getElementById(pageId);
+      const targetLink = document.querySelector(`a[data-page="${pageId}"]`);
+      if (targetPage) targetPage.classList.add("active");
+      if (targetLink) targetLink.classList.add("active");
+    }
+
+    function navigate(event) {
+      event.preventDefault();
+      const pageId = event.currentTarget.dataset.page;
+      location.hash = pageId;
+    }
+
+    navLinks.forEach(link => link.addEventListener("click", navigate));
+
+    window.addEventListener("hashchange", () => {
+      const page = location.hash.substring(1) || "general";
+      showPage(page);
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const initialPage = location.hash.substring(1) || "general";
+      showPage(initialPage);
+    });
+  </script>
+</body>
+</html>

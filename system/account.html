@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+  <meta charset="UTF-8">
+  <title data-translate="pages.account.title">Fiók</title>
+  <link rel="stylesheet" href="account.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "@material/web/": "https://esm.run/@material/web/"
+      }
+    }
+  </script>
+  <script type="module">
+    import '@material/web/all.js';
+    import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
+
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+  <script src="/assets/js/permissions.js"></script>
+  <script src="/assets/js/translations.js"></script>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
+      authDomain: "eu2k-hub.firebaseapp.com",
+      projectId: "eu2k-hub",
+      storageBucket: "eu2k-hub.firebasestorage.app",
+      messagingSenderId: "560244867055",
+      appId: "1:560244867055:web:3cd51b85baead94989001a",
+      measurementId: "G-2JDPR089WD"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    // Make db globally available
+    window.db = db;
+  </script>
+</head>
+
+<body>
+  <div class="app-bg">
+    <aside class="sidebar">
+      <nav class="nav-menu">
+        <a class="nav-item" href="/main/index.html">
+          <div class="nav-icon-container">
+            <img src="/assets/home_icon.svg" class="nav-icon" alt="Otthon">
+          </div>
+          <span data-translate="navigation.home">Otthon</span>
+        </a>
+        <a class="nav-item" href="/main/qr-code.html">
+          <div class="nav-icon-container">
+            <img src="/assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
+          </div>
+          <span data-translate="navigation.qr">QR-Kód</span>
+        </a>
+        <a class="nav-item" href="/main/youhub.html">
+          <div class="nav-icon-container">
+            <img src="/assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
+          </div>
+          <span data-translate="navigation.youhub">YouHub</span>
+        </a>
+        <a class="nav-item" href="/main/courses.html">
+          <div class="nav-icon-container">
+            <img src="/assets/courses_icon.svg" class="nav-icon" alt="Kurzusok">
+          </div>
+          <span data-translate="navigation.courses">Kurzusok</span>
+        </a>
+      </nav>
+    </aside>
+    <main class="main-area">
+      <div class="main-content">
+        <div id="logged-out-view" class="account-container" style="display: none;">
+          <img src="/assets/account_icon.svg" class="account-icon" alt="Fiók">
+          <h1 class="account-title" data-translate="pages.account.title">Fiók</h1>
+          <p class="account-description" data-translate="pages.account.description_part1">
+            Jelentkezz be az <strong>Iskolai fiókoddal</strong>, hogy hozzáférj elképesztő funkciókhoz, mint a <strong>Statisztikák</strong>, <strong>Személyes Értesítések</strong>, <strong>Javaslatok</strong>, <strong>Naptár</strong>, és még sok más. Vagy használd a <strong>személyes fiókod</strong>, ha szülő vagy, így <strong>felügyelni</strong> tudod a gyermeked tevékenységét a Hub-on!
+          </p>
+          <button class="login-button">
+            <img src="/assets/login.svg" class="login-icon" alt="Belépés">
+            <span class="login-text" data-translate="pages.account.login_button">Bejelentkezés</span>
+          </button>
+        </div>
+        <div id="logged-in-view" class="account-view" style="display: none;">
+          <div class="left-column">
+            <img src="/assets/avatars/magenta.png" class="avatar" alt="Avatar">
+            <h2 class="user-name">Turóczi Ádám</h2>
+            <div class="account-type">
+              <img src="/assets/account/eu2k_logo.png" class="school-logo" alt="EU2K Logo">
+              <span>Iskolai Fiók</span>
+            </div>
+            <div class="user-details">
+              <div class="detail-item">
+                <img src="/assets/account/email.svg" class="detail-icon" alt="Email">
+                <span>turoczi.adam@europa2000.hu</span>
+              </div>
+              <div class="detail-item">
+                <img src="/assets/account/birthday.svg" class="detail-icon" alt="Birthday">
+                <span>December 1.</span>
+              </div>
+              <div class="detail-item">
+                <img src="/assets/account/class.svg" class="detail-icon" alt="Class">
+                <span>8.E Osztály</span>
+              </div>
+            </div>
+            <button class="logout-button">
+              <img src="/assets/logout.svg" class="logout-icon" alt="Kijelentkezés">
+              <span>Kijelentkezés</span>
+            </button>
+          </div>
+          <div class="divider"></div>
+          <div class="right-column">
+            <div class="button-group">
+              <a href="#" class="button-group-item active" data-page="messages" data-icon="messages">
+                <img src="/assets/account/messages.svg" class="button-group-icon" alt="Üzenetküldés">
+                <span data-translate="pages.account.nav_messages">Üzenetküldés</span>
+              </a>
+              <a href="#" class="button-group-item" data-page="functions" data-icon="functions">
+                <img src="/assets/account/functions.svg" class="button-group-icon" alt="Funkciók">
+                <span data-translate="pages.account.nav_functions">Funkciók</span>
+              </a>
+              <a href="#" class="button-group-item" data-page="security" data-icon="safety">
+                <img src="/assets/account/safety.svg" class="button-group-icon" alt="Biztonság és Felügyelet">
+                <span data-translate="pages.account.nav_security">Biztonság és Felügyelet</span>
+              </a>
+            </div>
+            <div id="messages-page" class="account-page active">
+              <div class="card card-top">
+                <span data-translate="pages.account.private_messages">Privát Üzenetek</span>
+                <md-switch icons selected></md-switch>
+              </div>
+              <div class="card card-middle">
+                <span data-translate="pages.account.who_can_message">Ki küldhet neked üzeneteket?</span>
+                <div class="notice">
+                  <img src="/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
+                  <span data-translate="pages.account.message_notice">Ezt a beállítást csak te tudod módosítani.</span>
+                </div>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <span data-translate="pages.account.everyone">Mindenki</span>
+                    <md-radio name="message-privacy" value="everyone"></md-radio>
+                  </div>
+                  <div class="radio-item">
+                    <span data-translate="pages.account.nobody">Senki</span>
+                    <md-radio name="message-privacy" value="nobody" checked></md-radio>
+                  </div>
+                  <div class="radio-item">
+                    <span data-translate="pages.account.classmates_only">Csak osztálytársak</span>
+                    <md-radio name="message-privacy" value="classmates"></md-radio>
+                  </div>
+                </div>
+              </div>
+              <div class="card card-bottom">
+                <div class="card-header">
+                  <span data-translate="pages.account.word_filter">Szófilter</span>
+                  <md-switch icons selected></md-switch>
+                </div>
+                <div class="textbox-container">
+                  <textarea data-translate-placeholder="pages.account.word_filter_placeholder" placeholder="Ide írj... (vesszővel, és egy szóközzel utána válaszd el a szavakat)"></textarea>
+                </div>
+                <div class="notice-bottom">
+                  <img src="/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
+                  <span data-translate="pages.account.word_filter_notice">Írd be, hogy Auto, így egy előre megírt listányi szavak lesznek leszűrve.</span>
+                </div>
+              </div>
+            </div>
+            <div id="functions-page" class="account-page">
+              <!-- Functions page content will go here, this is filler content -->
+              <div class="card card-top">
+                <span data-translate="pages.account.private_messages">Privát Üzenetek</span>
+                <md-switch icons selected></md-switch>
+              </div>
+              <div class="card card-middle">
+                <span data-translate="pages.account.who_can_message">Ki küldhet neked üzeneteket?</span>
+                <div class="notice">
+                  <img src="/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
+                  <span data-translate="pages.account.message_notice">Ezt a beállítást csak te tudod módosítani.</span>
+                </div>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <span data-translate="pages.account.everyone">Mindenki</span>
+                    <md-radio name="message-privacy" value="everyone"></md-radio>
+                  </div>
+                  <div class="radio-item">
+                    <span data-translate="pages.account.nobody">Senki</span>
+                    <md-radio name="message-privacy" value="nobody" checked></md-radio>
+                  </div>
+                  <div class="radio-item">
+                    <span data-translate="pages.account.classmates_only">Csak osztálytársak</span>
+                    <md-radio name="message-privacy" value="classmates"></md-radio>
+                  </div>
+                </div>
+              </div>
+              <div class="card card-bottom">
+                <div class="card-header">
+                  <span data-translate="pages.account.word_filter">Szófilter</span>
+                  <md-switch icons selected></md-switch>
+                </div>
+                <div class="textbox-container">
+                  <textarea data-translate-placeholder="pages.account.word_filter_placeholder" placeholder="Ide írj... (vesszővel, és egy szóközzel utána válaszd el a szavakat)"></textarea>
+                </div>
+                <div class="notice-bottom">
+                  <img src="/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
+                  <span data-translate="pages.account.word_filter_notice">Írd be, hogy Auto, így egy előre megírt listányi szavak lesznek leszűrve.</span>
+                </div>
+              </div>
+            </div>
+            <div id="security-page" class="account-page">
+              <!-- Security page content will go here, this is filler content -->
+              <div class="card card-top">
+                <span data-translate="pages.account.private_messages">Privát Üzenetek</span>
+                <md-switch icons selected></md-switch>
+              </div>
+              <div class="card card-middle">
+                <span data-translate="pages.account.who_can_message">Ki küldhet neked üzeneteket?</span>
+                <div class="notice">
+                  <img src="/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
+                  <span data-translate="pages.account.message_notice">Ezt a beállítást csak te tudod módosítani.</span>
+                </div>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <span data-translate="pages.account.everyone">Mindenki</span>
+                    <md-radio name="message-privacy" value="everyone"></md-radio>
+                  </div>
+                  <div class="radio-item">
+                    <span data-translate="pages.account.nobody">Senki</span>
+                    <md-radio name="message-privacy" value="nobody" checked></md-radio>
+                  </div>
+                  <div class="radio-item">
+                    <span data-translate="pages.account.classmates_only">Csak osztálytársak</span>
+                    <md-radio name="message-privacy" value="classmates"></md-radio>
+                  </div>
+                </div>
+              </div>
+              <div class="card card-bottom">
+                <div class="card-header">
+                  <span data-translate="pages.account.word_filter">Szófilter</span>
+                  <md-switch icons selected></md-switch>
+                </div>
+                <div class="textbox-container">
+                  <textarea data-translate-placeholder="pages.account.word_filter_placeholder" placeholder="Ide írj... (vesszővel, és egy szóközzel utána válaszd el a szavakat)"></textarea>
+                </div>
+                <div class="notice-bottom">
+                  <img src="/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
+                  <span data-translate="pages.account.word_filter_notice">Írd be, hogy Auto, így egy előre megírt listányi szavak lesznek leszűrve.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const schoolAccount = localStorage.getItem('schoolAccount') === 'true';
+      const publicAccount = localStorage.getItem('publicAccount') === 'true';
+      const loggedOutView = document.getElementById('logged-out-view');
+      const loggedInView = document.getElementById('logged-in-view');
+
+      if (!schoolAccount && !publicAccount) {
+        loggedOutView.style.display = 'flex';
+      } else {
+        loggedInView.style.display = 'flex';
+      }
+
+      // Button Group Logic
+      // Hashtag navigation
+      const navButtons = document.querySelectorAll('.button-group-item');
+      const pages = document.querySelectorAll('.account-page');
+
+      function showPage(pageId) {
+        pages.forEach(page => {
+          page.classList.remove('active');
+        });
+        document.getElementById(pageId + '-page').classList.add('active');
+
+        navButtons.forEach(button => {
+          button.classList.remove('active');
+          if (button.dataset.page === pageId) {
+            button.classList.add('active');
+          }
+        });
+        updateBorderRadius();
+      }
+
+      navButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          const pageId = this.dataset.page;
+          location.hash = pageId;
+        });
+      });
+      
+      function updateBorderRadius() {
+        navButtons.forEach((button, index) => {
+          button.classList.remove('btn-first', 'btn-middle', 'btn-last');
+
+          if (index === 0) {
+            button.classList.add('btn-first');
+          } else if (index === navButtons.length - 1) {
+            button.classList.add('btn-last');
+          } else {
+            button.classList.add('btn-middle');
+          }
+        });
+      }
+
+      window.addEventListener('hashchange', () => {
+        const pageId = location.hash.substring(1) || 'messages';
+        showPage(pageId);
+      });
+
+      // Initial page load
+      const initialPage = location.hash.substring(1) || 'messages';
+      showPage(initialPage);
+
+      // Radio button logic
+      const radioButtons = document.querySelectorAll('md-radio[name="message-privacy"]');
+      radioButtons.forEach(radio => {
+        radio.addEventListener('click', function() {
+          radioButtons.forEach(r => r.checked = false);
+          this.checked = true;
+        });
+      });
+
+      // Manually trigger translation for the newly added elements
+      if (window.translationManager) {
+        window.translationManager.applyTranslations();
+      }
+
+      // Switch functionality for disabling elements
+      const privateMessagesSwitch = document.querySelector('.card-top md-switch');
+      const wordFilterSwitch = document.querySelector('.card-header md-switch');
+      const messageRadios = document.querySelectorAll('md-radio[name="message-privacy"]');
+      const wordFilterTextarea = document.querySelector('.textbox-container textarea');
+
+      if (privateMessagesSwitch) {
+        privateMessagesSwitch.addEventListener('change', (event) => {
+          const isEnabled = event.target.selected;
+          messageRadios.forEach(radio => {
+            radio.disabled = !isEnabled;
+          });
+          // Also disable/enable the word filter switch itself
+          if (wordFilterSwitch) {
+            wordFilterSwitch.disabled = !isEnabled;
+            // If disabling, also disable the textbox
+            if (!isEnabled && wordFilterTextarea) {
+              wordFilterTextarea.disabled = true;
+            }
+            // Note: We don't re-enable the textbox here based on this switch alone,
+            // the wordFilterSwitch's own listener handles that.
+          }
+        });
+      }
+
+      if (wordFilterSwitch && wordFilterTextarea) {
+        wordFilterSwitch.addEventListener('change', (event) => {
+          const isEnabled = event.target.selected;
+          wordFilterTextarea.disabled = !isEnabled;
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>
