@@ -107,7 +107,8 @@
       "classmates_only": "Csak osztálytársak",
       "word_filter": "Szófilter",
       "word_filter_placeholder": "Ide írj... (vesszővel, és egy szóközzel utána válaszd el a szavakat)",
-      "word_filter_notice": "Írd be, hogy Auto, így egy előre megírt listányi szavak lesznek leszűrve."
+      "word_filter_notice": "Írd be, hogy Auto, így egy előre megírt listányi szavak lesznek leszűrve.",
+      "word_filter_notice2": "A Szófilter a szavak súlyossága, és túlzott használatuk alapján dönt."
     },
     "settings": {
       "title": "Beállítások"

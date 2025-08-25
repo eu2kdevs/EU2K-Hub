@@ -469,6 +469,17 @@ body {
   margin: 16px 0;
 }
 
+.notice-middle {
+  background-color: #2C332C;
+  border-radius: 8px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #C1C9BE;
+  margin: 0 0 16px 0;
+}
+
 .notice-bottom {
   background-color: #2C332C;
   border-radius: 8px 8px 32px 32px;

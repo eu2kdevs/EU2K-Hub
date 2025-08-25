@@ -107,7 +107,8 @@
       "classmates_only": "Classmates only",
       "word_filter": "Word Filter",
       "word_filter_placeholder": "Type here... (separate words with a comma and a space)",
-      "word_filter_notice": "Type 'Auto' to filter a pre-written list of words."
+      "word_filter_notice": "Type 'Auto' to filter a pre-written list of words.",
+      "word_filter_notice2": "The word filter decides based on the severity of the words and their excessive use."
     },
     "settings": {
       "title": "Settings"
