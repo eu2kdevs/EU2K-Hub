@@ -38,12 +38,12 @@ function shrinkToMiniButton(toast, iconPath, message) {
   // Oldal alapján célgomb meghatározása
   const currentPage = window.location.pathname;
   if (currentPage.includes('youhub.html')) {
-    targetButton = headerIcons?.querySelector('a[href="/settings/settings.html"]') ||
-      headerIcons?.querySelector('a[href="settings/settings.html"]');
+    targetButton = headerIcons?.querySelector('a[href="/EU2K-Hub/settings/settings.html"]') ||
+      headerIcons?.querySelector('a[href="/EU2K-Hub/settings/settings.html"]');
   } else {
     // Minden más oldalon a fiók gomb elé
-    targetButton = headerIcons?.querySelector('a[href="/system/account.html"]') ||
-      headerIcons?.querySelector('a[href="system/account.html"]');
+    targetButton = headerIcons?.querySelector('a[href="/EU2K-Hub/system/account.html"]') ||
+      headerIcons?.querySelector('a[href="/EU2K-Hub/system/account.html"]');
   }
 
   if (headerIcons && targetButton) {
@@ -138,18 +138,18 @@ async function checkAndShowPermissions() {
       if (existingCam) existingCam.remove();
       if (existingMic) existingMic.remove();
 
-      showPermissionToast('/assets/qr-code/cam_mic_permission.svg', 'Mikrofon és Kamera Hozzáférés');
+      showPermissionToast('/EU2K-Hub/assets/qr-code/cam_mic_permission.svg', 'Mikrofon és Kamera Hozzáférés');
     } else if (cameraPermission) {
       // Ne jelenjen meg ha már van both
       const existingBoth = document.querySelector('.permission-mini-button[data-icon*="cam_mic"]');
       if (!existingBoth) {
-        showPermissionToast('/assets/qr-code/camera_permission.svg', 'Kamera Hozzáférés');
+        showPermissionToast('/EU2K-Hub/assets/qr-code/camera_permission.svg', 'Kamera Hozzáférés');
       }
     } else if (microphonePermission) {
       // Ne jelenjen meg ha már van both
       const existingBoth = document.querySelector('.permission-mini-button[data-icon*="cam_mic"]');
       if (!existingBoth) {
-        showPermissionToast('/assets/qr-code/mic_permission.svg', 'Mikrofon Hozzáférés');
+        showPermissionToast('/EU2K-Hub/assets/qr-code/mic_permission.svg', 'Mikrofon Hozzáférés');
       }
     }
 
@@ -268,9 +268,9 @@ window.testCameraPermission = () => {
   const existingMic = document.querySelector('.permission-mini-button[data-icon*="mic"]');
   if (existingMic) {
     existingMic.remove();
-    showPermissionToast('/assets/qr-code/cam_mic_permission.svg', 'Mikrofon és Kamera Hozzáférés');
+    showPermissionToast('/EU2K-Hub/assets/qr-code/cam_mic_permission.svg', 'Mikrofon és Kamera Hozzáférés');
   } else {
-    showPermissionToast('/assets/qr-code/camera_permission.svg', 'Kamera Hozzáférés');
+    showPermissionToast('/EU2K-Hub/assets/qr-code/camera_permission.svg', 'Kamera Hozzáférés');
   }
 };
 
@@ -283,13 +283,13 @@ window.testMicPermission = () => {
   const existingCam = document.querySelector('.permission-mini-button[data-icon*="camera"]');
   if (existingCam) {
     existingCam.remove();
-    showPermissionToast('/assets/qr-code/cam_mic_permission.svg', 'Mikrofon és Kamera Hozzáférés');
+    showPermissionToast('/EU2K-Hub/assets/qr-code/cam_mic_permission.svg', 'Mikrofon és Kamera Hozzáférés');
   } else {
-    showPermissionToast('/assets/qr-code/mic_permission.svg', 'Mikrofon Hozzáférés');
+    showPermissionToast('/EU2K-Hub/assets/qr-code/mic_permission.svg', 'Mikrofon Hozzáférés');
   }
 };
 
-window.testBothPermissions = () => showPermissionToast('/assets/qr-code/cam_mic_permission.svg', 'Mikrofon és Kamera Hozzáférés');
+window.testBothPermissions = () => showPermissionToast('/EU2K-Hub/assets/qr-code/cam_mic_permission.svg', 'Mikrofon és Kamera Hozzáférés');
 window.testRealPermissions = checkAndShowPermissions;
 window.stopStreams = stopPermissionStreams;
 
