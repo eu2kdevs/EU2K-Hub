@@ -4,10 +4,8 @@
 // Permission toast megjelenítő függvény
 function showPermissionToast(iconPath, message) {
   // Meglévő permission toast eltávolítása
-  const existingToast = document.querySelector('.permission-toast');
-  if (existingToast) {
-    existingToast.remove();
-  }
+  const existingToasts = document.querySelectorAll('.permission-toast');
+  existingToasts.forEach(toast => toast.remove());
 
   // Új permission toast létrehozása
   const toast = document.createElement('div');
