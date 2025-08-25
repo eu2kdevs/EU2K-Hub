@@ -149,7 +149,7 @@
             const icon = btn.querySelector('.button-group-icon');
             const iconName = btn.dataset.icon;
             // Visszaállítjuk az eredeti ikont
-            icon.src = `/assets/${iconName}.svg`;
+            icon.src = `/EU2K-Hub/assets/${iconName}.svg`;
           });
 
           // Hozzáadjuk az active osztályt az aktuális gombhoz
@@ -157,7 +157,7 @@
           const activeIcon = this.querySelector('.button-group-icon');
           const activeIconName = this.dataset.icon;
           // Aktív ikon beállítása
-          activeIcon.src = `/assets/${activeIconName}_active.svg`;
+          activeIcon.src = `/EU2K-Hub/assets/${activeIconName}_active.svg`;
 
           // Border-radius frissítése
           updateBorderRadius();
@@ -227,22 +227,22 @@
 
       const notifications = [
         {
-          avatarLight: '/assets/man_light.svg',
-          avatarDark: '/assets/man_dark.svg',
+          avatarLight: '/EU2K-Hub/assets/man_light.svg',
+          avatarDark: '/EU2K-Hub/assets/man_dark.svg',
           title: 'Férfi Példanév',
           shortDesc: '02.12-én nem kell első órába jönnöd.',
           longDesc: '02.12-én Tanítás nélküli Munkanap lesz, emiatt nem kell jönnöd az iskolába. Nem kell visszapótolni a napot.'
         },
         {
-          avatarLight: '/assets/woman_light.svg',
-          avatarDark: '/assets/woman_dark.svg',
+          avatarLight: '/EU2K-Hub/assets/woman_light.svg',
+          avatarDark: '/EU2K-Hub/assets/woman_dark.svg',
           title: 'Női Példanév',
           shortDesc: '02.12-én nem kell első órába jönnöd.',
           longDesc: '02.12-én Tanítás nélküli Munkanap lesz, emiatt nem kell jönnöd az iskolába. Nem kell visszapótolni a napot.'
         },
         {
-          avatarLight: '/assets/woman_light.svg',
-          avatarDark: '/assets/woman_dark.svg',
+          avatarLight: '/EU2K-Hub/assets/woman_light.svg',
+          avatarDark: '/EU2K-Hub/assets/woman_dark.svg',
           title: 'Női Példanév',
           shortDesc: '02.12-én nem kell első órába jönnöd.',
           longDesc: '02.12-én Tanítás nélküli Munkanap lesz, emiatt nem kell jönnöd az iskolába. Nem kell visszapótolni a napot.'
@@ -384,7 +384,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
 
         return generatedText;
       } catch (error) {
-        console.error('Gemini API hiba:', error);
+        console.error('Xelp API hiba:', error);
         return null;
       }
     }
@@ -672,35 +672,35 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
       initCalendar();
     });
   </script>
-  <script src="/assets/js/permissions.js"></script>
-  <script src="/assets/js/translations.js"></script>
+  <script src="/EU2K-Hub/assets/js/permissions.js"></script>
+  <script src="/EU2K-Hub/assets/js/translations.js"></script>
 </head>
 
 <body>
   <div class="app-bg">
     <aside class="sidebar">
       <nav class="nav-menu">
-        <a class="nav-item" href="/main/index.html">
+        <a class="nav-item" href="index.html">
           <div class="nav-icon-container">
-            <img src="/assets/home_icon.svg" class="nav-icon" alt="Otthon">
+            <img src="/EU2K-Hub/assets/home_icon.svg" class="nav-icon" alt="Otthon">
           </div>
           <span data-translate="navigation.home">Otthon</span>
         </a>
-        <a class="nav-item" href="/main/qr-code.html">
+        <a class="nav-item" href="qr-code.html">
           <div class="nav-icon-container">
-            <img src="/assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
+            <img src="/EU2K-Hub/assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
           </div>
           <span data-translate="navigation.qr">QR-Kód</span>
         </a>
-        <a class="nav-item active" href="/main/youhub.html">
+        <a class="nav-item active" href="youhub.html">
           <div class="nav-icon-container">
-            <img src="/assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
+            <img src="/EU2K-Hub/assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
           </div>
           <span data-translate="navigation.youhub">YouHub</span>
         </a>
-        <a class="nav-item" href="/main/courses.html">
+        <a class="nav-item" href="courses.html">
           <div class="nav-icon-container">
-            <img src="/assets/courses_icon.svg" class="nav-icon" alt="Kurzusok">
+            <img src="/EU2K-Hub/assets/courses_icon.svg" class="nav-icon" alt="Kurzusok">
           </div>
           <span data-translate="navigation.courses">Kurzusok</span>
         </a>
@@ -710,18 +710,18 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
       <div class="main-content">
         <header class="header">
           <div class="welcome-container">
-            <img src="/assets/youhub_icon.svg" class="welcome-icon" alt="YouHub Icon">
+            <img src="/EU2K-Hub/assets/youhub_icon.svg" class="welcome-icon" alt="YouHub Icon">
             <h1 class="welcome-text" data-translate="pages.youhub.title">YouHub</h1>
           </div>
           <div class="header-icons">
-            <a href="/settings/settings.html" class="header-icon-link">
-              <img src="/assets/edit_green.svg" class="header-icon" alt="Edit">
+            <a href="/EU2K-Hub/settings/settings.html" class="header-icon-link">
+              <img src="/EU2K-Hub/assets/edit_green.svg" class="header-icon" alt="Edit">
             </a>
-            <a href="/system/account.html" class="header-icon-link">
+            <a href="/EU2K-Hub/system/account.html" class="header-icon-link">
               <img src="/assets/account_icon.svg" class="header-icon" alt="Account">
             </a>
-            <a href="/settings/settings.html" class="header-icon-link">
-              <img src="/assets/settings_icon.svg" class="header-icon" alt="Settings">
+            <a href="/EU2K-Hub/settings/settings.html" class="header-icon-link">
+              <img src="/EU2K-Hub/assets/settings_icon.svg" class="header-icon" alt="Settings">
             </a>
           </div>
         </header>
@@ -731,21 +731,21 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
             <!-- AA Kártya (bal oldal) -->
             <div class="stats-card-aa">
               <div class="stats-header">
-                <img src="/assets/stats.svg" class="stats-icon" alt="Statisztikák">
+                <img src="/EU2K-Hub/assets/stats.svg" class="stats-icon" alt="Statisztikák">
                 <span class="stats-title" data-translate="pages.youhub.stats_title">Statisztikáim</span>
               </div>
               <!-- Connected Button Group -->
               <div class="button-group">
                 <a href="#" class="button-group-item active" data-icon="month_score" data-index="0">
-                  <img src="/assets/month_score_active.svg" class="button-group-icon" alt="Hónapom">
+                  <img src="/EU2K-Hub/assets/month_score_active.svg" class="button-group-icon" alt="Hónapom">
                   <span data-translate="pages.youhub.monthly_stats">Hónapom</span>
                 </a>
                 <a href="#" class="button-group-item" data-icon="strength" data-index="1">
-                  <img src="/assets/strength.svg" class="button-group-icon" alt="Erősségeim">
+                  <img src="/EU2K-Hub/assets/strength.svg" class="button-group-icon" alt="Erősségeim">
                   <span data-translate="pages.youhub.strengths">Erősségeim</span>
                 </a>
                 <a href="#" class="button-group-item" data-icon="fire" data-index="2">
-                  <img src="/assets/fire.svg" class="button-group-icon" alt="Szériám">
+                  <img src="/EU2K-Hub/assets/fire.svg" class="button-group-icon" alt="Szériám">
                   <span data-translate="pages.youhub.streak">Szériám</span>
                 </a>
               </div>
@@ -773,7 +773,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                   </div>
                 </div>
                 <div class="arrow-container disabled">
-                  <img src="/assets/arrow_forward.svg" class="arrow-icon" alt="Tovább">
+                  <img src="/EU2K-Hub/assets/arrow_forward.svg" class="arrow-icon" alt="Tovább">
                 </div>
               </div>
 
@@ -783,14 +783,14 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                 <div class="strengths-content">
                   <div class="strength-items">
                     <div class="strength-item best">
-                      <img src="/assets/badge.svg" class="strength-icon" alt="Legjobb">
+                      <img src="/EU2K-Hub/assets/badge.svg" class="strength-icon" alt="Legjobb">
                       <div class="strength-text">
                         <div class="strength-label" data-translate="pages.youhub.best_subject_label">Legjobb tantárgyad eddig</div>
                         <div class="strength-subject">Irodalom</div>
                       </div>
                     </div>
                     <div class="strength-item worst">
-                      <img src="/assets/mad.svg" class="strength-icon" alt="Legrosszabb">
+                      <img src="/EU2K-Hub/assets/mad.svg" class="strength-icon" alt="Legrosszabb">
                       <div class="strength-text">
                         <div class="strength-label" data-translate="pages.youhub.worst_subject_label">Legrosszabb tantárgyad eddig</div>
                         <div class="strength-subject">Matematika</div>
@@ -824,7 +824,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                 <div class="streak-content">
                   <!-- Bal oszlop: Nagy tűz és szám -->
                   <div class="streak-left">
-                    <img src="/assets/fire.svg" class="streak-fire-icon" alt="Tűz">
+                    <img src="/EU2K-Hub/assets/fire.svg" class="streak-fire-icon" alt="Tűz">
                     <div class="streak-number">8</div>
                   </div>
 
@@ -832,23 +832,23 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                   <div class="streak-right">
                     <div class="streak-levels">
                       <div class="streak-level basic">
-                        <img src="/assets/fire.svg" class="level-icon" alt="Alap">
+                        <img src="/EU2K-Hub/assets/fire.svg" class="level-icon" alt="Alap">
                         <span>Alap</span>
                       </div>
                       <div class="streak-level easy">
-                        <img src="/assets/fire_orange.svg" class="level-icon" alt="Könnyű">
+                        <img src="/EU2K-Hub/assets/fire_orange.svg" class="level-icon" alt="Könnyű">
                         <span>Könnyű</span>
                       </div>
                       <div class="streak-level medium">
-                        <img src="/assets/fire_green.svg" class="level-icon" alt="Közepes">
+                        <img src="/EU2K-Hub/assets/fire_green.svg" class="level-icon" alt="Közepes">
                         <span>Közepes</span>
                       </div>
                       <div class="streak-level hard">
-                        <img src="/assets/fire_red.svg" class="level-icon" alt="Nehéz">
+                        <img src="/EU2K-Hub/assets/fire_red.svg" class="level-icon" alt="Nehéz">
                         <span>Nehéz</span>
                       </div>
                       <div class="streak-level extreme">
-                        <img src="/assets/fire_purple.svg" class="level-icon" alt="Extrém">
+                        <img src="/EU2K-Hub/assets/fire_purple.svg" class="level-icon" alt="Extrém">
                         <span>Extrém</span>
                       </div>
                     </div>
@@ -861,7 +861,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                         magadtól!</div>
                     </div>
                     <button class="streak-restart-btn">
-                      <img src="/assets/trash_red.svg" class="restart-icon" alt="Újrakezdés">
+                      <img src="/EU2K-Hub/assets/trash_red.svg" class="restart-icon" alt="Újrakezdés">
                       <span>Széria újrakezdése</span>
                     </button>
                   </div>
@@ -892,7 +892,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
             <!-- CC Kártya (jobb lent) -->
             <div class="stats-card-cc">
               <div class="refresh-header">
-                <img src="/assets/refresh.svg" class="refresh-icon" alt="Frissítés">
+                <img src="/EU2K-Hub/assets/refresh.svg" class="refresh-icon" alt="Frissítés">
                 <span class="refresh-text">Frissítés</span>
               </div>
             </div>
@@ -902,7 +902,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
           <div class="notifications-card-container">
             <!-- Csengő ikon a bal felső sarokban -->
             <div class="notification-bell">
-              <img src="/assets/notifs.svg" class="bell-icon" alt="Értesítések">
+              <img src="/EU2K-Hub/assets/notifs.svg" class="bell-icon" alt="Értesítések">
             </div>
 
             <!-- Teljes szélességű header -->
@@ -915,7 +915,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
               <div class="notifications-list">
 
                 <div class="notification-item active" data-notification="0">
-                  <img src="/assets/man_dark.svg" class="notification-avatar" alt="Férfi">
+                  <img src="/EU2K-Hub/assets/man_dark.svg" class="notification-avatar" alt="Férfi">
                   <div class="notification-content">
                     <div class="notification-title">Férfi Példanév</div>
                     <div class="notification-desc">02.12-én nem kell első órába jönnöd.</div>
@@ -923,7 +923,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                 </div>
 
                 <div class="notification-item" data-notification="1">
-                  <img src="/assets/woman_light.svg" class="notification-avatar" alt="Női">
+                  <img src="/EU2K-Hub/assets/woman_light.svg" class="notification-avatar" alt="Női">
                   <div class="notification-content">
                     <div class="notification-title">Női Példanév</div>
                     <div class="notification-desc">02.12-én nem kell első órába jönnöd.</div>
@@ -931,7 +931,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                 </div>
 
                 <div class="notification-item" data-notification="2">
-                  <img src="/assets/woman_light.svg" class="notification-avatar" alt="Női">
+                  <img src="/EU2K-Hub/assets/woman_light.svg" class="notification-avatar" alt="Női">
                   <div class="notification-content">
                     <div class="notification-title">Női Példanév</div>
                     <div class="notification-desc">02.12-én nem kell első órába jönnöd.</div>
@@ -942,7 +942,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
               <!-- Jobb oldal - Részletes nézet -->
               <div class="notification-detail">
                 <div class="notification-detail-header">
-                  <img src="/assets/man_light.svg" class="detail-avatar" alt="Férfi">
+                  <img src="/EU2K-Hub/assets/man_light.svg" class="detail-avatar" alt="Férfi">
                   <div class="detail-info">
                     <div class="detail-title">Férfi Példanév</div>
                     <div class="detail-desc">02.12-én Tanítás nélküli Munkanap lesz, emiatt nem kell jönnöd az iskolába.
@@ -952,11 +952,11 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
 
                 <div class="notification-actions">
                   <button class="notification-delete-btn">
-                    <img src="/assets/trash_darkgreen.svg" class="delete-icon" alt="Törlés">
+                    <img src="/EU2K-Hub/assets/trash_darkgreen.svg" class="delete-icon" alt="Törlés">
                     <span>Törlés</span>
                   </button>
                   <button class="notification-dismiss-btn">
-                    <img src="/assets/not_interested.svg" class="dismiss-icon" alt="Nem érdekel">
+                    <img src="/EU2K-Hub/assets/not_interested.svg" class="dismiss-icon" alt="Nem érdekel">
                     <span>Nem érdekel</span>
                   </button>
                 </div>
@@ -970,7 +970,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
           <div class="suggestions-card-container">
             <!-- Csengő ikon és header -->
             <div class="suggestions-lightbulb">
-              <img src="/assets/suggestions_icon.svg" class="suggestions-lightbulb-icon" alt="Javaslatok">
+              <img src="/EU2K-Hub/assets/suggestions_icon.svg" class="suggestions-lightbulb-icon" alt="Javaslatok">
             </div>
 
             <div class="suggestions-header">
@@ -983,7 +983,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
               <div class="prompt-card">
                 <div class="prompt-image-container">
                   <div class="prompt-image-bg"></div>
-                  <img src="/assets/placeholder_img.svg" class="prompt-image" alt="Placeholder">
+                  <img src="/EU2K-Hub/assets/placeholder_img.svg" class="prompt-image" alt="Placeholder">
                 </div>
                 <div class="prompt-content">
                   <div class="prompt-title">Fotorealisztikus...</div>
@@ -994,7 +994,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
               <div class="prompt-card">
                 <div class="prompt-image-container">
                   <div class="prompt-image-bg"></div>
-                  <img src="/assets/placeholder_img.svg" class="prompt-image" alt="Placeholder">
+                  <img src="/EU2K-Hub/assets/placeholder_img.svg" class="prompt-image" alt="Placeholder">
                 </div>
                 <div class="prompt-content">
                   <div class="prompt-title">Puffy ikonok ké...</div>
@@ -1005,7 +1005,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
               <div class="prompt-card">
                 <div class="prompt-image-container">
                   <div class="prompt-image-bg"></div>
-                  <img src="/assets/placeholder_img.svg" class="prompt-image" alt="Placeholder">
+                  <img src="/EU2K-Hub/assets/placeholder_img.svg" class="prompt-image" alt="Placeholder">
                 </div>
                 <div class="prompt-content">
                   <div class="prompt-title">Kémiai ábrák</div>
@@ -1016,7 +1016,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
               <div class="prompt-card">
                 <div class="prompt-image-container">
                   <div class="prompt-image-bg"></div>
-                  <img src="/assets/placeholder_img.svg" class="prompt-image" alt="Placeholder">
+                  <img src="/EU2K-Hub/assets/placeholder_img.svg" class="prompt-image" alt="Placeholder">
                 </div>
                 <div class="prompt-content">
                   <div class="prompt-title">Fotorealisztikus...</div>
@@ -1045,18 +1045,18 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
 
                   <div class="category-buttons">
                     <button class="category-btn active" data-category="prompt">
-                      <img src="/assets/chatgpt_prompt_icon.svg" class="category-icon" alt="Prompt">
+                      <img src="/EU2K-Hub/assets/chatgpt_prompt_icon.svg" class="category-icon" alt="Prompt">
                       <span>Prompt</span>
                       <div class="category-check">
-                        <img src="/assets/check.svg" class="check-icon" alt="Check">
+                        <img src="/EU2K-Hub/assets/check.svg" class="check-icon" alt="Check">
                       </div>
                     </button>
 
                     <button class="category-btn" data-category="hive">
-                      <img src="/assets/hive.svg" class="category-icon" alt="Hive">
+                      <img src="/EU2K-Hub/assets/hive.svg" class="category-icon" alt="Hive">
                       <span>Hive</span>
                       <div class="category-check">
-                        <img src="/assets/check.svg" class="check-icon" alt="Check">
+                        <img src="/EU2K-Hub/assets/check.svg" class="check-icon" alt="Check">
                       </div>
                       <div class="hive-tooltip">Az OkosDoboz le lesz cserélve a
                         Hive funkcióra. Mostantól itt tudsz javaslatokat beadni, amit eddig az OkosDobozba dobtál.</div>
@@ -1066,7 +1066,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
 
                 <!-- Info chip -->
                 <div class="category-info">
-                  <img src="/assets/info.svg" class="info-icon" alt="Info">
+                  <img src="/EU2K-Hub/assets/info.svg" class="info-icon" alt="Info">
                   <span>Amikor elküldöd a Javaslatot, a profilképed meg fog
                     jelenni nyilvánosan mindenkinek, akinek joga van megtekinteni a Javaslatot.</span>
                 </div>
@@ -1080,14 +1080,14 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
 
             <!-- Küldés gomb -->
             <button class="suggestion-send-btn">
-              <img src="/assets/send.svg" class="send-icon" alt="Küldés">
+              <img src="/EU2K-Hub/assets/send.svg" class="send-icon" alt="Küldés">
             </button>
           </div>
           <!-- Naptár Kártya -->
           <div class="calendar-card-container">
             <!-- Naptár ikon a bal felső sarokban -->
             <div class="calendar-bell">
-              <img src="/assets/calendar_icon.svg" class="calendar-bell-icon" alt="Naptár">
+              <img src="/EU2K-Hub/assets/calendar_icon.svg" class="calendar-bell-icon" alt="Naptár">
             </div>
 
             <!-- Header -->
@@ -1107,7 +1107,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                   </div>
                 </div>
                 <div class="calendar-edit-wrapper">
-                  <img src="/assets/edit.svg" class="calendar-edit-icon" id="editButton" alt="Szerkesztés">
+                  <img src="/EU2K-Hub/assets/edit.svg" class="calendar-edit-icon" id="editButton" alt="Szerkesztés">
                 </div>
               </div>
 
@@ -1118,18 +1118,18 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
               <div class="calendar-month-nav">
                 <span class="calendar-month-year" id="monthYear">Március 2025</span>
                 <div class="calendar-nav-arrows">
-                  <img src="/assets/arrow_left.svg" class="calendar-arrow" id="prevMonth" alt="Előző hónap">
-                  <img src="/assets/arrow_right.svg" class="calendar-arrow" id="nextMonth" alt="Következő hónap">
+                  <img src="/EU2K-Hub/assets/arrow_left.svg" class="calendar-arrow" id="prevMonth" alt="Előző hónap">
+                  <img src="/EU2K-Hub/assets/arrow_right.svg" class="calendar-arrow" id="nextMonth" alt="Következő hónap">
                 </div>
               </div>
 
               <!-- Nap csík -->
               <div class="calendar-day-strip">
                 <div class="calendar-day-info">
-                  <img src="/assets/calendar_icon.svg" class="calendar-day-icon" alt="Naptár">
+                  <img src="/EU2K-Hub/assets/calendar_icon.svg" class="calendar-day-icon" alt="Naptár">
                   <span class="calendar-day-name" id="dayName">Hétfő</span>
                 </div>
-                <img src="/assets/arrow_down.svg" class="calendar-dropdown" alt="Lenyíló">
+                <img src="/EU2K-Hub/assets/arrow_down.svg" class="calendar-dropdown" alt="Lenyíló">
               </div>
 
               <!-- Órarend és Dolgozatok konténer -->
@@ -1137,13 +1137,13 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                 <!-- Órarend kártya -->
                 <div class="schedule-card">
                   <div class="schedule-item">
-                    <img src="/assets/class_icons/osztalyfonoki.svg" class="schedule-icon" alt="Osztályfőnöki">
+                    <img src="/EU2K-Hub/assets/class_icons/osztalyfonoki.svg" class="schedule-icon" alt="Osztályfőnöki">
                     <div class="schedule-info">
                       <div class="schedule-subject">Osztályfőnöki</div>
                       <div class="schedule-description">Zalasch Bernadett - A/30</div>
                     </div>
                     <div class="schedule-time">
-                      <img src="/assets/clock.svg" class="schedule-clock" alt="Óra">
+                      <img src="/EU2K-Hub/assets/clock.svg" class="schedule-clock" alt="Óra">
                       <div class="schedule-time-container">
                         <span class="schedule-time-text">08:25</span>
                         <span class="schedule-time-text">08:55</span>
@@ -1152,13 +1152,13 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                   </div>
 
                   <div class="schedule-item">
-                    <img src="/assets/class_icons/biologia.svg" class="schedule-icon" alt="Biológia">
+                    <img src="/EU2K-Hub/assets/class_icons/biologia.svg" class="schedule-icon" alt="Biológia">
                     <div class="schedule-info">
                       <div class="schedule-subject">Biológia</div>
                       <div class="schedule-description">Kiss Tamás - A/30</div>
                     </div>
                     <div class="schedule-time">
-                      <img src="/assets/clock.svg" class="schedule-clock" alt="Óra">
+                      <img src="/EU2K-Hub/assets/clock.svg" class="schedule-clock" alt="Óra">
                       <div class="schedule-time-container">
                         <span class="schedule-time-text">09:10</span>
                         <span class="schedule-time-text">09:55</span>
@@ -1167,13 +1167,13 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                   </div>
 
                   <div class="schedule-item">
-                    <img src="/assets/class_icons/matematika.svg" class="schedule-icon" alt="Matematika">
+                    <img src="/EU2K-Hub/assets/class_icons/matematika.svg" class="schedule-icon" alt="Matematika">
                     <div class="schedule-info">
                       <div class="schedule-subject">Matematika</div>
                       <div class="schedule-description">Katona Dániel - A/30</div>
                     </div>
                     <div class="schedule-time">
-                      <img src="/assets/clock.svg" class="schedule-clock" alt="Óra">
+                      <img src="/EU2K-Hub/assets/clock.svg" class="schedule-clock" alt="Óra">
                       <div class="schedule-time-container">
                         <span class="schedule-time-text">09:10</span>
                         <span class="schedule-time-text">09:55</span>
@@ -1182,13 +1182,13 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                   </div>
 
                   <div class="schedule-item">
-                    <img src="/assets/class_icons/foldrajz.svg" class="schedule-icon" alt="Földrajz">
+                    <img src="/EU2K-Hub/assets/class_icons/foldrajz.svg" class="schedule-icon" alt="Földrajz">
                     <div class="schedule-info">
                       <div class="schedule-subject">Földrajz</div>
                       <div class="schedule-description">Vincze Attila - A/30</div>
                     </div>
                     <div class="schedule-time">
-                      <img src="/assets/clock.svg" class="schedule-clock" alt="Óra">
+                      <img src="/EU2K-Hub/assets/clock.svg" class="schedule-clock" alt="Óra">
                       <div class="schedule-time-container">
                         <span class="schedule-time-text">09:10</span>
                         <span class="schedule-time-text">09:55</span>
@@ -1197,13 +1197,13 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                   </div>
 
                   <div class="schedule-item">
-                    <img src="/assets/class_icons/vizualis_kultura.svg" class="schedule-icon" alt="Vizuális Kultúra">
+                    <img src="/EU2K-Hub/assets/class_icons/vizualis_kultura.svg" class="schedule-icon" alt="Vizuális Kultúra">
                     <div class="schedule-info">
                       <div class="schedule-subject">Vizuális Kultúra</div>
                       <div class="schedule-description">Lendér Andrea - Könyvtár</div>
                     </div>
                     <div class="schedule-time">
-                      <img src="/assets/clock.svg" class="schedule-clock" alt="Óra">
+                      <img src="/EU2K-Hub/assets/clock.svg" class="schedule-clock" alt="Óra">
                       <div class="schedule-time-container">
                         <span class="schedule-time-text">09:10</span>
                         <span class="schedule-time-text">09:55</span>
@@ -1212,13 +1212,13 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                   </div>
 
                   <div class="schedule-item">
-                    <img src="/assets/class_icons/angol_nemet_francia_spanyol.svg" class="schedule-icon" alt="Angol">
+                    <img src="/EU2K-Hub/assets/class_icons/angol_nemet_francia_spanyol.svg" class="schedule-icon" alt="Angol">
                     <div class="schedule-info">
                       <div class="schedule-subject">Angol</div>
                       <div class="schedule-description">Sikolya Erzsébet - A/30</div>
                     </div>
                     <div class="schedule-time">
-                      <img src="/assets/clock.svg" class="schedule-clock" alt="Óra">
+                      <img src="/EU2K-Hub/assets/clock.svg" class="schedule-clock" alt="Óra">
                       <div class="schedule-time-container">
                         <span class="schedule-time-text">09:10</span>
                         <span class="schedule-time-text">09:55</span>
@@ -1227,14 +1227,14 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                   </div>
 
                   <div class="schedule-item">
-                    <img src="/assets/class_icons/matematika_kompetencia.svg" class="schedule-icon"
+                    <img src="/EU2K-Hub/assets/class_icons/matematika_kompetencia.svg" class="schedule-icon"
                       alt="Mat. Kompetencia">
                     <div class="schedule-info">
                       <div class="schedule-subject">Mat. Kompetencia</div>
                       <div class="schedule-description">Katona Dániel - A/30</div>
                     </div>
                     <div class="schedule-time">
-                      <img src="/assets/clock.svg" class="schedule-clock" alt="Óra">
+                      <img src="/EU2K-Hub/assets/clock.svg" class="schedule-clock" alt="Óra">
                       <div class="schedule-time-container">
                         <span class="schedule-time-text">09:10</span>
                         <span class="schedule-time-text">09:55</span>
@@ -1246,49 +1246,49 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                 <!-- Dolgozatok kártya -->
                 <div class="tests-card">
                   <div class="schedule-item">
-                    <img src="/assets/class_icons/digitalis_kultura.svg" class="schedule-icon" alt="Digitális Kultúra">
+                    <img src="/EU2K-Hub/assets/class_icons/digitalis_kultura.svg" class="schedule-icon" alt="Digitális Kultúra">
                     <div class="schedule-info">
                       <div class="schedule-subject">Digitális Kultúra</div>
                       <div class="schedule-description">Furják László - B/22</div>
                     </div>
                     <div class="schedule-time">
-                      <img src="/assets/clock.svg" class="schedule-clock" alt="Óra">
+                      <img src="/EU2K-Hub/assets/clock.svg" class="schedule-clock" alt="Óra">
                       <span class="schedule-time-text">02:02</span>
                     </div>
                   </div>
 
                   <div class="schedule-item">
-                    <img src="/assets/class_icons/biologia.svg" class="schedule-icon" alt="Biológia">
+                    <img src="/EU2K-Hub/assets/class_icons/biologia.svg" class="schedule-icon" alt="Biológia">
                     <div class="schedule-info">
                       <div class="schedule-subject">Biológia</div>
                       <div class="schedule-description">Kiss Tamás - A/30</div>
                     </div>
                     <div class="schedule-time">
-                      <img src="/assets/clock.svg" class="schedule-clock" alt="Óra">
+                      <img src="/EU2K-Hub/assets/clock.svg" class="schedule-clock" alt="Óra">
                       <span class="schedule-time-text">02:05</span>
                     </div>
                   </div>
 
                   <div class="schedule-item">
-                    <img src="/assets/class_icons/matematika.svg" class="schedule-icon" alt="Matematika">
+                    <img src="/EU2K-Hub/assets/class_icons/matematika.svg" class="schedule-icon" alt="Matematika">
                     <div class="schedule-info">
                       <div class="schedule-subject">Matematika</div>
                       <div class="schedule-description">Katona Dániel - A/30</div>
                     </div>
                     <div class="schedule-time">
-                      <img src="/assets/clock.svg" class="schedule-clock" alt="Óra">
+                      <img src="/EU2K-Hub/assets/clock.svg" class="schedule-clock" alt="Óra">
                       <span class="schedule-time-text">02:11</span>
                     </div>
                   </div>
 
                   <div class="schedule-item">
-                    <img src="/assets/class_icons/foldrajz.svg" class="schedule-icon" alt="Földrajz">
+                    <img src="/EU2K-Hub/assets/class_icons/foldrajz.svg" class="schedule-icon" alt="Földrajz">
                     <div class="schedule-info">
                       <div class="schedule-subject">Földrajz</div>
                       <div class="schedule-description">Vincze Attila - A/30</div>
                     </div>
                     <div class="schedule-time">
-                      <img src="/assets/clock.svg" class="schedule-clock" alt="Óra">
+                      <img src="/EU2K-Hub/assets/clock.svg" class="schedule-clock" alt="Óra">
                       <span class="schedule-time-text">02:12</span>
                     </div>
                   </div>
@@ -1296,7 +1296,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
                   <!-- Divider és shrug -->
                   <div class="tests-divider"></div>
                   <div class="tests-empty">
-                    <img src="/assets/shrug.svg" class="tests-shrug" alt="Shrug">
+                    <img src="/EU2K-Hub/assets/shrug.svg" class="tests-shrug" alt="Shrug">
                     <span class="tests-empty-text">Itt egyelőre ennyi!</span>
                   </div>
                 </div>
@@ -1310,7 +1310,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
 
   <!-- Visszajelzés gomb - fix pozíció -->
   <div class="feedback-floating-button" id="feedbackButton">
-    <img src="/assets/courses_icons/feedback_icon.svg" class="feedback-floating-icon" alt="Visszajelzés">
+    <img src="/EU2K-Hub/assets/courses_icons/feedback_icon.svg" class="feedback-floating-icon" alt="Visszajelzés">
     <span class="feedback-floating-text">Visszajelzés</span>
   </div>
 
@@ -1319,10 +1319,10 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
     <div class="feedback-popup">
       <!-- Header -->
       <div class="feedback-popup-header">
-        <img src="/assets/courses_icons/feedback_icon.svg" class="feedback-popup-icon" alt="Visszajelzés">
+        <img src="/EU2K-Hub/assets/courses_icons/feedback_icon.svg" class="feedback-popup-icon" alt="Visszajelzés">
         <span class="feedback-popup-title">Visszajelzés</span>
         <button class="feedback-close-btn" onclick="closeFeedbackPopup()">
-          <img src="/assets/close.svg" class="feedback-close-icon" alt="Bezárás">
+          <img src="/EU2K-Hub/assets/close.svg" class="feedback-close-icon" alt="Bezárás">
         </button>
       </div>
 
@@ -1343,14 +1343,14 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
             <button class="feedback-category-btn active" data-category="function">
               <span>Funkció amit javítani kéne</span>
               <div class="feedback-category-check">
-                <img src="/assets/check.svg" class="feedback-check-icon" alt="Check">
+                <img src="/EU2K-Hub/assets/check.svg" class="feedback-check-icon" alt="Check">
               </div>
             </button>
 
             <button class="feedback-category-btn" data-category="feature">
               <span>Funkció amit látni szeretnék</span>
               <div class="feedback-category-check">
-                <img src="/assets/check.svg" class="feedback-check-icon" alt="Check">
+                <img src="/EU2K-Hub/assets/check.svg" class="feedback-check-icon" alt="Check">
               </div>
             </button>
           </div>
@@ -1358,7 +1358,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
 
         <!-- Info chip -->
         <div class="feedback-category-info">
-          <img src="/assets/info.svg" class="feedback-info-icon" alt="Info">
+          <img src="/EU2K-Hub/assets/info.svg" class="feedback-info-icon" alt="Info">
           <span>Nagyon köszönjük, hogy segítesz nekünk fejleszteni a Hubot! Ezek a
             visszajelzések névtelenek, nem fogjuk tudni ki küldte be.</span>
         </div>
@@ -1370,7 +1370,7 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
           <input type="text" class="feedback-title-input" placeholder="Cím...">
         </div>
         <button class="feedback-send-btn" onclick="submitFeedback()">
-          <img src="/assets/send.svg" class="feedback-send-icon" alt="Küldés">
+          <img src="/EU2K-Hub/assets/send.svg" class="feedback-send-icon" alt="Küldés">
         </button>
       </div>
     </div>
@@ -1514,17 +1514,8 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
         }, 300);
       }, 3000);
     }
-
-    // Duplikált permission rendszer eltávolítva - használd a permissions.js-t
-    // Teszteléshez: testCameraPermission(), testMicPermission(), testBothPermissions()
-
-    // Automatikus permission ellenőrzés kikapcsolva - csak akkor jelenjen meg ha tényleg használja
-    // A permissions.js-ben lévő függvények használhatók manuálisan ha szükséges
   </script>
-  <script src="/assets/js/translations.js"></script>
-
-
-
+  <script src="/EU2K-Hub/assets/js/translations.js"></script>
 </body>
 
 </html>

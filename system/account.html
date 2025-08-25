@@ -18,8 +18,8 @@
 
     document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
   </script>
-  <script src="/assets/js/permissions.js"></script>
-  <script src="/assets/js/translations.js"></script>
+  <script src="/EU2K-Hub/assets/js/permissions.js"></script>
+  <script src="/EU2K-Hub/assets/js/translations.js"></script>
   <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
@@ -51,27 +51,27 @@
   <div class="app-bg">
     <aside class="sidebar">
       <nav class="nav-menu">
-        <a class="nav-item" href="/main/index.html">
+        <a class="nav-item" href="index.html">
           <div class="nav-icon-container">
-            <img src="/assets/home_icon.svg" class="nav-icon" alt="Otthon">
+            <img src="/EU2K-Hub/assets/home_icon.svg" class="nav-icon" alt="Otthon">
           </div>
           <span data-translate="navigation.home">Otthon</span>
         </a>
-        <a class="nav-item" href="/main/qr-code.html">
+        <a class="nav-item" href="qr-code.html">
           <div class="nav-icon-container">
-            <img src="/assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
+            <img src="/EU2K-Hub/assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
           </div>
           <span data-translate="navigation.qr">QR-Kód</span>
         </a>
-        <a class="nav-item" href="/main/youhub.html">
+        <a class="nav-item" href="youhub.html">
           <div class="nav-icon-container">
-            <img src="/assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
+            <img src="/EU2K-Hub/assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
           </div>
           <span data-translate="navigation.youhub">YouHub</span>
         </a>
-        <a class="nav-item" href="/main/courses.html">
+        <a class="nav-item" href="courses.html">
           <div class="nav-icon-container">
-            <img src="/assets/courses_icon.svg" class="nav-icon" alt="Kurzusok">
+            <img src="/EU2K-Hub/assets/courses_icon.svg" class="nav-icon" alt="Kurzusok">
           </div>
           <span data-translate="navigation.courses">Kurzusok</span>
         </a>
@@ -80,40 +80,40 @@
     <main class="main-area">
       <div class="main-content">
         <div id="logged-out-view" class="account-container" style="display: none;">
-          <img src="/assets/account_icon.svg" class="account-icon" alt="Fiók">
+          <img src="/EU2K-Hub/assets/account_icon.svg" class="account-icon" alt="Fiók">
           <h1 class="account-title" data-translate="pages.account.title">Fiók</h1>
           <p class="account-description" data-translate="pages.account.description_part1">
             Jelentkezz be az <strong>Iskolai fiókoddal</strong>, hogy hozzáférj elképesztő funkciókhoz, mint a <strong>Statisztikák</strong>, <strong>Személyes Értesítések</strong>, <strong>Javaslatok</strong>, <strong>Naptár</strong>, és még sok más. Vagy használd a <strong>személyes fiókod</strong>, ha szülő vagy, így <strong>felügyelni</strong> tudod a gyermeked tevékenységét a Hub-on!
           </p>
           <button class="login-button">
-            <img src="/assets/login.svg" class="login-icon" alt="Belépés">
+            <img src="/EU2K-Hub/assets/login.svg" class="login-icon" alt="Belépés">
             <span class="login-text" data-translate="pages.account.login_button">Bejelentkezés</span>
           </button>
         </div>
         <div id="logged-in-view" class="account-view" style="display: none;">
           <div class="left-column">
-            <img src="/assets/avatars/magenta.png" class="avatar" alt="Avatar">
+            <img src="/EU2K-Hub/assets/avatars/magenta.png" class="avatar" alt="Avatar">
             <h2 class="user-name">Turóczi Ádám</h2>
             <div class="account-type">
-              <img src="/assets/account/eu2k_logo.png" class="school-logo" alt="EU2K Logo">
+              <img src="/EU2K-Hub/assets/account/eu2k_logo.png" class="school-logo" alt="EU2K Logo">
               <span>Iskolai Fiók</span>
             </div>
             <div class="user-details">
               <div class="detail-item">
-                <img src="/assets/account/email.svg" class="detail-icon" alt="Email">
+                <img src="/EU2K-Hub/assets/account/email.svg" class="detail-icon" alt="Email">
                 <span>turoczi.adam@europa2000.hu</span>
               </div>
               <div class="detail-item">
-                <img src="/assets/account/birthday.svg" class="detail-icon" alt="Birthday">
+                <img src="/EU2K-Hub/assets/account/birthday.svg" class="detail-icon" alt="Birthday">
                 <span>December 1.</span>
               </div>
               <div class="detail-item">
-                <img src="/assets/account/class.svg" class="detail-icon" alt="Class">
+                <img src="/EU2K-Hub/assets/account/class.svg" class="detail-icon" alt="Class">
                 <span>8.E Osztály</span>
               </div>
             </div>
             <button class="logout-button">
-              <img src="/assets/logout.svg" class="logout-icon" alt="Kijelentkezés">
+              <img src="/EU2K-Hub/assets/logout.svg" class="logout-icon" alt="Kijelentkezés">
               <span>Kijelentkezés</span>
             </button>
           </div>
@@ -121,15 +121,15 @@
           <div class="right-column">
             <div class="button-group">
               <a href="#" class="button-group-item active" data-page="messages" data-icon="messages">
-                <img src="/assets/account/messages.svg" class="button-group-icon" alt="Üzenetküldés">
+                <img src="/EU2K-Hub/assets/account/messages.svg" class="button-group-icon" alt="Üzenetküldés">
                 <span data-translate="pages.account.nav_messages">Üzenetküldés</span>
               </a>
               <a href="#" class="button-group-item" data-page="functions" data-icon="functions">
-                <img src="/assets/account/functions.svg" class="button-group-icon" alt="Funkciók">
+                <img src="/EU2K-Hub/assets/account/functions.svg" class="button-group-icon" alt="Funkciók">
                 <span data-translate="pages.account.nav_functions">Funkciók</span>
               </a>
               <a href="#" class="button-group-item" data-page="security" data-icon="safety">
-                <img src="/assets/account/safety.svg" class="button-group-icon" alt="Biztonság és Felügyelet">
+                <img src="/EU2K-Hub/assets/account/safety.svg" class="button-group-icon" alt="Biztonság és Felügyelet">
                 <span data-translate="pages.account.nav_security">Biztonság és Felügyelet</span>
               </a>
             </div>
@@ -141,7 +141,7 @@
               <div class="card card-middle">
                 <span data-translate="pages.account.who_can_message">Ki küldhet neked üzeneteket?</span>
                 <div class="notice">
-                  <img src="/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
+                  <img src="/EU2K-Hub/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
                   <span data-translate="pages.account.message_notice">Ezt a beállítást csak te tudod módosítani.</span>
                 </div>
                 <div class="radio-group">
@@ -168,7 +168,7 @@
                   <textarea data-translate-placeholder="pages.account.word_filter_placeholder" placeholder="Ide írj... (vesszővel, és egy szóközzel utána válaszd el a szavakat)"></textarea>
                 </div>
                 <div class="notice-bottom">
-                  <img src="/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
+                  <img src="/EU2K-Hub/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
                   <span data-translate="pages.account.word_filter_notice">Írd be, hogy Auto, így egy előre megírt listányi szavak lesznek leszűrve.</span>
                 </div>
               </div>
@@ -182,7 +182,7 @@
               <div class="card card-middle">
                 <span data-translate="pages.account.who_can_message">Ki küldhet neked üzeneteket?</span>
                 <div class="notice">
-                  <img src="/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
+                  <img src="/EU2K-Hub/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
                   <span data-translate="pages.account.message_notice">Ezt a beállítást csak te tudod módosítani.</span>
                 </div>
                 <div class="radio-group">
@@ -209,7 +209,7 @@
                   <textarea data-translate-placeholder="pages.account.word_filter_placeholder" placeholder="Ide írj... (vesszővel, és egy szóközzel utána válaszd el a szavakat)"></textarea>
                 </div>
                 <div class="notice-bottom">
-                  <img src="/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
+                  <img src="/EU2K-Hub/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
                   <span data-translate="pages.account.word_filter_notice">Írd be, hogy Auto, így egy előre megírt listányi szavak lesznek leszűrve.</span>
                 </div>
               </div>
@@ -223,7 +223,7 @@
               <div class="card card-middle">
                 <span data-translate="pages.account.who_can_message">Ki küldhet neked üzeneteket?</span>
                 <div class="notice">
-                  <img src="/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
+                  <img src="/EU2K-Hub/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
                   <span data-translate="pages.account.message_notice">Ezt a beállítást csak te tudod módosítani.</span>
                 </div>
                 <div class="radio-group">
@@ -250,7 +250,7 @@
                   <textarea data-translate-placeholder="pages.account.word_filter_placeholder" placeholder="Ide írj... (vesszővel, és egy szóközzel utána válaszd el a szavakat)"></textarea>
                 </div>
                 <div class="notice-bottom">
-                  <img src="/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
+                  <img src="/EU2K-Hub/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
                   <span data-translate="pages.account.word_filter_notice">Írd be, hogy Auto, így egy előre megírt listányi szavak lesznek leszűrve.</span>
                 </div>
               </div>

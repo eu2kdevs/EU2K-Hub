@@ -18,8 +18,8 @@
 
     document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
   </script>
-  <script src="/assets/js/permissions.js"></script>
-  <script src="/assets/js/translations.js"></script>
+  <script src="/EU2K-Hub/assets/js/permissions.js"></script>
+  <script src="/EU2K-Hub/assets/js/translations.js"></script>
   <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
@@ -53,25 +53,25 @@
       <nav class="nav-menu">
         <a class="nav-item" href="index.html">
           <div class="nav-icon-container">
-            <img src="/assets/home_icon.svg" class="nav-icon" alt="Otthon">
+            <img src="/EU2K-Hub/assets/home_icon.svg" class="nav-icon" alt="Otthon">
           </div>
           <span data-translate="navigation.home">Otthon</span>
         </a>
         <a class="nav-item" href="qr-code.html">
           <div class="nav-icon-container">
-            <img src="/assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
+            <img src="/EU2K-Hub/assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
           </div>
           <span data-translate="navigation.qr">QR-Kód</span>
         </a>
         <a class="nav-item active" href="youhub.html">
           <div class="nav-icon-container">
-            <img src="/assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
+            <img src="/EU2K-Hub/assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
           </div>
           <span data-translate="navigation.youhub">YouHub</span>
         </a>
         <a class="nav-item" href="courses.html">
           <div class="nav-icon-container">
-            <img src="/assets/courses_icon.svg" class="nav-icon" alt="Kurzusok">
+            <img src="/EU2K-Hub/assets/courses_icon.svg" class="nav-icon" alt="Kurzusok">
           </div>
           <span data-translate="navigation.courses">Kurzusok</span>
         </a>
@@ -81,7 +81,7 @@
       <div class="main-content">
         <div class="courses-container">
           <!-- Block ikon -->
-          <img src="/assets/settings_icons/community_page/block.svg" class="courses-block-icon" alt="Block">
+          <img src="/EU2K-Hub/assets/settings_icons/community_page/block.svg" class="courses-block-icon" alt="Block">
           
           <!-- Kurzusok cím -->
           <h1 class="courses-title" data-translate="pages.youhub.title">YouHub</h1>
@@ -95,7 +95,7 @@
           
           <!-- Visszajelzés gomb -->
           <button class="feedback-button">
-            <img src="/assets/courses_icons/feedback_icon.svg" class="feedback-icon" alt="Visszajelzés">
+            <img src="/EU2K-Hub/assets/courses_icons/feedback_icon.svg" class="feedback-icon" alt="Visszajelzés">
             <span class="feedback-text" data-translate="pages.courses.feedback_button">Visszajelzés</span>
           </button>
         </div>
@@ -108,10 +108,10 @@
     <div class="feedback-popup">
       <!-- Header -->
       <div class="feedback-popup-header">
-        <img src="/assets/courses_icons/feedback_icon.svg" class="feedback-popup-icon" alt="Visszajelzés">
+        <img src="/EU2K-Hub/assets/courses_icons/feedback_icon.svg" class="feedback-popup-icon" alt="Visszajelzés">
         <span class="feedback-popup-title">Visszajelzés</span>
         <button class="feedback-close-btn" onclick="closeFeedbackPopup()">
-          <img src="/assets/close.svg" class="feedback-close-icon" alt="Bezárás">
+          <img src="/EU2K-Hub/assets/close.svg" class="feedback-close-icon" alt="Bezárás">
         </button>
       </div>
 
@@ -132,14 +132,14 @@
             <button class="feedback-category-btn active" data-category="function">
               <span>Funkció amit javítani kéne</span>
               <div class="feedback-category-check">
-                <img src="/assets/check.svg" class="feedback-check-icon" alt="Check">
+                <img src="/EU2K-Hub/assets/check.svg" class="feedback-check-icon" alt="Check">
               </div>
             </button>
 
             <button class="feedback-category-btn" data-category="feature">
               <span>Funkció amit látni szeretnék</span>
               <div class="feedback-category-check">
-                <img src="/assets/check.svg" class="feedback-check-icon" alt="Check">
+                <img src="/EU2K-Hub/assets/check.svg" class="feedback-check-icon" alt="Check">
               </div>
             </button>
           </div>
@@ -147,7 +147,7 @@
 
         <!-- Info chip -->
         <div class="feedback-category-info">
-          <img src="/assets/info.svg" class="feedback-info-icon" alt="Info">
+          <img src="/EU2K-Hub/assets/info.svg" class="feedback-info-icon" alt="Info">
           <span>Nagyon köszönjük, hogy segítesz nekünk fejleszteni a Hubot! Ezek a
             visszajelzések névtelenek, nem fogjuk tudni ki küldte be.</span>
         </div>
@@ -159,7 +159,7 @@
           <input type="text" class="feedback-title-input" placeholder="Cím...">
         </div>
         <button class="feedback-send-btn" onclick="submitFeedback()">
-          <img src="/assets/send.svg" class="feedback-send-icon" alt="Küldés">
+          <img src="/EU2K-Hub/assets/send.svg" class="feedback-send-icon" alt="Küldés">
         </button>
       </div>
     </div>

@@ -185,7 +185,7 @@
             window.history.back();
           } else {
             // Ha nincs referrer, akkor alapértelmezett oldalra
-            window.location.href = '/main/index.html';
+            window.location.href = 'index.html';
           }
         });
       }
@@ -194,35 +194,35 @@
     // DOM betöltés után inicializálás
     document.addEventListener('DOMContentLoaded', initializeSettings);
   </script>
-  <script src="/assets/js/permissions.js"></script>
-  <script src="/assets/js/translations.js?v=1.1"></script>
+  <script src="/EU2K-Hub/assets/js/permissions.js"></script>
+  <script src="/EU2K-Hub/assets/js/translations.js?v=1.1"></script>
 </head>
 
 <body>
   <div class="app-bg">
     <aside class="sidebar">
       <nav class="nav-menu">
-        <a class="nav-item" href="/main/index.html">
+        <a class="nav-item" href="index.html">
           <div class="nav-icon-container">
-            <img src="/assets/home_icon.svg" class="nav-icon" alt="Otthon">
+            <img src="/EU2K-Hub/assets/home_icon.svg" class="nav-icon" alt="Otthon">
           </div>
           <span data-translate="navigation.home">Otthon</span>
         </a>
-        <a class="nav-item" href="/main/qr-code.html">
+        <a class="nav-item" href="qr-code.html">
           <div class="nav-icon-container">
-            <img src="/assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
+            <img src="/EU2K-Hub/assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
           </div>
           <span data-translate="navigation.qr">QR-Kód</span>
         </a>
-        <a class="nav-item" href="/main/youhub.html">
+        <a class="nav-item" href="youhub.html">
           <div class="nav-icon-container">
-            <img src="/assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
+            <img src="/EU2K-Hub/assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
           </div>
           <span data-translate="navigation.youhub">YouHub</span>
         </a>
-        <a class="nav-item" href="/main/courses.html">
+        <a class="nav-item" href="courses.html">
           <div class="nav-icon-container">
-            <img src="/assets/courses_icon.svg" class="nav-icon" alt="Kurzusok">
+            <img src="/EU2K-Hub/assets/courses_icon.svg" class="nav-icon" alt="Kurzusok">
           </div>
           <span data-translate="navigation.courses">Kurzusok</span>
         </a>
@@ -233,18 +233,18 @@
         <div class="publish-layout">
           <div class="back-arrow-column">
             <md-filled-button id="backToHome" class="back-arrow-btn">
-              <img src="/assets/arrowback.svg" alt="Vissza" class="arrow-img">
+              <img src="/EU2K-Hub/assets/arrowback.svg" alt="Vissza" class="arrow-img">
             </md-filled-button>
           </div>
           <div class="publish-content">
             <header class="header">
               <div class="welcome-container">
-                <img src="/assets/settings_icon.svg" class="welcome-icon" alt="Settings">
+                <img src="/EU2K-Hub/assets/settings_icon.svg" class="welcome-icon" alt="Settings">
                 <h1 class="welcome-text" data-translate="pages.settings.title">Beállítások</h1>
               </div>
               <div class="header-icons">
-                <a href="/system/account.html" class="header-icon-link">
-                  <img src="/assets/account_icon.svg" class="header-icon" alt="Account">
+                <a href="/EU2K-Hubystem/account.html" class="header-icon-link">
+                  <img src="/EU2K-Hub/assets/account_icon.svg" class="header-icon" alt="Account">
                 </a>
               </div>
             </header>
@@ -256,7 +256,7 @@
                 <div class="settings-cards">
                   <!-- Általános -->
                   <div class="settings-card single-card active" data-page="general">
-                    <img src="/assets/settings_icons/general_icon.svg" class="settings-card-icon" alt="Általános">
+                    <img src="/EU2K-Hub/assets/settings_icons/general_icon.svg" class="settings-card-icon" alt="Általános">
                     <div class="settings-card-content">
                       <div class="settings-card-title" data-translate="settings.general">Általános</div>
                       <div class="settings-card-desc" data-translate="settings.general_desc">Bétaverzió - Nyelv - Infó</div>
@@ -265,7 +265,7 @@
 
                   <!-- Értesítések -->
                   <div class="settings-card group-top" data-page="notifications">
-                    <img src="/assets/settings_icons/notifications_icon.svg" class="settings-card-icon"
+                    <img src="/EU2K-Hub/assets/settings_icons/notifications_icon.svg" class="settings-card-icon"
                       alt="Értesítések">
                     <div class="settings-card-content">
                       <div class="settings-card-title" data-translate="settings.notifications">Értesítések</div>
@@ -277,7 +277,7 @@
 
                   <!-- Statisztikák és Teljesítmény -->
                   <div class="settings-card group-bottom" data-page="stats">
-                    <img src="/assets/settings_icons/statistics_and_performance_icon.svg" class="settings-card-icon"
+                    <img src="/EU2K-Hub/assets/settings_icons/statistics_and_performance_icon.svg" class="settings-card-icon"
                       alt="Statisztikák">
                     <div class="settings-card-content">
                       <div class="settings-card-title" data-translate="settings.stats">Statisztikák és Teljesítmény</div>
@@ -287,7 +287,7 @@
 
                   <!-- Közösség -->
                   <div class="settings-card group-top" data-page="community">
-                    <img src="/assets/settings_icons/community_icon.svg" class="settings-card-icon" alt="Közösség">
+                    <img src="/EU2K-Hub/assets/settings_icons/community_icon.svg" class="settings-card-icon" alt="Közösség">
                     <div class="settings-card-content">
                       <div class="settings-card-title" data-translate="settings.community">Közösség</div>
                       <div class="settings-card-desc" data-translate="settings.community_desc">Kurzusok - Csoporttagságok</div>
@@ -296,7 +296,7 @@
 
                   <!-- Események és Naptár -->
                   <div class="settings-card group-middle" data-page="events">
-                    <img src="/assets/settings_icons/events_and_calendar_icon.svg" class="settings-card-icon"
+                    <img src="/EU2K-Hub/assets/settings_icons/events_and_calendar_icon.svg" class="settings-card-icon"
                       alt="Események">
                     <div class="settings-card-content">
                       <div class="settings-card-title" data-translate="settings.events_calendar">Események és Naptár</div>
@@ -306,7 +306,7 @@
 
                   <!-- Üzenetek -->
                   <div class="settings-card group-bottom" data-page="messages">
-                    <img src="/assets/settings_icons/messages_icon.svg" class="settings-card-icon" alt="Üzenetek">
+                    <img src="/EU2K-Hub/assets/settings_icons/messages_icon.svg" class="settings-card-icon" alt="Üzenetek">
                     <div class="settings-card-content">
                       <div class="settings-card-title" data-translate="settings.messages">Üzenetek</div>
                       <div class="settings-card-desc" data-translate="settings.messages_desc">Privát Üzenetek</div>
@@ -334,7 +334,7 @@
                       <!-- English kártya -->
                       <div class="general-language-card">
                         <div class="general-language-content">
-                          <img src="/assets/settings_icons/general_page/english.png" class="general-language-flag"
+                          <img src="/EU2K-Hub/assets/settings_icons/general_page/english.png" class="general-language-flag"
                             alt="English">
                           <span class="general-language-text" data-translate="settings.language_english">English</span>
                         </div>
@@ -344,7 +344,7 @@
                       <!-- Magyar kártya -->
                       <div class="general-language-card">
                         <div class="general-language-content">
-                          <img src="/assets/settings_icons/general_page/hungarian.png" class="general-language-flag"
+                          <img src="/EU2K-Hub/assets/settings_icons/general_page/hungarian.png" class="general-language-flag"
                             alt="Magyar">
                           <span class="general-language-text" data-translate="settings.language_hungarian">Magyar</span>
                         </div>
@@ -358,14 +358,14 @@
                     <!-- Bal oszlop -->
                     <div class="general-info-column">
                       <div class="general-info-item">
-                        <img src="/assets/eu2khub_logo.png" class="general-info-logo" alt="EU2K Hub">
+                        <img src="/EU2K-Hub/assets/eu2khub_logo.png" class="general-info-logo" alt="EU2K Hub">
                       </div>
                       <div class="general-info-item">
-                        <img src="/assets/settings_icons/version.svg" class="general-info-icon" alt="Verzió">
+                        <img src="/EU2K-Hub/assets/settings_icons/version.svg" class="general-info-icon" alt="Verzió">
                         <span class="general-info-text" data-translate="settings.version">Verzió: 1.0</span>
                       </div>
                       <div class="general-info-item">
-                        <img src="/assets/settings_icons/channel.svg" class="general-info-icon" alt="Csatorna">
+                        <img src="/EU2K-Hub/assets/settings_icons/channel.svg" class="general-info-icon" alt="Csatorna">
                         <span class="general-info-text" data-translate="settings.channel">Csatorna: Béta</span>
                       </div>
                     </div>
@@ -376,19 +376,19 @@
                     <!-- Középső oszlop -->
                     <div class="general-info-column">
                       <div class="general-info-item">
-                        <img src="/assets/settings_icons/ui_version.svg" class="general-info-icon" alt="UI Verzió">
+                        <img src="/EU2K-Hub/assets/settings_icons/ui_version.svg" class="general-info-icon" alt="UI Verzió">
                         <span class="general-info-text" data-translate="settings.ui_version">UI Verzió: Material 3 Expressive</span>
                       </div>
                       <div class="general-info-item">
-                        <img src="/assets/settings_icons/stands_behind.svg" class="general-info-icon" alt="Mögötte áll">
+                        <img src="/EU2K-Hub/assets/settings_icons/stands_behind.svg" class="general-info-icon" alt="Mögötte áll">
                         <span class="general-info-text" data-translate="settings.stands_behind">Mögötte áll még: EU2K DÖK, EU2K Devs</span>
                       </div>
                       <div class="general-info-item">
-                        <img src="/assets/settings_icons/made_by.svg" class="general-info-icon" alt="Készítette">
+                        <img src="/EU2K-Hub/assets/settings_icons/made_by.svg" class="general-info-icon" alt="Készítette">
                         <span class="general-info-text" data-translate="settings.made_by">Készítette: Turoczi Ádám 8.E</span>
                       </div>
                       <div class="general-info-item">
-                        <img src="/assets/settings_icons/organization.svg" class="general-info-icon" alt="Szervezet">
+                        <img src="/EU2K-Hub/assets/settings_icons/organization.svg" class="general-info-icon" alt="Szervezet">
                         <span class="general-info-text" data-translate="settings.organization">Európa 2000 Gimnázium Tulajdona</span>
                       </div>
                     </div>
@@ -396,10 +396,10 @@
                     <!-- Jobb oszlop -->
                     <div class="general-info-column">
                       <div class="general-info-item">
-                        <img src="/assets/eu2kdok_logo.png" class="general-info-logo" alt="EU2K DÖK">
+                        <img src="/EU2K-Hub/assets/eu2kdok_logo.png" class="general-info-logo" alt="EU2K DÖK">
                       </div>
                       <div class="general-info-item">
-                        <img src="/assets/eu2kdevs_logo.png" class="general-info-logo-devs" alt="EU2K Devs">
+                        <img src="/EU2K-Hub/assets/eu2kdevs_logo.png" class="general-info-logo-devs" alt="EU2K Devs">
                       </div>
                     </div>
                   </div>
@@ -408,7 +408,7 @@
                 <div id="notifications-page" class="settings-page">
                   <!-- Notice kártya -->
                   <div class="notifications-notice">
-                    <img src="/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
+                    <img src="/EU2K-Hub/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
                     <span class="notice-text" data-translate="settings.notifications_notice">Amíg az iskolában vagy, csendes értesítéseket fogsz kapni.</span>
                   </div>
 
@@ -419,14 +419,14 @@
                     <div class="category-items">
                       <!-- Hírek -->
                       <div class="category-item first">
-                        <img src="/assets/settings_icons/notifications_page/news.svg" class="category-icon" alt="Hírek">
+                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/news.svg" class="category-icon" alt="Hírek">
                         <span class="category-text" data-translate="settings.news">Hírek</span>
                         <md-switch icons selected></md-switch>
                       </div>
 
                       <!-- Kurzusok -->
                       <div class="category-item middle">
-                        <img src="/assets/settings_icons/notifications_page/courses.svg" class="category-icon"
+                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/courses.svg" class="category-icon"
                           alt="Kurzusok">
                         <span class="category-text" data-translate="settings.courses">Kurzusok</span>
                         <md-switch icons selected></md-switch>
@@ -434,7 +434,7 @@
 
                       <!-- Események -->
                       <div class="category-item middle">
-                        <img src="/assets/settings_icons/notifications_page/events.svg" class="category-icon"
+                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/events.svg" class="category-icon"
                           alt="Események">
                         <span class="category-text" data-translate="settings.events">Események</span>
                         <md-switch icons selected></md-switch>
@@ -442,31 +442,31 @@
 
                       <!-- Üzenetek -->
                       <div class="category-item middle">
-                        <img src="/assets/settings_icons/notifications_page/messages.svg" class="category-icon"
+                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/messages.svg" class="category-icon"
                           alt="Üzenetek">
                         <span class="category-text" data-translate="settings.messages">Üzenetek</span>
-                        <md-switch icons selected></md-switch>
+                        <md-switch icons disabled></md-switch>
                       </div>
 
                       <!-- Posztok -->
                       <div class="category-item middle">
-                        <img src="/assets/settings_icons/notifications_page/posts.svg" class="category-icon"
+                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/posts.svg" class="category-icon"
                           alt="Posztok">
                         <span class="category-text" data-translate="settings.posts">Posztok</span>
-                        <md-switch icons selected></md-switch>
+                        <md-switch icons disabled></md-switch>
                       </div>
 
                       <!-- Meghívók -->
                       <div class="category-item middle">
-                        <img src="/assets/settings_icons/notifications_page/invites.svg" class="category-icon"
+                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/invites.svg" class="category-icon"
                           alt="Meghívók">
                         <span class="category-text" data-translate="settings.invites">Meghívók</span>
-                        <md-switch icons selected></md-switch>
+                        <md-switch icons disabled></md-switch>
                       </div>
 
                       <!-- Bétaverzió -->
                       <div class="category-item middle">
-                        <img src="/assets/settings_icons/notifications_page/beta_version.svg" class="category-icon"
+                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/beta_version.svg" class="category-icon"
                           alt="Bétaverzió">
                         <span class="category-text" data-translate="settings.beta_version">Bétaverzió</span>
                         <md-switch icons selected></md-switch>
@@ -474,7 +474,7 @@
 
                       <!-- Újdonságok -->
                       <div class="category-item middle">
-                        <img src="/assets/settings_icons/notifications_page/new_things.svg" class="category-icon"
+                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/new_things.svg" class="category-icon"
                           alt="Újdonságok">
                         <span class="category-text" data-translate="settings.new_things">Újdonságok</span>
                         <md-switch icons selected></md-switch>
@@ -482,10 +482,10 @@
 
                       <!-- Csengő -->
                       <div class="category-item last">
-                        <img src="/assets/settings_icons/notifications_page/bell.svg" class="category-icon"
+                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/bell.svg" class="category-icon"
                           alt="Csengő">
                         <span class="category-text" data-translate="settings.bell">Csengő</span>
-                        <md-switch icons selected></md-switch>
+                        <md-switch icons disabled></md-switch>
                       </div>
                     </div>
                   </div>
@@ -502,7 +502,7 @@
                   <div class="community-courses-card">
                     <div class="community-card-title" data-translate="settings.my_courses">Kurzusaim:</div>
                     <div class="community-no-courses">
-                      <img src="/assets/settings_icons/community_page/block.svg" class="community-block-icon"
+                      <img src="/EU2K-Hub/assets/settings_icons/community_page/block.svg" class="community-block-icon"
                         alt="Block">
                       <div class="community-no-courses-text">
                         <div data-translate="settings.courses_unavailable_line1">A Kurzusok funkció ebben a verzióban</div>
@@ -518,21 +518,21 @@
                       <div class="community-suggestion-item first">
                         <span class="community-suggestion-text" data-translate="settings.suggestion1">Puffy, felfújt ikonok készítése</span>
                         <div class="community-suggestion-arrow">
-                          <img src="/assets/settings_icons/community_page/arrow_right.svg" class="community-arrow-icon"
+                          <img src="/EU2K-Hub/assets/settings_icons/community_page/arrow_right.svg" class="community-arrow-icon"
                             alt="Arrow">
                         </div>
                       </div>
                       <div class="community-suggestion-item middle">
                         <span class="community-suggestion-text" data-translate="settings.suggestion2">A tökéletes prompt a tanuláshoz</span>
                         <div class="community-suggestion-arrow">
-                          <img src="/assets/settings_icons/community_page/arrow_right.svg" class="community-arrow-icon"
+                          <img src="/EU2K-Hub/assets/settings_icons/community_page/arrow_right.svg" class="community-arrow-icon"
                             alt="Arrow">
                         </div>
                       </div>
                       <div class="community-suggestion-item last">
                         <span class="community-suggestion-text" data-translate="settings.suggestion3">Hogyan készíts élethű képeket</span>
                         <div class="community-suggestion-arrow">
-                          <img src="/assets/settings_icons/community_page/arrow_right.svg" class="community-arrow-icon"
+                          <img src="/EU2K-Hub/assets/settings_icons/community_page/arrow_right.svg" class="community-arrow-icon"
                             alt="Arrow">
                         </div>
                       </div>
