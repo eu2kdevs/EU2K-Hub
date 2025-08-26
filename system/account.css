@@ -130,6 +130,8 @@ body {
   flex-direction: column;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
   max-width: calc(100% - 22px);
+  overflow-y: auto;
+  position: relative;
 }
 
 .header {
