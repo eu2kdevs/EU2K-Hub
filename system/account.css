@@ -236,6 +236,20 @@ body {
   height: 24px;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .account-container {
   display: flex;
   flex-direction: column;
