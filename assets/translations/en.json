@@ -112,6 +112,7 @@
       "ai_functions": "AI Functions",
       "smart_help": "Smart Help:",
       "ai_no_acc_notice": "You don't need to be signed in to use these features.",
+      "ai_rec_stay_on": "We recommend keeping these features on.",
       "ai_translation": "AI Translation in changing contents",
       "ai_correction": "AI Spelling Correction in input fields"
     },
