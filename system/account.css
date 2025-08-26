@@ -551,6 +551,14 @@ body {
   color: #C1C9BE;
 }
 
+.radio-item-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  color: #C1C9BE;
+}
+
 .card-header {
   display: flex;
   justify-content: space-between;
