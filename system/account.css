@@ -509,12 +509,12 @@ body {
 .notice-top {
   background-color: #2C332C;
   border-radius: 32px 32px 8px 8px;
-  padding: 16px;
+  padding: 18px;
   display: flex;
   align-items: center;
   gap: 8px;
   color: #C1C9BE;
-  margin: 16px 0;
+  margin: 16px 0 4px 0;
 }
 
 .notice-middle {
