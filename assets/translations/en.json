@@ -108,7 +108,12 @@
       "word_filter": "Word Filter",
       "word_filter_placeholder": "Type here... (separate words with a comma and a space)",
       "word_filter_notice": "Type 'Auto' to filter a pre-written list of words.",
-      "word_filter_notice2": "The word filter decides based on the severity of the words and their excessive use."
+      "word_filter_notice2": "The word filter decides based on the severity of the words and their excessive use.",
+      "ai_functions": "AI Functions",
+      "smart_help": "Smart Help:",
+      "ai_no_acc_notice": "You don't need to be signed in to use these features.",
+      "ai_translation": "AI Translation in changing contents",
+      "ai_correction": "AI Spelling Correction in input fields"
     },
     "settings": {
       "title": "Settings"

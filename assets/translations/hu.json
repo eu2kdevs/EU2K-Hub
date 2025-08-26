@@ -108,7 +108,12 @@
       "word_filter": "Szófilter",
       "word_filter_placeholder": "Ide írj... (vesszővel, és egy szóközzel utána válaszd el a szavakat)",
       "word_filter_notice": "Írd be, hogy Auto, így egy előre megírt listányi szavak lesznek leszűrve.",
-      "word_filter_notice2": "A Szófilter a szavak súlyossága, és túlzott használatuk alapján dönt."
+      "word_filter_notice2": "A Szófilter a szavak súlyossága, és túlzott használatuk alapján dönt.",
+      "ai_functions": "AI Funkciók",
+      "smart_help": "Okos Segítség:",
+      "ai_no_acc_notice": "Ezen funkciók használatához nem kell bejelentkezned.",
+      "ai_translation": "AI Fordítás változó tartalmaknál",
+      "ai_correction": "AI Hibajavítás beviteli mezőkben"
     },
     "settings": {
       "title": "Beállítások"
