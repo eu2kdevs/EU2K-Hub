@@ -2,20 +2,18 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+This project is currently in **closed beta** and has **not been officially released**.  
+All versions are experimental and may change frequently.
+⚠️ **We cannot provide full support at this point.**
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| Version               | Supported          |
+| --------------------- | ----------------- |
+| 0.2abc (beta, closed) | ⚠️                 |
+| Older versions        | :x:               |
+
+> Note: Security updates are only applied to the latest beta release. Older or private builds will not receive any fixes.  
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
-
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+This project is still in closed beta. Please **do not report bugs or security issues at this time**, as we are not yet able to provide full support.  
+Once the beta is opened to a wider group and support is available, instructions for reporting vulnerabilities will be provided.
