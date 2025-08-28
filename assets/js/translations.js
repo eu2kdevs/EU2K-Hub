@@ -79,12 +79,12 @@ class TranslationManager {
             try {
                 const translation = this.getTranslation(key);
                 if (translation) {
-                    element.innerHTML = translation;
+                    element.textContent = translation;
                     console.log(`Translated ${key} to: ${translation}`);
                 } else {
                     console.warn(`Translation not found for key: ${key}`);
                     if (fallback) {
-                        element.innerHTML = fallback;
+                        element.textContent = fallback;
                     }
                 }
             } catch (error) {
