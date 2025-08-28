@@ -1,0 +1,30 @@
+name: IndexNow Auto Submit
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notify-indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get changed HTML files
+        id: changes
+        run: |
+          # Listázzuk ki az összes változott fájlt az utolsó commitból
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | grep '\.html$' || true)
+          echo "changed=$CHANGED_FILES" >> $GITHUB_ENV
+
+      - name: Submit changed files to IndexNow
+        if: env.changed != ''
+        run: |
+          for file in ${{ env.changed }}; do
+            # A fájl útvonalából készítünk URL-t
+            url="https://eu2kdevs.github.io/EU2K-Hub/${file}"
+            echo "Beküldés: $url"
+            curl -s "https://www.bing.com/indexnow?url=$url&key=c19252f3e41241318e2c77e9aa41bae8"
+          done
