@@ -235,7 +235,7 @@ function setLanguage(lang) {
 }
 
 // Gemini AI API configuration
-const GEMINI_API_KEY = 'AIzaSyCch4gnRQ7VQIZ_xiEBwL_9m-0WwQTNXxw';
+const GEMINI_API_KEY = 'no peeking bruh';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
 // AI Translation function
