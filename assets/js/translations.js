@@ -79,12 +79,12 @@ class TranslationManager {
             try {
                 const translation = this.getTranslation(key);
                 if (translation) {
-                    element.innerHTML = translation;
+                    element.textContent = translation;
                     console.log(`Translated ${key} to: ${translation}`);
                 } else {
                     console.warn(`Translation not found for key: ${key}`);
                     if (fallback) {
-                        element.innerHTML = fallback;
+                        element.textContent = fallback;
                     }
                 }
             } catch (error) {
@@ -235,7 +235,7 @@ function setLanguage(lang) {
 }
 
 // Gemini AI API configuration
-const GEMINI_API_KEY = 'AIzaSyCch4gnRQ7VQIZ_xiEBwL_9m-0WwQTNXxw';
+const GEMINI_API_KEY = 'no peeking bruh';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
 // AI Translation function

@@ -1,5 +1,8 @@
 name: IndexNow Auto Submit
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
