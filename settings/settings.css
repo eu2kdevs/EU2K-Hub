@@ -800,6 +800,11 @@ body {
 
 .settings-page.active {
   display: block !important;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  border-radius: 32px;
+  padding: 20px;
+  background: rgba(16, 21, 16, 0.3);
 }
 
 .settings-page h2 {
