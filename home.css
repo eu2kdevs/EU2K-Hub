@@ -3,7 +3,7 @@
   --main-bg: #0b0f0b;
   --surface-bg: #101510;
   --card-bg: #232823;
-  --red: #ff0000;
+  --red: #272B26;
   --green-btn: #2d3a2d;
   --green-btn-arrow: #b6c6b6;
   --text-main: #e3e3e3;
@@ -35,7 +35,7 @@ body {
   position: relative;
   min-height: 100vh;
   min-width: 100vw;
-  width: calc(100vw - var(--sidebar-width) - 44px);
+  width: 100%;
   height: 100vh;
   background: var(--surface-bg);
   display: flex;
@@ -59,7 +59,8 @@ body {
 }
 
 .main-area {
-  flex: 1;
+  flex: 1; /* kitölti a sidebar melletti helyet */
+  min-width: 0; /* fontos, hogy a flexbox engedje zsugorodni */
   display: flex;
   flex-direction: column;
   position: relative;
@@ -77,6 +78,8 @@ body {
   gap: 18px;
   box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
   max-width: calc(100% - 22px);
+  min-height: calc(100dvh - 64px); /* mobilbarát */
+  height: auto; /* engedd nőni/zsugorodni */
 }
 
 .header {
@@ -165,12 +168,17 @@ body {
   display: flex;
   gap: 8px;
   width: max-content;
+  min-width: 100%;
 }
 
 .event-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.event-container.hidden {
+  display: none !important;
 }
 
 .red-card {
@@ -183,16 +191,19 @@ body {
   box-shadow: 0 4px 16px rgba(0,0,0,0.18);
 }
 .red-card.large {
-  width: 714px;
+  width: 400px;
   height: 205px;
+  transition: width 0.3s ease;
 }
 .red-card.medium {
   width: 120px;
   height: 205px;
+  transition: width 0.3s ease;
 }
 .red-card.small {
   width: 56px;
   height: 205px;
+  transition: width 0.3s ease;
 }
 .event-labels-row {
   display: flex;
@@ -254,13 +265,29 @@ body {
 }
 
 .bottom-cards-row {
-  margin-top: 12px;
   display: flex;
-  flex-direction: row;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 6px;
+  gap: 12px;
+  overflow-x: auto;     /* engedi a vízszintes görgetést */
+  overflow-y: hidden;   /* ne jelenjen meg felesleges függőleges scroll */
+  scroll-behavior: smooth;
+  padding-bottom: 8px;  /* legyen kis hely a scrollbar alatt */
 }
+
+.bottom-cards-row::-webkit-scrollbar {
+  height: 8px; /* vékony sáv */
+}
+.bottom-cards-row::-webkit-scrollbar-track {
+  background: var(--card-bg); /* halvány track */
+  border-radius: 10px;
+}
+.bottom-cards-row::-webkit-scrollbar-thumb {
+  background: var(--green-btn); /* any brand szín */
+  border-radius: 10px;
+}
+.bottom-cards-row::-webkit-scrollbar-thumb:hover {
+  background: var(--card-bg); /* hover szín */
+}
+
 
 .news-card {
   background: var(--card-bg);
@@ -274,7 +301,7 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.13);
   flex-shrink: 0;
   overflow: hidden;
-  transition: var(--transition);
+  transition: var(--transition), width 0.3s ease;
 }
 
 .news-card:hover {
@@ -315,6 +342,36 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.news-carousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--green-btn);
+  border: none;
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  transition: background 0.2s ease;
+  z-index: 10;
+}
+.carousel-btn:hover {
+  background: var(--card-bg);
+}
+.carousel-btn.left { left: -20px; }
+.carousel-btn.right { right: -20px; }
+
 
 .section-header.upcoming-events h2 {
   font-weight: 600;

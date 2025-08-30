@@ -271,7 +271,7 @@ async function translateWithAI(text, targetLanguage) {
 
         return translatedText;
     } catch (error) {
-        console.error('Gemini API error:', error);
+        console.error('Xelp API error:', error);
         return text; // Return original text on error
     }
 }

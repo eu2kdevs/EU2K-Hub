@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Nagyon örülünk hogy itt vagy velünk, és érdeklődsz a Hub iránt. Kérlek fejezd be ezt a gyors bemutatót, és máris elkezdheted használni a Hubot!">
+  <title data-translate="pages.onboarding_student.title">Üdvözlünk a Hub-ban!</title>
+  <link rel="stylesheet" href="onboarding_student.css">
+  <link rel="icon" href="/EU2K-Hub/favicon.ico">
+  <script type="importmap">
+    {
+      "imports": {
+        "@material/web/": "https://esm.run/@material/web/"
+      }
+    }
+  </script>
+  <script type="module">
+    import '@material/web/all.js';
+    import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
+
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+  <script src="/EU2K-Hub/assets/js/permissions.js"></script>
+  <script src="/EU2K-Hub/assets/js/translations.js"></script>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
+      authDomain: "eu2k-hub.firebaseapp.com",
+      projectId: "eu2k-hub",
+      storageBucket: "eu2k-hub.firebasestorage.app",
+      messagingSenderId: "560244867055",
+      appId: "1:560244867055:web:3cd51b85baead94989001a",
+      measurementId: "G-2JDPR089WD"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    // Make db globally available
+    window.db = db;
+  </script>
+
+  <script>
+    // Welcome onboarding navigation system
+    let currentLanguage = 'hu'; // Default language
+
+    function initializeWelcome() {
+      const welcomePages = document.querySelectorAll('.welcome-page');
+
+      function showPage(pageId) {
+        console.log('Showing page:', pageId);
+
+        // Hide all pages
+        welcomePages.forEach(page => {
+          page.classList.remove('active');
+          page.style.display = 'none';
+        });
+
+        // Show target page
+        const targetPage = document.getElementById(pageId + '-page');
+        if (targetPage) {
+          targetPage.classList.add('active');
+          targetPage.style.display = 'flex';
+        }
+      }
+
+      function navigate(event, pageId) {
+        event.preventDefault();
+        location.hash = pageId;
+      }
+
+      // Language selection handlers
+      const languageButtons = document.querySelectorAll('.language-button');
+      languageButtons.forEach(button => {
+        button.addEventListener('click', e => {
+          const language = button.getAttribute('data-language');
+          currentLanguage = language;
+          
+          console.log('Language selected:', language);
+          
+          // Switch language in translation system
+          if (window.translationManager) {
+            console.log('Switching language to:', language);
+            window.translationManager.switchLanguage(language);
+          } else {
+            console.log('Translation manager not available, waiting...');
+            // Wait for translation manager to load
+            setTimeout(() => {
+              if (window.translationManager) {
+                console.log('Translation manager loaded, switching language to:', language);
+                window.translationManager.switchLanguage(language);
+              } else {
+                console.error('Translation manager still not available');
+              }
+            }, 500);
+          }
+          
+          navigate(e, 'step2');
+        });
+      });
+
+      // Navigation button handlers
+      const navButtons = document.querySelectorAll('.nav-button');
+      navButtons.forEach(button => {
+        button.addEventListener('click', e => {
+          const action = button.getAttribute('data-action');
+          
+          if (action === 'back-step1') {
+            navigate(e, 'step1');
+          } else if (action === 'back-step2') {
+            navigate(e, 'step2');
+          } else if (action === 'student') {
+            navigate(e, 'student-profile');
+          } else if (action === 'teacher' || action === 'without-account') {
+            // TODO: Implement these later
+            console.log('Action not implemented yet:', action);
+          }
+        });
+      });
+
+      // Avatar selection handlers
+      const avatarOptions = document.querySelectorAll('.avatar-option');
+      const mainAvatarImg = document.querySelector('.main-avatar-img');
+      const mainAvatar = document.querySelector('.main-avatar');
+      
+      avatarOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          const avatarImg = option.querySelector('.avatar-img');
+          const avatarSrc = avatarImg.src;
+          const avatarType = option.getAttribute('data-avatar');
+          
+          // Update main avatar
+          mainAvatarImg.src = avatarSrc;
+          
+          // Color maps for background and border based on actual avatar colors
+          const backgroundColorMap = {
+            'magenta': '#E8B4E3',
+            'green': '#B4E8B4', 
+            'blue': '#B4D4E8',
+            'orange': '#E8D4B4',
+            'purple': '#D4B4E8',
+            'cyan': '#B4E8E8',
+            'red': '#E8B4B4',
+            'gray': '#C4C4C4'
+          };
+          
+          // Updated border colors to match avatar main colors
+          const borderColorMap = {
+            'magenta': '#D946EF', // Bright magenta/fuchsia
+            'green': '#22C55E',   // Bright green
+            'blue': '#3B82F6',    // Bright blue
+            'orange': '#F97316',  // Bright orange
+            'purple': '#A855F7',  // Bright purple
+            'cyan': '#06B6D4',    // Bright cyan
+            'red': '#EF4444',     // Bright red
+            'gray': '#6B7280'     // Medium gray
+          };
+          
+          // Update main avatar background
+          mainAvatar.style.background = backgroundColorMap[avatarType] || '#E8B4E3';
+          
+          // Remove active class from all options
+          avatarOptions.forEach(opt => {
+            opt.classList.remove('active');
+            opt.style.border = 'none';
+          });
+          
+          // Add active class and colored border to selected option
+          option.classList.add('active');
+          option.style.border = `3px solid ${borderColorMap[avatarType]}`;
+        });
+      });
+
+      // Hash change listener
+      window.addEventListener('hashchange', () => {
+        const page = location.hash.substring(1) || 'step1';
+        showPage(page);
+      });
+
+      // Initial page load
+      const initialPage = location.hash.substring(1) || 'step1';
+      showPage(initialPage);
+      
+      // Set default avatar selection (magenta)
+      setTimeout(() => {
+        const defaultAvatar = document.querySelector('.avatar-option[data-avatar="magenta"]');
+        if (defaultAvatar) {
+          defaultAvatar.click();
+        }
+      }, 100);
+    }
+
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      // Wait a bit for translation manager to load
+      setTimeout(() => {
+        initializeWelcome();
+        
+        // Check if translation manager is available
+        if (window.translationManager) {
+          console.log('Translation manager is available');
+        } else {
+          console.log('Translation manager not yet available');
+        }
+      }, 100);
+    });
+  </script>
+</head>
+
+<body>
+  <div class="app-bg">
+    <main class="main-area">
+      <div class="main-content">
+        
+        <!-- Step 1: Language Selection -->
+        <div id="step1-page" class="welcome-page active">
+          <div class="welcome-container">
+            <!-- Kéz ikon -->
+            <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-hand-icon" alt="Waving Hand">
+            
+            <!-- Üdvözlő Szöveg -->
+            <h1 class="welcome-title" data-translate="pages.onboarding_student.welcome-title">Üdvözöllek a Hub-ban!</h1>
+            
+            <!-- Nyelvgombok -->
+            <div class="welcome-description">
+              <button class="welcome-button language-button" data-language="hu">
+                  <img src="/EU2K-Hub/assets/settings_icons/general_page/hungarian.png" class="welcome-icon" alt="HU-Flag">
+                  <span class="welcome-text" data-translate="settings.language_hungarian">Magyar</span>
+              </button>
+              <button class="welcome-button-secondary language-button" data-language="en">
+                  <img src="/EU2K-Hub/assets/settings_icons/general_page/english.png" class="welcome-icon" alt="EN-Flag">
+                  <span class="welcome-text" data-translate="settings.language_english">English</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: User Type Selection -->
+        <div id="step2-page" class="welcome-page">
+          <div class="welcome-container">
+            <!-- Kéz ikon -->
+            <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-hand-icon" alt="Waving Hand">
+            
+            <!-- Üdvözlő Szöveg -->
+            <h1 class="welcome-title" data-translate="pages.onboarding_student.welcome-title">Üdvözöllek a Hub-ban!</h1>
+            
+            <!-- Navigation buttons -->
+            <div class="welcome-navigation">
+              <button class="welcome-nav-button nav-button" data-action="back-step1">
+                <img src="/EU2K-Hub/assets/welcome_icons/back.svg" class="welcome-nav-icon" alt="Back">
+                <span class="welcome-nav-text" data-translate="navigation.back">Vissza</span>
+              </button>
+              
+              <button class="welcome-nav-button-primary nav-button" data-action="student">
+                <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="welcome-nav-icon" alt="Student">
+                <span class="welcome-nav-text" data-translate="onboarding.continue_as_student">Tovább diákként</span>
+              </button>
+              
+              <button class="welcome-nav-button-primary nav-button" data-action="teacher">
+                <img src="/EU2K-Hub/assets/welcome_icons/teacher.svg" class="welcome-nav-icon" alt="Teacher">
+                <span class="welcome-nav-text" data-translate="onboarding.continue_as_teacher">Tovább tanárként</span>
+              </button>
+              
+              <button class="welcome-nav-button-last nav-button" data-action="without-account">
+                <img src="/EU2K-Hub/assets/welcome_icons/without_account.svg" class="welcome-nav-icon" alt="Without Account">
+                <span class="welcome-nav-text" data-translate="onboarding.continue_without_account">Tovább fiók nélkül</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Student Profile Setup -->
+        <div id="student-profile-page" class="welcome-page">
+          <div class="publish-layout">
+            <div class="back-arrow-column">
+              <button class="back-arrow-btn nav-button" data-action="back-step2">
+                <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
+              </button>
+            </div>
+            <div class="publish-content">
+              <header class="header">
+                <div class="welcome-container-header">
+                  <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-icon-header" alt="Welcome">
+                  <h1 class="welcome-text-header" data-translate="pages.onboarding_student.welcome_hub">Üdvözlünk a Hub-ban!</h1>
+                  <p class="welcome-description-header" data-translate="pages.onboarding_student.create_account_description">Kérlek válassz egy avatárt, vagy használd az iskolai fiókod által biztosítottat!</p>
+                </div>
+              </header>
+            </div>
+            
+            <!-- Profile Setup Content - Right Column -->
+            <div class="profile-content">
+              <!-- Main Avatar -->
+              <div class="main-avatar-container">
+                <div class="main-avatar">
+                  <img src="/EU2K-Hub/assets/avatars/magenta.png" class="main-avatar-img" alt="Avatar">
+                </div>
+                <div class="main-avatar-name" data-translate="profile.student_name">Turóczi Ádám - 8.E</div>
+              </div>
+              
+              <!-- Divider -->
+              <div class="profile-divider"></div>
+              
+              <!-- Avatar Selection -->
+              <div class="avatar-selection">
+                <div class="avatar-row">
+                  <div class="avatar-option" data-avatar="magenta">
+                    <img src="/EU2K-Hub/assets/avatars/magenta.png" class="avatar-img" alt="Avatar 1">
+                  </div>
+                  <div class="avatar-option" data-avatar="green">
+                    <img src="/EU2K-Hub/assets/avatars/green.png" class="avatar-img" alt="Avatar 2">
+                  </div>
+                  <div class="avatar-option" data-avatar="blue">
+                    <img src="/EU2K-Hub/assets/avatars/blue.png" class="avatar-img" alt="Avatar 3">
+                  </div>
+                  <div class="avatar-option" data-avatar="orange">
+                    <img src="/EU2K-Hub/assets/avatars/orange.png" class="avatar-img" alt="Avatar 4">
+                  </div>
+                  <div class="avatar-option" data-avatar="purple">
+                    <img src="/EU2K-Hub/assets/avatars/purple.png" class="avatar-img" alt="Avatar 5">
+                  </div>
+                </div>
+                <div class="avatar-row">
+                  <div class="avatar-option" data-avatar="cyan">
+                    <img src="/EU2K-Hub/assets/avatars/light_blue.png" class="avatar-img" alt="Avatar 6">
+                  </div>
+                  <div class="avatar-option" data-avatar="red">
+                    <img src="/EU2K-Hub/assets/avatars/red.png" class="avatar-img" alt="Avatar 7">
+                  </div>
+                  <div class="avatar-option" data-avatar="gray">
+                    <img src="/EU2K-Hub/assets/avatars/black.png" class="avatar-img" alt="Avatar 8">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="profile-actions">
+                <button class="profile-button-secondary">
+                  <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="profile-button-icon" alt="School Account">
+                  <span class="profile-button-text" data-translate="profile.use_school_account">Tovább az iskolai profilképpel</span>
+                </button>
+                <button class="profile-button-primary">
+                  <img src="/EU2K-Hub/assets/welcome_icons/arrow_right.svg" class="profile-button-icon" alt="Continue">
+                  <span class="profile-button-text" data-translate="profile.continue">Tovább ezzel</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</body>
+
+</html>

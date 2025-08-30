@@ -306,7 +306,7 @@ body {
   position: relative;
   min-height: 100vh;
   min-width: 100vw;
-  width: calc(100vw - var(--sidebar-width) - 44px);
+  width: 100vw; /* Teljes szélesség használata */
   height: 100vh;
   background: var(--surface-bg);
   display: flex;
@@ -348,7 +348,10 @@ body {
   gap: 18px;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
   max-width: calc(100% - 22px);
-  overflow-y: auto;
+  min-width: 800px; /* Minimum szélesség a dinamikus méretezéshez */
+  width: auto; /* Automatikus szélesség */
+  flex: 1; /* Rugalmas méretezés */
+  overflow: hidden;
   position: relative;
 }
 
@@ -634,6 +637,33 @@ body {
   }
 }
 
+/* Responsive design for settings */
+@media (max-width: 1200px) {
+  .settings-cards {
+    min-width: 350px;
+    max-width: 500px;
+  }
+  
+  .settings-content-layout {
+    gap: 40px;
+  }
+}
+
+@media (max-width: 900px) {
+  .settings-cards {
+    min-width: 300px;
+    max-width: 400px;
+  }
+  
+  .settings-content-layout {
+    gap: 30px;
+  }
+  
+  .settings-pages {
+    padding-left: 20px;
+  }
+}
+
 @media (max-width: 700px) {
   .sidebar {
     display: none;
@@ -647,6 +677,24 @@ body {
 
   .main-area {
     margin-left: 0;
+  }
+  
+  .settings-content-layout {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .settings-cards {
+    min-width: 100%;
+    max-width: 100%;
+  }
+  
+  .settings-vertical-divider {
+    display: none;
+  }
+  
+  .settings-pages {
+    padding-left: 0;
   }
 }
 
@@ -690,7 +738,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0;
-  width: 600px;
+  min-width: 585px;
+  max-width: 600px;
+  width: 100%;
   margin-left: -42px;
 }
 
@@ -732,6 +782,7 @@ body {
 .settings-card.active {
   background: #1E2A1E;
   border-radius: 32px !important;
+  /* Eltávolítottuk a fix szélességet a dinamikus méretezés érdekében */
 }
 
 /* Hover State */
@@ -798,13 +849,19 @@ body {
   display: none !important;
 }
 
-.settings-page.active {
-  display: block !important;
+.notifications-categories {
   max-height: calc(100vh - 200px);
   overflow-y: auto;
+  overflow-x: hidden;
   border-radius: 32px;
   padding: 20px;
   background: rgba(16, 21, 16, 0.3);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.settings-page.active::-webkit-scrollbar {
+  display: none;
 }
 
 .settings-page h2 {
@@ -931,6 +988,8 @@ body {
   grid-template-columns: 1fr 1px 1fr 1fr;
   gap: 24px;
   align-items: start;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .general-info-column {
@@ -1059,11 +1118,11 @@ body {
 .notifications-categories-card {
   background: #101510;
   border-radius: 32px;
-  padding: 20px;
+  padding: 20px 8px;
   margin-left: 40px;
-  /* Padding helyett margin a bal oldalon */
   margin-right: 20px;
-  /* Kis margin a jobb oldalon */
+  height: 600px;
+  position: relative;
 }
 
 .categories-title {
@@ -1078,6 +1137,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  max-height: 553px;
+  overflow-y: auto;
+  border-radius: 32px;
 }
 
 .category-item {
@@ -1131,6 +1193,7 @@ body {
   padding: 0;
   margin: 0;
   width: 100%;
+  overflow: hidden;
 }
 
 /* Notice kártya */
@@ -1197,9 +1260,9 @@ body {
 
 /* General page custom styling */
 .general-page-custom {
-  margin-left: -40px;
+  margin-left: -60px;
   margin-top: -20px;
-  width: calc(100% + 40px);
+  width: calc(100% + 30px);
 }
 
 /* Specific page overrides to ensure proper hiding */
@@ -1574,9 +1637,9 @@ body {
 
 /* General Page */
 #general-page {
-  margin-left: -40px;
+  margin-left: -60px;
   margin-top: -20px;
-  width: calc(100% + 40px);
+  width: calc(100% + 30px);
 }
 
 #community-page .community-no-courses {

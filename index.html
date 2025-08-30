@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Üdvözöllek az EU2K Hub-ban! Fedezd fel a legújabb eseményeket, híreket és tanulási lehetőségeket egy helyen.">
+  <meta name="description"
+    content="Üdvözöllek az EU2K Hub-ban! Fedezd fel a legújabb eseményeket, híreket és tanulási lehetőségeket egy helyen.">
   <title data-translate="pages.index.title" data-translate-fallback="EU2K Hub">EU2K Hub</title>
   <link rel="stylesheet" href="home.css">
   <link rel="icon" href="/EU2K-Hub/favicon.ico">
@@ -18,6 +19,19 @@
       font-weight: 400;
       font-style: normal;
       font-variation-settings: "wdth" 100;
+    }
+
+    /* Scrollbar elrejtése a news carousel-ben */
+    #newsRow {
+      scrollbar-width: none;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* Internet Explorer 10+ */
+    }
+
+    #newsRow::-webkit-scrollbar {
+      display: none;
+      /* WebKit */
     }
   </style>
   <script type="importmap">
@@ -35,12 +49,12 @@
     })(window, document, "clarity", "script", "s6n7qpfkv4");
   </script>
   <script type="importmap">
-  {
-    "imports": {
-      "@material/web/": "https://esm.run/@material/web/"
+    {
+      "imports": {
+        "@material/web/": "https://esm.run/@material/web/"
+      }
     }
-  }
-</script>
+  </script>
   <script type="module">
     import '@material/web/all.js';
     import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
@@ -48,14 +62,10 @@
     document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
   </script>
   <script type="module">
-    // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
+    import { getFirestore, collection, onSnapshot, query, orderBy, limit, startAfter, getDocs } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
       apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
       authDomain: "eu2k-hub.firebaseapp.com",
@@ -69,119 +79,504 @@
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
-
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-
     const db = getFirestore(app);
 
-    // Make db globally available for the new things popup
+    // Make db globally available
     window.db = db;
 
-    async function loadNews() {
-      const hirekRef = collection(db, 'homePageData', 'news', 'hirek');
-      const snapshot = await getDocs(hirekRef);
-      let news = [];
-      snapshot.forEach(doc => {
-        news.push({ id: parseInt(doc.id), data: doc.data() });
-      });
-      news.sort((a, b) => b.id - a.id);
-      const cards = document.querySelectorAll('.news-card');
-      news.slice(0, cards.length).forEach((item, index) => {
-        const card = cards[index];
-        const rect = card.querySelector('.red-rect');
-        rect.style.backgroundImage = `url(${item.data.image})`;
-        rect.style.backgroundSize = 'cover';
-        rect.style.backgroundPosition = 'center';
-        rect.style.backgroundColor = 'transparent';
-        const titleSpan = card.querySelector('.news-label > span:first-child');
-        let title = item.data.title.substring(0, 30);
-        if (item.data.title.length > 30) title += '...';
-        titleSpan.textContent = title;
-        const descSpan = card.querySelector('.news-label > span.desc');
-        let desc = item.data.desc.substring(0, 60);
-        if (item.data.desc.length > 60) desc += '...';
-        descSpan.textContent = desc;
-        card.addEventListener('click', () => {
-          window.location.href = item.data.link;
-        });
-        card.style.cursor = 'pointer';
-      });
-    }
+    /* ---------------------- NEWS ----------------------- */
+    let lastVisible = null;
+    let loadingNews = false;
+    const pageSize = 14; // Frissítve 14 kártyára
 
-    async function loadEvents() {
-      const eventsRef = collection(db, 'homePageData', 'events', 'esemenyek');
-      const snapshot = await getDocs(eventsRef);
-      let events = [];
-      snapshot.forEach(doc => {
-        events.push({ id: parseInt(doc.id), data: doc.data() });
-      });
-      events.sort((a, b) => b.id - a.id);
-      const containers = document.querySelectorAll('.event-container');
-      events.slice(0, containers.length).forEach((item, index) => {
-        const container = containers[index];
-        const card = container.querySelector('.red-card');
-        if (card) {
-          card.style.backgroundImage = `url(${item.data.image})`;
-          card.style.backgroundSize = 'cover';
-          card.style.backgroundPosition = 'center';
-          card.style.backgroundColor = 'transparent';
+    // Fallback news data
+    function loadFallbackNews() {
+      console.log('📰 Loading fallback news data...');
+      const fallbackNews = [
+        {
+          title: "Valami baj van.",
+          desc: "Nemsokára kijavítjuk.",
+          image: "/EU2K-Hub/assets/placeholder_img.svg",
+          link: "#"
+        },
+        {
+          title: "Valami baj van.",
+          desc: "Nemsokára kijavítjuk.",
+          image: "/EU2K-Hub/assets/placeholder_img.svg",
+          link: "#"
+        },
+        {
+          title: "Valami baj van.",
+          desc: "Nemsokára kijavítjuk.",
+          image: "/EU2K-Hub/assets/placeholder_img.svg",
+          link: "#"
+        },
+        {
+          title: "Valami baj van.",
+          desc: "Nemsokára kijavítjuk.",
+          image: "/EU2K-Hub/assets/placeholder_img.svg",
+          link: "#"
+        },
+        {
+          title: "Valami baj van.",
+          desc: "Nemsokára kijavítjuk.",
+          image: "/EU2K-Hub/assets/placeholder_img.svg",
+          link: "#"
+        },
+        {
+          title: "Valami baj van.",
+          desc: "Nemsokára kijavítjuk.",
+          image: "/EU2K-Hub/assets/placeholder_img.svg",
+          link: "#"
+        }
+      ];
+
+      const cards = document.querySelectorAll("#newsRow .news-card");
+
+      fallbackNews.slice(0, cards.length).forEach((newsItem, index) => {
+        const card = cards[index];
+
+        // kép
+        const rect = card.querySelector(".red-rect");
+        if (rect) {
+          rect.style.backgroundImage = `url(${newsItem.image})`;
+          rect.style.backgroundSize = "cover";
+          rect.style.backgroundPosition = "center";
+          rect.style.backgroundColor = "var(--red)";
         }
 
-        // Only update text elements if they exist (for cards with labels)
-        const titleSpan = container.querySelector('.event-label-text > span:first-child');
+        // cím
+        const titleSpan = card.querySelector(".news-label > span:first-child");
         if (titleSpan) {
-          let title = item.data.title.substring(0, 30);
-          if (item.data.title.length > 30) title += '...';
+          let title = newsItem.title;
+          if (title.length > 30) title = title.substring(0, 30) + "...";
           titleSpan.textContent = title;
         }
 
-        const descSpan = container.querySelector('.event-label-text > span.desc');
+        // leírás
+        const descSpan = card.querySelector(".news-label > span.desc");
         if (descSpan) {
-          let desc = item.data.description.substring(0, 120);
-          if (item.data.description.length > 120) desc += '...';
+          let desc = newsItem.desc;
+          if (desc.length > 60) desc = desc.substring(0, 60) + "...";
           descSpan.textContent = desc;
         }
 
-        const placeSpan = container.querySelector('.event-label-text > span.place');
-        if (placeSpan && item.data.place) {
-          placeSpan.textContent = item.data.place;
+        // kattinthatóság
+        card.style.cursor = (newsItem.link !== "#") ? "pointer" : "default";
+        card.onclick = null; // Clear previous onclick
+        if (newsItem.link !== "#") {
+          card.onclick = () => {
+            let url = newsItem.link.trim();
+            if (!url.startsWith("http://") && !url.startsWith("https://")) url = "https://" + url;
+            window.open(url, "_blank");
+          };
+        }
+      });
+
+      console.log('✅ Fallback news loaded successfully');
+    }
+
+    // Load hírek
+    async function loadNews() {
+      console.log('🔄 Loading news...');
+      try {
+        const hirekRef = collection(db, "homePageData", "news", "hirek");
+        console.log('🔗 Trying to connect to collection: homePageData/news/hirek');
+
+        // Lekérjük az összes dokumentumot
+        const snapshot = await getDocs(hirekRef);
+        console.log('📰 News snapshot:', snapshot.docs.length, 'documents found');
+
+        // Debug: log all document IDs and their order
+        snapshot.docs.forEach((doc, index) => {
+          console.log(`📄 Document ${index}: ID=${doc.id}, data:`, doc.data());
+        });
+
+        if (snapshot.docs.length === 0) {
+          console.warn('⚠️ No news documents found in Firebase collection');
+          // Use fallback data
+          loadFallbackNews();
+          return;
         }
 
-        // Handle arrow button based on link availability
-        const arrowContainer = container.querySelector('.arrow-container');
-        if (arrowContainer) {
-          if (item.data.link && item.data.link.trim() !== '') {
-            // Enable arrow button and add click handler
-            arrowContainer.style.opacity = '1';
-            arrowContainer.style.cursor = 'pointer';
-            arrowContainer.style.filter = 'none';
-            arrowContainer.onclick = function (e) {
-              e.stopPropagation();
-              let url = item.data.link.trim();
-              // Check if URL starts with http:// or https://, if not add https://
-              if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                url = 'https://' + url;
-              }
-              window.open(url, '_blank');
+        // Rendezzük a dokumentumokat ID szerint csökkenő sorrendben (legnagyobb szám elöl)
+        const sortedDocs = snapshot.docs.sort((a, b) => {
+          const idA = parseInt(a.id) || 0;
+          const idB = parseInt(b.id) || 0;
+          return idB - idA; // Csökkenő sorrend
+        });
+
+        console.log('📰 Sorted news by ID (desc):', sortedDocs.map(doc => doc.id));
+
+        const cards = document.querySelectorAll("#newsRow .news-card");
+        console.log('🎯 Found', cards.length, 'news cards in DOM');
+
+        if (cards.length === 0) {
+          console.error('❌ No news cards found! Check if #newsRow exists and contains .news-card elements');
+          return;
+        }
+
+        // Az összes elérhető dokumentumot feldolgozzuk, de maximum annyi kártyát töltünk fel, amennyi van
+        const docsToProcess = sortedDocs.slice(0, Math.min(sortedDocs.length, cards.length));
+        console.log(`📰 Processing ${docsToProcess.length} news items for ${cards.length} cards`);
+
+        docsToProcess.forEach((doc, index) => {
+          const data = doc.data();
+          const card = cards[index];
+          console.log(`📄 Processing news ${index + 1}: ID=${doc.id}, Title="${data.title || 'No title'}"`);
+
+          // kép
+          const rect = card.querySelector(".red-rect");
+          if (rect) {
+            if (data.image && data.image.trim() !== '') {
+              rect.style.backgroundImage = `url(${data.image})`;
+              rect.style.backgroundSize = "cover";
+              rect.style.backgroundPosition = "center";
+              rect.style.backgroundColor = "transparent";
+            } else {
+              rect.style.backgroundImage = '';
+              rect.style.backgroundColor = "var(--red)";
+            }
+          }
+
+          // cím
+          const titleSpan = card.querySelector(".news-label > span:first-child");
+          if (titleSpan) {
+            let title = data.title || "Nincs cím";
+            if (title.length > 30) title = title.substring(0, 30) + "...";
+            titleSpan.textContent = title;
+          }
+
+          // leírás - a description mező használata
+          const descSpan = card.querySelector(".news-label > span.desc");
+          if (descSpan) {
+            let desc = data.description || data.desc || "";
+            if (desc.length > 60) desc = desc.substring(0, 60) + "...";
+            descSpan.textContent = desc;
+          }
+
+          // kattinthatóság
+          card.style.cursor = (data.link && data.link.trim() !== '') ? "pointer" : "default";
+          card.onclick = null; // Clear previous onclick
+          if (data.link && data.link.trim() !== '') {
+            card.onclick = () => {
+              let url = data.link.trim();
+              if (!url.startsWith("http://") && !url.startsWith("https://")) url = "https://" + url;
+              window.open(url, "_blank");
             };
+          }
+        });
+
+        console.log('✅ News loading completed successfully');
+      } catch (error) {
+        console.error('❌ Error loading news:', error);
+        console.log('🔄 Falling back to placeholder content...');
+
+        // Fallback: Load fallback news instead of just placeholders
+        loadFallbackNews();
+      }
+    }
+
+    // Dinamikus méretezés a hírkártyákhoz
+    function handleNewsCardResize() {
+      const newsRow = document.getElementById("newsRow");
+      const cards = Array.from(document.querySelectorAll("#newsRow .news-card"));
+
+      if (!newsRow || cards.length === 0) return;
+
+      const containerWidth = newsRow.clientWidth;
+      const defaultCardWidth = 200; // Alapértelmezett kártya szélesség
+      const cardGap = 8; // Kártyák közötti távolság
+      const maxVisibleCards = 6; // Maximum hány kártya legyen látható egyszerre
+
+      // Számoljuk ki, hogy hány kártya fér el alapméretben
+      const totalDefaultWidth = (defaultCardWidth * maxVisibleCards) + (cardGap * (maxVisibleCards - 1));
+
+      if (containerWidth > totalDefaultWidth) {
+        // Van extra hely, megnöveljük az első 6 kártyát
+        const extraSpace = containerWidth - totalDefaultWidth;
+        const extraPerCard = extraSpace / maxVisibleCards;
+        const newCardWidth = defaultCardWidth + extraPerCard;
+
+        console.log(`📏 News cards resizing: ${defaultCardWidth}px -> ${newCardWidth.toFixed(1)}px`);
+
+        // Alkalmazzuk az új méretet az első 6 kártyára
+        cards.slice(0, maxVisibleCards).forEach(card => {
+          card.style.minWidth = `${newCardWidth}px`;
+          card.style.maxWidth = `${newCardWidth}px`;
+          card.style.width = `${newCardWidth}px`;
+        });
+
+        // A többi kártya marad alapméretben
+        cards.slice(maxVisibleCards).forEach(card => {
+          card.style.minWidth = `${defaultCardWidth}px`;
+          card.style.maxWidth = `${defaultCardWidth}px`;
+          card.style.width = `${defaultCardWidth}px`;
+        });
+      } else {
+        // Nincs extra hely, minden kártya alapméretben
+        cards.forEach(card => {
+          card.style.minWidth = `${defaultCardWidth}px`;
+          card.style.maxWidth = `${defaultCardWidth}px`;
+          card.style.width = `${defaultCardWidth}px`;
+        });
+      }
+    }
+
+    // Carousel gombok
+    function initNewsCarousel() {
+      const row = document.getElementById("newsRow");
+      const leftBtn = document.querySelector(".carousel-btn.left");
+      const rightBtn = document.querySelector(".carousel-btn.right");
+
+      leftBtn.addEventListener("click", () => row.scrollBy({ left: -300, behavior: "smooth" }));
+      rightBtn.addEventListener("click", () => row.scrollBy({ left: 300, behavior: "smooth" }));
+
+      // infinite scroll trigger
+      row.addEventListener("scroll", () => {
+        if (row.scrollLeft + row.clientWidth >= row.scrollWidth - 50) {
+          loadNews(false);
+        }
+      });
+
+      // Méretezés inicializálása
+      handleNewsCardResize();
+    }
+
+    /* ---------------------- EVENTS ----------------------- */
+    function handleDynamicLayout() {
+      const mainContent = document.querySelector('.main-content');
+      const containers = Array.from(document.querySelectorAll('.event-container'));
+      if (!mainContent || containers.length === 0) return;
+
+      const mainContentWidth = mainContent.clientWidth;
+      const availableWidth = mainContentWidth - 64;
+
+      const defaultWidths = [120, 400, 400, 400, 120, 120, 56];
+      const defaultHeights = [205, 205, 205, 205, 205, 205, 205];
+      const hideOrder = [4, 3, 2, 0, 5];
+
+      containers.forEach(c => c.classList.remove("hidden"));
+
+      let totalWidth = defaultWidths.reduce((a, b) => a + b, 0) + (defaultWidths.length - 1) * 8;
+
+      for (let i = 0; i < hideOrder.length; i++) {
+        if (totalWidth <= availableWidth) break;
+        const idx = hideOrder[i];
+        containers[idx].classList.add("hidden");
+        totalWidth -= defaultWidths[idx] + 8;
+      }
+
+      const visibleContainers = containers.filter(c => !c.classList.contains('hidden'));
+      if (visibleContainers.length > 0) {
+        const visibleWidths = visibleContainers.map(c => defaultWidths[containers.indexOf(c)]);
+        const visibleTotalWidth = visibleWidths.reduce((a, b) => a + b, 0) + (visibleContainers.length - 1) * 8;
+        const scaleRatio = Math.min(1 + (availableWidth - visibleTotalWidth) / visibleTotalWidth, 1.5);
+
+        visibleContainers.forEach(c => {
+          const idx = containers.indexOf(c);
+          const card = c.querySelector('.red-card');
+          if (card) {
+            card.style.width = `${defaultWidths[idx] * scaleRatio}px`;
+            card.style.height = `${defaultHeights[idx] * scaleRatio}px`;
+          }
+        });
+      }
+
+      loadEvents();
+    }
+
+    async function loadEvents() {
+      console.log('Loading events...');
+      try {
+        const eventsRef = collection(db, 'homePageData', 'events', 'esemenyek');
+        console.log('Trying to connect to database...');
+
+        const snapshot = await getDocs(eventsRef);
+        console.log('Events snapshot:', snapshot.docs.length, 'documents found');
+
+        // Debug: log all document IDs
+        snapshot.docs.forEach((doc, index) => {
+          console.log(`Event Document ${index}: ID=${doc.id}, data:`, doc.data());
+        });
+
+        if (snapshot.docs.length === 0) {
+          console.warn('No event documents found in Firebase collection');
+          return;
+        }
+
+        let events = [];
+        const now = new Date();
+        const oneMonthLater = new Date(now);
+        oneMonthLater.setMonth(now.getMonth() + 1);
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const eventDate = data.date?.toDate ? data.date.toDate() : null;
+          if (!eventDate) return;
+          if (eventDate >= now && eventDate <= oneMonthLater) {
+            events.push({ id: parseInt(doc.id), data, date: eventDate });
+          }
+        });
+
+        console.log('Filtered events (next month):', events.length);
+        events.sort((a, b) => b.id - a.id);
+
+        const containers = Array.from(document.querySelectorAll('.event-container'));
+        const visibleContainers = containers.filter(c => !c.classList.contains('hidden'));
+        console.log('Found', visibleContainers.length, 'visible event containers');
+
+        if (visibleContainers.length === 0) return;
+
+        // A legújabb esemény (legnagyobb ID) indexe - ez lesz a jobbszélső kártyán
+        const newestEventIndex = 0; // már ID szerint csökkenő sorrendben vannak
+
+        const largeIndices = visibleContainers.map((c, idx) => ({ idx, w: c.querySelector('.red-card')?.offsetWidth || 0 }))
+                                              .filter(c => c.w >= 400)
+                                              .map(c => c.idx);
+        let centerIdx;
+        if (largeIndices.length > 0) {
+          centerIdx = largeIndices[Math.floor(largeIndices.length / 2)];
+        } else {
+          centerIdx = visibleContainers.length - 1;
+        }
+
+        const arrangedIndices = [];
+        
+        // Jobbszélső pozíció: legújabb esemény
+        const rightmostIdx = visibleContainers.length - 1;
+        arrangedIndices[rightmostIdx] = newestEventIndex;
+
+        // Balra haladva: régebbi események (csak ha van elég esemény)
+        let eventPtr = newestEventIndex + 1;
+        for (let i = rightmostIdx - 1; i >= 0; i--) {
+          if (eventPtr < events.length) {
+            arrangedIndices[i] = eventPtr;
+            eventPtr++;
           } else {
-            // Disable arrow button
-            arrowContainer.style.opacity = '0.3';
-            arrowContainer.style.cursor = 'not-allowed';
-            arrowContainer.style.filter = 'grayscale(100%)';
-            arrowContainer.onclick = function (e) {
-              e.stopPropagation();
-            };
+            arrangedIndices[i] = null; // Üres kártya ha nincs több esemény
           }
         }
 
-        // Remove the old click handler from container since we now use arrow button
-      });
+        visibleContainers.forEach((container, i) => {
+          const itemIndex = arrangedIndices[i];
+          const item = itemIndex != null ? events[itemIndex] : null;
+
+          const card = container.querySelector('.red-card');
+          const titleSpan = container.querySelector('.event-label-text > span:first-child');
+          const descSpan = container.querySelector('.event-label-text > span.desc');
+          const placeSpan = container.querySelector('.event-label-text > span.place');
+          const arrowContainer = container.querySelector('.arrow-container');
+
+          if (!item) {
+            if (card) {
+              card.style.backgroundImage = '';
+              card.style.backgroundColor = '';
+            }
+            if (titleSpan) titleSpan.textContent = '';
+            if (descSpan) descSpan.textContent = '';
+            if (placeSpan) placeSpan.textContent = '';
+            if (arrowContainer) {
+              arrowContainer.style.opacity = '0';
+              arrowContainer.style.cursor = 'default';
+              arrowContainer.onclick = (e) => e.stopPropagation();
+            }
+            return;
+          }
+
+          console.log(`Processing event ${i + 1}: ID=${item.id}, Title="${item.data.title || 'No title'}"`);
+
+          if (card) {
+            if (item.data.image && item.data.image.trim() !== '') {
+              card.style.backgroundImage = `url(${item.data.image})`;
+              card.style.backgroundSize = 'cover';
+              card.style.backgroundPosition = 'center';
+              card.style.backgroundColor = 'transparent';
+            } else {
+              card.style.backgroundImage = '';
+              card.style.backgroundColor = 'var(--red)';
+            }
+          }
+
+          if (titleSpan) {
+            let title = item.data.title || "Nincs cím";
+            if (title.length > 30) title = title.substring(0, 30) + '...';
+            titleSpan.textContent = title;
+          }
+
+          if (descSpan) {
+            let desc = item.data.description || "";
+            if (desc.length > 50) desc = desc.substring(0, 50) + '...';
+            descSpan.textContent = desc;
+          }
+
+          if (placeSpan && item.data.place) {
+            placeSpan.textContent = "Helyszín: " + item.data.place;
+          }
+
+          if (arrowContainer) {
+            if (item.data.link && item.data.link.trim() !== '') {
+              arrowContainer.style.opacity = '1';
+              arrowContainer.style.cursor = 'pointer';
+              arrowContainer.style.filter = 'none';
+              arrowContainer.onclick = (e) => {
+                e.stopPropagation();
+                let url = item.data.link.trim();
+                if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
+                window.open(url, '_blank');
+              };
+            } else {
+              arrowContainer.style.opacity = '0.3';
+              arrowContainer.style.cursor = 'not-allowed';
+              arrowContainer.style.filter = 'grayscale(100%)';
+              arrowContainer.onclick = (e) => e.stopPropagation();
+            }
+          }
+        });
+
+        console.log('Events loading completed successfully');
+      } catch (error) {
+        console.error('❌ Error loading events:', error);
+      }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      loadNews();
-      loadEvents();
+    /* ---------------------- INIT ----------------------- */
+    window.addEventListener("load", () => {
+      console.log('Page loaded, initializing...');
+
+      // DOM elemek ellenőrzése
+      const newsRow = document.getElementById('newsRow');
+      const newsCards = document.querySelectorAll('#newsRow .news-card');
+      console.log('🔍 DOM check:', {
+        newsRow: !!newsRow,
+        newsCardsCount: newsCards.length,
+        db: !!window.db
+      });
+
+      if (!newsRow) {
+        console.error('❌ newsRow element not found!');
+        return;
+      }
+
+      if (newsCards.length === 0) {
+        console.error('❌ No news cards found!');
+        return;
+      }
+
+      // Kis késleltetés, hogy biztosan betöltődjenek a DOM elemek és Firebase
+      setTimeout(() => {
+        console.log('Starting delayed initialization...');
+        loadNews();
+        handleDynamicLayout();
+        initNewsCarousel();
+        // Kis késleltetés a hírek betöltése után a méretezéshez
+        setTimeout(handleNewsCardResize, 100);
+      }, 200);
+    });
+
+    window.addEventListener("resize", () => {
+      handleDynamicLayout();
+      handleNewsCardResize();
     });
   </script>
 </head>
@@ -221,7 +616,8 @@
         <header class="header">
           <div class="welcome-container">
             <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-icon" alt="Welcome">
-            <h1 class="welcome-text" data-translate="pages.index.welcome" data-translate-fallback="Üdvözöllek a Hub-ban!">Üdvözöllek a Hub-ban!</h1>
+            <h1 class="welcome-text" data-translate="pages.index.welcome"
+              data-translate-fallback="Üdvözöllek a Hub-ban!">Üdvözöllek a Hub-ban!</h1>
           </div>
           <div class="header-icons">
             <a href="/EU2K-Hub/system/account.html" class="header-icon-link">
@@ -234,24 +630,20 @@
         </header>
         <section class="events-section">
           <div class="section-title">
-            <span data-translate="pages.index.upcoming_events" data-translate-fallback="Közelgő Események">Közelgő Események</span>
+            <span data-translate="pages.index.upcoming_events" data-translate-fallback="Közelgő Események">Közelgő
+              Események</span>
             <img src="/EU2K-Hub/assets/arrow_forward.svg" class="arrow-icon" alt="Tovább">
           </div>
           <div class="event-frame">
             <div class="top-cards-row">
+              <!-- sorrend: medium, large, large, large, medium, medium, small -->
+
+              <!-- Medium 1 -->
               <div class="event-container">
-                <div class="red-card large"></div>
-                <div class="event-label">
-                  <div class="event-label-text">
-                    <span>Esemény Neve</span>
-                    <span class="desc">Esemény leírása</span>
-                    <span class="place">Esemény Helye</span>
-                  </div>
-                  <div class="arrow-container">
-                    <img src="/EU2K-Hub/assets/arrow_forward.svg" class="arrow-icon" alt="Tovább">
-                  </div>
-                </div>
+                <div class="red-card medium"></div>
               </div>
+
+              <!-- Large 1 -->
               <div class="event-container">
                 <div class="red-card large"></div>
                 <div class="event-label">
@@ -265,12 +657,52 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Large 2 -->
+              <div class="event-container">
+                <div class="red-card large"></div>
+                <div class="event-label">
+                  <div class="event-label-text">
+                    <span>Esemény neve</span>
+                    <span class="desc">Esemény leírása</span>
+                    <span class="place">Esemény Helye</span>
+                  </div>
+                  <div class="arrow-container">
+                    <img src="/EU2K-Hub/assets/arrow_forward.svg" class="arrow-icon" alt="Tovább">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Large 3 -->
+              <div class="event-container">
+                <div class="red-card large"></div>
+                <div class="event-label">
+                  <div class="event-label-text">
+                    <span>Esemény neve</span>
+                    <span class="desc">Esemény leírása</span>
+                    <span class="place">Esemény Helye</span>
+                  </div>
+                  <div class="arrow-container">
+                    <img src="/EU2K-Hub/assets/arrow_forward.svg" class="arrow-icon" alt="Tovább">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Medium 2 -->
               <div class="event-container">
                 <div class="red-card medium"></div>
               </div>
+
+              <!-- Medium 3 -->
+              <div class="event-container">
+                <div class="red-card medium"></div>
+              </div>
+
+              <!-- Small -->
               <div class="event-container">
                 <div class="red-card small"></div>
               </div>
+
             </div>
           </div>
         </section>
@@ -279,31 +711,71 @@
             <span data-translate="pages.index.news" data-translate-fallback="Hírek">Hírek</span>
             <img src="/EU2K-Hub/assets/arrow_forward.svg" class="arrow-icon" alt="Tovább">
           </div>
-          <div class="bottom-cards-row">
-            <div class="news-card">
-              <div class="red-rect"></div>
-              <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+
+          <!-- carousel wrapper -->
+          <div class="news-carousel">
+            <button class="carousel-btn left">‹</button>
+
+            <div class="bottom-cards-row" id="newsRow">
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
             </div>
-            <div class="news-card">
-              <div class="red-rect"></div>
-              <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
-            </div>
-            <div class="news-card">
-              <div class="red-rect"></div>
-              <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
-            </div>
-            <div class="news-card">
-              <div class="red-rect"></div>
-              <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
-            </div>
-            <div class="news-card">
-              <div class="red-rect"></div>
-              <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
-            </div>
-            <div class="news-card">
-              <div class="red-rect"></div>
-              <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
-            </div>
+
+            <button class="carousel-btn right">›</button>
           </div>
         </section>
       </div>
@@ -330,7 +802,8 @@
           <!-- A lista dinamikusan lesz feltöltve JavaScript által -->
         </div>
         <div class="new-things-footer">
-          <a href="https://eu2kdevs.hu" target="_blank" class="new-things-link" data-translate="pages.index.more_info_link">
+          <a href="https://eu2kdevs.hu" target="_blank" class="new-things-link"
+            data-translate="pages.index.more_info_link">
             Továbbiak az <b>eu2kdevs.hu</b> oldalon.
           </a>
         </div>
@@ -392,15 +865,15 @@
         snapshot.forEach(doc => {
           const data = doc.data();
           const publishDate = data.publish_date;
-          
+
           if (publishDate) {
             const timestamp = publishDate.toDate ? publishDate.toDate().getTime() : publishDate;
-            
+
             // Ellenőrizzük, hogy a timestamp nem jövőbeli-e (1 óra tolerancia)
             const oneHourInMs = 60 * 60 * 1000;
             if (timestamp <= currentTime + oneHourInMs && timestamp > latestTimestamp) {
               latestTimestamp = timestamp;
-              latestUpdate = {...data, document_id: doc.id}; // Add document ID to data
+              latestUpdate = { ...data, document_id: doc.id }; // Add document ID to data
               latestUpdateId = doc.id;
             }
           }
@@ -408,7 +881,7 @@
 
         if (latestUpdate) {
           const lastShownUpdateId = localStorage.getItem('lastShownNewThingsUpdateId');
-          
+
           if (lastShownUpdateId !== latestUpdateId) {
             // Pre-translate content
             const translations = {};
@@ -421,10 +894,10 @@
             }
             latestUpdate.translations = translations;
             newThingsData = latestUpdate;
-            
+
             updatePopupContent(newThingsData);
             showNewThingsPopup();
-            
+
             localStorage.setItem('lastShownNewThingsUpdateId', latestUpdateId);
           }
         }
@@ -453,7 +926,7 @@
         ul.style.margin = '0';
         ul.style.paddingLeft = '20px';
         ul.style.listStyleType = 'disc';
-        
+
         if (translatedData.new_thing1) {
           const li1 = document.createElement('li');
           li1.textContent = translatedData.new_thing1;
@@ -462,7 +935,7 @@
           li1.style.lineHeight = '1.5';
           ul.appendChild(li1);
         }
-        
+
         if (translatedData.new_thing2) {
           const li2 = document.createElement('li');
           li2.textContent = translatedData.new_thing2;
@@ -471,10 +944,10 @@
           li2.style.lineHeight = '1.5';
           ul.appendChild(li2);
         }
-        
+
         newThingsList.appendChild(ul);
       }
-      
+
       window.translationManager.applyTranslations();
     }
 
@@ -486,13 +959,13 @@
 
     // Debug függvény a localStorage reset-hez és popup újra megjelenítéséhez
     // Használat a konzolban: resetNewThingsPopup()
-    window.resetNewThingsPopup = function() {
+    window.resetNewThingsPopup = function () {
       console.log('🔄 Resetting new things popup tracking...');
-      
+
       // Töröljük a localStorage-ból az utoljára megjelenített update ID-t
       localStorage.removeItem('lastShownNewThingsUpdateId');
       console.log('✅ Cleared lastShownNewThingsUpdateId from localStorage');
-      
+
       // Újra futtatjuk a checkAndShowNewThings függvényt
       console.log('🔍 Checking for new updates...');
       checkAndShowNewThings().then(() => {
@@ -504,9 +977,9 @@
 
     // Debug függvény az összes new things adat törléséhez
     // Használat a konzolban: clearAllNewThingsData()
-    window.clearAllNewThingsData = function() {
+    window.clearAllNewThingsData = function () {
       console.log('🗑️ Clearing all new things data...');
-      
+
       // Töröljük az összes kapcsolódó localStorage elemet
       const keysToRemove = ['lastShownNewThingsUpdateId', 'lastNewThingsCheck'];
       keysToRemove.forEach(key => {
@@ -515,13 +988,13 @@
           console.log(`✅ Removed ${key}`);
         }
       });
-      
+
       console.log('✨ All new things data cleared!');
     };
 
     // Debug függvény az aktuális állapot megjelenítéséhez
     // Használat a konzolban: showNewThingsStatus()
-    window.showNewThingsStatus = function() {
+    window.showNewThingsStatus = function () {
       console.log('📊 Current New Things Status:');
       console.log('Last shown update ID:', localStorage.getItem('lastShownNewThingsUpdateId') || 'None');
       console.log('Last check date:', localStorage.getItem('lastNewThingsCheck') || 'None');

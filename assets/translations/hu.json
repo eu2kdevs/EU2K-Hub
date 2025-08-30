@@ -118,13 +118,41 @@
     },
     "settings": {
       "title": "Beállítások"
+    },
+    "onboarding_student": {
+      "title": "Üdvözlünk a Hub-ban!",
+      "welcome-title": "Üdvözöllek a Hub-ban!",
+      "welcome_hub": "Üdvözlünk a Hub-ban!",
+      "create_account_description": "Kérlek válassz egy avatárt, vagy használd az iskolai fiókod által biztosítottat!",
+      "courses": "Kurzusok",
+      "description": "Örülünk hogy ennyire érdeklődsz a Kurzusok iránt, de egyelőre még fejlesztés alatt van, és nem alkalmas a mostani állapotában a használatra.",
+      "description2": "Viszont, addig tudsz visszajelzést adni, és elmondani",
+      "description3": "szerinted",
+      "description4": "mi lenne ide a legjobb ;)",
+      "feedback_button": "Visszajelzés",
+      "interest_text_1": "Örülünk hogy ennyire érdeklődsz",
+      "interest_text_2": "Viszont, addig tudsz visszajelzést adni",
+      "interest_text_3": "szerinted",
+      "interest_text_4": "mi lenne ide a legjobb ;)",
+      "feedback": "Visszajelzés"
     }
   },
   "navigation": {
     "home": "Otthon",
     "qr": "QR-Kód",
+    "back": "Vissza",
     "youhub": "YouHub",
     "courses": "Kurzusok"
+  },
+  "onboarding": {
+    "continue_as_student": "Tovább diákként",
+    "continue_as_teacher": "Tovább tanárként", 
+    "continue_without_account": "Tovább fiók nélkül"
+  },
+  "profile": {
+    "student_name": "Turóczi Ádám - 8.E",
+    "use_school_account": "Tovább az iskolai profilképpel",
+    "continue": "Tovább ezzel"
   },
   "feedback": {
     "title": "Visszajelzés",
@@ -135,7 +163,7 @@
       "fix": "Funkció amit javítani kéne",
       "new": "Funkció amit látni szeretnék"
     },
-    "notice": "Nagyon köszönjük, hogy segítesz nekünk fejleszteni a Hubot! Ezek a visszajelzések névtelenek, nem fogjuk tudni ki küldte be.",
+    "notice": "Nagyon köszönjük, hogy segítesz nekünk fejleszteni a Hubot! Ezek a visszajelzések névtelenek, nem fogjuk tudni ki küldte be, viszont be tudod kapcsolni hogy névvel küldd be őket.",
     "title_placeholder": "Cím...",
     "send": "Küldés",
     "validation": {

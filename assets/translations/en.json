@@ -118,13 +118,30 @@
     },
     "settings": {
       "title": "Settings"
+    },
+    "onboarding_student": {
+      "title": "Welcome to the Hub!",
+      "welcome-title": "Welcome to the Hub!",
+      "welcome_hub": "Welcome to the Hub!",
+      "create_account_description": "Please choose an avatar, or use the one provided by your school account!"
     }
   },
   "navigation": {
     "home": "Home",
     "qr": "QR-Code",
+    "back": "Back",
     "youhub": "YouHub",
     "courses": "Courses"
+  },
+  "onboarding": {
+    "continue_as_student": "Continue as Student",
+    "continue_as_teacher": "Continue as Teacher",
+    "continue_without_account": "Continue without Account"
+  },
+  "profile": {
+    "student_name": "Turóczi Ádám - 8.E",
+    "use_school_account": "Continue with school profile picture",
+    "continue": "Continue with this"
   },
   "feedback": {
     "title": "Feedback",
@@ -135,7 +152,7 @@
       "fix": "Function that needs fixing",
       "new": "Function I would like to see"
     },
-    "notice": "Thank you very much for helping us improve the Hub! These feedbacks are anonymous, we will not know who sent them.",
+    "notice": "Thank you very much for helping us improve the Hub! These feedbacks are anonymous, we will not know who sent them, but you can enable to send them in with your name.",
     "title_placeholder": "Title...",
     "send": "Send",
     "validation": {
@@ -153,7 +170,7 @@
     "category": "Category",
     "title_placeholder": "Title...",
     "send": "Send",
-    "hive_tooltip": "The SmartBox will be replaced with the Hive function. From now on, you can submit suggestions here that you previously dropped into the SmartBox.",
+    "hive_tooltip": "OkosDoboz will be replaced with the Hive function. From now on, you can submit suggestions here that you previously dropped into OkosDoboz.",
     "profile_notice": "When you submit the Suggestion, your profile picture will appear publicly to everyone who has the right to view the Suggestion."
   },
   "permissions": {
@@ -212,18 +229,6 @@
     "messages_not_available": "This section is not available in beta, we are working very hard to make it available as soon as possible."
   },
   "common": {
-    "welcome_hub": "Welcome to the Hub!",
-    "settings": "Settings",
-    "profile": "Profile",
-    "home": "Home",
-    "courses": "Courses",
-    "qr": "QR Code",
-    "account": "Account",
-    "category": "Category",
-    "send": "Send",
-    "close": "Close",
-    "title": "Title",
-    "back": "Back",
     "forward": "Forward",
     "loading": "Loading...",
     "error": "An error occurred",
@@ -260,13 +265,6 @@
     "export": "Export",
     "import": "Import",
     "help": "Help",
-    "about": "About",
-    "version": "Version",
-    "language": "Language",
-    "theme": "Theme",
-    "dark_mode": "Dark Mode",
-    "light_mode": "Light Mode",
-    "auto_mode": "Auto Mode",
     "ok": "OK"
   }
 }
