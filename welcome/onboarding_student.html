@@ -325,7 +325,7 @@
         welcomeDescription.setAttribute('data-translate', 'profile.looks_good_description');
         // Update text based on current language
         if (window.translationManager) {
-          const translatedText = window.translationManager.translate('profile.looks_good_description');
+          const translatedText = window.translationManager.getTranslation('profile.looks_good_description');
           welcomeDescription.textContent = translatedText;
         } else {
           welcomeDescription.textContent = currentLanguage === 'en' ? 'Does this look good?' : 'Ez így jól néz ki?';
@@ -390,7 +390,7 @@
       if (welcomeDescription) {
         welcomeDescription.setAttribute('data-translate', 'pages.onboarding_student.create_account_description');
         if (window.translationManager) {
-          const translatedText = window.translationManager.translate('pages.onboarding_student.create_account_description');
+          const translatedText = window.translationManager.getTranslation('pages.onboarding_student.create_account_description');
           welcomeDescription.textContent = translatedText;
         } else {
           welcomeDescription.textContent = currentLanguage === 'en' ? 'Please choose an avatar or use the one provided by your school account!' : 'Kérlek válassz egy avatárt, vagy használd az iskolai fiókod által biztosítottat!';
@@ -467,7 +467,7 @@
       if (welcomeDescription) {
         welcomeDescription.setAttribute('data-translate', 'pages.onboarding_student.create_account_description');
         if (window.translationManager) {
-          const translatedText = window.translationManager.translate('pages.onboarding_student.create_account_description');
+          const translatedText = window.translationManager.getTranslation('pages.onboarding_student.create_account_description');
           welcomeDescription.textContent = translatedText;
         } else {
           welcomeDescription.textContent = currentLanguage === 'en' ? 'Please choose an avatar or use the one provided by your school account!' : 'Kérlek válassz egy avatárt, vagy használd az iskolai fiókod által biztosítottat!';
