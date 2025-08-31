@@ -4,9 +4,10 @@
 # EU2K Hub
 
 **Status:** ⚠️ Closed Beta  
-**Version:** 0.2abc (experimental, closed beta)
+**Version:** 0.3abc (experimental, closed beta)
+**Known issues:** Scrolling not working on homepage, settings general page resizeability is broken, news carausel on homepage is broken, teacher hub broken
 
----
+--- 
 
 ## About
 
