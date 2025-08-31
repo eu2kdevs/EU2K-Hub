@@ -123,7 +123,23 @@
       "title": "Welcome to the Hub!",
       "welcome-title": "Welcome to the Hub!",
       "welcome_hub": "Welcome to the Hub!",
-      "create_account_description": "Please choose an avatar, or use the one provided by your school account!"
+      "create_account_description": "Please choose an avatar, or use the one provided by your school account!",
+      "notifications_title": "Notification Settings",
+      "notifications_description": "Choose what notifications you'd like to receive!",
+      "messages_title": "Messages Settings",
+      "messages_description": "Decide if you're open to private messages!",
+      "terms_title": "Please accept the terms of service!",
+      "terms_description": "Read through, or learn more, and accept the information, and we're done!",
+      "teacher_description": "It looks like you're a teacher! We greatly appreciate that you're trying to explore the endless possibilities offered by the Hub (well, not quite endless 😊), but the Hub is in the early beta stage. It will be available for teachers soon!",
+      "adult_description": "It looks like you're an adult! We greatly appreciate that you're trying to explore the endless possibilities offered by the Hub (well, not quite endless 😊), but the Hub is in the early beta stage. It will be available for adults soon!"
+    },
+    "account": {
+      "private_messages": "Private Messages",
+      "who_can_message": "Who can send you messages?",
+      "message_notice": "Only you can modify this setting.",
+      "everyone": "Everyone",
+      "nobody": "Nobody",
+      "classmates_only": "Classmates only"
     }
   },
   "navigation": {
@@ -136,12 +152,14 @@
   "onboarding": {
     "continue_as_student": "Continue as Student",
     "continue_as_teacher": "Continue as Teacher",
-    "continue_without_account": "Continue without Account"
+    "continue_without_account": "Continue as Adult"
   },
   "profile": {
     "student_name": "Turóczi Ádám - 8.E",
     "use_school_account": "Continue with school profile picture",
-    "continue": "Continue with this"
+    "continue": "Continue with this",
+    "looks_good": "I look good!",
+    "looks_good_description": "Does this look good?"
   },
   "feedback": {
     "title": "Feedback",
@@ -220,13 +238,22 @@
     "beta_version": "Beta Version",
     "new_things": "New Things",
     "bell": "Bell",
+    "messages_notice": "This setting only applies to known contacts!",
+    "message_categories": "Who can send you messages?",
+    "everyone": "Everyone",
+    "nobody": "Nobody",
+    "classmates_only": "Classmates only",
     "stats_not_available": "This section is not available in beta, we are working very hard to make it available as soon as possible.",
     "my_courses": "My Courses:",
     "courses_unavailable_line1": "The Courses function in this version",
     "courses_unavailable_line2": "is not yet available.",
     "my_suggestions": "My Suggestions:",
     "events_not_available": "This section is not available in beta, we are working very hard to make it available as soon as possible.",
-    "messages_not_available": "This section is not available in beta, we are working very hard to make it available as soon as possible."
+    "messages_not_available": "This section is not available in beta, we are working very hard to make it available as soon as possible.",
+    "experiments_title": "Experiments",
+    "experiments_desc": "Show Welcome Screen",
+    "experiments_notice": "These are experimental features, they may be unstable, and they have not yet reached their full functionality.",
+    "experiments-welcome-screen": "Welcome Screen"
   },
   "common": {
     "forward": "Forward",

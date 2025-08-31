@@ -33,6 +33,19 @@
       display: none;
       /* WebKit */
     }
+
+    /* Scrollbar elrejtése a news carousel-ben */
+    #event-frame {
+      scrollbar-width: none;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* Internet Explorer 10+ */
+    }
+
+    #event-frame::-webkit-scrollbar {
+      display: none;
+      /* WebKit */
+    }
   </style>
   <script type="importmap">
     {
@@ -285,41 +298,48 @@
       if (!newsRow || cards.length === 0) return;
 
       const containerWidth = newsRow.clientWidth;
-      const defaultCardWidth = 200; // Alapértelmezett kártya szélesség
-      const cardGap = 8; // Kártyák közötti távolság
-      const maxVisibleCards = 6; // Maximum hány kártya legyen látható egyszerre
+      const defaultCardWidth = 272; // Alapértelmezett kártya szélesség (CSS-ből)
+      const cardGap = 12; // Kártyák közötti távolság (CSS-ből)
+      const minCards = 2; // Minimum 2 kártya mindig látható legyen
 
-      // Számoljuk ki, hogy hány kártya fér el alapméretben
-      const totalDefaultWidth = (defaultCardWidth * maxVisibleCards) + (cardGap * (maxVisibleCards - 1));
+      // Számoljuk ki, hogy hány kártya fér el
+      let maxVisibleCards = 6;
+      for (let cardCount = 6; cardCount >= minCards; cardCount--) {
+        const totalWidth = (defaultCardWidth * cardCount) + (cardGap * (cardCount - 1));
+        if (totalWidth <= containerWidth) {
+          maxVisibleCards = cardCount;
+          break;
+        }
+      }
 
-      if (containerWidth > totalDefaultWidth) {
-        // Van extra hely, megnöveljük az első 6 kártyát
-        const extraSpace = containerWidth - totalDefaultWidth;
+      console.log(`📏 Container width: ${containerWidth}px, showing ${maxVisibleCards} cards`);
+
+      // Mutassuk/rejtsük el a kártyákat
+      cards.forEach((card, index) => {
+        if (index < maxVisibleCards) {
+          card.style.display = 'flex';
+          card.style.minWidth = `${defaultCardWidth}px`;
+          card.style.maxWidth = `${defaultCardWidth}px`;
+          card.style.width = `${defaultCardWidth}px`;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Ha van extra hely, osszuk el a kártyák között
+      const totalUsedWidth = (defaultCardWidth * maxVisibleCards) + (cardGap * (maxVisibleCards - 1));
+      if (containerWidth > totalUsedWidth && maxVisibleCards > 0) {
+        const extraSpace = containerWidth - totalUsedWidth;
         const extraPerCard = extraSpace / maxVisibleCards;
         const newCardWidth = defaultCardWidth + extraPerCard;
 
-        console.log(`📏 News cards resizing: ${defaultCardWidth}px -> ${newCardWidth.toFixed(1)}px`);
-
-        // Alkalmazzuk az új méretet az első 6 kártyára
         cards.slice(0, maxVisibleCards).forEach(card => {
           card.style.minWidth = `${newCardWidth}px`;
           card.style.maxWidth = `${newCardWidth}px`;
           card.style.width = `${newCardWidth}px`;
         });
 
-        // A többi kártya marad alapméretben
-        cards.slice(maxVisibleCards).forEach(card => {
-          card.style.minWidth = `${defaultCardWidth}px`;
-          card.style.maxWidth = `${defaultCardWidth}px`;
-          card.style.width = `${defaultCardWidth}px`;
-        });
-      } else {
-        // Nincs extra hely, minden kártya alapméretben
-        cards.forEach(card => {
-          card.style.minWidth = `${defaultCardWidth}px`;
-          card.style.maxWidth = `${defaultCardWidth}px`;
-          card.style.width = `${defaultCardWidth}px`;
-        });
+        console.log(`📏 Cards resized to: ${newCardWidth.toFixed(1)}px each`);
       }
     }
 
@@ -407,54 +427,69 @@
 
         let events = [];
         const now = new Date();
-        const oneMonthLater = new Date(now);
-        oneMonthLater.setMonth(now.getMonth() + 1);
+        // Minden eseményt figyelembe veszünk, nem csak a következő 1 hónapot,
+        // így a közeli múlt eseményei is bekerülnek, és a legközelebbi esemény
+        // valóban középre kerülhet
 
         snapshot.forEach(doc => {
           const data = doc.data();
           const eventDate = data.date?.toDate ? data.date.toDate() : null;
           if (!eventDate) return;
-          if (eventDate >= now && eventDate <= oneMonthLater) {
-            events.push({ id: parseInt(doc.id), data, date: eventDate });
+          events.push({ id: parseInt(doc.id), data, date: eventDate });
+        });
+
+        console.log('Collected events (all with valid date):', events.length);
+        events.sort((a, b) => a.id - b.id);
+
+        let closestEventIndex = -1;
+        let minDateDiff = Infinity;
+
+        events.forEach((event, index) => {
+          const diff = Math.abs(event.date - now);
+          if (diff < minDateDiff) {
+            minDateDiff = diff;
+            closestEventIndex = index;
           }
         });
 
-        console.log('Filtered events (next month):', events.length);
-        events.sort((a, b) => b.id - a.id);
-
-        const containers = Array.from(document.querySelectorAll('.event-container'));
-        const visibleContainers = containers.filter(c => !c.classList.contains('hidden'));
-        console.log('Found', visibleContainers.length, 'visible event containers');
-
-        if (visibleContainers.length === 0) return;
-
-        // A legújabb esemény (legnagyobb ID) indexe - ez lesz a jobbszélső kártyán
-        const newestEventIndex = 0; // már ID szerint csökkenő sorrendben vannak
-
-        const largeIndices = visibleContainers.map((c, idx) => ({ idx, w: c.querySelector('.red-card')?.offsetWidth || 0 }))
-                                              .filter(c => c.w >= 400)
-                                              .map(c => c.idx);
-        let centerIdx;
-        if (largeIndices.length > 0) {
-          centerIdx = largeIndices[Math.floor(largeIndices.length / 2)];
-        } else {
-          centerIdx = visibleContainers.length - 1;
+        if (closestEventIndex === -1 && events.length > 0) {
+          closestEventIndex = events.length - 1; // Legújabb (legnagyobb ID)
         }
 
-        const arrangedIndices = [];
-        
-        // Jobbszélső pozíció: legújabb esemény
-        const rightmostIdx = visibleContainers.length - 1;
-        arrangedIndices[rightmostIdx] = newestEventIndex;
+        // Lokális konténerek és látható konténerek meghatározása az aktuális layout alapján
+        const containers = Array.from(document.querySelectorAll('.event-container'));
+        const visibleContainers = containers.filter(c => !c.classList.contains('hidden'));
+        if (visibleContainers.length === 0) {
+          console.warn('No visible event containers found after layout calculation');
+          return;
+        }
+        // Preferált közép: a 3 nagy kártya közül a 2. (containers[2]) ha látható,
+        // ha nem, próbáljuk a containers[1]-et, majd containers[3]-at, végül fallback középre
+        const preferOrder = [2, 1, 3];
+        let centerContainerIndex = Math.floor(visibleContainers.length / 2);
+        for (const idx of preferOrder) {
+          const el = containers[idx];
+          const visibleIdx = el ? visibleContainers.indexOf(el) : -1;
+          if (visibleIdx !== -1) {
+            centerContainerIndex = visibleIdx;
+            break;
+          }
+        }
+        const arrangedIndices = new Array(visibleContainers.length).fill(null);
 
-        // Balra haladva: régebbi események (csak ha van elég esemény)
-        let eventPtr = newestEventIndex + 1;
-        for (let i = rightmostIdx - 1; i >= 0; i--) {
-          if (eventPtr < events.length) {
-            arrangedIndices[i] = eventPtr;
-            eventPtr++;
-          } else {
-            arrangedIndices[i] = null; // Üres kártya ha nincs több esemény
+        if (closestEventIndex !== -1) {
+          arrangedIndices[centerContainerIndex] = closestEventIndex;
+
+          // Régebbi események (kisebb ID) elhelyezése balra
+          let leftIndex = centerContainerIndex - 1;
+          for (let i = closestEventIndex - 1; i >= 0 && leftIndex >= 0; i--) {
+            arrangedIndices[leftIndex--] = i;
+          }
+
+          // Újabb események (nagyobb ID) elhelyezése jobbra
+          let rightIndex = centerContainerIndex + 1;
+          for (let i = closestEventIndex + 1; i < events.length && rightIndex < visibleContainers.length; i++) {
+            arrangedIndices[rightIndex++] = i;
           }
         }
 
@@ -636,8 +671,6 @@
           </div>
           <div class="event-frame">
             <div class="top-cards-row">
-              <!-- sorrend: medium, large, large, large, medium, medium, small -->
-
               <!-- Medium 1 -->
               <div class="event-container">
                 <div class="red-card medium"></div>
@@ -717,10 +750,6 @@
             <button class="carousel-btn left">‹</button>
 
             <div class="bottom-cards-row" id="newsRow">
-              <div class="news-card">
-                <div class="red-rect"></div>
-                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
-              </div>
               <div class="news-card">
                 <div class="red-rect"></div>
                 <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
@@ -1004,6 +1033,18 @@
 
   <script src="/EU2K-Hub/assets/js/permissions.js"></script>
   <script src="/EU2K-Hub/assets/js/translations.js"></script>
+  <script src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
+
+  <script>
+    // Check if user has accepted terms of service
+    document.addEventListener('DOMContentLoaded', () => {
+      const termsAccepted = localStorage.getItem('termsAccepted');
+      if (termsAccepted !== 'true') {
+        // Redirect to onboarding if terms not accepted
+        window.location.href = '/EU2K-Hub/welcome/onboarding_student.html';
+      }
+    });
+  </script>
 </body>
 
 </html>

@@ -432,12 +432,9 @@ body {
   background: transparent;
   display: flex;
   align-items: flex-end;
-  /* Alsó részhez igazítás */
   justify-content: flex-end;
-  /* Jobb oldalhoz igazítás */
   z-index: 2000;
   pointer-events: none;
-  /* Átlátszó háttér nem blokkolja a kattintásokat */
 }
 
 .feedback-popup {
@@ -566,62 +563,45 @@ body {
 .feedback-category-buttons {
   display: flex;
   flex-direction: row;
-  /* Egymás mellett */
   gap: 12px;
 }
 
 .feedback-category-btn {
   background: #2B4D2B;
-  /* Nem kiválasztott kategória */
   border: none;
   border-radius: 32px;
-  /* 32px lekerekítettség */
   padding: 50px 16px;
-  /* Még magasabb gombok hogy elférjen a pipa */
   color: #AACF9C;
-  /* Nem kiválasztott szöveg */
   font-size: 0.85rem;
-  /* Még kisebb szöveg */
   cursor: pointer;
   transition: var(--transition);
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Középre igazítás */
   position: relative;
   flex: 1;
-  /* Egyenlő szélesség */
   min-height: 120px;
-  /* Még nagyobb minimum magasság hogy elférjen a pipa */
   text-align: center;
 }
 
 .feedback-category-btn.active {
   background: #20381B;
-  /* Kiválasztott kategória háttere */
   color: #81BE75;
-  /* Kiválasztott szöveg */
 }
 
 .feedback-category-check {
   opacity: 0;
   transition: var(--transition);
   background: #81BE75;
-  /* Zöld háttér */
   border-radius: 50%;
-  /* Kör alakú háttér */
   width: 24px;
-  /* Kisebb méret */
   height: 24px;
-  /* Kisebb méret */
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
   top: 12px;
-  /* Több hely felett */
   right: 12px;
-  /* Több hely mellett */
 }
 
 .feedback-category-btn.active .feedback-category-check {
@@ -630,30 +610,24 @@ body {
 
 .feedback-category-btn:hover {
   border-radius: 22px;
-  /* 22px hover effekt */
 }
 
 .feedback-check-icon {
   width: 14px;
-  /* Kisebb ikon */
   height: 14px;
-  /* Kisebb ikon */
   filter: brightness(0) saturate(100%) invert(12%) sepia(25%) saturate(1500%) hue-rotate(80deg) brightness(95%) contrast(95%);
-  /* #20381B színű ikon */
+  /* #20381B */
 }
 
 /* Info chip */
 .feedback-category-info {
   background: #81BE75;
-  /* Info notice háttere */
   border-radius: 32px;
-  /* 32px lekerekítettség */
   padding: 16px;
   display: flex;
   align-items: flex-start;
   gap: 12px;
   margin-bottom: 6px;
-  /* 6px gap a küldés gombig */
 }
 
 .feedback-info-icon {
@@ -666,7 +640,6 @@ body {
 
 .feedback-category-info span {
   color: #20381B;
-  /* Info ikon színe */
   font-size: 0.9rem;
   line-height: 1.4;
 }
@@ -676,30 +649,22 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  /* Kevesebb hely a küldés gomb és cím között */
   margin-bottom: 16px;
-  /* Ugyanannyi hely alul mint a jobb oldalon (popup padding) */
 }
 
 /* Cím input */
 .feedback-title-container {
   background: #2C412C;
-  /* Kategória kártya színe */
   border-radius: 32px;
-  /* 32px lekerekítettség */
   padding: 18px 16px;
-  /* Kicsit kisebb padding */
   flex: 1;
-  /* Kitölti a rendelkezésre álló helyet */
 }
 
 .feedback-title-input {
   background: transparent;
   border: none;
   color: #CDFFC5;
-  /* Kategória szöveg */
   font-size: 0.9rem;
-  /* Kisebb szöveg */
   width: 100%;
   outline: none;
   font-family: 'Roboto', sans-serif;
@@ -707,22 +672,16 @@ body {
 
 .feedback-title-input::placeholder {
   color: rgba(205, 255, 197, 0.6);
-  /* Cím placeholder átlátszóbb */
 }
 
 /* Küldés gomb */
 .feedback-send-btn {
   width: 80px;
-  /* Kicsit nagyobb gomb */
   height: 80px;
-  /* Kicsit nagyobb gomb */
   background: #3D563D;
-  /* Küldés gomb háttere */
   flex-shrink: 0;
-  /* Nem zsugorodik */
   border: none;
   border-radius: 52px;
-  /* 52px alap lekerekítettség */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -732,43 +691,32 @@ body {
 
 .feedback-send-btn:hover {
   border-radius: 32px;
-  /* 32px hover effekt */
 }
 
 .feedback-send-icon {
   width: 40px;
-  /* Kicsit nagyobb ikon */
   height: 40px;
-  /* Kicsit nagyobb ikon */
   filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(300%) hue-rotate(80deg) brightness(110%) contrast(90%);
-  /* AACF9C színű ikon */
+  /* AACF9C */
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .feedback-popup {
     width: 320px;
-    /* Még kisebb mobil szélesség */
     padding: 16px;
-    /* Kisebb padding */
     max-height: 450px;
-    /* Kisebb mobil magasság */
     margin: 10px;
-    /* Kisebb margin mobil nézetben */
   }
 
   .feedback-send-btn {
     width: 56px;
-    /* Nagyobb mobil gomb */
     height: 56px;
-    /* Nagyobb mobil gomb */
   }
 
   .feedback-category-btn {
     padding: 16px 12px;
-    /* Kisebb padding mobil nézetben */
     font-size: 0.8rem;
-    /* Még kisebb szöveg mobil nézetben */
   }
 }
 

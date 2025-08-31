@@ -124,6 +124,14 @@
       "welcome-title": "Üdvözöllek a Hub-ban!",
       "welcome_hub": "Üdvözlünk a Hub-ban!",
       "create_account_description": "Kérlek válassz egy avatárt, vagy használd az iskolai fiókod által biztosítottat!",
+      "notifications_title": "Értesítések beállítása",
+      "notifications_description": "Válaszd ki, milyen értesítéseket szeretnél kapni!",
+      "messages_title": "Üzenetek beállítása",
+      "messages_description": "Döntsd el, hogy nyitott vagy-e a privát üzenetekre!",
+      "terms_title": "Fogadd el kérlek a használati feltételeket!",
+      "terms_description": "Olvasd végig, vagy tudj meg többet, és fogadd el a tájékoztatót, és be is fejeztük!",
+      "teacher_description": "Úgy látszik, tanár vagy! Nagyra értékeljük hogy megpróbálod felfedezni a Hub által nyújtott végtelen lehetőségeket (na jó azért nem 😊), de a Hub a béta szakasz elején van. Tanároknak is nemsokára elérhető lesz!",
+      "adult_description": "Úgy látszik, felnőtt vagy! Nagyra értékeljük hogy megpróbálod felfedezni a Hub által nyújtott végtelen lehetőségeket (na jó azért nem 😊), de a Hub a béta szakasz elején van. Felnőtteknek is nemsokára elérhető lesz!",
       "courses": "Kurzusok",
       "description": "Örülünk hogy ennyire érdeklődsz a Kurzusok iránt, de egyelőre még fejlesztés alatt van, és nem alkalmas a mostani állapotában a használatra.",
       "description2": "Viszont, addig tudsz visszajelzést adni, és elmondani",
@@ -135,6 +143,14 @@
       "interest_text_3": "szerinted",
       "interest_text_4": "mi lenne ide a legjobb ;)",
       "feedback": "Visszajelzés"
+    },
+    "account": {
+      "private_messages": "Privát Üzenetek",
+      "who_can_message": "Ki küldhet neked üzeneteket?",
+      "message_notice": "Ezt a beállítást csak te tudod módosítani.",
+      "everyone": "Mindenki",
+      "nobody": "Senki",
+      "classmates_only": "Csak osztálytársak"
     }
   },
   "navigation": {
@@ -147,12 +163,14 @@
   "onboarding": {
     "continue_as_student": "Tovább diákként",
     "continue_as_teacher": "Tovább tanárként", 
-    "continue_without_account": "Tovább fiók nélkül"
+    "continue_without_account": "Tovább felnőttként"
   },
   "profile": {
     "student_name": "Turóczi Ádám - 8.E",
     "use_school_account": "Tovább az iskolai profilképpel",
-    "continue": "Tovább ezzel"
+    "continue": "Tovább ezzel",
+    "looks_good": "Jól nézek ki!",
+    "looks_good_description": "Ez így jól néz ki?"
   },
   "feedback": {
     "title": "Visszajelzés",
@@ -231,6 +249,11 @@
     "beta_version": "Bétaverzió",
     "new_things": "Újdonságok",
     "bell": "Csengő",
+    "messages_notice": "Ez a beállítás csak a tudott névjegyekre vonatkozik!",
+    "message_categories": "Kit küldhetsz üzenetet?",
+    "everyone": "Mindenki",
+    "nobody": "Senki",
+    "classmates_only": "Csak osztálytársak",
     "stats_not_available": "Ez a részleg bétában nem elérhető, nagyon erősen dolgozunk rajta, hogy minél hamarabb elérhető legyen.",
     "my_courses": "Kurzusaim:",
     "courses_unavailable_line1": "A Kurzusok funkció ebben a verzióban",
@@ -240,7 +263,11 @@
     "suggestion2": "A tökéletes prompt a tanuláshoz",
     "suggestion3": "Hogyan készíts élethű képeket",
     "events_not_available": "Ez a részleg bétában nem elérhető, nagyon erősen dolgozunk rajta, hogy minél hamarabb elérhető legyen.",
-    "messages_not_available": "Ez a részleg bétában nem elérhető, nagyon erősen dolgozunk rajta, hogy minél hamarabb elérhető legyen."
+    "messages_not_available": "Ez a részleg bétában nem elérhető, nagyon erősen dolgozunk rajta, hogy minél hamarabb elérhető legyen.",
+    "experiments_title": "Kísérletek",
+    "experiments_desc": "Üdvözlő Képernyő mutatása",
+    "experiments_notice": "Ezek kísérleti funkciók, instabilak lehetek, és nem nyerték még el a teljes funkcionalitásukat.",
+    "experiments-welcome-screen": "Üdvözlő Képernyő"
   },
   "common": {
     "welcome_hub": "Üdvözöllek a Hub-ban!",

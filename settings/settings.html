@@ -119,6 +119,35 @@
         });
       });
 
+      // Üdvözlő képernyő switch kezelése
+      const welcomeScreenSwitch = document.getElementById('welcome-screen-switch');
+      if (welcomeScreenSwitch && window.welcomeScreenManager) {
+        // Beállítjuk a switch állapotát a mentett beállítás alapján
+        welcomeScreenSwitch.selected = window.welcomeScreenManager.isWelcomeScreenEnabled();
+        
+        welcomeScreenSwitch.addEventListener('click', e => {
+          e.stopPropagation(); // Megakadályozza a kártya kattintás eseményét
+        });
+
+        welcomeScreenSwitch.addEventListener('change', e => {
+          const isEnabled = e.target.selected;
+          window.welcomeScreenManager.setWelcomeScreenEnabled(isEnabled);
+          console.log('Welcome screen setting changed to:', isEnabled);
+        });
+      }
+
+      // Első látogatás visszaállítása gomb kezelése
+      const resetFirstVisitBtn = document.getElementById('reset-first-visit-btn');
+      if (resetFirstVisitBtn && window.welcomeScreenManager) {
+        resetFirstVisitBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          if (confirm('Biztosan visszaállítod az első látogatás állapotát? A következő oldal betöltésekor megjelenik az üdvözlő képernyő.')) {
+            window.welcomeScreenManager.resetFirstVisit();
+            alert('Első látogatás állapota visszaállítva! A következő oldal betöltésekor megjelenik az üdvözlő képernyő.');
+          }
+        });
+      }
+
       // Nyelv radio button-ok kezelése
       const languageRadios = document.querySelectorAll('.general-language-card md-radio');
       languageRadios.forEach(radio => {
@@ -198,6 +227,7 @@
   </script>
   <script src="/EU2K-Hub/assets/js/permissions.js"></script>
   <script src="/EU2K-Hub/assets/js/translations.js?v=1.1"></script>
+  <script src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
 </head>
 
 <body>
@@ -306,12 +336,12 @@
                     </div>
                   </div>
 
-                  <!-- Üzenetek -->
-                  <div class="settings-card group-bottom" data-page="messages">
-                    <img src="/EU2K-Hub/assets/settings_icons/messages_icon.svg" class="settings-card-icon" alt="Üzenetek">
+                  <!-- Kísérletek -->
+                  <div class="settings-card group-bottom" data-page="experiments">
+                    <img src="/EU2K-Hub/assets/settings_icons/experiments_page/experiments.svg" class="settings-card-icon" alt="Kísérletek">
                     <div class="settings-card-content">
-                      <div class="settings-card-title" data-translate="settings.messages">Üzenetek</div>
-                      <div class="settings-card-desc" data-translate="settings.messages_desc">Privát Üzenetek</div>
+                      <div class="settings-card-title" data-translate="settings.experiments_title">Kísérletek</div>
+                      <div class="settings-card-desc" data-translate="settings.experiments_desc">Üdvözlő képernyő</div>
                     </div>
                   </div>
                 </div>
@@ -548,10 +578,19 @@
                     legyen.</p>
                 </div>
 
-                <div id="messages-page" class="settings-page">
-                  <h2 data-translate="settings.messages">Üzenetek</h2>
-                  <p data-translate="settings.messages_not_available">Ez a részleg bétában nem elérhető, nagyon erősen dolgozunk rajta, hogy minél hamarabb elérhető
-                    legyen.</p>
+                <div id="experiments-page" class="settings-page">
+                  <div class="general-beta-card">
+                    <span class="general-beta-text" data-translate="settings.experiments-welcome-screen">Üdvözlő Képernyő</span>
+                    <md-switch id="welcome-screen-switch" icons selected></md-switch>
+                  </div>
+                  
+                  <!-- Tesztelési gomb az első látogatás visszaállításához -->
+                  <div class="general-beta-card" style="margin-top: 16px;">
+                    <span class="general-beta-text">Első látogatás visszaállítása (teszteléshez)</span>
+                    <md-filled-button id="reset-first-visit-btn" style="margin-left: auto;">
+                      Visszaállítás
+                    </md-filled-button>
+                  </div>
                 </div>
               </div>
             </div>

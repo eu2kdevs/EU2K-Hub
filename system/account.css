@@ -69,7 +69,8 @@
   --transition: 0.2s cubic-bezier(.4, 0, .2, 1);
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -375,7 +376,8 @@ body {
 
 .logout-button {
   margin-top: auto;
-  align-self: flex-start; /* Align to the left, not centered */
+  align-self: flex-start;
+  /* Align to the left, not centered */
   width: 100%;
   padding: 16px;
   background-color: #2A3827;
@@ -383,16 +385,19 @@ body {
   border: none;
   border-radius: 32px;
   display: flex;
-  flex-direction: column; /* Icon above text */
+  flex-direction: column;
+  /* Icon above text */
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: var(--transition);
-  margin-top: 200px; /* Add space below the button */
+  margin-top: 200px;
+  /* Add space below the button */
 }
 
 .logout-button:hover {
-  border-radius: 22px; /* Hover effect as requested */
+  border-radius: 22px;
+  /* Hover effect as requested */
 }
 
 .logout-icon {
@@ -484,7 +489,7 @@ body {
 }
 
 .account-page.active {
-  display: flex;  
+  display: flex;
   flex-direction: column;
   overflow-y: auto;
   position: relative;

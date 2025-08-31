@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="description" content="Nagyon örülünk hogy itt vagy velünk, és érdeklődsz a Hub iránt. Kérlek fejezd be ezt a gyors bemutatót, és máris elkezdheted használni a Hubot!">
+  <meta name="description"
+    content="Nagyon örülünk hogy itt vagy velünk, és érdeklődsz a Hub iránt. Kérlek fejezd be ezt a gyors bemutatót, és máris elkezdheted használni a Hubot!">
   <title data-translate="pages.onboarding_student.title">Üdvözlünk a Hub-ban!</title>
   <link rel="stylesheet" href="onboarding_student.css">
   <link rel="icon" href="/EU2K-Hub/favicon.ico">
@@ -22,6 +23,7 @@
   </script>
   <script src="/EU2K-Hub/assets/js/permissions.js"></script>
   <script src="/EU2K-Hub/assets/js/translations.js"></script>
+  <script src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
   <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
@@ -58,18 +60,40 @@
       function showPage(pageId) {
         console.log('Showing page:', pageId);
 
-        // Hide all pages
-        welcomePages.forEach(page => {
-          page.classList.remove('active');
-          page.style.display = 'none';
-        });
-
-        // Show target page
-        const targetPage = document.getElementById(pageId + '-page');
-        if (targetPage) {
-          targetPage.classList.add('active');
-          targetPage.style.display = 'flex';
+        // First fade out all active pages
+        const currentActive = document.querySelector('.welcome-page.active');
+        if (currentActive) {
+          currentActive.classList.remove('active');
         }
+
+        // Show target page - handle both with and without '-page' suffix
+        let targetPage = document.getElementById(pageId + '-page');
+        if (!targetPage) {
+          targetPage = document.getElementById(pageId);
+        }
+
+        if (targetPage) {
+          // Make sure it's visible but not active first
+          targetPage.style.display = 'flex';
+          
+          // Small delay to ensure display change is processed
+          setTimeout(() => {
+            targetPage.classList.add('active');
+          }, 10);
+          
+          console.log('Successfully showed page:', targetPage.id);
+        } else {
+          console.error('Page not found:', pageId);
+        }
+
+        // Hide non-active pages after transition
+        setTimeout(() => {
+          welcomePages.forEach(page => {
+            if (!page.classList.contains('active')) {
+              page.style.display = 'none';
+            }
+          });
+        }, 500);
       }
 
       function navigate(event, pageId) {
@@ -83,9 +107,9 @@
         button.addEventListener('click', e => {
           const language = button.getAttribute('data-language');
           currentLanguage = language;
-          
+
           console.log('Language selected:', language);
-          
+
           // Switch language in translation system
           if (window.translationManager) {
             console.log('Switching language to:', language);
@@ -102,7 +126,7 @@
               }
             }, 500);
           }
-          
+
           navigate(e, 'step2');
         });
       });
@@ -112,16 +136,33 @@
       navButtons.forEach(button => {
         button.addEventListener('click', e => {
           const action = button.getAttribute('data-action');
-          
+
           if (action === 'back-step1') {
             navigate(e, 'step1');
           } else if (action === 'back-step2') {
-            navigate(e, 'step2');
+            // Check if we're in confirmation state
+            const profileContent = document.querySelector('.profile-content');
+            if (profileContent && profileContent.classList.contains('confirmation-state')) {
+              // Revert to avatar selection instead of going back to step2
+              e.preventDefault();
+              revertAvatarConfirmation();
+            } else {
+              navigate(e, 'step2');
+            }
+          } else if (action === 'back-student-profile') {
+            // Reset the student profile page to its original state
+            resetStudentProfilePage();
+            navigate(e, 'student-profile');
+          } else if (action === 'back-notifications-setup') {
+            navigate(e, 'notifications-setup');
+          } else if (action === 'back-messages-setup') {
+            navigate(e, 'messages-setup');
           } else if (action === 'student') {
             navigate(e, 'student-profile');
-          } else if (action === 'teacher' || action === 'without-account') {
-            // TODO: Implement these later
-            console.log('Action not implemented yet:', action);
+          } else if (action === 'teacher') {
+            navigate(e, 'teacher');
+          } else if (action === 'without-account') {
+            navigate(e, 'adult');
           }
         });
       });
@@ -130,20 +171,20 @@
       const avatarOptions = document.querySelectorAll('.avatar-option');
       const mainAvatarImg = document.querySelector('.main-avatar-img');
       const mainAvatar = document.querySelector('.main-avatar');
-      
+
       avatarOptions.forEach(option => {
         option.addEventListener('click', () => {
           const avatarImg = option.querySelector('.avatar-img');
           const avatarSrc = avatarImg.src;
           const avatarType = option.getAttribute('data-avatar');
-          
+
           // Update main avatar
           mainAvatarImg.src = avatarSrc;
-          
+
           // Color maps for background and border based on actual avatar colors
           const backgroundColorMap = {
             'magenta': '#E8B4E3',
-            'green': '#B4E8B4', 
+            'green': '#B4E8B4',
             'blue': '#B4D4E8',
             'orange': '#E8D4B4',
             'purple': '#D4B4E8',
@@ -151,7 +192,7 @@
             'red': '#E8B4B4',
             'gray': '#C4C4C4'
           };
-          
+
           // Updated border colors to match avatar main colors
           const borderColorMap = {
             'magenta': '#D946EF', // Bright magenta/fuchsia
@@ -163,16 +204,16 @@
             'red': '#EF4444',     // Bright red
             'gray': '#6B7280'     // Medium gray
           };
-          
+
           // Update main avatar background
           mainAvatar.style.background = backgroundColorMap[avatarType] || '#E8B4E3';
-          
+
           // Remove active class from all options
           avatarOptions.forEach(opt => {
             opt.classList.remove('active');
             opt.style.border = 'none';
           });
-          
+
           // Add active class and colored border to selected option
           option.classList.add('active');
           option.style.border = `3px solid ${borderColorMap[avatarType]}`;
@@ -188,7 +229,7 @@
       // Initial page load
       const initialPage = location.hash.substring(1) || 'step1';
       showPage(initialPage);
-      
+
       // Set default avatar selection (magenta)
       setTimeout(() => {
         const defaultAvatar = document.querySelector('.avatar-option[data-avatar="magenta"]');
@@ -196,6 +237,348 @@
           defaultAvatar.click();
         }
       }, 100);
+
+      // Handle "Continue with this" button click
+      const continueButton = document.getElementById('continue-with-avatar');
+      if (continueButton) {
+        continueButton.addEventListener('click', () => {
+          showAvatarConfirmation();
+        });
+      }
+
+      // Handle "Looks good" button click
+      const looksGoodButton = document.getElementById('looks-good-button');
+      if (looksGoodButton) {
+        looksGoodButton.addEventListener('click', () => {
+          showSuccessAnimation();
+        });
+      }
+
+      // Handle "Continue notifications" button click
+      const continueNotificationsButton = document.getElementById('continue-notifications');
+      if (continueNotificationsButton) {
+        continueNotificationsButton.addEventListener('click', () => {
+          navigate(event, 'messages-setup');
+        });
+      }
+
+      // Handle "Continue messages" button click
+      const continueMessagesButton = document.getElementById('continue-messages');
+      if (continueMessagesButton) {
+        continueMessagesButton.addEventListener('click', () => {
+          showPage('terms-setup');
+        });
+      }
+
+      // Handle terms checkbox
+      const termsCheckbox = document.getElementById('terms-checkbox');
+      const continueTermsButton = document.getElementById('continue-terms');
+      
+      if (termsCheckbox && continueTermsButton) {
+        termsCheckbox.addEventListener('change', (event) => {
+          continueTermsButton.disabled = !event.target.checked;
+        });
+      }
+
+      // Handle "Continue terms" button click
+      if (continueTermsButton) {
+        continueTermsButton.addEventListener('click', () => {
+          const checkbox = document.getElementById('terms-checkbox');
+          if (checkbox && checkbox.checked) {
+            // Store acceptance in localStorage
+            localStorage.setItem('termsAccepted', 'true');
+            showPage('final-welcome-page');
+          } else {
+            alert('Kérlek fogadd el a használati feltételeket a folytatáshoz!');
+          }
+        });
+      }
+
+      // Handle private messages switch toggle
+      const privateMessagesSwitch = document.querySelector('#messages-setup-page .card-top md-switch');
+      const messageRadios = document.querySelectorAll('#messages-setup-page md-radio[name="message-privacy"]');
+
+      if (privateMessagesSwitch) {
+        privateMessagesSwitch.addEventListener('change', (event) => {
+          const isEnabled = event.target.selected;
+          messageRadios.forEach(radio => {
+            radio.disabled = !isEnabled;
+          });
+        });
+      }
+    }
+
+    function showAvatarConfirmation() {
+      const profileContent = document.querySelector('.profile-content');
+      const welcomeDescription = document.querySelector('.welcome-description-header');
+      const avatarSelection = document.querySelector('.avatar-selection');
+      const profileActions = document.querySelector('.profile-actions');
+      const confirmationActions = document.querySelector('.profile-actions-confirmation');
+      const mainAvatarContainer = document.querySelector('.main-avatar-container');
+      const profileDivider = document.querySelector('.profile-divider');
+
+      // Add confirmation state class to profile content for avatar enlargement
+      profileContent.classList.add('confirmation-state');
+
+      // Update description text with translation support
+      if (welcomeDescription) {
+        welcomeDescription.setAttribute('data-translate', 'profile.looks_good_description');
+        // Update text based on current language
+        if (window.translationManager) {
+          const translatedText = window.translationManager.translate('profile.looks_good_description');
+          welcomeDescription.textContent = translatedText;
+        } else {
+          welcomeDescription.textContent = currentLanguage === 'en' ? 'Does this look good?' : 'Ez így jól néz ki?';
+        }
+      }
+
+      // Hide avatar selection and original buttons with smooth transition
+      if (avatarSelection) {
+        avatarSelection.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        avatarSelection.style.opacity = '0';
+        avatarSelection.style.transform = 'translateY(-20px)';
+        setTimeout(() => {
+          avatarSelection.style.display = 'none';
+        }, 400);
+      }
+
+      if (profileActions) {
+        profileActions.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        profileActions.style.opacity = '0';
+        profileActions.style.transform = 'translateY(-20px)';
+        setTimeout(() => {
+          profileActions.style.display = 'none';
+        }, 400);
+      }
+
+      if (profileDivider) {
+        profileDivider.style.transition = 'opacity 0.4s ease';
+        profileDivider.style.opacity = '0';
+        setTimeout(() => {
+          profileDivider.style.display = 'none';
+        }, 400);
+      }
+
+      // Show confirmation button with smooth entrance transition
+      setTimeout(() => {
+        if (confirmationActions) {
+          confirmationActions.style.display = 'flex';
+          confirmationActions.style.opacity = '0';
+          confirmationActions.style.transform = 'translateY(20px)';
+          confirmationActions.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+
+          setTimeout(() => {
+            confirmationActions.style.opacity = '1';
+            confirmationActions.style.transform = 'translateY(0)';
+          }, 50);
+        }
+      }, 400);
+    }
+
+    function revertAvatarConfirmation() {
+      const profileContent = document.querySelector('.profile-content');
+      const welcomeDescription = document.querySelector('.welcome-description-header');
+      const avatarSelection = document.querySelector('.avatar-selection');
+      const profileActions = document.querySelector('.profile-actions');
+      const confirmationActions = document.querySelector('.profile-actions-confirmation');
+      const profileDivider = document.querySelector('.profile-divider');
+
+      // Remove confirmation state class
+      profileContent.classList.remove('confirmation-state');
+
+      // Revert description text
+      if (welcomeDescription) {
+        welcomeDescription.setAttribute('data-translate', 'pages.onboarding_student.create_account_description');
+        if (window.translationManager) {
+          const translatedText = window.translationManager.translate('pages.onboarding_student.create_account_description');
+          welcomeDescription.textContent = translatedText;
+        } else {
+          welcomeDescription.textContent = currentLanguage === 'en' ? 'Please choose an avatar or use the one provided by your school account!' : 'Kérlek válassz egy avatárt, vagy használd az iskolai fiókod által biztosítottat!';
+        }
+      }
+
+      // Hide confirmation actions
+      if (confirmationActions) {
+        confirmationActions.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        confirmationActions.style.opacity = '0';
+        confirmationActions.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          confirmationActions.style.display = 'none';
+        }, 400);
+      }
+
+      // Show avatar selection and original buttons
+      setTimeout(() => {
+        if (avatarSelection) {
+          avatarSelection.style.display = 'block';
+          avatarSelection.style.opacity = '0';
+          avatarSelection.style.transform = 'translateY(-20px)';
+          avatarSelection.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+          setTimeout(() => {
+            avatarSelection.style.opacity = '1';
+            avatarSelection.style.transform = 'translateY(0)';
+          }, 50);
+        }
+
+        if (profileActions) {
+          profileActions.style.display = 'flex';
+          profileActions.style.opacity = '0';
+          profileActions.style.transform = 'translateY(-20px)';
+          profileActions.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+          setTimeout(() => {
+            profileActions.style.opacity = '1';
+            profileActions.style.transform = 'translateY(0)';
+          }, 50);
+        }
+
+        if (profileDivider) {
+          profileDivider.style.display = 'block';
+          profileDivider.style.opacity = '0';
+          profileDivider.style.transition = 'opacity 0.4s ease';
+          setTimeout(() => {
+            profileDivider.style.opacity = '1';
+          }, 50);
+        }
+      }, 400);
+    }
+
+    function resetStudentProfilePage() {
+      // Reset the publish layout visibility
+      const publishLayout = document.querySelector('.publish-layout');
+      if (publishLayout) {
+        publishLayout.style.opacity = '1';
+        publishLayout.style.transition = '';
+      }
+
+      // Reset profile content to avatar selection state
+      const profileContent = document.querySelector('.profile-content');
+      const welcomeDescription = document.querySelector('.welcome-description-header');
+      const avatarSelection = document.querySelector('.avatar-selection');
+      const profileActions = document.querySelector('.profile-actions');
+      const confirmationActions = document.querySelector('.profile-actions-confirmation');
+      const profileDivider = document.querySelector('.profile-divider');
+
+      // Remove confirmation state
+      if (profileContent) {
+        profileContent.classList.remove('confirmation-state');
+      }
+
+      // Reset description text
+      if (welcomeDescription) {
+        welcomeDescription.setAttribute('data-translate', 'pages.onboarding_student.create_account_description');
+        if (window.translationManager) {
+          const translatedText = window.translationManager.translate('pages.onboarding_student.create_account_description');
+          welcomeDescription.textContent = translatedText;
+        } else {
+          welcomeDescription.textContent = currentLanguage === 'en' ? 'Please choose an avatar or use the one provided by your school account!' : 'Kérlek válassz egy avatárt, vagy használd az iskolai fiókod által biztosítottat!';
+        }
+      }
+
+      // Show all original elements
+      if (avatarSelection) {
+        avatarSelection.style.display = 'block';
+        avatarSelection.style.opacity = '1';
+        avatarSelection.style.transform = 'translateY(0)';
+        avatarSelection.style.transition = '';
+      }
+
+      if (profileActions) {
+        profileActions.style.display = 'flex';
+        profileActions.style.opacity = '1';
+        profileActions.style.transform = 'translateY(0)';
+        profileActions.style.transition = '';
+      }
+
+      if (profileDivider) {
+        profileDivider.style.display = 'block';
+        profileDivider.style.opacity = '1';
+        profileDivider.style.transition = '';
+      }
+
+      // Hide confirmation actions
+      if (confirmationActions) {
+        confirmationActions.style.display = 'none';
+        confirmationActions.style.opacity = '0';
+        confirmationActions.style.transform = 'translateY(20px)';
+        confirmationActions.style.transition = '';
+      }
+    }
+
+    function showSuccessAnimation() {
+      // Hide the publish layout
+      const publishLayout = document.querySelector('.publish-layout');
+      if (publishLayout) {
+        publishLayout.style.opacity = '0';
+        publishLayout.style.transition = 'opacity 0.3s ease';
+      }
+
+      // Create success animation overlay that covers the whole screen
+      const overlay = document.createElement('div');
+      overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+      `;
+
+      // Create the success text element
+      const successText = document.createElement('div');
+      successText.textContent = 'Szuper!';
+      successText.style.cssText = `
+        font-size: 3rem;
+        font-weight: 700;
+        color: #1976d2;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      `;
+
+      overlay.appendChild(successText);
+      document.body.appendChild(overlay);
+
+      // Animate text to center
+      setTimeout(() => {
+        successText.style.opacity = '1';
+        successText.style.transform = 'translateY(0)';
+      }, 100);
+
+      // Gravity fall animation and navigate
+      setTimeout(() => {
+        successText.style.transition = 'all 0.8s cubic-bezier(0.55, 0.085, 0.68, 0.53)';
+        successText.style.transform = 'translateY(200px)';
+        successText.style.opacity = '0';
+
+        setTimeout(() => {
+          document.body.removeChild(overlay);
+          // Navigate to notifications setup page
+          location.hash = 'notifications-setup';
+        }, 800);
+      }, 1500);
+    }
+
+    // Check terms acceptance and redirect
+    function checkTermsAndRedirect() {
+      const termsAccepted = localStorage.getItem('termsAccepted');
+      if (termsAccepted === 'true') {
+        // Megjelöljük, hogy a felhasználó már látogatta az oldalt
+        if (window.welcomeScreenManager) {
+          window.welcomeScreenManager.markAsVisited();
+          // Visszatérés az eredeti oldalra
+          window.welcomeScreenManager.returnFromWelcomeScreen();
+        } else {
+          // Fallback ha nincs welcome screen manager
+          window.location.href = '/EU2K-Hub/index.html';
+        }
+      } else {
+        alert('Kérlek fejezd be az onboarding folyamatot és fogadd el a használati feltételeket!');
+        showPage('terms-setup-page');
+      }
     }
 
     // Initialize on DOM load
@@ -203,7 +586,7 @@
       // Wait a bit for translation manager to load
       setTimeout(() => {
         initializeWelcome();
-        
+
         // Check if translation manager is available
         if (window.translationManager) {
           console.log('Translation manager is available');
@@ -219,25 +602,26 @@
   <div class="app-bg">
     <main class="main-area">
       <div class="main-content">
-        
+
         <!-- Step 1: Language Selection -->
         <div id="step1-page" class="welcome-page active">
           <div class="welcome-container">
             <!-- Kéz ikon -->
             <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-hand-icon" alt="Waving Hand">
-            
+
             <!-- Üdvözlő Szöveg -->
             <h1 class="welcome-title" data-translate="pages.onboarding_student.welcome-title">Üdvözöllek a Hub-ban!</h1>
-            
+
             <!-- Nyelvgombok -->
             <div class="welcome-description">
               <button class="welcome-button language-button" data-language="hu">
-                  <img src="/EU2K-Hub/assets/settings_icons/general_page/hungarian.png" class="welcome-icon" alt="HU-Flag">
-                  <span class="welcome-text" data-translate="settings.language_hungarian">Magyar</span>
+                <img src="/EU2K-Hub/assets/settings_icons/general_page/hungarian.png" class="welcome-icon"
+                  alt="HU-Flag">
+                <span class="welcome-text" data-translate="settings.language_hungarian">Magyar</span>
               </button>
               <button class="welcome-button-secondary language-button" data-language="en">
-                  <img src="/EU2K-Hub/assets/settings_icons/general_page/english.png" class="welcome-icon" alt="EN-Flag">
-                  <span class="welcome-text" data-translate="settings.language_english">English</span>
+                <img src="/EU2K-Hub/assets/settings_icons/general_page/english.png" class="welcome-icon" alt="EN-Flag">
+                <span class="welcome-text" data-translate="settings.language_english">English</span>
               </button>
             </div>
           </div>
@@ -248,30 +632,84 @@
           <div class="welcome-container">
             <!-- Kéz ikon -->
             <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-hand-icon" alt="Waving Hand">
-            
+
             <!-- Üdvözlő Szöveg -->
             <h1 class="welcome-title" data-translate="pages.onboarding_student.welcome-title">Üdvözöllek a Hub-ban!</h1>
-            
+
             <!-- Navigation buttons -->
             <div class="welcome-navigation">
               <button class="welcome-nav-button nav-button" data-action="back-step1">
                 <img src="/EU2K-Hub/assets/welcome_icons/back.svg" class="welcome-nav-icon" alt="Back">
                 <span class="welcome-nav-text" data-translate="navigation.back">Vissza</span>
               </button>
-              
+
               <button class="welcome-nav-button-primary nav-button" data-action="student">
                 <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="welcome-nav-icon" alt="Student">
                 <span class="welcome-nav-text" data-translate="onboarding.continue_as_student">Tovább diákként</span>
               </button>
-              
+
               <button class="welcome-nav-button-primary nav-button" data-action="teacher">
                 <img src="/EU2K-Hub/assets/welcome_icons/teacher.svg" class="welcome-nav-icon" alt="Teacher">
                 <span class="welcome-nav-text" data-translate="onboarding.continue_as_teacher">Tovább tanárként</span>
               </button>
-              
+
               <button class="welcome-nav-button-last nav-button" data-action="without-account">
-                <img src="/EU2K-Hub/assets/welcome_icons/without_account.svg" class="welcome-nav-icon" alt="Without Account">
-                <span class="welcome-nav-text" data-translate="onboarding.continue_without_account">Tovább fiók nélkül</span>
+                <img src="/EU2K-Hub/assets/welcome_icons/without_account.svg" class="welcome-nav-icon"
+                  alt="Without Account">
+                <span class="welcome-nav-text" data-translate="onboarding.continue_without_account">Tovább
+                  felnőttként</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Teacher Page -->
+        <div id="teacher-page" class="welcome-page">
+          <div class="welcome-container">
+            <!-- Kéz ikon -->
+            <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-hand-icon" alt="Waving Hand">
+
+            <!-- Üdvözlő Szöveg -->
+            <h1 class="welcome-title" data-translate="pages.onboarding_student.welcome_hub">Üdvözlünk a Hub-ban!</h1>
+
+            <!-- Leírás -->
+            <p class="welcome-description-text" data-translate="pages.onboarding_student.teacher_description">
+              Úgy látszik, tanár vagy! Nagyra értékeljük hogy megpróbálod felfedezni a Hub által nyújtott
+              végtelen lehetőségeket (na jó azért nem 😊), de a Hub a béta szakasz elején van.
+              Tanároknak is nemsokára elérhető lesz!
+            </p>
+
+            <!-- Vissza gomb -->
+            <div class="welcome-back-button-container">
+              <button class="welcome-back-button nav-button" data-action="back-step2">
+                <img src="/EU2K-Hub/assets/welcome_icons/back.svg" class="welcome-back-icon" alt="Back">
+                <span class="welcome-back-text" data-translate="navigation.back">Vissza</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Adult Page -->
+        <div id="adult-page" class="welcome-page">
+          <div class="welcome-container">
+            <!-- Kéz ikon -->
+            <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-hand-icon" alt="Waving Hand">
+
+            <!-- Üdvözlő Szöveg -->
+            <h1 class="welcome-title" data-translate="pages.onboarding_student.welcome_hub">Üdvözlünk a Hub-ban!</h1>
+
+            <!-- Leírás -->
+            <p class="welcome-description-text" data-translate="pages.onboarding_student.adult_description">
+              Úgy látszik, felnőtt vagy! Nagyra értékeljük hogy megpróbálod felfedezni a Hub által nyújtott
+              végtelen lehetőségeket (na jó azért nem 😊), de a Hub a béta szakasz elején van.
+              Felnőtteknek is nemsokára elérhető lesz!
+            </p>
+
+            <!-- Vissza gomb -->
+            <div class="welcome-back-button-container">
+              <button class="welcome-back-button nav-button" data-action="back-step2">
+                <img src="/EU2K-Hub/assets/welcome_icons/back.svg" class="welcome-back-icon" alt="Back">
+                <span class="welcome-back-text" data-translate="navigation.back">Vissza</span>
               </button>
             </div>
           </div>
@@ -280,21 +718,23 @@
         <!-- Step 3: Student Profile Setup -->
         <div id="student-profile-page" class="welcome-page">
           <div class="publish-layout">
-            <div class="back-arrow-column">
-              <button class="back-arrow-btn nav-button" data-action="back-step2">
-                <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
-              </button>
-            </div>
             <div class="publish-content">
-              <header class="header">
+              <div class="publish-content-header">
+                <button class="back-arrow-btn nav-button" data-action="back-step2">
+                  <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
+                </button>
                 <div class="welcome-container-header">
                   <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-icon-header" alt="Welcome">
-                  <h1 class="welcome-text-header" data-translate="pages.onboarding_student.welcome_hub">Üdvözlünk a Hub-ban!</h1>
-                  <p class="welcome-description-header" data-translate="pages.onboarding_student.create_account_description">Kérlek válassz egy avatárt, vagy használd az iskolai fiókod által biztosítottat!</p>
+                  <h1 class="welcome-text-header" data-translate="pages.onboarding_student.welcome_hub">Üdvözlünk a
+                    Hub-ban!</h1>
+                  <p class="welcome-description-header"
+                    data-translate="pages.onboarding_student.create_account_description">Kérlek válassz egy avatárt,
+                    vagy
+                    használd az iskolai fiókod által biztosítottat!</p>
                 </div>
-              </header>
+              </div>
             </div>
-            
+
             <!-- Profile Setup Content - Right Column -->
             <div class="profile-content">
               <!-- Main Avatar -->
@@ -304,10 +744,10 @@
                 </div>
                 <div class="main-avatar-name" data-translate="profile.student_name">Turóczi Ádám - 8.E</div>
               </div>
-              
+
               <!-- Divider -->
               <div class="profile-divider"></div>
-              
+
               <!-- Avatar Selection -->
               <div class="avatar-selection">
                 <div class="avatar-row">
@@ -343,20 +783,322 @@
               <!-- Action Buttons -->
               <div class="profile-actions">
                 <button class="profile-button-secondary">
-                  <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="profile-button-icon" alt="School Account">
-                  <span class="profile-button-text" data-translate="profile.use_school_account">Tovább az iskolai profilképpel</span>
+                  <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="profile-button-icon"
+                    alt="School Account">
+                  <span class="profile-button-text" data-translate="profile.use_school_account">Tovább az iskolai
+                    profilképpel</span>
                 </button>
-                <button class="profile-button-primary">
+                <button class="profile-button-primary" id="continue-with-avatar">
                   <img src="/EU2K-Hub/assets/welcome_icons/arrow_right.svg" class="profile-button-icon" alt="Continue">
                   <span class="profile-button-text" data-translate="profile.continue">Tovább ezzel</span>
+                </button>
+              </div>
+
+              <!-- Confirmation State (initially hidden) -->
+              <div class="profile-actions profile-actions-confirmation" style="display: none;">
+                <button class="profile-button-primary profile-button-confirmation" id="looks-good-button">
+                  <img src="/EU2K-Hub/assets/welcome_icons/smiley.svg" class="profile-button-icon" alt="Looks Good">
+                  <span class="profile-button-text" data-translate="profile.looks_good">Jól nézek ki!</span>
                 </button>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- Step 4: Notifications Setup -->
+        <div id="notifications-setup-page" class="welcome-page">
+          <div class="publish-layout">
+            <div class="publish-content">
+              <div class="publish-content-header">
+                <button class="back-arrow-btn nav-button" data-action="back-student-profile">
+                  <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
+                </button>
+                <div class="welcome-container-header">
+                  <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-icon-header" alt="Welcome">
+                  <h1 class="welcome-text-header" data-translate="pages.onboarding_student.notifications_title">
+                    Értesítések beállítása</h1>
+                  <p class="welcome-description-header"
+                    data-translate="pages.onboarding_student.notifications_description">Válaszd ki, milyen értesítéseket
+                    szeretnél kapni!</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vertical Divider -->
+            <div class="notifications-vertical-divider"></div>
+
+            <!-- Notifications Content - Right Column -->
+            <div class="profile-content notifications-content">
+              <!-- Notice kártya -->
+              <div class="notifications-notice">
+                <img src="/EU2K-Hub/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
+                <span class="notice-text" data-translate="settings.notifications_notice">Amíg az iskolában vagy, csendes
+                  értesítéseket fogsz kapni.</span>
+              </div>
+
+              <!-- Kategóriák kártya -->
+              <div class="notifications-categories-card">
+                <div class="categories-title" data-translate="settings.categories">Kategóriák</div>
+
+                <div class="category-items">
+                  <!-- Hírek -->
+                  <div class="category-item first">
+                    <img src="/EU2K-Hub/assets/settings_icons/notifications_page/news.svg" class="category-icon"
+                      alt="Hírek">
+                    <span class="category-text" data-translate="settings.news">Hírek</span>
+                    <md-switch icons selected></md-switch>
+                  </div>
+
+                  <!-- Kurzusok -->
+                  <div class="category-item middle">
+                    <img src="/EU2K-Hub/assets/settings_icons/notifications_page/courses.svg" class="category-icon"
+                      alt="Kurzusok">
+                    <span class="category-text" data-translate="settings.courses">Kurzusok</span>
+                    <md-switch icons disabled></md-switch>
+                  </div>
+
+                  <!-- Események -->
+                  <div class="category-item middle">
+                    <img src="/EU2K-Hub/assets/settings_icons/notifications_page/events.svg" class="category-icon"
+                      alt="Események">
+                    <span class="category-text" data-translate="settings.events">Események</span>
+                    <md-switch icons selected></md-switch>
+                  </div>
+
+                  <!-- Üzenetek -->
+                  <div class="category-item middle">
+                    <img src="/EU2K-Hub/assets/settings_icons/notifications_page/messages.svg" class="category-icon"
+                      alt="Üzenetek">
+                    <span class="category-text" data-translate="settings.messages">Üzenetek</span>
+                    <md-switch icons disabled></md-switch>
+                  </div>
+
+                  <!-- Posztok -->
+                  <div class="category-item middle">
+                    <img src="/EU2K-Hub/assets/settings_icons/notifications_page/posts.svg" class="category-icon"
+                      alt="Posztok">
+                    <span class="category-text" data-translate="settings.posts">Posztok</span>
+                    <md-switch icons disabled></md-switch>
+                  </div>
+
+                  <!-- Meghívók -->
+                  <div class="category-item middle">
+                    <img src="/EU2K-Hub/assets/settings_icons/notifications_page/invites.svg" class="category-icon"
+                      alt="Meghívók">
+                    <span class="category-text" data-translate="settings.invites">Meghívók</span>
+                    <md-switch icons disabled></md-switch>
+                  </div>
+
+                  <!-- Bétaverzió -->
+                  <div class="category-item middle">
+                    <img src="/EU2K-Hub/assets/settings_icons/notifications_page/beta_version.svg" class="category-icon"
+                      alt="Bétaverzió">
+                    <span class="category-text" data-translate="settings.beta_version">Bétaverzió</span>
+                    <md-switch icons disabled selected></md-switch>
+                  </div>
+
+                  <!-- Újdonságok -->
+                  <div class="category-item middle">
+                    <img src="/EU2K-Hub/assets/settings_icons/notifications_page/new_things.svg" class="category-icon"
+                      alt="Újdonságok">
+                    <span class="category-text" data-translate="settings.new_things">Újdonságok</span>
+                    <md-switch icons disabled selected></md-switch>
+                  </div>
+
+                  <!-- Csengő -->
+                  <div class="category-item last">
+                    <img src="/EU2K-Hub/assets/settings_icons/notifications_page/bell.svg" class="category-icon"
+                      alt="Csengő">
+                    <span class="category-text" data-translate="settings.bell">Csengő</span>
+                    <md-switch icons disabled></md-switch>
+                  </div>
+                </div>
+
+                <!-- Continue Button - Inside categories card -->
+                <div class="notifications-actions">
+                  <button class="notifications-continue-button" id="continue-notifications">
+                    <img src="/EU2K-Hub/assets/arrow_right.svg" class="profile-button-icon" alt="Next">
+                    <span class="notifications-continue-text" data-translate="navigation.continue">Tovább</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Messages Setup -->
+        <div id="messages-setup-page" class="welcome-page">
+          <div class="publish-layout">
+            <div class="publish-content">
+              <div class="publish-content-header">
+                <button class="back-arrow-btn nav-button" data-action="back-notifications-setup">
+                  <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
+                </button>
+                <div class="welcome-container-header">
+                  <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-icon-header" alt="Welcome">
+                  <h1 class="welcome-text-header" data-translate="pages.onboarding_student.messages_title">
+                    Üzenetek beállítása</h1>
+                  <p class="welcome-description-header" data-translate="pages.onboarding_student.messages_description">
+                    Döntsd el, hogy nyitott vagy-e a privát üzenetekre!</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vertical Divider -->
+            <div class="notifications-vertical-divider"></div>
+
+            <!-- Messages Content - Right Column -->
+            <div class="profile-content messages-content">
+              <div class="card card-top">
+                <span data-translate="pages.account.private_messages">Privát Üzenetek</span>
+                <md-switch icons selected></md-switch>
+              </div>
+
+              <div class="card card-bottom">
+                <span data-translate="pages.account.who_can_message">Ki küldhet neked üzeneteket?</span>
+                <div class="notice">
+                  <img src="/EU2K-Hub/assets/warning.svg" class="notice-icon" alt="Info">
+                  <span data-translate="pages.account.message_notice">Ezt a beállítást csak te tudod módosítani.</span>
+                </div>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <span data-translate="pages.account.everyone">Mindenki</span>
+                    <md-radio name="message-privacy" value="everyone"></md-radio>
+                  </div>
+                  <div class="radio-item">
+                    <span data-translate="pages.account.nobody">Senki</span>
+                    <md-radio name="message-privacy" value="nobody" checked></md-radio>
+                  </div>
+                  <div class="radio-item">
+                    <span data-translate="pages.account.classmates_only">Csak osztálytársak</span>
+                    <md-radio name="message-privacy" value="classmates"></md-radio>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Continue Button -->
+              <div class="messages-actions">
+                <button class="messages-continue-button" id="continue-messages">
+                  <img src="/EU2K-Hub/assets/arrow_right.svg" class="profile-button-icon" alt="Next">
+                  <span class="notifications-continue-text" data-translate="navigation.continue">Tovább</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 6: Terms of Service -->
+        <div id="terms-setup-page" class="welcome-page">
+          <div class="publish-layout">
+            <div class="publish-content">
+              <div class="publish-content-header">
+                <button class="back-arrow-btn nav-button" data-action="back-messages-setup">
+                  <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
+                </button>
+                <div class="welcome-container-header">
+                  <img src="/EU2K-Hub/assets/welcome_icons/terms_of_service.svg" class="welcome-icon-header" alt="Terms of Service">
+                  <h1 class="welcome-text-header" data-translate="pages.onboarding_student.terms_title">
+                    Fogadd el kérlek a használati feltételeket!</h1>
+                  <p class="welcome-description-header" data-translate="pages.onboarding_student.terms_description">
+                    Olvasd végig, vagy tudj meg többet, és fogadd el a tájékoztatót, és be is fejeztük!</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vertical Divider -->
+            <div class="terms-vertical-divider"></div>
+
+            <!-- Terms Content - Right Column -->
+            <div class="profile-content terms-content">
+              <div class="terms-scroll-area">
+                <div class="terms-section terms-section-first">
+                  <h3>
+                    <img src="/EU2K-Hub/assets/welcome_icons/message.svg" class="terms-icon" alt="Messages">
+                    Üzenetküldés és felügyelet
+                  </h3>
+                  <ul>
+                    <li>A Hub lehetőséget biztosít közösségi és kurzuson belüli kommunikációra.</li>
+                    <li>A Hub lehetőséget biztosít közösségi és kurzuson belüli kommunikációra.</li>
+                  </ul>
+                </div>
+
+                <div class="terms-section terms-section-middle">
+                  <h3>
+                    <img src="/EU2K-Hub/assets/welcome_icons/account_protection.svg" class="terms-icon" alt="Account Protection">
+                    Felhasználói fiókok és jogosultságok
+                  </h3>
+                  <ul>
+                    <li>A Hub egy központi, iskolai rendszer, melyet többféle szerepben (tanár, diák, szülő) lehet használni.</li>
+                    <li>A diákok számára elkülönített részhez kizárólag iskolai fiókkal lehet hozzáférni.</li>
+                    <li>A külsős email címek nem használhatók, csak szülői fiók létrehozására.</li>
+                    <li>Amennyiben a rendszer visszaélést észlel (pl. szülői fiókot használó diák), fenntartjuk a jogot a fiók típusának módosítására, értesítés küldésére, és akár funkciók korlátozására is.</li>
+                    <li>A rendszer bármilyen fajta kihasználása nem engedélyezett, kihasználása büntetést von maga után.</li>
+                  </ul>
+                </div>
+
+                <div class="terms-section terms-section-middle">
+                  <h3>
+                    <img src="/EU2K-Hub/assets/welcome_icons/supervision.svg" class="terms-icon" alt="Supervision">
+                    Felelősség
+                  </h3>
+                  <ul>
+                    <li>A Hubban elérhető kurzusokat külső vagy belső szervezők („hostok”) működtetik.</li>
+                    <li>A kurzusokért kizárólag a kurzus hostja felel.</li>
+                    <li>A Hub, az iskola, és a platform fejlesztői nem vállalnak felelősséget a kurzusok tartalmáért, időpontjáért vagy esetleges technikai hibákért.</li>
+                    <li>A Hub a bétaszakaszban nem rendelkezik moderációs rendszerrel, emiatt a közösségi funckiók korlátozottak, vagy hiányzóak is lehetnek.</li>
+                  </ul>
+                </div>
+
+                <div class="terms-section terms-section-last">
+                  <h3>
+                    <img src="/EU2K-Hub/assets/welcome_icons/feedback.svg" class="terms-icon" alt="Feedback">
+                    Visszajelzések és béta funkciók
+                  </h3>
+                  <ul>
+                    <li>Nagyra értékeljük a visszajelzéseidet – ezek segítik a Hub fejlődését!</li>
+                    <li>Viszont, a visszajelző, hibabejelentő és javaslati funkciókat csak tiszteletteljes, jó szándékú módon lehet használni.</li>
+                    <li>A rendszer visszaélésszerű használata (pl. spamelés, hamis jelentések, sértő hangnem) a visszajelzési lehetőségek korlátozását vonhatja maga után.</li>
+                    <li>Ha béta verziót használsz, azonnali kizárásra kerülhetsz ezekből a programokból súlyosabb szabálysértés esetén.</li>
+                    <li>Mivel a Hub még csak elő-béta szakaszban jár, nagyra értékeljük a visszajelzésed. Minden visszajelzés után valamilyen jutalmat tudunk neked adni, ha a visszajelzésed hasznos.</li>
+                    <li>A visszajelzéseket egy ember értékeli.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Terms Acceptance -->
+              <div class="terms-acceptance">
+                <label class="terms-acceptance-label">
+                  <md-checkbox id="terms-checkbox"></md-checkbox>
+                  <span class="terms-acceptance-text">Elfogadom a használati feltételeket és az adatkezelési tájékoztatót</span>
+                </label>
+              </div>
+
+              <!-- Continue Button - Fixed at bottom -->
+              <div class="terms-actions">
+                <button class="terms-continue-button" id="continue-terms" disabled>
+                  <img src="/EU2K-Hub/assets/arrow_right.svg" class="profile-button-icon" alt="Next">
+                  <span class="terms-continue-text" data-translate="navigation.continue">Tovább</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 7: Final Welcome -->
+        <div id="final-welcome-page" class="welcome-page">
+          <div class="final-welcome-container">
+            <img src="/EU2K-Hub/assets/welcome_icons/smiley_animated.gif" class="final-welcome-gif" alt="Welcome">
+            <h1 class="final-welcome-title">Kész is vagyunk!</h1>
+            <button class="final-welcome-button" onclick="checkTermsAndRedirect()">
+              <img src="/EU2K-Hub/assets/welcome_icons/wave.svg" class="final-welcome-icon" alt="Wave">
+              <span>Kezdés</span>
+            </button>
+          </div>
+        </div>
       </div>
-    </main>
+
+  </div>
+  </main>
   </div>
 </body>
 

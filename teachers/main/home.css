@@ -49,223 +49,11 @@
   --md-sys-color-surface-container: rgb(28 33 28);
   --md-sys-color-surface-container-high: rgb(38 43 38);
   --md-sys-color-surface-container-highest: rgb(49 54 49);
-  --md-extended-color-sharp-light-color: rgb(156 212 159);
-  --md-extended-color-sharp-light-on-color: rgb(0 57 20);
-  --md-extended-color-sharp-light-color-container: rgb(29 81 40);
-  --md-extended-color-sharp-light-on-color-container: rgb(183 241 185);
-  --md-extended-color-sharp-dark-color: rgb(156 212 159);
-  --md-extended-color-sharp-dark-on-color: rgb(1 57 19);
-  --md-extended-color-sharp-dark-color-container: rgb(29 81 40);
-  --md-extended-color-sharp-dark-on-color-container: rgb(184 241 185);
-  --md-extended-color-sharp-white-color: rgb(156 212 159);
-  --md-extended-color-sharp-white-on-color: rgb(0 57 20);
-  --md-extended-color-sharp-white-color-container: rgb(29 81 40);
-  --md-extended-color-sharp-white-on-color-container: rgb(183 241 186);
-  --md-extended-color-teritary-dark-color: rgb(157 212 157);
-  --md-extended-color-teritary-dark-on-color: rgb(3 57 18);
-  --md-extended-color-teritary-dark-color-container: rgb(31 80 39);
-  --md-extended-color-teritary-dark-on-color-container: rgb(185 240 184);
-  --md-extended-color-yellow-dark-color: rgb(226 196 109);
-  --md-extended-color-yellow-dark-on-color: rgb(61 47 0);
-  --md-extended-color-yellow-dark-color-container: rgb(87 69 0);
-  --md-extended-color-yellow-dark-on-color-container: rgb(255 224 137);
-  --md-extended-color-yellow-dark2-color: rgb(230 195 108);
-  --md-extended-color-yellow-dark2-on-color: rgb(62 46 0);
-  --md-extended-color-yellow-dark2-color-container: rgb(89 68 0);
-  --md-extended-color-yellow-dark2-on-color-container: rgb(255 223 149);
-  --md-extended-color-yellow-mid-color: rgb(236 192 108);
-  --md-extended-color-yellow-mid-on-color: rgb(65 45 0);
-  --md-extended-color-yellow-mid-color-container: rgb(93 66 0);
-  --md-extended-color-yellow-mid-on-color-container: rgb(255 222 165);
-  --md-extended-color-yellow-light-color: rgb(233 193 108);
-  --md-extended-color-yellow-light-on-color: rgb(64 45 0);
-  --md-extended-color-yellow-light-color-container: rgb(91 67 0);
-  --md-extended-color-yellow-light-on-color-container: rgb(255 223 158);
-  --md-extended-color-yellow-dark3-color: rgb(237 192 108);
-  --md-extended-color-yellow-dark3-on-color: rgb(65 45 0);
-  --md-extended-color-yellow-dark3-color-container: rgb(93 66 0);
-  --md-extended-color-yellow-dark3-on-color-container: rgb(255 222 166);
-  --md-extended-color-yellow-mid2-color: rgb(236 192 108);
-  --md-extended-color-yellow-mid2-on-color: rgb(65 45 0);
-  --md-extended-color-yellow-mid2-color-container: rgb(93 66 0);
-  --md-extended-color-yellow-mid2-on-color-container: rgb(255 222 165);
-  --md-extended-color-yellow-mid3-color: rgb(232 194 108);
-  --md-extended-color-yellow-mid3-on-color: rgb(63 46 0);
-  --md-extended-color-yellow-mid3-color-container: rgb(91 67 0);
-  --md-extended-color-yellow-mid3-on-color-container: rgb(255 223 156);
-  --md-extended-color-purple-dark-color: rgb(205 189 255);
-  --md-extended-color-purple-dark-on-color: rgb(52 39 94);
-  --md-extended-color-purple-dark-color-container: rgb(75 62 118);
-  --md-extended-color-purple-dark-on-color-container: rgb(231 222 255);
-  --md-extended-color-purple-dark2-color: rgb(208 188 254);
-  --md-extended-color-purple-dark2-on-color: rgb(54 38 93);
-  --md-extended-color-purple-dark2-color-container: rgb(77 61 117);
-  --md-extended-color-purple-dark2-on-color-container: rgb(233 221 255);
-  --md-extended-color-purple-dark3-color: rgb(215 186 251);
-  --md-extended-color-purple-dark3-on-color: rgb(59 37 90);
-  --md-extended-color-purple-dark3-color-container: rgb(83 60 115);
-  --md-extended-color-purple-dark3-on-color-container: rgb(237 220 255);
-  --md-extended-color-purple-light-color: rgb(208 188 254);
-  --md-extended-color-purple-light-on-color: rgb(55 38 93);
-  --md-extended-color-purple-light-color-container: rgb(77 61 117);
-  --md-extended-color-purple-light-on-color-container: rgb(233 221 255);
-  --md-extended-color-blue-dark-color: rgb(208 189 254);
-  --md-extended-color-blue-dark-on-color: rgb(54 38 93);
-  --md-extended-color-blue-dark-color-container: rgb(77 61 117);
-  --md-extended-color-blue-dark-on-color-container: rgb(233 221 255);
-  --md-extended-color-blue-dark2-color: rgb(207 189 254);
-  --md-extended-color-blue-dark2-on-color: rgb(54 38 93);
-  --md-extended-color-blue-dark2-color-container: rgb(77 61 117);
-  --md-extended-color-blue-dark2-on-color-container: rgb(233 221 255);
-  --md-extended-color-green-dark-color: rgb(162 211 152);
-  --md-extended-color-green-dark-on-color: rgb(13 56 14);
-  --md-extended-color-green-dark-color-container: rgb(37 80 34);
-  --md-extended-color-green-dark-on-color-container: rgb(190 240 178);
-  --md-extended-color-green-light-color: rgb(161 211 154);
-  --md-extended-color-green-light-on-color: rgb(9 57 15);
-  --md-extended-color-green-light-color-container: rgb(35 80 36);
-  --md-extended-color-green-light-on-color-container: rgb(188 240 180);
-  --md-extended-color-green-mid-color: rgb(164 211 150);
-  --md-extended-color-green-mid-on-color: rgb(16 56 12);
-  --md-extended-color-green-mid-color-container: rgb(40 80 33);
-  --md-extended-color-green-mid-on-color-container: rgb(192 239 176);
-  --md-extended-color-green-light2-color: rgb(163 211 151);
-  --md-extended-color-green-light2-on-color: rgb(15 56 13);
-  --md-extended-color-green-light2-color-container: rgb(39 80 34);
-  --md-extended-color-green-light2-on-color-container: rgb(191 240 177);
-  --md-extended-color-green-dark2-color: rgb(164 211 150);
-  --md-extended-color-green-dark2-on-color: rgb(16 56 12);
-  --md-extended-color-green-dark2-color-container: rgb(39 80 33);
-  --md-extended-color-green-dark2-on-color-container: rgb(191 239 176);
-  --md-extended-color-green-dark3-color: rgb(163 211 151);
-  --md-extended-color-green-dark3-on-color: rgb(15 56 13);
-  --md-extended-color-green-dark3-color-container: rgb(39 80 34);
-  --md-extended-color-green-dark3-on-color-container: rgb(191 240 177);
-  --md-extended-color-green-light3-color: rgb(162 211 153);
-  --md-extended-color-green-light3-on-color: rgb(12 57 14);
-  --md-extended-color-green-light3-color-container: rgb(37 80 35);
-  --md-extended-color-green-light3-on-color-container: rgb(189 240 179);
-  --md-extended-color-green-light2-hovered-color: rgb(162 211 152);
-  --md-extended-color-green-light2-hovered-on-color: rgb(12 57 14);
-  --md-extended-color-green-light2-hovered-color-container: rgb(37 80 35);
-  --md-extended-color-green-light2-hovered-on-color-container: rgb(189 240 179);
-  --md-extended-color-green-dark2-hovered-color: rgb(161 211 153);
-  --md-extended-color-green-dark2-hovered-on-color: rgb(11 57 15);
-  --md-extended-color-green-dark2-hovered-color-container: rgb(36 80 35);
-  --md-extended-color-green-dark2-hovered-on-color-container: rgb(189 240 179);
-  --md-extended-color-system-regular-color: rgb(156 212 159);
-  --md-extended-color-system-regular-on-color: rgb(1 57 19);
-  --md-extended-color-system-regular-color-container: rgb(29 81 40);
-  --md-extended-color-system-regular-on-color-container: rgb(184 241 185);
-  --md-extended-color-system-hovered-color: rgb(154 212 161);
-  --md-extended-color-system-hovered-on-color: rgb(0 57 22);
-  --md-extended-color-system-hovered-color-container: rgb(26 81 42);
-  --md-extended-color-system-hovered-on-color-container: rgb(182 241 188);
-  --md-extended-color-purple-light-hovered-color: rgb(208 188 254);
-  --md-extended-color-purple-light-hovered-on-color: rgb(54 38 93);
-  --md-extended-color-purple-light-hovered-color-container: rgb(77 61 117);
-  --md-extended-color-purple-light-hovered-on-color-container: rgb(233 221 255);
-  --md-extended-color-yellow-dark2-hovered-color: rgb(228 195 108);
-  --md-extended-color-yellow-dark2-hovered-on-color: rgb(61 46 0);
-  --md-extended-color-yellow-dark2-hovered-color-container: rgb(88 68 0);
-  --md-extended-color-yellow-dark2-hovered-on-color-container: rgb(255 223 145);
-  --md-extended-color-yellow-dark3-hovered-color: rgb(232 194 108);
-  --md-extended-color-yellow-dark3-hovered-on-color: rgb(63 46 0);
-  --md-extended-color-yellow-dark3-hovered-color-container: rgb(91 67 0);
-  --md-extended-color-yellow-dark3-hovered-on-color-container: rgb(255 223 155);
-  --md-extended-color-teal-dark-color: rgb(128 212 214);
-  --md-extended-color-teal-dark-on-color: rgb(0 55 56);
-  --md-extended-color-teal-dark-color-container: rgb(0 79 81);
-  --md-extended-color-teal-dark-on-color-container: rgb(156 241 243);
-  --md-extended-color-teal-dark-hovered-color: rgb(128 212 217);
-  --md-extended-color-teal-dark-hovered-on-color: rgb(0 55 57);
-  --md-extended-color-teal-dark-hovered-color-container: rgb(0 79 83);
-  --md-extended-color-teal-dark-hovered-on-color-container: rgb(156 240 245);
-  --md-extended-color-teal-mid-color: rgb(128 212 215);
-  --md-extended-color-teal-mid-on-color: rgb(0 55 56);
-  --md-extended-color-teal-mid-color-container: rgb(0 79 82);
-  --md-extended-color-teal-mid-on-color-container: rgb(156 241 244);
-  --md-extended-color-teal-light-color: rgb(129 212 221);
-  --md-extended-color-teal-light-on-color: rgb(0 54 59);
-  --md-extended-color-teal-light-color-container: rgb(0 79 85);
-  --md-extended-color-teal-light-on-color-container: rgb(157 240 249);
-  --md-extended-color-teal-light-variant-color: rgb(129 211 221);
-  --md-extended-color-teal-light-variant-on-color: rgb(0 54 59);
-  --md-extended-color-teal-light-variant-color-container: rgb(0 79 86);
-  --md-extended-color-teal-light-variant-on-color-container: rgb(157 240 250);
-  --md-extended-color-teal-light2-color: rgb(128 213 212);
-  --md-extended-color-teal-light2-on-color: rgb(0 55 55);
-  --md-extended-color-teal-light2-color-container: rgb(0 79 80);
-  --md-extended-color-teal-light2-on-color-container: rgb(156 241 241);
-  --md-extended-color-teal-light-strong-color: rgb(129 211 221);
-  --md-extended-color-teal-light-strong-on-color: rgb(0 54 59);
-  --md-extended-color-teal-light-strong-color-container: rgb(0 79 85);
-  --md-extended-color-teal-light-strong-on-color-container: rgb(157 240 249);
-  --md-extended-color-teal-dark2-color: rgb(128 213 212);
-  --md-extended-color-teal-dark2-on-color: rgb(0 55 55);
-  --md-extended-color-teal-dark2-color-container: rgb(0 79 80);
-  --md-extended-color-teal-dark2-on-color-container: rgb(156 241 240);
-  --md-extended-color-system-dark-grey-color: rgb(153 212 162);
-  --md-extended-color-system-dark-grey-on-color: rgb(0 57 23);
-  --md-extended-color-system-dark-grey-color-container: rgb(25 81 42);
-  --md-extended-color-system-dark-grey-on-color-container: rgb(181 241 189);
-  --md-extended-color-system-light-gray-color: rgb(155 212 161);
-  --md-extended-color-system-light-gray-on-color: rgb(0 57 22);
-  --md-extended-color-system-light-gray-color-container: rgb(27 81 41);
-  --md-extended-color-system-light-gray-on-color-container: rgb(182 241 187);
-  --md-extended-color-system-green-mid-color: rgb(158 212 157);
-  --md-extended-color-system-green-mid-on-color: rgb(4 57 18);
-  --md-extended-color-system-green-mid-color-container: rgb(32 80 38);
-  --md-extended-color-system-green-mid-on-color-container: rgb(185 240 183);
-  --md-extended-color-system-green-dark-color: rgb(164 211 150);
-  --md-extended-color-system-green-dark-on-color: rgb(16 56 12);
-  --md-extended-color-system-green-dark-color-container: rgb(39 80 33);
-  --md-extended-color-system-green-dark-on-color-container: rgb(191 239 176);
-  --md-extended-color-system-green-mid2-color: rgb(160 212 155);
-  --md-extended-color-system-green-mid2-on-color: rgb(7 57 16);
-  --md-extended-color-system-green-mid2-color-container: rgb(34 80 37);
-  --md-extended-color-system-green-mid2-on-color-container: rgb(187 240 181);
-  --md-extended-color-system-green-mid-gray-color: rgb(158 212 157);
-  --md-extended-color-system-green-mid-gray-on-color: rgb(3 57 18);
-  --md-extended-color-system-green-mid-gray-color-container: rgb(31 80 39);
-  --md-extended-color-system-green-mid-gray-on-color-container: rgb(185 240 184);
-  --md-extended-color-system-green-light-strong-color: rgb(163 211 151);
-  --md-extended-color-system-green-light-strong-on-color: rgb(15 56 13);
-  --md-extended-color-system-green-light-strong-color-container: rgb(39 80 34);
-  --md-extended-color-system-green-light-strong-on-color-container: rgb(191 240 177);
-  --md-extended-color-system-green-light-gray-color: rgb(165 211 149);
-  --md-extended-color-system-green-light-gray-on-color: rgb(17 56 11);
-  --md-extended-color-system-green-light-gray-color-container: rgb(40 80 32);
-  --md-extended-color-system-green-light-gray-on-color-container: rgb(192 239 176);
-  --md-extended-color-system-green-dark2-color: rgb(158 212 156);
-  --md-extended-color-system-green-dark2-on-color: rgb(5 57 17);
-  --md-extended-color-system-green-dark2-color-container: rgb(32 80 38);
-  --md-extended-color-system-green-dark2-on-color-container: rgb(186 240 183);
-  --md-extended-color-system-green-light-gray2-color: rgb(159 212 156);
-  --md-extended-color-system-green-light-gray2-on-color: rgb(6 57 17);
-  --md-extended-color-system-green-light-gray2-color-container: rgb(33 80 37);
-  --md-extended-color-system-green-light-gray2-on-color-container: rgb(186 240 182);
-  --md-extended-color-onboarding-green-color: rgb(160 212 155);
-  --md-extended-color-onboarding-green-on-color: rgb(7 57 16);
-  --md-extended-color-onboarding-green-color-container: rgb(34 80 37);
-  --md-extended-color-onboarding-green-on-color-container: rgb(187 240 182);
-  --md-extended-color-onboarding-green-dark-color: rgb(162 211 152);
-  --md-extended-color-onboarding-green-dark-on-color: rgb(12 56 14);
-  --md-extended-color-onboarding-green-dark-color-container: rgb(37 80 35);
-  --md-extended-color-onboarding-green-dark-on-color-container: rgb(189 240 179);
-  --md-extended-color-onboarding-green-hovered-color: rgb(161 211 154);
-  --md-extended-color-onboarding-green-hovered-on-color: rgb(10 57 15);
-  --md-extended-color-onboarding-green-hovered-color-container: rgb(36 80 36);
-  --md-extended-color-onboarding-green-hovered-on-color-container: rgb(188 240 180);
-  --md-extended-color-onboarding-green-dark-hovered-color: rgb(162 211 152);
-  --md-extended-color-onboarding-green-dark-hovered-on-color: rgb(12 57 14);
-  --md-extended-color-onboarding-green-dark-hovered-color-container: rgb(37 80 35);
-  --md-extended-color-onboarding-green-dark-hovered-on-color-container: rgb(189 240 179);
   --sidebar-bg: #101510;
   --main-bg: #0b0f0b;
   --surface-bg: #101510;
   --card-bg: #232823;
-  --red: #ff0000;
+  --red: #272B26;
   --green-btn: #2d3a2d;
   --green-btn-arrow: #b6c6b6;
   --text-main: #e3e3e3;
@@ -274,11 +62,10 @@
   --card-radius: 32px;
   --news-radius: 20px;
   --sidebar-width: 76px;
-  --transition: 0.2s cubic-bezier(.4, 0, .2, 1);
+  --transition: 0.2s cubic-bezier(.4,0,.2,1);
 }
 
-html,
-body {
+html, body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -298,7 +85,7 @@ body {
   position: relative;
   min-height: 100vh;
   min-width: 100vw;
-  width: calc(100vw - var(--sidebar-width) - 44px);
+  width: 100%;
   height: 100vh;
   background: var(--surface-bg);
   display: flex;
@@ -322,7 +109,8 @@ body {
 }
 
 .main-area {
-  flex: 1;
+  flex: 1; /* kitölti a sidebar melletti helyet */
+  min-width: 0; /* fontos, hogy a flexbox engedje zsugorodni */
   display: flex;
   flex-direction: column;
   position: relative;
@@ -333,13 +121,14 @@ body {
   background: var(--main-bg);
   border-radius: 32px;
   margin: 22px 22px 22px 0;
-  padding: 0 22px 22px 32px;
   height: calc(100vh - 64px);
   display: flex;
   flex-direction: column;
   gap: 18px;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
   max-width: calc(100% - 22px);
+  min-height: calc(100dvh - 64px); /* mobilbarát */
+  height: auto; /* engedd nőni/zsugorodni */
 }
 
 .header {
@@ -350,11 +139,11 @@ body {
   position: relative;
   min-height: 80px;
 }
-
 .welcome-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 4px;
   margin-top: 40px;
 }
 
@@ -397,7 +186,6 @@ body {
   font-weight: 500;
   color: var(--text-main);
 }
-
 .section-title {
   display: flex;
   align-items: center;
@@ -407,40 +195,38 @@ body {
   margin: 0 0 12px 0;
   font-weight: 500;
 }
-
 .arrow-icon {
   width: 18px;
   height: 18px;
   vertical-align: middle;
   filter: brightness(0.8);
 }
-
 .event-frame {
   width: 100%;
   border-radius: 32px;
   overflow-x: auto;
-  /* görgethető, ha túl nagy */
   overflow-y: hidden;
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
-  /* simább görgetés mobilon */
-  padding: 6px;
-  /* belső távolság, hogy ne tapadjanak a sarkokhoz a kártyák */
+  padding: 6px 0 6px 6px;
   background: var(--main-bg);
-  /* háttér, hogy a sarkok jól nézzenek ki */
 }
 
-/* A sor maga szélesebb lehet, hogy kilógjon, ezért max-content */
 .top-cards-row {
   display: flex;
   gap: 8px;
   width: max-content;
+  min-width: 100%;
 }
 
 .event-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.event-container.hidden {
+  display: none !important;
 }
 
 .red-card {
@@ -450,24 +236,23 @@ body {
   flex-direction: column;
   justify-content: flex-end;
   position: relative;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
 }
-
 .red-card.large {
-  width: 714px;
+  width: 400px;
   height: 205px;
+  transition: width 0.3s ease;
 }
-
 .red-card.medium {
   width: 120px;
   height: 205px;
+  transition: width 0.3s ease;
 }
-
 .red-card.small {
   width: 56px;
   height: 205px;
+  transition: width 0.3s ease;
 }
-
 .event-labels-row {
   display: flex;
   flex-direction: row;
@@ -475,7 +260,6 @@ body {
   margin-top: 8px;
   margin-bottom: 0;
 }
-
 .event-label {
   display: flex;
   flex-direction: row;
@@ -493,6 +277,12 @@ body {
 }
 
 .event-label .desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.event-label .place {
   font-size: 0.95rem;
   color: var(--text-secondary);
   font-weight: 400;
@@ -523,18 +313,38 @@ body {
 }
 
 .bottom-cards-row {
-  margin-top: 12px;
   display: flex;
-  flex-direction: row;
-  gap: 8px;
+  gap: 12px;
   overflow-x: auto;
-  padding-bottom: 6px;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  padding-bottom: 8px; 
+  width: 100%;
+  justify-content: flex-start;
 }
+
+.bottom-cards-row::-webkit-scrollbar {
+  height: 8px;
+}
+.bottom-cards-row::-webkit-scrollbar-track {
+  background: var(--card-bg);
+  border-radius: 10px;
+}
+.bottom-cards-row::-webkit-scrollbar-thumb {
+  background: var(--green-btn);
+  border-radius: 10px;
+}
+.bottom-cards-row::-webkit-scrollbar-thumb:hover {
+  background: var(--card-bg);
+}
+
 
 .news-card {
   background: var(--card-bg);
   border-radius: 32px;
   width: 272px;
+  min-width: 272px;
+  max-width: 272px;
   height: 205px;
   display: flex;
   flex-direction: column;
@@ -543,7 +353,7 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.13);
   flex-shrink: 0;
   overflow: hidden;
-  transition: var(--transition);
+  transition: var(--transition), width 0.3s ease, min-width 0.3s ease, max-width 0.3s ease;
 }
 
 .news-card:hover {
@@ -585,6 +395,36 @@ body {
   text-overflow: ellipsis;
 }
 
+.news-carousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--green-btn);
+  border: none;
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  transition: background 0.2s ease;
+  z-index: 10;
+}
+.carousel-btn:hover {
+  background: var(--card-bg);
+}
+.carousel-btn.left { left: -20px; }
+.carousel-btn.right { right: -20px; }
+
+
 .section-header.upcoming-events h2 {
   font-weight: 600;
   font-size: 1.4rem;
@@ -592,14 +432,12 @@ body {
   color: var(--text-main);
   content: "Közelgő Események";
 }
-
 .section-header.news h2 {
   font-weight: 600;
   font-size: 1.4rem;
-  margin-bottom: 24px;
+  margin-bottom: 24px; 
   color: var(--text-main);
 }
-
 .header-title {
   font-size: 20px;
   font-weight: 600;
@@ -610,11 +448,10 @@ body {
   flex-direction: column;
   align-items: center;
 }
-
 .account-settings-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; 
   gap: 16px;
   margin-right: 24px;
   position: absolute;
@@ -628,8 +465,8 @@ body {
   border-radius: 50%;
   background-color: var(--card-bg);
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; 
+  align-items: center; 
   cursor: pointer;
 }
 
@@ -642,7 +479,6 @@ body {
   align-items: center;
   gap: 24px;
 }
-
 .nav-item {
   display: flex;
   flex-direction: column;
@@ -657,7 +493,6 @@ body {
   transition: var(--transition);
   position: relative;
 }
-
 .nav-item:hover .nav-icon-container {
   background-color: #232823;
 }
@@ -675,15 +510,12 @@ body {
 }
 
 .nav-icon {
-  filter: brightness(0) saturate(100%) invert(85%) sepia(6%) saturate(466%) hue-rotate(60deg) brightness(95%) contrast(86%);
-  /* #C1C9BE */
+  filter: brightness(0) saturate(100%) invert(85%) sepia(6%) saturate(466%) hue-rotate(60deg) brightness(95%) contrast(86%); /* #C1C9BE */
 }
 
 .nav-item.active .nav-icon {
-  filter: brightness(0) saturate(100%) invert(94%) sepia(11%) saturate(309%) hue-rotate(61deg) brightness(94%) contrast(90%);
-  /* #D4E8D1 */
+  filter: brightness(0) saturate(100%) invert(94%) sepia(11%) saturate(309%) hue-rotate(61deg) brightness(94%) contrast(90%); /* #D4E8D1 */
 }
-
 .nav-icon-container {
   width: 56px;
   height: 32px;
@@ -698,7 +530,6 @@ body {
   width: 24px;
   height: 24px;
 }
-
 .top-cards-row.shrinked .red-card.large {
   width: 480px;
 }
@@ -716,6 +547,157 @@ body {
 .top-cards-row.shrinked .arrow-container {
   transform: scale(0.9);
   transform-origin: left center;
+}
+@media (max-width: 1200px) {
+  .red-card.large { min-width: 220px; }
+}
+@media (max-width: 900px) {
+  .main-content { padding: 0 8px 32px 32px; }
+  .red-card.large { min-width: 140px; }
+  .sidebar { margin-left: 8px; }
+  .main-content { margin-left: 0; }
+}
+@media (max-width: 700px) {
+  .sidebar { display: none; }
+  .main-content { border-radius: 32px; margin: 8px; box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container); }
+  .main-area { margin-left: 0; }
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: #232823; border-radius: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Új dolgok Popup */
+.new-things-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(11, 15, 11, 0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.new-things-container {
+  position: relative;
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  padding: 32px 18px 32px 18px;
+  max-width: 400px;
+  width: 400px !important;
+  margin: 20px;
+  box-sizing: border-box;
+}
+
+.new-things-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: #3D433C;
+  border-radius: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.new-things-close-btn:hover {
+  border-radius: 15px;
+}
+
+.new-things-content {
+  text-align: center;
+}
+
+.new-things-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.new-things-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+}
+
+.new-things-icon-top {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 12px;
+}
+
+.new-things-title {
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.new-things-subtitle {
+  color: #FFFFFF;
+  opacity: 0.65;
+  font-size: 0.95rem;
+  margin: 0 0 20px 0;
+}
+
+.new-things-image-container {
+  background: #3D433C;
+  border-radius: 32px;
+  padding: 30px;
+  margin: 0 0 20px 0;
+  display: flex;
+  justify-content: center;
+  height: 220px;
+  box-sizing: border-box;
+}
+
+.new-things-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: luminosity;
+  opacity: 0.93;
+}
+
+.new-things-list {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.new-things-item {
+  color: #C2C3C2;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.new-things-footer {
+  text-align: center;
+}
+
+.new-things-link {
+  color: #B7F1B9;
+  text-decoration: underline;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.new-things-link:hover {
+  color: #FFFFFF;
+}
+
+.new-things-link strong {
+  font-weight: 700;
+}
+
+.new-things-link b {
+  font-weight: 700;
 }
 
 .courses-container {
@@ -769,67 +751,6 @@ body {
   margin-top: 16px;
   font-size: 0.9rem;
   color: var(--text-secondary);
-}
-
-@media (max-width: 1200px) {
-  .red-card.large {
-    min-width: 220px;
-  }
-
-  .news-card {
-    min-width: 120px;
-  }
-}
-
-@media (max-width: 900px) {
-  .main-content {
-    padding: 0 8px 32px 32px;
-  }
-
-  .red-card.large {
-    min-width: 140px;
-  }
-
-  .news-card {
-    min-width: 90px;
-  }
-
-  .sidebar {
-    margin-left: 8px;
-  }
-
-  .main-content {
-    margin-left: 0;
-  }
-}
-
-@media (max-width: 700px) {
-  .sidebar {
-    display: none;
-  }
-
-  .main-content {
-    border-radius: 32px;
-    margin: 8px;
-    box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container);
-  }
-
-  .main-area {
-    margin-left: 0;
-  }
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #232823;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
 }
 
 .sidebar-divider {
