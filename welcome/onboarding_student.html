@@ -75,12 +75,12 @@
         if (targetPage) {
           // Make sure it's visible but not active first
           targetPage.style.display = 'flex';
-          
+
           // Small delay to ensure display change is processed
           setTimeout(() => {
             targetPage.classList.add('active');
           }, 10);
-          
+
           console.log('Successfully showed page:', targetPage.id);
         } else {
           console.error('Page not found:', pageId);
@@ -273,7 +273,7 @@
       // Handle terms checkbox
       const termsCheckbox = document.getElementById('terms-checkbox');
       const continueTermsButton = document.getElementById('continue-terms');
-      
+
       if (termsCheckbox && continueTermsButton) {
         termsCheckbox.addEventListener('change', (event) => {
           continueTermsButton.disabled = !event.target.checked;
@@ -529,7 +529,7 @@
 
       // Create the success text element
       const successText = document.createElement('div');
-      successText.textContent = 'Szuper!';
+      successText.textContent = window.translationManager ? window.translationManager.getTranslation('profile.super') || 'Szuper!' : 'Szuper!';
       successText.style.cssText = `
         font-size: 3rem;
         font-weight: 700;
@@ -917,7 +917,7 @@
                 <!-- Continue Button - Inside categories card -->
                 <div class="notifications-actions">
                   <button class="notifications-continue-button" id="continue-notifications">
-                    <img src="/EU2K-Hub/assets/arrow_right.svg" class="profile-button-icon" alt="Next">
+                    <img src="/EU2K-Hub/assets/arrow_forward.svg" class="profile-button-icon" alt="Next">
                     <span class="notifications-continue-text" data-translate="navigation.continue">Tovább</span>
                   </button>
                 </div>
@@ -979,7 +979,7 @@
               <!-- Continue Button -->
               <div class="messages-actions">
                 <button class="messages-continue-button" id="continue-messages">
-                  <img src="/EU2K-Hub/assets/arrow_right.svg" class="profile-button-icon" alt="Next">
+                  <img src="/EU2K-Hub/assets/arrow_forward.svg" class="profile-button-icon" alt="Next">
                   <span class="notifications-continue-text" data-translate="navigation.continue">Tovább</span>
                 </button>
               </div>
@@ -996,7 +996,8 @@
                   <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
                 </button>
                 <div class="welcome-container-header">
-                  <img src="/EU2K-Hub/assets/welcome_icons/terms_of_service.svg" class="welcome-icon-header" alt="Terms of Service">
+                  <img src="/EU2K-Hub/assets/welcome_icons/terms_of_service.svg" class="welcome-icon-header"
+                    alt="Terms of Service">
                   <h1 class="welcome-text-header" data-translate="pages.onboarding_student.terms_title">
                     Fogadd el kérlek a használati feltételeket!</h1>
                   <p class="welcome-description-header" data-translate="pages.onboarding_student.terms_description">
@@ -1014,53 +1015,79 @@
                 <div class="terms-section terms-section-first">
                   <h3>
                     <img src="/EU2K-Hub/assets/welcome_icons/message.svg" class="terms-icon" alt="Messages">
-                    Üzenetküldés és felügyelet
+                    <span data-translate="pages.onboarding_student.terms_messaging_title">Üzenetküldés és
+                      felügyelet</span>
                   </h3>
                   <ul>
-                    <li>A Hub lehetőséget biztosít közösségi és kurzuson belüli kommunikációra.</li>
-                    <li>A Hub lehetőséget biztosít közösségi és kurzuson belüli kommunikációra.</li>
+                    <li data-translate="pages.onboarding_student.terms_messaging_1">A Hub lehetőséget biztosít közösségi
+                      és kurzuson belüli kommunikációra.</li>
+                    <li data-translate="pages.onboarding_student.terms_messaging_2">A Hub lehetőséget biztosít közösségi
+                      és kurzuson belüli kommunikációra.</li>
                   </ul>
                 </div>
 
                 <div class="terms-section terms-section-middle">
                   <h3>
-                    <img src="/EU2K-Hub/assets/welcome_icons/account_protection.svg" class="terms-icon" alt="Account Protection">
-                    Felhasználói fiókok és jogosultságok
+                    <img src="/EU2K-Hub/assets/welcome_icons/account_protection.svg" class="terms-icon"
+                      alt="Account Protection">
+                    <span data-translate="pages.onboarding_student.terms_accounts_title">Felhasználói fiókok és
+                      jogosultságok</span>
                   </h3>
                   <ul>
-                    <li>A Hub egy központi, iskolai rendszer, melyet többféle szerepben (tanár, diák, szülő) lehet használni.</li>
-                    <li>A diákok számára elkülönített részhez kizárólag iskolai fiókkal lehet hozzáférni.</li>
-                    <li>A külsős email címek nem használhatók, csak szülői fiók létrehozására.</li>
-                    <li>Amennyiben a rendszer visszaélést észlel (pl. szülői fiókot használó diák), fenntartjuk a jogot a fiók típusának módosítására, értesítés küldésére, és akár funkciók korlátozására is.</li>
-                    <li>A rendszer bármilyen fajta kihasználása nem engedélyezett, kihasználása büntetést von maga után.</li>
+                    <li data-translate="pages.onboarding_student.terms_accounts_1">A Hub egy központi, iskolai rendszer,
+                      melyet többféle szerepben (tanár, diák, szülő) lehet
+                      használni.</li>
+                    <li data-translate="pages.onboarding_student.terms_accounts_2">A diákok számára elkülönített részhez
+                      kizárólag iskolai fiókkal lehet hozzáférni.</li>
+                    <li data-translate="pages.onboarding_student.terms_accounts_3">A külsős email címek nem
+                      használhatók, csak szülői fiók létrehozására.</li>
+                    <li data-translate="pages.onboarding_student.terms_accounts_4">Amennyiben a rendszer visszaélést
+                      észlel (pl. szülői fiókot használó diák), fenntartjuk a jogot
+                      a fiók típusának módosítására, értesítés küldésére, és akár funkciók korlátozására is.</li>
+                    <li data-translate="pages.onboarding_student.terms_accounts_5">A rendszer bármilyen fajta
+                      kihasználása nem engedélyezett, kihasználása büntetést von maga után.
+                    </li>
                   </ul>
                 </div>
 
                 <div class="terms-section terms-section-middle">
                   <h3>
                     <img src="/EU2K-Hub/assets/welcome_icons/supervision.svg" class="terms-icon" alt="Supervision">
-                    Felelősség
+                    <span data-translate="pages.onboarding_student.terms_responsibility_title">Felelősség</span>
                   </h3>
                   <ul>
                     <li>A Hubban elérhető kurzusokat külső vagy belső szervezők („hostok”) működtetik.</li>
                     <li>A kurzusokért kizárólag a kurzus hostja felel.</li>
-                    <li>A Hub, az iskola, és a platform fejlesztői nem vállalnak felelősséget a kurzusok tartalmáért, időpontjáért vagy esetleges technikai hibákért.</li>
-                    <li>A Hub a bétaszakaszban nem rendelkezik moderációs rendszerrel, emiatt a közösségi funckiók korlátozottak, vagy hiányzóak is lehetnek.</li>
+                    <li>A Hub, az iskola, és a platform fejlesztői nem vállalnak felelősséget a kurzusok tartalmáért,
+                      időpontjáért vagy esetleges technikai hibákért.</li>
+                    <li>A Hub a bétaszakaszban nem rendelkezik moderációs rendszerrel, emiatt a közösségi funckiók
+                      korlátozottak, vagy hiányzóak is lehetnek.</li>
                   </ul>
                 </div>
 
                 <div class="terms-section terms-section-last">
                   <h3>
                     <img src="/EU2K-Hub/assets/welcome_icons/feedback.svg" class="terms-icon" alt="Feedback">
-                    Visszajelzések és béta funkciók
+                    <span data-translate="pages.onboarding_student.terms_feedback_title">Visszajelzések és béta
+                      funkciók</span>
                   </h3>
                   <ul>
-                    <li>Nagyra értékeljük a visszajelzéseidet – ezek segítik a Hub fejlődését!</li>
-                    <li>Viszont, a visszajelző, hibabejelentő és javaslati funkciókat csak tiszteletteljes, jó szándékú módon lehet használni.</li>
-                    <li>A rendszer visszaélésszerű használata (pl. spamelés, hamis jelentések, sértő hangnem) a visszajelzési lehetőségek korlátozását vonhatja maga után.</li>
-                    <li>Ha béta verziót használsz, azonnali kizárásra kerülhetsz ezekből a programokból súlyosabb szabálysértés esetén.</li>
-                    <li>Mivel a Hub még csak elő-béta szakaszban jár, nagyra értékeljük a visszajelzésed. Minden visszajelzés után valamilyen jutalmat tudunk neked adni, ha a visszajelzésed hasznos.</li>
-                    <li>A visszajelzéseket egy ember értékeli.</li>
+                    <li data-translate="pages.onboarding_student.terms_feedback_1">Nagyra értékeljük a visszajelzéseidet
+                      – ezek segítik a Hub fejlődését!</li>
+                    <li data-translate="pages.onboarding_student.terms_feedback_2">Viszont, a visszajelző, hibabejelentő
+                      és javaslati funkciókat csak tiszteletteljes, jó szándékú
+                      módon lehet használni.</li>
+                    <li data-translate="pages.onboarding_student.terms_feedback_3">A rendszer visszaélésszerű használata
+                      (pl. spamelés, hamis jelentések, sértő hangnem) a
+                      visszajelzési lehetőségek korlátozását vonhatja maga után.</li>
+                    <li data-translate="pages.onboarding_student.terms_feedback_4">Ha béta verziót használsz, azonnali
+                      kizárásra kerülhetsz ezekből a programokból súlyosabb
+                      szabálysértés esetén.</li>
+                    <li data-translate="pages.onboarding_student.terms_feedback_5">Mivel a Hub még csak elő-béta
+                      szakaszban jár, nagyra értékeljük a visszajelzésed. Minden
+                      visszajelzés után valamilyen jutalmat tudunk neked adni, ha a visszajelzésed hasznos.</li>
+                    <li data-translate="pages.onboarding_student.terms_feedback_6">A visszajelzéseket egy ember
+                      értékeli.</li>
                   </ul>
                 </div>
               </div>
@@ -1069,15 +1096,18 @@
               <div class="terms-acceptance">
                 <label class="terms-acceptance-label">
                   <md-checkbox id="terms-checkbox"></md-checkbox>
-                  <span class="terms-acceptance-text">Elfogadom a használati feltételeket és az adatkezelési tájékoztatót</span>
+                  <span class="terms-acceptance-text"
+                    data-translate="pages.onboarding_student.terms_acceptance_text">Elfogadom a használati feltételeket
+                    és az adatkezelési
+                    tájékoztatót</span>
                 </label>
               </div>
 
               <!-- Continue Button - Fixed at bottom -->
               <div class="terms-actions">
                 <button class="terms-continue-button" id="continue-terms" disabled>
-                  <img src="/EU2K-Hub/assets/arrow_right.svg" class="profile-button-icon" alt="Next">
-                  <span class="terms-continue-text" data-translate="navigation.continue">Tovább</span>
+                  <img src="/EU2K-Hub/assets/arrow_forward.svg" class="profile-button-icon" alt="Next">
+                  <span class="terms-continue-text" data-translate="pages.onboarding_student.accept">Elfogadom</span>
                 </button>
               </div>
             </div>
@@ -1088,10 +1118,11 @@
         <div id="final-welcome-page" class="welcome-page">
           <div class="final-welcome-container">
             <img src="/EU2K-Hub/assets/welcome_icons/smiley_animated.gif" class="final-welcome-gif" alt="Welcome">
-            <h1 class="final-welcome-title">Kész is vagyunk!</h1>
+            <h1 class="final-welcome-title" data-translate="pages.onboarding_student.final_welcome_title">Kész is
+              vagyunk!</h1>
             <button class="final-welcome-button" onclick="checkTermsAndRedirect()">
               <img src="/EU2K-Hub/assets/welcome_icons/wave.svg" class="final-welcome-icon" alt="Wave">
-              <span>Kezdés</span>
+              <span data-translate="pages.onboarding_student.final_welcome_start">Kezdés</span>
             </button>
           </div>
         </div>
