@@ -306,7 +306,8 @@ body {
   position: relative;
   min-height: 100vh;
   min-width: 100vw;
-  width: 100vw; /* Teljes szélesség használata */
+  width: 100vw;
+  /* Teljes szélesség használata */
   height: 100vh;
   background: var(--surface-bg);
   display: flex;
@@ -348,9 +349,12 @@ body {
   gap: 18px;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
   max-width: calc(100% - 22px);
-  min-width: 800px; /* Minimum szélesség a dinamikus méretezéshez */
-  width: auto; /* Automatikus szélesség */
-  flex: 1; /* Rugalmas méretezés */
+  min-width: 800px;
+  /* Minimum szélesség a dinamikus méretezéshez */
+  width: auto;
+  /* Automatikus szélesség */
+  flex: 1;
+  /* Rugalmas méretezés */
   overflow: hidden;
   position: relative;
 }
@@ -643,9 +647,23 @@ body {
     min-width: 350px;
     max-width: 500px;
   }
-  
+
   .settings-content-layout {
     gap: 40px;
+  }
+
+  /* General page responsive adjustments */
+  #general-page {
+    margin-left: -30px;
+    width: calc(100% + 15px);
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* General info card responsive */
+  .general-info-card {
+    grid-template-columns: 1fr 1px 1fr 1fr;
+    gap: 22px;
   }
 }
 
@@ -654,13 +672,32 @@ body {
     min-width: 300px;
     max-width: 400px;
   }
-  
+
   .settings-content-layout {
     gap: 30px;
   }
-  
+
   .settings-pages {
     padding-left: 20px;
+  }
+
+  /* General page responsive adjustments */
+  #general-page {
+    margin-left: -20px;
+    width: calc(100% + 10px);
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* General info card responsive */
+  .general-info-card {
+    grid-template-columns: 1fr 1px 1fr;
+    gap: 20px;
+  }
+
+  .general-info-column:last-child {
+    flex-direction: column;
+    gap: 12px;
   }
 }
 
@@ -678,23 +715,52 @@ body {
   .main-area {
     margin-left: 0;
   }
-  
+
   .settings-content-layout {
     flex-direction: column;
     gap: 20px;
   }
-  
+
   .settings-cards {
     min-width: 100%;
     max-width: 100%;
   }
-  
+
   .settings-vertical-divider {
     display: none;
   }
-  
+
   .settings-pages {
     padding-left: 0;
+  }
+
+  /* General page responsive adjustments */
+  #general-page {
+    margin-left: 0;
+    margin-top: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* General info card responsive */
+  .general-info-card {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .general-info-column:nth-child(3) {
+    padding: 20px;
+  }
+
+  .general-info-column:last-child {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .general-info-divider {
+    display: none;
   }
 }
 
@@ -845,6 +911,19 @@ body {
   padding-top: 20px;
 }
 
+.settings-pages-experiments {
+  flex: 1;
+  padding-right: 0;
+  padding-top: 20px;
+  padding-left: 80px;
+  /* 40px alapértelmezett + 40px extra = 80px */
+}
+
+/* Experiments page specific styling - 40px extra indentation */
+#experiments-page {
+  margin-left: -40px;
+}
+
 .settings-page {
   display: none !important;
 }
@@ -902,6 +981,8 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .general-beta-text {
@@ -923,6 +1004,8 @@ body {
   border-radius: 32px;
   padding: 20px;
   margin-bottom: 16px;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .general-language-title {
@@ -990,6 +1073,7 @@ body {
   align-items: start;
   max-width: 100%;
   overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .general-info-column {
@@ -1175,17 +1259,6 @@ body {
   font-size: 1rem;
   font-weight: 400;
   flex: 1;
-}
-
-/* Switch stílusok */
-.category-item md-switch {
-  --md-switch-selected-track-color: #B7F1B9;
-  --md-switch-selected-handle-color: #003913;
-  --md-switch-unselected-track-color: rgba(193, 201, 190, 0.3);
-  --md-switch-unselected-handle-color: #C1C9BE;
-  pointer-events: auto;
-  z-index: 10;
-  position: relative;
 }
 
 /* Notifications Page Styles */
@@ -1635,11 +1708,13 @@ body {
   height: 20px;
 }
 
-/* General Page */
-#general-page {
-  margin-left: -60px;
-  margin-top: -20px;
-  width: calc(100% + 30px);
+/* General Page - Desktop only */
+@media (min-width: 1201px) {
+  #general-page {
+    margin-left: -60px;
+    margin-top: -20px;
+    width: calc(100% + 30px);
+  }
 }
 
 #community-page .community-no-courses {
@@ -1673,3 +1748,5 @@ body {
 #community-page .community-arrow-icon {
   filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(500%) hue-rotate(80deg) brightness(110%) contrast(90%) !important;
 }
+
+/*na ezt foigyeljd, képzeld, amikor a general settings page aktív, akkor a main contentre oylan mintha kerülne egy limit hogy mennyire lehet keskeny (kb semmi, alig lehet méretezni). Na itt a twist, viszont a többi settigns pagenél, pl a notificationsnél, ott tök normélisan viselkedik a main content*/

@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
     content="Üdvözöllek az EU2K Hub-ban! Fedezd fel a legújabb eseményeket, híreket és tanulási lehetőségeket egy helyen.">
-  <title data-translate="pages.index.title" data-translate-fallback="EU2K Hub">EU2K Hub</title>
+  <title data-translate="pages.index.title" data-translate-fallback="EU2K Hub">EU2K Teacher Hub</title>
   <link rel="stylesheet" href="home.css">
   <link rel="icon" href="/EU2K-Hub/favicon.ico">
   <style>
@@ -620,6 +620,31 @@
   <div class="app-bg">
     <aside class="sidebar">
       <nav class="nav-menu">
+        <a class="nav-item" href="control_panel.html">
+          <div class="nav-icon-container">
+            <img src="/EU2K-Hub/assets/control_panel.svg" class="nav-icon" alt="Vezérlőpult">
+          </div>
+          <span>Vezérlőpult</span>
+        </a>
+        <a class="nav-item" href="students.html">
+          <div class="nav-icon-container">
+            <img src="/EU2K-Hub/assets/students.svg" class="nav-icon" alt="Diákok">
+          </div>
+          <span>Diákok</span>
+        </a>
+        <a class="nav-item" href="calendar.html">
+          <div class="nav-icon-container">
+            <img src="/EU2K-Hub/assets/calendar.svg" class="nav-icon" alt="Naptár">
+          </div>
+          <span>Naptár</span>
+        </a>
+        <a class="nav-item" href="hive.html">
+          <div class="nav-icon-container">
+            <img src="/EU2K-Hub/assets/hive.svg" class="nav-icon" alt="Hive">
+          </div>
+          <span>Hive</span>
+        </a>
+        <div class="sidebar-divider"></div>
         <a class="nav-item active" href="index.html">
           <div class="nav-icon-container">
             <img src="/EU2K-Hub/assets/home_icon.svg" class="nav-icon" alt="Otthon">
@@ -803,10 +828,13 @@
                 <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
               </div>
             </div>
-
             <button class="carousel-btn right">›</button>
           </div>
+          <div style="text-align:center;margin-top:24px;">
+            <md-filled-button id="publishBtnNav">Hír / Esemény Publikálása</md-filled-button>
+          </div>
         </section>
+        <section id="publish-section" style="display:none;"></section>
       </div>
     </main>
   </div>
@@ -1045,6 +1073,350 @@
       }
     });
   </script>
+  <script>
+    // SPA routing és tartalomváltás - Hash alapú navigáció
+    const publishSection = document.getElementById('publish-section');
+    const publishBtnNav = document.getElementById('publishBtnNav');
+    const dashboardSections = [
+      document.querySelector('.header'),
+      document.querySelector('.events-section'),
+      document.querySelector('.news-section')
+    ];
+
+    function showPage(pageId) {
+      // Minden oldal elrejtése
+      dashboardSections.forEach(section => section.style.display = 'none');
+      publishSection.style.display = 'none';
+
+      // Megfelelő oldal megjelenítése
+      if (pageId === 'publish') {
+        publishSection.style.display = '';
+
+        // Template betöltése ha szükséges
+        if (!publishSection.innerHTML.trim()) {
+          const template = document.getElementById('courses-page');
+          if (template) {
+            publishSection.appendChild(template.content.cloneNode(true));
+            setupCoursesPageLogic();
+          }
+        }
+      } else {
+        // Dashboard megjelenítése (alapértelmezett)
+        dashboardSections.forEach(section => section.style.display = '');
+      }
+    }
+
+    function navigate(event, pageId) {
+      event.preventDefault();
+      location.hash = pageId;
+    }
+
+    // Publikálás gomb eseménykezelő
+    if (publishBtnNav) {
+      publishBtnNav.addEventListener('click', e => {
+        navigate(e, 'publish');
+      });
+    }
+
+    // Hash változás figyelése
+    window.addEventListener('hashchange', () => {
+      const page = location.hash.substring(1) || 'dashboard';
+      showPage(page);
+    });
+
+    // Oldal betöltésekor
+    window.addEventListener('DOMContentLoaded', () => {
+      const initialPage = location.hash.substring(1) || 'dashboard';
+      showPage(initialPage);
+    });
+
+    // Initial page load (ha már betöltött a DOM)
+    if (document.readyState === 'loading') {
+      // A DOMContentLoaded esemény fogja kezelni
+    } else {
+      const initialPage = location.hash.substring(1) || 'dashboard';
+      showPage(initialPage);
+    }
+  </script>
+  <script>
+    async function setupCoursesPageLogic() {
+      if (window.coursesPageLoaded) return;
+      window.coursesPageLoaded = true;
+
+      const {
+        initializeApp
+      } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js");
+      const {
+        getAnalytics
+      } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js");
+      const {
+        getFirestore,
+        collection,
+        getDocs,
+        setDoc,
+        doc,
+        Timestamp
+      } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
+        authDomain: "eu2k-hub.firebaseapp.com",
+        projectId: "eu2k-hub",
+        storageBucket: "eu2k-hub.firebasestorage.app",
+        messagingSenderId: "560244867055",
+        appId: "1:560244867055:web:c5bbfe3939fdec9f89001a",
+        measurementId: "G-LB2WZ574GJ"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const db = getFirestore(app);
+
+      // Dátum formázás preview-hoz
+      const formatDatePreview = (raw) => {
+        if (!raw) return '';
+        if (raw.length >= 6) {
+          return `${raw.slice(0, 4)}/${raw.slice(4, 6)}/${raw.slice(6)}`;
+        } else if (raw.length >= 4) {
+          return `${raw.slice(0, 4)}/${raw.slice(4)}`;
+        }
+        return raw;
+      };
+
+      // Dátum input kezelése
+      const handleDateInput = (inputEl, previewEl) => {
+        inputEl.addEventListener('input', () => {
+          let raw = inputEl.value.replace(/\D/g, '').slice(0, 8);
+          inputEl.value = raw;
+          previewEl.textContent = formatDatePreview(raw);
+        });
+      };
+
+      handleDateInput(document.getElementById('dateNews'), document.getElementById('datePreviewNews'));
+      handleDateInput(document.getElementById('dateEvent'), document.getElementById('datePreviewEvent'));
+
+      // Függvény a mwc textfield-ek törlésére
+      const clearMwTextFields = (containerId) => {
+        document.querySelectorAll(`#${containerId} md-outlined-text-field`).forEach(el => {
+          el.value = '';
+        });
+      };
+
+      // Hír publikálása
+      document.getElementById('publishBtnNews').addEventListener('click', async () => {
+        const title = document.getElementById('titleNews').value.trim();
+        const hubExclusive = document.getElementById('hubExclusiveNews').checked;
+        const author = document.getElementById('authorNews').value.trim();
+        const desc = document.getElementById('descNews').value.trim();
+        const image = document.getElementById('imageNews').value.trim();
+        const link = document.getElementById('linkNews').value.trim();
+        const rawDate = document.getElementById('dateNews').value.trim();
+
+        const hibak = [];
+
+        if (!title) hibak.push("Nincs megadva a cím!");
+        if (hubExclusive && !author) hibak.push("Hub Exkluzív hírnél kötelező a szerző megadása!");
+        if (!desc) hibak.push("Nincs megadva a leírás!");
+        if (!image) hibak.push("Nincs megadva a kép URL!");
+        if (!link) hibak.push("Nincs megadva a hivatkozás!");
+        if (!rawDate) {
+          hibak.push("Nincs megadva a dátum!");
+        } else if (rawDate.length !== 8) {
+          hibak.push("Hibás dátumformátum! Írd be 8 számjeggyel, pl. 20250120.");
+        } else {
+          const year = rawDate.slice(0, 4);
+          const month = rawDate.slice(4, 6);
+          const day = rawDate.slice(6, 8);
+          const dateObj = new Date(`${year}-${month}-${day}`);
+          if (isNaN(dateObj)) {
+            hibak.push("Érvénytelen dátum!");
+          }
+        }
+
+        if (hibak.length > 0) {
+          document.getElementById('statusNews').innerHTML = hibak.join("<br>");
+          return;
+        }
+
+        const year = rawDate.slice(0, 4);
+        const month = rawDate.slice(4, 6);
+        const day = rawDate.slice(6, 8);
+        const dateObj = new Date(`${year}-${month}-${day}`);
+        const timestamp = Timestamp.fromDate(dateObj);
+
+        const hirekRef = collection(db, "homePageData", "news", "hirek");
+        const snapshot = await getDocs(hirekRef);
+
+        let maxId = 0;
+        snapshot.forEach(docSnap => {
+          const docId = parseInt(docSnap.id);
+          if (!isNaN(docId) && docId > maxId) maxId = docId;
+        });
+
+        const newId = (maxId + 1).toString();
+
+        await setDoc(doc(hirekRef, newId), {
+          title,
+          author: hubExclusive ? author : '',
+          desc,
+          image,
+          link,
+          hubExclusive,
+          date: timestamp
+        });
+
+        document.getElementById('statusNews').textContent = "✅ Hír sikeresen kiadva!";
+        clearMwTextFields('newsForm');
+        document.getElementById('datePreviewNews').textContent = '';
+      });
+
+      // Esemény publikálása
+      document.getElementById('publishBtnEvent').addEventListener('click', async () => {
+        const title = document.getElementById('titleEvent').value.trim();
+        const place = document.getElementById('placeEvent').value.trim();
+        const description = document.getElementById('descriptionEvent').value.trim();
+        const image = document.getElementById('imageEvent').value.trim();
+        const link = document.getElementById('linkEvent').value.trim();
+        const rawDate = document.getElementById('dateEvent').value.trim();
+
+        const hibak = [];
+
+        if (!title) hibak.push("Nincs megadva a cím!");
+        if (!place) hibak.push("Nincs megadva a helyszín!");
+        if (!description) hibak.push("Nincs megadva a leírás!");
+        if (!image) hibak.push("Nincs megadva a kép URL!");
+        if (!rawDate) {
+          hibak.push("Nincs megadva a dátum!");
+        } else if (rawDate.length !== 8) {
+          hibak.push("Hibás dátumformátum! Írd be 8 számjeggyel, pl. 20250120.");
+        } else {
+          const year = rawDate.slice(0, 4);
+          const month = rawDate.slice(4, 6);
+          const day = rawDate.slice(6, 8);
+          const dateObj = new Date(`${year}-${month}-${day}`);
+          if (isNaN(dateObj)) {
+            hibak.push("Érvénytelen dátum!");
+          }
+        }
+
+        if (hibak.length > 0) {
+          document.getElementById('statusEvent').innerHTML = hibak.join("<br>");
+          return;
+        }
+
+        const year = rawDate.slice(0, 4);
+        const month = rawDate.slice(4, 6);
+        const day = rawDate.slice(6, 8);
+        const dateObj = new Date(`${year}-${month}-${day}`);
+        const timestamp = Timestamp.fromDate(dateObj);
+
+        const esemenyekRef = collection(db, "homePageData", "events", "esemenyek");
+        const snapshot = await getDocs(esemenyekRef);
+
+        let maxId = 0;
+        snapshot.forEach(docSnap => {
+          const docId = parseInt(docSnap.id);
+          if (!isNaN(docId) && docId > maxId) maxId = docId;
+        });
+
+        const newId = (maxId + 1).toString();
+
+        await setDoc(doc(esemenyekRef, newId), {
+          title,
+          description,
+          place,
+          image,
+          link,
+          date: timestamp
+        });
+
+        document.getElementById('statusEvent').textContent = "Esemény sikeresen publikálva!";
+        clearMwTextFields('eventForm');
+        document.getElementById('datePreviewEvent').textContent = '';
+      });
+
+      // Hub Exkluzív checkbox logika
+      document.getElementById('hubExclusiveNews').addEventListener('change', function () {
+        const authorField = document.getElementById('authorNews');
+        if (this.checked) {
+          authorField.removeAttribute('disabled');
+        } else {
+          authorField.setAttribute('disabled', '');
+          authorField.value = '';
+        }
+      });
+
+      // Vissza gomb funkció
+      document.getElementById('backToHome').addEventListener('click', function (e) {
+        e.preventDefault();
+        location.hash = 'dashboard';
+      });
+    }
+  </script>
 </body>
+<template id="courses-page">
+  <div class="publish-layout">
+    <div class="back-arrow-column">
+      <md-filled-button id="backToHome" class="back-arrow-btn">
+        <img src="/EU2K-Hub/assets/arrowback.svg" alt="Vissza" class="arrow-img">
+      </md-filled-button>
+    </div>
+    <div class="publish-content">
+      <header class="header">
+        <div class="welcome-container">
+          <img src="/EU2K-Hub/assets/add_news.svg" class="welcome-icon" alt="Új Hír">
+          <h1 class="welcome-text">Új hír publikálása</h1>
+        </div>
+        <div class="header-icons">
+          <a href="/EU2K-Hub/system/account.html" class="header-icon-link">
+            <img src="/EU2K-Hub/assets/account_icon.svg" class="header-icon" alt="Account">
+          </a>
+          <a href="/EU2K-Hub/settings/settings.html" class="header-icon-link">
+            <img src="/EU2K-Hub/assets/settings_icon.svg" class="header-icon" alt="Settings">
+          </a>
+        </div>
+      </header>
+      <section class="form-card">
+        <div class="form" id="newsForm">
+          <md-outlined-text-field label="Cím" id="titleNews"></md-outlined-text-field>
+          <md-outlined-text-field label="Szerző" id="authorNews" disabled></md-outlined-text-field>
+          <md-outlined-text-field label="Leírás" id="descNews"></md-outlined-text-field>
+          <md-outlined-text-field label="Kép URL" id="imageNews"></md-outlined-text-field>
+          <md-outlined-text-field label="Link" id="linkNews"></md-outlined-text-field>
+          <md-outlined-text-field label="Dátum (pl. 20250120)" id="dateNews" maxlength="8" type="text"
+            autocomplete="off">
+          </md-outlined-text-field>
+          <div id="datePreviewNews" class="date-preview"></div>
+          <div style="margin-bottom: 16px;">
+            <md-checkbox id="hubExclusiveNews"></md-checkbox>
+            <label for="hubExclusiveNews">Hub Exkluzív</label>
+          </div>
+          <md-filled-button id="publishBtnNews">Publikálás</md-filled-button>
+        </div>
+        <p id="statusNews" class="status-text"></p>
+      </section>
+
+      <section class="form-card">
+        <div class="welcome-container">
+          <img src="/EU2K-Hub/assets/add_event.svg" class="welcome-icon" alt="Új esemény">
+          <h1 class="welcome-text">Új esemény publikálása</h1>
+        </div>
+        <div class="form" id="eventForm">
+          <md-outlined-text-field label="Cím" id="titleEvent"></md-outlined-text-field>
+          <md-outlined-text-field label="Helyszín" id="placeEvent"></md-outlined-text-field>
+          <md-outlined-text-field label="Leírás" id="descriptionEvent"></md-outlined-text-field>
+          <md-outlined-text-field label="Kép URL" id="imageEvent"></md-outlined-text-field>
+          <md-outlined-text-field label="Link" id="linkEvent"></md-outlined-text-field>
+          <md-outlined-text-field label="Dátum (pl. 20250120)" id="dateEvent" maxlength="8" type="text"
+            autocomplete="off">
+          </md-outlined-text-field>
+          <div id="datePreviewEvent" class="date-preview"></div>
+          <md-filled-button id="publishBtnEvent">Publikálás</md-filled-button>
+        </div>
+        <p id="statusEvent" class="status-text"></p>
+      </section>
+    </div>
+  </div>
+</template>
 
 </html>

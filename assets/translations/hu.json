@@ -56,6 +56,21 @@
       "permission_popup_text5": "További kamerát használó lehetőségek is aktiválódnak.",
       "permission_ok": "Rendben"
     },
+    "students": {
+      "title": "Diákok",
+      "groups_by": "Csoportok szerint:",
+      "class_8e": "8.E",
+      "cse_ho_day": "CSE-HO Nap:",
+      "name": "Név",
+      "identifier": "Azonosító",
+      "birthdate": "Születési Dátum",
+      "email": "Email Cím",
+      "share": "Megosztás",
+      "more": "Továbbiak",
+      "continue": "Tovább",
+      "displayed_class_selection": "Megjelenített Osztály Kiválasztása",
+      "selection": "Kiválasztás"
+    },
     "qr": {
       "title": "QR-Kód",
       "qr_code": "QR-Kód",
@@ -76,10 +91,10 @@
       "permission_list_4": "Ha most megadod az engedélyt, ez a funkció elérhetővé válik.",
       "permission_list_5": "További kamerát használó lehetőségek is aktiválódnak."
     },
-    "courses": {
-      "title": "Kurzusok",
-      "courses": "Kurzusok",
-      "description": "Örülünk hogy ennyire érdeklődsz a Kurzusok iránt, de egyelőre még fejlesztés alatt van, és nem alkalmas a mostani állapotában a használatra.",
+    "event_hub": {
+      "title": "Event Hub",
+      "courses": "Event Hub",
+      "description": "Örülünk hogy ennyire érdeklődsz az Event Hub iránt, de egyelőre még fejlesztés alatt van, és nem alkalmas a mostani állapotában a használatra.",
       "description2": "Viszont, addig tudsz visszajelzést adni, és elmondani",
       "description3": "szerinted",
       "description4": "mi lenne ide a legjobb ;)",
@@ -140,7 +155,7 @@
       "terms_accounts_4": "Amennyiben a rendszer visszaélést észlel (pl. szülői fiókot használó diák), fenntartjuk a jogot a fiók típusának módosítására, értesítés küldésére, és akár funkciók korlátozására is.",
       "terms_accounts_5": "A rendszer bármilyen fajta kihasználása nem engedélyezett, kihasználása büntetést von maga után.",
       "terms_responsibility_title": "Felelősség",
-      "terms_responsibility_1": "A Hubban elérhető kurzusokat külső vagy belső szervezők („hostok") működtetik.",
+      "terms_responsibility_1": "A Hubban elérhető kurzusokat külső vagy belső szervezők (hostok) működtetik.",
       "terms_responsibility_2": "A kurzusokért kizárólag a kurzus hostja felel.",
       "terms_responsibility_3": "A Hub, az iskola, és a platform fejlesztői nem vállalnak felelősséget a kurzusok tartalmáért, időpontjáért vagy esetleges technikai hibákért.",
       "terms_responsibility_4": "A Hub a bétaszakaszban nem rendelkezik moderációs rendszerrel, emiatt a közösségi funckiók korlátozottak, vagy hiányzóak is lehetnek.",
@@ -183,11 +198,11 @@
     "qr": "QR-Kód",
     "back": "Vissza",
     "youhub": "YouHub",
-    "courses": "Kurzusok"
+    "event_hub": "Event Hub"
   },
   "onboarding": {
     "continue_as_student": "Tovább diákként",
-    "continue_as_teacher": "Tovább tanárként", 
+    "continue_as_teacher": "Tovább tanárként",
     "continue_without_account": "Tovább felnőttként"
   },
   "profile": {
@@ -293,7 +308,8 @@
     "experiments_title": "Kísérletek",
     "experiments_desc": "Üdvözlő Képernyő mutatása",
     "experiments_notice": "Ezek kísérleti funkciók, instabilak lehetek, és nem nyerték még el a teljes funkcionalitásukat.",
-    "experiments-welcome-screen": "Üdvözlő Képernyő"
+    "experiments-welcome-screen": "Üdvözlő Képernyő",
+    "experiments-welcome-scr-reset": "Első Látogatás változó visszaállítása (teszteléshez)"
   },
   "common": {
     "welcome_hub": "Üdvözöllek a Hub-ban!",

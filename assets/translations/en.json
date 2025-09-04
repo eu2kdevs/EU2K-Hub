@@ -56,6 +56,21 @@
       "permission_popup_text5": "Additional camera-using features will also be activated.",
       "permission_ok": "OK"
     },
+    "students": {
+      "title": "Students",
+      "groups_by": "Groups by:",
+      "class_8e": "8.E",
+      "cse_ho_day": "CSE-HO Day:",
+      "name": "Name",
+      "identifier": "Identifier",
+      "birthdate": "Birthdate",
+      "email": "Email",
+      "share": "Share",
+      "more": "More",
+      "continue": "Continue",
+      "displayed_class_selection": "Displayed Class Selection",
+      "selection": "Selection"
+    },
     "qr": {
       "title": "QR Code",
       "qr_code": "QR Code",
@@ -76,10 +91,10 @@
       "permission_list_4": "If you grant permission now, this feature will become available.",
       "permission_list_5": "Additional camera-using features will also be activated."
     },
-    "courses": {
-      "title": "Courses",
-      "courses": "Courses",
-      "description": "We're glad you're so interested in Courses, but it's still under development and not suitable for use in its current state.",
+    "event_hub": {
+      "title": "Event Hub",
+      "courses": "Event Hub",
+      "description": "We're glad you're so interested in Event Hub, but it's still under development and not suitable for use in its current state.",
       "description2": "However, you can give feedback and tell us",
       "description3": "what you think",
       "description4": "would be best here ;)",
@@ -172,7 +187,7 @@
     "qr": "QR-Code",
     "back": "Back",
     "youhub": "YouHub",
-    "courses": "Courses"
+    "event_hub": "Event Hub"
   },
   "onboarding": {
     "continue_as_student": "Continue as Student",
@@ -279,7 +294,8 @@
     "experiments_title": "Experiments",
     "experiments_desc": "Show Welcome Screen",
     "experiments_notice": "These are experimental features, they may be unstable, and they have not yet reached their full functionality.",
-    "experiments-welcome-screen": "Welcome Screen"
+    "experiments-welcome-screen": "Welcome Screen",
+    "experiments-welcome-scr-reset": "Reset First Visit Variable (for testing)"
   },
   "common": {
     "forward": "Forward",

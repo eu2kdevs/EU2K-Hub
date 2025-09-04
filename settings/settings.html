@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="hu">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="description" content="Láss többet a Hub-ról, kapcsold ki és be az értesítéseket, kezeld a statisztikáidat, lásd mely Kurzusok tagja vagy, és még sok mást.">
+  <meta name="description"
+    content="Láss többet a Hub-ról, kapcsold ki és be az értesítéseket, kezeld a statisztikáidat, lásd mely Kurzusok tagja vagy, és még sok mást.">
   <title data-translate="pages.settings.title">Beállítások</title>
   <link rel="stylesheet" href="settings.css">
   <link rel="icon" href="/EU2K-Hub/favicon.ico">
@@ -124,7 +126,7 @@
       if (welcomeScreenSwitch && window.welcomeScreenManager) {
         // Beállítjuk a switch állapotát a mentett beállítás alapján
         welcomeScreenSwitch.selected = window.welcomeScreenManager.isWelcomeScreenEnabled();
-        
+
         welcomeScreenSwitch.addEventListener('click', e => {
           e.stopPropagation(); // Megakadályozza a kártya kattintás eseményét
         });
@@ -158,7 +160,7 @@
               otherRadio.checked = false;
             }
           });
-          
+
           // Fordítási rendszer integrálása
           if (window.translationManager && radio.checked) {
             const language = radio.value;
@@ -252,11 +254,11 @@
           </div>
           <span data-translate="navigation.youhub">YouHub</span>
         </a>
-        <a class="nav-item" href="/EU2K-Hub/courses.html">
+        <a class="nav-item" href="/EU2K-Hub/event_hub.html">
           <div class="nav-icon-container">
-            <img src="/EU2K-Hub/assets/courses_icon.svg" class="nav-icon" alt="Kurzusok">
+            <img src="/EU2K-Hub/assets/event_hub_icon.svg" class="nav-icon" alt="Event Hub">
           </div>
-          <span data-translate="navigation.courses">Kurzusok</span>
+          <span data-translate="navigation.event_hub">Event Hub</span>
         </a>
       </nav>
     </aside>
@@ -288,10 +290,12 @@
                 <div class="settings-cards">
                   <!-- Általános -->
                   <div class="settings-card single-card active" data-page="general">
-                    <img src="/EU2K-Hub/assets/settings_icons/general_icon.svg" class="settings-card-icon" alt="Általános">
+                    <img src="/EU2K-Hub/assets/settings_icons/general_icon.svg" class="settings-card-icon"
+                      alt="Általános">
                     <div class="settings-card-content">
                       <div class="settings-card-title" data-translate="settings.general">Általános</div>
-                      <div class="settings-card-desc" data-translate="settings.general_desc">Bétaverzió - Nyelv - Infó</div>
+                      <div class="settings-card-desc" data-translate="settings.general_desc">Bétaverzió - Nyelv - Infó
+                      </div>
                     </div>
                   </div>
 
@@ -309,20 +313,24 @@
 
                   <!-- Statisztikák és Teljesítmény -->
                   <div class="settings-card group-bottom" data-page="stats">
-                    <img src="/EU2K-Hub/assets/settings_icons/statistics_and_performance_icon.svg" class="settings-card-icon"
-                      alt="Statisztikák">
+                    <img src="/EU2K-Hub/assets/settings_icons/statistics_and_performance_icon.svg"
+                      class="settings-card-icon" alt="Statisztikák">
                     <div class="settings-card-content">
-                      <div class="settings-card-title" data-translate="settings.stats">Statisztikák és Teljesítmény</div>
-                      <div class="settings-card-desc" data-translate="settings.stats_desc">Teljesítmények megjelenítése</div>
+                      <div class="settings-card-title" data-translate="settings.stats">Statisztikák és Teljesítmény
+                      </div>
+                      <div class="settings-card-desc" data-translate="settings.stats_desc">Teljesítmények megjelenítése
+                      </div>
                     </div>
                   </div>
 
                   <!-- Közösség -->
                   <div class="settings-card group-top" data-page="community">
-                    <img src="/EU2K-Hub/assets/settings_icons/community_icon.svg" class="settings-card-icon" alt="Közösség">
+                    <img src="/EU2K-Hub/assets/settings_icons/community_icon.svg" class="settings-card-icon"
+                      alt="Közösség">
                     <div class="settings-card-content">
                       <div class="settings-card-title" data-translate="settings.community">Közösség</div>
-                      <div class="settings-card-desc" data-translate="settings.community_desc">Kurzusok - Csoporttagságok</div>
+                      <div class="settings-card-desc" data-translate="settings.community_desc">Kurzusok -
+                        Csoporttagságok</div>
                     </div>
                   </div>
 
@@ -331,14 +339,16 @@
                     <img src="/EU2K-Hub/assets/settings_icons/events_and_calendar_icon.svg" class="settings-card-icon"
                       alt="Események">
                     <div class="settings-card-content">
-                      <div class="settings-card-title" data-translate="settings.events_calendar">Események és Naptár</div>
+                      <div class="settings-card-title" data-translate="settings.events_calendar">Események és Naptár
+                      </div>
                       <div class="settings-card-desc" data-translate="settings.events_desc">Események</div>
                     </div>
                   </div>
 
                   <!-- Kísérletek -->
                   <div class="settings-card group-bottom" data-page="experiments">
-                    <img src="/EU2K-Hub/assets/settings_icons/experiments_page/experiments.svg" class="settings-card-icon" alt="Kísérletek">
+                    <img src="/EU2K-Hub/assets/settings_icons/experiments_page/experiments.svg"
+                      class="settings-card-icon" alt="Kísérletek">
                     <div class="settings-card-content">
                       <div class="settings-card-title" data-translate="settings.experiments_title">Kísérletek</div>
                       <div class="settings-card-desc" data-translate="settings.experiments_desc">Üdvözlő képernyő</div>
@@ -355,7 +365,8 @@
                 <div id="general-page" class="settings-page active">
                   <!-- Weboldal bétaverziójának használata -->
                   <div class="general-beta-card">
-                    <span class="general-beta-text" data-translate="settings.beta_usage">Weboldal bétaverziójának használata</span>
+                    <span class="general-beta-text" data-translate="settings.beta_usage">Weboldal bétaverziójának
+                      használata</span>
                     <md-switch icons selected disabled></md-switch>
                   </div>
 
@@ -366,8 +377,8 @@
                       <!-- English kártya -->
                       <div class="general-language-card">
                         <div class="general-language-content">
-                          <img src="/EU2K-Hub/assets/settings_icons/general_page/english.png" class="general-language-flag"
-                            alt="English">
+                          <img src="/EU2K-Hub/assets/settings_icons/general_page/english.png"
+                            class="general-language-flag" alt="English">
                           <span class="general-language-text" data-translate="settings.language_english">English</span>
                         </div>
                         <md-radio name="language" value="en"></md-radio>
@@ -376,8 +387,8 @@
                       <!-- Magyar kártya -->
                       <div class="general-language-card">
                         <div class="general-language-content">
-                          <img src="/EU2K-Hub/assets/settings_icons/general_page/hungarian.png" class="general-language-flag"
-                            alt="Magyar">
+                          <img src="/EU2K-Hub/assets/settings_icons/general_page/hungarian.png"
+                            class="general-language-flag" alt="Magyar">
                           <span class="general-language-text" data-translate="settings.language_hungarian">Magyar</span>
                         </div>
                         <md-radio name="language" value="hu" checked></md-radio>
@@ -408,20 +419,28 @@
                     <!-- Középső oszlop -->
                     <div class="general-info-column">
                       <div class="general-info-item">
-                        <img src="/EU2K-Hub/assets/settings_icons/ui_version.svg" class="general-info-icon" alt="UI Verzió">
-                        <span class="general-info-text" data-translate="settings.ui_version">UI Verzió: Material 3 Expressive</span>
+                        <img src="/EU2K-Hub/assets/settings_icons/ui_version.svg" class="general-info-icon"
+                          alt="UI Verzió">
+                        <span class="general-info-text" data-translate="settings.ui_version">UI Verzió: Material 3
+                          Expressive</span>
                       </div>
                       <div class="general-info-item">
-                        <img src="/EU2K-Hub/assets/settings_icons/stands_behind.svg" class="general-info-icon" alt="Mögötte áll">
-                        <span class="general-info-text" data-translate="settings.stands_behind">Mögötte áll még: EU2K DÖK, EU2K Devs</span>
+                        <img src="/EU2K-Hub/assets/settings_icons/stands_behind.svg" class="general-info-icon"
+                          alt="Mögötte áll">
+                        <span class="general-info-text" data-translate="settings.stands_behind">Mögötte áll még: EU2K
+                          DÖK, EU2K Devs</span>
                       </div>
                       <div class="general-info-item">
-                        <img src="/EU2K-Hub/assets/settings_icons/made_by.svg" class="general-info-icon" alt="Készítette">
-                        <span class="general-info-text" data-translate="settings.made_by">Készítette: Turoczi Ádám 8.E</span>
+                        <img src="/EU2K-Hub/assets/settings_icons/made_by.svg" class="general-info-icon"
+                          alt="Készítette">
+                        <span class="general-info-text" data-translate="settings.made_by">Készítette: Turoczi Ádám
+                          8.E</span>
                       </div>
                       <div class="general-info-item">
-                        <img src="/EU2K-Hub/assets/settings_icons/organization.svg" class="general-info-icon" alt="Szervezet">
-                        <span class="general-info-text" data-translate="settings.organization">Európa 2000 Gimnázium Tulajdona</span>
+                        <img src="/EU2K-Hub/assets/settings_icons/organization.svg" class="general-info-icon"
+                          alt="Szervezet">
+                        <span class="general-info-text" data-translate="settings.organization">Európa 2000 Gimnázium
+                          Tulajdona</span>
                       </div>
                     </div>
 
@@ -440,8 +459,10 @@
                 <div id="notifications-page" class="settings-page">
                   <!-- Notice kártya -->
                   <div class="notifications-notice">
-                    <img src="/EU2K-Hub/assets/settings_icons/notifications_page/info.svg" class="notice-icon" alt="Info">
-                    <span class="notice-text" data-translate="settings.notifications_notice">Amíg az iskolában vagy, csendes értesítéseket fogsz kapni.</span>
+                    <img src="/EU2K-Hub/assets/settings_icons/notifications_page/info.svg" class="notice-icon"
+                      alt="Info">
+                    <span class="notice-text" data-translate="settings.notifications_notice">Amíg az iskolában vagy,
+                      csendes értesítéseket fogsz kapni.</span>
                   </div>
 
                   <!-- Kategóriák kártya -->
@@ -451,7 +472,8 @@
                     <div class="category-items">
                       <!-- Hírek -->
                       <div class="category-item first">
-                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/news.svg" class="category-icon" alt="Hírek">
+                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/news.svg" class="category-icon"
+                          alt="Hírek">
                         <span class="category-text" data-translate="settings.news">Hírek</span>
                         <md-switch icons selected></md-switch>
                       </div>
@@ -498,16 +520,16 @@
 
                       <!-- Bétaverzió -->
                       <div class="category-item middle">
-                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/beta_version.svg" class="category-icon"
-                          alt="Bétaverzió">
+                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/beta_version.svg"
+                          class="category-icon" alt="Bétaverzió">
                         <span class="category-text" data-translate="settings.beta_version">Bétaverzió</span>
                         <md-switch icons selected></md-switch>
                       </div>
 
                       <!-- Újdonságok -->
                       <div class="category-item middle">
-                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/new_things.svg" class="category-icon"
-                          alt="Újdonságok">
+                        <img src="/EU2K-Hub/assets/settings_icons/notifications_page/new_things.svg"
+                          class="category-icon" alt="Újdonságok">
                         <span class="category-text" data-translate="settings.new_things">Újdonságok</span>
                         <md-switch icons selected></md-switch>
                       </div>
@@ -525,7 +547,8 @@
 
                 <div id="stats-page" class="settings-page">
                   <h2 data-translate="settings.stats">Statisztikák és Teljesítmény</h2>
-                  <p data-translate="settings.stats_not_available">Ez a részleg bétában nem elérhető, nagyon erősen dolgozunk rajta, hogy minél hamarabb elérhető
+                  <p data-translate="settings.stats_not_available">Ez a részleg bétában nem elérhető, nagyon erősen
+                    dolgozunk rajta, hogy minél hamarabb elérhető
                     legyen.</p>
                 </div>
 
@@ -537,7 +560,8 @@
                       <img src="/EU2K-Hub/assets/settings_icons/community_page/block.svg" class="community-block-icon"
                         alt="Block">
                       <div class="community-no-courses-text">
-                        <div data-translate="settings.courses_unavailable_line1">A Kurzusok funkció ebben a verzióban</div>
+                        <div data-translate="settings.courses_unavailable_line1">A Kurzusok funkció ebben a verzióban
+                        </div>
                         <div data-translate="settings.courses_unavailable_line2">nem érhető még el.</div>
                       </div>
                     </div>
@@ -548,24 +572,27 @@
                     <div class="community-card-title" data-translate="settings.my_suggestions">Javaslataim:</div>
                     <div class="community-suggestion-items">
                       <div class="community-suggestion-item first">
-                        <span class="community-suggestion-text" data-translate="settings.suggestion1">Puffy, felfújt ikonok készítése</span>
+                        <span class="community-suggestion-text" data-translate="settings.suggestion1">Puffy, felfújt
+                          ikonok készítése</span>
                         <div class="community-suggestion-arrow">
-                          <img src="/EU2K-Hub/assets/settings_icons/community_page/arrow_right.svg" class="community-arrow-icon"
-                            alt="Arrow">
+                          <img src="/EU2K-Hub/assets/settings_icons/community_page/arrow_right.svg"
+                            class="community-arrow-icon" alt="Arrow">
                         </div>
                       </div>
                       <div class="community-suggestion-item middle">
-                        <span class="community-suggestion-text" data-translate="settings.suggestion2">A tökéletes prompt a tanuláshoz</span>
+                        <span class="community-suggestion-text" data-translate="settings.suggestion2">A tökéletes prompt
+                          a tanuláshoz</span>
                         <div class="community-suggestion-arrow">
-                          <img src="/EU2K-Hub/assets/settings_icons/community_page/arrow_right.svg" class="community-arrow-icon"
-                            alt="Arrow">
+                          <img src="/EU2K-Hub/assets/settings_icons/community_page/arrow_right.svg"
+                            class="community-arrow-icon" alt="Arrow">
                         </div>
                       </div>
                       <div class="community-suggestion-item last">
-                        <span class="community-suggestion-text" data-translate="settings.suggestion3">Hogyan készíts élethű képeket</span>
+                        <span class="community-suggestion-text" data-translate="settings.suggestion3">Hogyan készíts
+                          élethű képeket</span>
                         <div class="community-suggestion-arrow">
-                          <img src="/EU2K-Hub/assets/settings_icons/community_page/arrow_right.svg" class="community-arrow-icon"
-                            alt="Arrow">
+                          <img src="/EU2K-Hub/assets/settings_icons/community_page/arrow_right.svg"
+                            class="community-arrow-icon" alt="Arrow">
                         </div>
                       </div>
                     </div>
@@ -574,20 +601,22 @@
 
                 <div id="events-page" class="settings-page">
                   <h2 data-translate="settings.events_calendar">Események és Naptár</h2>
-                  <p data-translate="settings.events_not_available">Ez a részleg bétában nem elérhető, nagyon erősen dolgozunk rajta, hogy minél hamarabb elérhető
+                  <p data-translate="settings.events_not_available">Ez a részleg bétában nem elérhető, nagyon erősen
+                    dolgozunk rajta, hogy minél hamarabb elérhető
                     legyen.</p>
                 </div>
 
                 <div id="experiments-page" class="settings-page">
                   <div class="general-beta-card">
-                    <span class="general-beta-text" data-translate="settings.experiments-welcome-screen">Üdvözlő Képernyő</span>
-                    <md-switch id="welcome-screen-switch" icons selected></md-switch>
+                    <span class="general-beta-text" data-translate="settings.experiments-welcome-screen">Üdvözlő
+                      Képernyő</span>
+                    <md-switch id="welcome-screen-switch" icons disabled selected></md-switch>
                   </div>
-                  
+
                   <!-- Tesztelési gomb az első látogatás visszaállításához -->
                   <div class="general-beta-card" style="margin-top: 16px;">
-                    <span class="general-beta-text">Első látogatás visszaállítása (teszteléshez)</span>
-                    <md-filled-button id="reset-first-visit-btn" style="margin-left: auto;">
+                    <span class="general-beta-text">Első Látogatás változó visszaállítása (teszteléshez)</span>
+                    <md-filled-button disabled id="reset-first-visit-btn" style="margin-left: auto;">
                       Visszaállítás
                     </md-filled-button>
                   </div>
@@ -600,4 +629,5 @@
     </main>
   </div>
 </body>
+
 </html>
