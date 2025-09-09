@@ -1,0 +1,12 @@
+{
+  "id": "com.eu2kdevs.hub",
+  "version": "1.0.51",
+  "vendor": "Európa 2000 Gimnázium",
+  "type": "web",
+  "main": "index.html",
+  "title": "EU2K Hub",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png",
+  "appDescription": "Az EU2K Hub egy webes alkalmazás, amely az Európa 2000 Gimnázium diákjai számára készült. Az alkalmazás célja, hogy egy központi helyet biztosítson a diákok számára, ahol könnyen hozzáférhetnek az iskolai információkhoz, eseményekhez és egyéb hasznos erőforrásokhoz.",
+  "supportTouchMode": "none"
+}

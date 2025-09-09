@@ -29,6 +29,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
     import { getFirestore } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { getAuth, OAuthProvider, signInWithRedirect, signInWithPopup, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -40,14 +41,467 @@
       appId: "1:560244867055:web:3cd51b85baead94989001a",
       measurementId: "G-2JDPR089WD"
     };
+    
+    console.log('🔧 Current domain:', window.location.origin);
+    console.log('🔧 Auth domain:', firebaseConfig.authDomain);
+    
+    // Check if we're on localhost and warn about domain issues
+    if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+      console.warn('⚠️ LOCALHOST DETECTED - Firebase auth may not work properly!');
+      console.warn('⚠️ You need to add this domain to Firebase Authorized Domains:');
+      console.warn(`⚠️ Add: ${window.location.origin} to Firebase Console > Authentication > Settings > Authorized domains`);
+    }
+    
+    // Persistent logging system
+    const persistentLog = {
+      add: (message) => {
+        try {
+          const logs = JSON.parse(localStorage.getItem('eu2k-debug-logs') || '[]');
+          logs.push(`${new Date().toISOString()}: ${message}`);
+          // Keep only last 20 logs
+          if (logs.length > 20) logs.shift();
+          localStorage.setItem('eu2k-debug-logs', JSON.stringify(logs));
+          console.log(message);
+        } catch (e) {
+          console.log(message);
+        }
+      },
+      show: () => {
+        try {
+          const logs = JSON.parse(localStorage.getItem('eu2k-debug-logs') || '[]');
+          console.log('📋 Persistent logs:');
+          logs.forEach(log => console.log(log));
+          return logs;
+        } catch (e) {
+          console.log('No persistent logs found');
+          return [];
+        }
+      },
+      clear: () => {
+        localStorage.removeItem('eu2k-debug-logs');
+        console.log('🧹 Cleared persistent logs');
+      }
+    };
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     // Make db globally available
     window.db = db;
+    
+    // Debug functions for manual testing
+    window.debugAuth = {
+      checkCurrentUser: () => {
+        console.log('🔍 Current user:', auth.currentUser);
+        return auth.currentUser;
+      },
+      forceProfileChooser: () => {
+        const user = auth.currentUser;
+        if (user) {
+          console.log('🚀 Forcing profile chooser with current user');
+          proceedToProfileChooser(user);
+        } else {
+          console.log('❌ No current user found');
+        }
+      },
+      clearAuth: () => {
+        localStorage.removeItem('eu2k-auth-logged-in');
+        localStorage.removeItem('eu2k-auth-display-name');
+        console.log('🧹 Cleared auth localStorage');
+      },
+      checkRedirectUrl: () => {
+        const expectedRedirect = `${window.location.origin}${window.location.pathname}`;
+        console.log('🔗 Expected redirect URL:', expectedRedirect);
+        console.log('🔗 Current URL:', window.location.href);
+        console.log('🔗 Auth domain:', firebaseConfig.authDomain);
+        return expectedRedirect;
+      },
+      testPopupAuth: () => {
+        console.log('🪟 Testing popup auth...');
+        signInWithPopup(auth, msProvider)
+          .then((result) => {
+            console.log('✅ Popup auth successful:', result);
+            proceedToProfileChooser(result.user);
+          })
+          .catch((error) => {
+            console.error('❌ Popup auth failed:', error);
+          });
+      },
+      showLogs: () => {
+        return persistentLog.show();
+      },
+      clearLogs: () => {
+        persistentLog.clear();
+      },
+      diagnoseAuthIssue: () => {
+        console.log('🔍 PROBLEM IDENTIFIED FROM LOGS:');
+        console.log('❌ Microsoft redirected back WITHOUT auth code/state parameters');
+        console.log('❌ This means Azure is configured to redirect to localhost directly');
+        console.log('❌ Instead of going through Firebase auth handler first');
+        
+        console.log('\n🔧 ROOT CAUSE:');
+        console.log('Azure App Registration has localhost in redirect URIs');
+        console.log('Current domain:', window.location.origin);
+        console.log('Firebase auth domain:', firebaseConfig.authDomain);
+        console.log('Expected flow: localhost → Microsoft → Firebase → localhost');
+        console.log('Actual flow: localhost → Microsoft → localhost (WRONG!)');
+        
+        console.log('\n🔧 IMMEDIATE FIX:');
+        console.log('1. Remove ALL localhost redirect URIs from Azure');
+        console.log('2. Only keep: https://eu2k-hub.firebaseapp.com/__/auth/handler');
+        console.log('3. Firebase will handle the redirect back to localhost');
+        
+        console.log('\n🧪 ALTERNATIVE TEST:');
+        console.log('Try production URL: window.debugAuth.tryProductionAuth()');
+        
+        return {
+          problem: 'Azure redirecting to localhost instead of Firebase handler',
+          currentDomain: window.location.origin,
+          authDomain: firebaseConfig.authDomain,
+          expectedFlow: 'localhost → Microsoft → Firebase → localhost',
+          actualFlow: 'localhost → Microsoft → localhost',
+          solution: 'Remove localhost redirect URIs from Azure'
+        };
+      },
+      tryProductionAuth: () => {
+        const productionUrl = 'https://eu2k-hub.firebaseapp.com/welcome/onboarding_student.html#step2';
+        console.log('🚀 Redirecting to production for auth:', productionUrl);
+        window.location.href = productionUrl;
+      },
+      testDirectFirebaseAuth: () => {
+        console.log('🧪 Testing direct Firebase auth redirect...');
+        const testUrl = `https://eu2k-hub.firebaseapp.com/__/auth/handler?apiKey=${firebaseConfig.apiKey}&appName=[DEFAULT]&authType=signInViaRedirect&providerId=microsoft.com`;
+        console.log('Test URL:', testUrl);
+        console.log('Opening in new tab...');
+        window.open(testUrl, '_blank');
+      },
+      checkAzureConfig: () => {
+        console.log('🔍 AZURE APP REGISTRATION PROBLEM IDENTIFIED:');
+        console.log('❌ Microsoft is redirecting to localhost instead of Firebase handler!');
+        console.log('❌ This means Azure has the wrong redirect URI configured.');
+        console.log('\n🔧 IMMEDIATE FIX NEEDED:');
+        console.log('1. Azure Portal > App registrations > Your App');
+        console.log('2. Authentication tab');
+        console.log('3. Platform configurations > Web');
+        console.log('4. REMOVE any localhost redirect URIs like:');
+        console.log('   ❌ http://127.0.0.1:5500/...');
+        console.log('   ❌ http://localhost:5500/...');
+        console.log('5. ONLY keep this redirect URI:');
+        console.log('   ✅ https://eu2k-hub.firebaseapp.com/__/auth/handler');
+        console.log('\n6. Make sure these are enabled:');
+        console.log('   ✅ Access tokens (used for implicit flows)');
+        console.log('   ✅ ID tokens (used for implicit and hybrid flows)');
+        console.log('\n💡 The issue: Azure is redirecting directly to your localhost');
+        console.log('   instead of going through Firebase auth handler first!');
+      },
+      checkFirebaseConfig: () => {
+        console.log('🔍 FIREBASE CONFIGURATION CHECK:');
+        console.log('1. Firebase Console > Authentication > Sign-in method');
+        console.log('2. Microsoft provider should be enabled');
+        console.log('3. Check these settings:');
+        console.log('   - Web SDK configuration');
+        console.log('   - Client ID from Azure');
+        console.log('   - Client secret from Azure');
+        console.log('\n4. Firebase Console > Authentication > Settings > Authorized domains');
+        console.log('   Should include:');
+        console.log('   ✅ eu2k-hub.firebaseapp.com');
+        console.log('   ✅ 127.0.0.1');
+        console.log('   ✅ localhost');
+        
+        // Test Firebase auth configuration
+        console.log('\n🧪 Testing Firebase auth config...');
+        try {
+          const authUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=${firebaseConfig.apiKey}`;
+          console.log('Firebase Auth API URL:', authUrl);
+          
+          // Check if we can reach Firebase auth
+          fetch(authUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ returnSecureToken: true })
+          }).then(response => {
+            console.log('Firebase Auth API response status:', response.status);
+            if (response.status === 400) {
+              console.log('✅ Firebase Auth API is reachable (400 = missing params, which is expected)');
+            }
+          }).catch(error => {
+            console.log('❌ Firebase Auth API error:', error);
+          });
+        } catch (error) {
+          console.log('❌ Firebase config test error:', error);
+        }
+      },
+      simulateSuccessfulAuth: () => {
+        console.log('🎭 Simulating successful auth for testing...');
+        // Create a mock user object
+        const mockUser = {
+          uid: 'test-uid-123',
+          email: 'test@example.com',
+          displayName: 'Test User',
+          photoURL: null
+        };
+        
+        // Set auth flags
+        localStorage.setItem('eu2k-auth-logged-in', 'true');
+        localStorage.setItem('eu2k-auth-display-name', mockUser.displayName);
+        
+        console.log('🎭 Mock user created, proceeding to profile chooser...');
+        proceedToProfileChooser(mockUser);
+      },
+      quickFix: () => {
+        console.log('🚀 QUICK FIX: Opening production URL...');
+        console.log('This will work because production uses the correct Firebase auth flow');
+        window.debugAuth.tryProductionAuth();
+      }
+    };
+
+    // Microsoft provider and sign-in flow
+    const msProvider = new OAuthProvider('microsoft.com');
+    
+    // Log provider setup
+    persistentLog.add('🔧 Setting up Microsoft OAuth provider...');
+    
+    // Optional: force account selection each time
+    msProvider.setCustomParameters({ 
+      prompt: 'select_account',
+      domain_hint: 'organizations', // Focus on organizational accounts
+      response_type: 'code',
+      response_mode: 'query'
+    });
+    
+    persistentLog.add('🔧 Custom parameters set: prompt=select_account, domain_hint=organizations');
+    
+    // Request Graph profile access
+    try { 
+      msProvider.addScope('User.Read');
+      msProvider.addScope('profile');
+      msProvider.addScope('email');
+      msProvider.addScope('openid');
+      persistentLog.add('🔧 Scopes added: User.Read, profile, email, openid');
+    } catch (error) {
+      persistentLog.add(`⚠️ Could not add scopes: ${error.message}`);
+    }
+    
+    // Log the final provider config
+    persistentLog.add(`🔧 Final provider config: ${JSON.stringify({
+      providerId: msProvider.providerId,
+      scopes: msProvider.scopes,
+      customParameters: msProvider.customParameters
+    })}`);
+
+    // Expose start function for the inline navigation script
+    window.startMicrosoftSignIn = () => {
+      persistentLog.add('🔐 Starting Microsoft Sign-In process...');
+      persistentLog.add(`Auth provider configured: ${JSON.stringify(msProvider)}`);
+      persistentLog.add(`🌐 Current URL: ${window.location.href}`);
+      
+      // Check if we're on localhost
+      const isLocalhost = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+      
+      if (isLocalhost) {
+        persistentLog.add('⚠️ LOCALHOST DETECTED - This may not work with Firebase Auth!');
+        persistentLog.add('💡 Try opening the app on: https://eu2k-hub.firebaseapp.com');
+        
+        // Show user-friendly error
+        alert(`⚠️ Localhost Auth Issue\n\nFirebase authentication may not work on localhost (${window.location.origin}).\n\nPlease try:\n1. Open https://eu2k-hub.firebaseapp.com\n2. Or add ${window.location.origin} to Firebase Authorized Domains\n\nFor now, I'll try the auth anyway...`);
+      }
+      
+      // Mark that we're starting auth
+      localStorage.setItem('eu2k-auth-in-progress', 'true');
+      localStorage.setItem('eu2k-auth-start-time', Date.now().toString());
+      
+      // Always use redirect for Microsoft (popup often doesn't work with Microsoft)
+      persistentLog.add('🔄 Using redirect sign-in for Microsoft OAuth');
+      
+      try {
+        signInWithRedirect(auth, msProvider);
+      } catch (error) {
+        persistentLog.add(`❌ signInWithRedirect failed: ${error.message}`);
+        alert(`Authentication Error: ${error.message}`);
+      }
+    };
+
+    // After redirect, continue to profile chooser and prefill
+    const proceedToProfileChooser = (user) => {
+      console.log('✅ Proceeding to profile chooser with user:', user);
+      try {
+        if (user) {
+          console.log('👤 User data:', {
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            uid: user.uid
+          });
+          
+          const nameEl = document.querySelector('.main-avatar-name');
+          if (nameEl && user.displayName) {
+            nameEl.textContent = user.displayName;
+            console.log('📝 Updated name element with:', user.displayName);
+          }
+          
+          const imgEl = document.querySelector('.main-avatar-img');
+          if (imgEl && user.photoURL) {
+            imgEl.src = user.photoURL;
+            console.log('🖼️ Updated avatar image with:', user.photoURL);
+          }
+          
+          // Persist minimal auth state
+          localStorage.setItem('eu2k-auth-logged-in', 'true');
+          if (user.displayName) localStorage.setItem('eu2k-auth-display-name', user.displayName);
+          console.log('💾 Saved auth state to localStorage');
+        }
+      } catch (e) {
+        console.error('❌ Prefill failed:', e);
+      }
+      try { 
+        localStorage.setItem('eu2k-onboarding-target', 'student-profile'); 
+        console.log('🎯 Set onboarding target to student-profile');
+      } catch (_) {}
+      
+      console.log('🔄 Navigating to student-profile page...');
+      location.hash = 'student-profile';
+    };
+
+    // Handle redirect result when coming back from Microsoft login
+    getRedirectResult(auth).then((result) => {
+      persistentLog.add(`🔍 Checking redirect result: ${result ? 'found' : 'null'}`);
+      persistentLog.add(`🔍 Full URL: ${window.location.href}`);
+      persistentLog.add(`🔍 URL search params: ${window.location.search}`);
+      persistentLog.add(`🔍 URL hash: ${window.location.hash}`);
+      
+      // Log all URL parameters for debugging
+      const urlParams = new URLSearchParams(window.location.search);
+      const allParams = {};
+      for (const [key, value] of urlParams.entries()) {
+        allParams[key] = value;
+      }
+      persistentLog.add(`🔍 All URL params: ${JSON.stringify(allParams)}`);
+      
+      if (result && result.user) {
+        persistentLog.add(`✅ Redirect result successful! User: ${result.user.email}`);
+        
+        // Clear auth in progress flag
+        localStorage.removeItem('eu2k-auth-in-progress');
+        
+        // Try to fetch Graph displayName using access token
+        try {
+          const credential = OAuthProvider.credentialFromResult(result);
+          const accessToken = credential && credential.accessToken;
+          persistentLog.add(`🔑 Access token available: ${!!accessToken}`);
+          
+          if (accessToken) {
+            persistentLog.add('📡 Fetching user data from Microsoft Graph...');
+            fetch('https://graph.microsoft.com/v1.0/me', {
+              headers: { Authorization: `Bearer ${accessToken}` }
+            }).then(r => r.json()).then(data => {
+              persistentLog.add(`📊 Graph API response: ${JSON.stringify(data)}`);
+              if (data && data.displayName) {
+                localStorage.setItem('eu2k-auth-display-name', data.displayName);
+                persistentLog.add(`💾 Saved Graph display name: ${data.displayName}`);
+              }
+            }).catch((error) => {
+              persistentLog.add(`❌ Graph API error: ${error.message}`);
+            });
+          }
+        } catch (error) {
+          persistentLog.add(`❌ Credential extraction error: ${error.message}`);
+        }
+        
+        proceedToProfileChooser(result.user);
+      } else {
+        persistentLog.add('ℹ️ No redirect result or user found');
+        
+        // Check if we were in the middle of auth
+        const authInProgress = localStorage.getItem('eu2k-auth-in-progress');
+        const authStartTime = localStorage.getItem('eu2k-auth-start-time');
+        
+        if (authInProgress) {
+          const timeSinceStart = Date.now() - parseInt(authStartTime || '0');
+          persistentLog.add(`⏰ Auth was in progress, time since start: ${timeSinceStart}ms`);
+          
+          // Check if Microsoft redirected us back but Firebase didn't catch it
+          const urlParams = new URLSearchParams(window.location.search);
+          const hasCode = urlParams.has('code');
+          const hasState = urlParams.has('state');
+          const hasError = urlParams.has('error');
+          
+          persistentLog.add(`🔍 Microsoft OAuth params - code: ${hasCode}, state: ${hasState}, error: ${hasError}`);
+          
+          if (hasError) {
+            const error = urlParams.get('error');
+            const errorDescription = urlParams.get('error_description');
+            persistentLog.add(`❌ Microsoft OAuth error: ${error} - ${errorDescription}`);
+          }
+          
+          if (hasCode && hasState) {
+            persistentLog.add('🔍 Microsoft returned auth code, but Firebase didn\'t process it');
+            persistentLog.add('🔧 This suggests a Firebase configuration issue');
+            
+            // Try to manually trigger Firebase auth processing
+            persistentLog.add('🔄 Attempting manual Firebase auth processing...');
+            setTimeout(() => {
+              // Force a page reload to trigger Firebase auth processing
+              persistentLog.add('🔄 Reloading page to trigger Firebase auth...');
+              window.location.reload();
+            }, 2000);
+          }
+          
+          // If less than 30 seconds, wait for auth state change
+          if (timeSinceStart < 30000) {
+            persistentLog.add('🔄 Waiting for auth state change...');
+            setTimeout(() => {
+              const currentUser = auth.currentUser;
+              persistentLog.add(`⏰ Delayed check - current user: ${currentUser ? currentUser.email : 'none'}`);
+              if (currentUser) {
+                localStorage.removeItem('eu2k-auth-in-progress');
+                proceedToProfileChooser(currentUser);
+              }
+            }, 3000);
+          } else {
+            persistentLog.add('⏰ Auth timeout, clearing flags');
+            localStorage.removeItem('eu2k-auth-in-progress');
+            localStorage.removeItem('eu2k-auth-start-time');
+          }
+        }
+      }
+    }).catch((error) => {
+      persistentLog.add(`❌ Microsoft sign-in error: ${error.message}`);
+      persistentLog.add(`❌ Error details: ${JSON.stringify(error)}`);
+      localStorage.removeItem('eu2k-auth-in-progress');
+    });
+
+    // If already logged in (e.g., returning visitor), go on directly
+    let authStateProcessed = false;
+    onAuthStateChanged(auth, (user) => {
+      persistentLog.add(`🔄 Auth state changed. User: ${user ? 'logged in' : 'not logged in'}`);
+      persistentLog.add(`📍 Current hash: ${location.hash}`);
+      persistentLog.add(`🔄 Auth state already processed: ${authStateProcessed}`);
+      
+      if (user) {
+        persistentLog.add(`👤 User details: ${JSON.stringify({
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName
+        })}`);
+        
+        // Check if we're coming back from Microsoft auth
+        const authInProgress = localStorage.getItem('eu2k-auth-in-progress');
+        const isStep2 = location.hash === '#step2' || location.hash === '';
+        
+        persistentLog.add(`🔍 Auth in progress: ${authInProgress}`);
+        persistentLog.add(`🔍 Is on step2 or empty hash: ${isStep2}`);
+        
+        if (!authStateProcessed && (isStep2 || authInProgress)) {
+          persistentLog.add('🚀 Auto-proceeding to profile chooser for logged in user');
+          authStateProcessed = true;
+          localStorage.removeItem('eu2k-auth-in-progress');
+          proceedToProfileChooser(user);
+        }
+      }
+    });
   </script>
 
   <script>
@@ -58,11 +512,12 @@
       const welcomePages = document.querySelectorAll('.welcome-page');
 
       function showPage(pageId) {
-        console.log('Showing page:', pageId);
+        console.log('📄 Showing page:', pageId);
 
         // First fade out all active pages
         const currentActive = document.querySelector('.welcome-page.active');
         if (currentActive) {
+          console.log('🔄 Hiding current active page:', currentActive.id);
           currentActive.classList.remove('active');
         }
 
@@ -73,17 +528,20 @@
         }
 
         if (targetPage) {
+          console.log('✅ Found target page:', targetPage.id);
           // Make sure it's visible but not active first
           targetPage.style.display = 'flex';
 
           // Small delay to ensure display change is processed
           setTimeout(() => {
             targetPage.classList.add('active');
+            console.log('🎯 Activated page:', targetPage.id);
           }, 10);
 
-          console.log('Successfully showed page:', targetPage.id);
+          console.log('✅ Successfully showed page:', targetPage.id);
         } else {
-          console.error('Page not found:', pageId);
+          console.error('❌ Page not found:', pageId);
+          console.log('🔍 Available pages:', Array.from(document.querySelectorAll('.welcome-page')).map(p => p.id));
         }
 
         // Hide non-active pages after transition
@@ -158,7 +616,26 @@
           } else if (action === 'back-messages-setup') {
             navigate(e, 'messages-setup');
           } else if (action === 'student') {
-            navigate(e, 'student-profile');
+            e.preventDefault();
+            console.log('🎓 Student button clicked');
+            
+            // Check if already logged in
+            const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
+            console.log('🔍 Already logged in?', isLoggedIn);
+            
+            if (isLoggedIn) {
+              console.log('✅ User already logged in, going to profile chooser');
+              showPage('student-profile');
+              return;
+            }
+            
+            console.log('🔐 Starting Microsoft sign-in...');
+            if (window.startMicrosoftSignIn) {
+              window.startMicrosoftSignIn();
+            } else {
+              console.error('❌ Microsoft sign-in function not available');
+              navigate(e, 'student-profile');
+            }
           } else if (action === 'teacher') {
             navigate(e, 'teacher');
           } else if (action === 'without-account') {
@@ -229,6 +706,20 @@
       // Initial page load
       const initialPage = location.hash.substring(1) || 'step1';
       showPage(initialPage);
+
+      // If an onboarding target was requested (e.g., after auth redirect), navigate there
+      try {
+        const target = localStorage.getItem('eu2k-onboarding-target');
+        console.log('🎯 Checking onboarding target:', target);
+        if (target) {
+          console.log('🚀 Found onboarding target, navigating to:', target);
+          localStorage.removeItem('eu2k-onboarding-target');
+          showPage(target);
+          location.hash = target;
+        }
+      } catch (error) {
+        console.error('❌ Error checking onboarding target:', error);
+      }
 
       // Set default avatar selection (magenta)
       setTimeout(() => {

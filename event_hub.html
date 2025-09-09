@@ -24,6 +24,7 @@
   <script src="/EU2K-Hub/assets/js/permissions.js"></script>
   <script src="/EU2K-Hub/assets/js/translations.js"></script>
   <script src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
+  <script src="/EU2K-Hub/assets/js/auth-state.js"></script>
   <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
@@ -84,6 +85,11 @@
     <main class="main-area">
       <div class="main-content">
         <header class="header">
+          <div class="welcome-container">
+            <img src="/EU2K-Hub/assets/qr_code_icon.svg" class="event-hub-icon" alt="Event Hub" style="margin-bottom: 4px;">
+            <h1 class="event-hub-text" data-translate="pages.event-hub.title" style="margin-top: 0; margin-bottom: 4px;">Event Hub</h1>
+            <p class="event-hub-desc" data-translate="pages.event-hub.description">Kiemelt Esemény:</p>
+          </div>
           <div class="header-icons">
             <a href="/EU2K-Hub/system/account.html" class="header-icon-link">
               <img src="/EU2K-Hub/assets/account_icon.svg" class="header-icon" alt="Account">
@@ -93,91 +99,38 @@
             </a>
           </div>
         </header>
-        <div class="courses-container">
-          <!-- Block ikon -->
-          <img src="/EU2K-Hub/assets/settings_icons/community_page/block.svg" class="courses-block-icon" alt="Block">
-          
-          <!-- Kurzusok cím -->
-          <h1 class="courses-title" data-translate="pages.event_hub.title">Kurzusok</h1>
-          
-          <!-- Leíró szöveg -->
-          <p class="courses-description">
-            <span data-translate="pages.event_hub.description">Örülünk hogy ennyire érdeklődsz a Kurzusok iránt, de egyelőre még fejlesztés alatt van, és nem alkalmas a mostani állapotában a használatra.</span>
-            <br><br>
-            <span data-translate="pages.event_hub.description2">Viszont, addig tudsz visszajelzést adni, és elmondani</span> <strong data-translate="pages.courses.description3">szerinted</strong> <span data-translate="pages.courses.description4">mi lenne ide a legjobb ;)</span>
-          </p>
-          
-          <!-- Visszajelzés gomb -->
-          <button class="feedback-button">
-            <img src="/EU2K-Hub/assets/courses_icons/feedback_icon.svg" class="feedback-icon" alt="Visszajelzés">
-            <span class="feedback-text" data-translate="pages.event_hub.feedback_button">Visszajelzés</span>
-          </button>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- Feedback Popup -->
-  <div class="feedback-popup-overlay" id="feedbackPopup" style="display: none;">
-    <div class="feedback-popup">
-      <!-- Header -->
-      <div class="feedback-popup-header">
-        <img src="/EU2K-Hub/assets/courses_icons/feedback_icon.svg" class="feedback-popup-icon" alt="Visszajelzés">
-        <span class="feedback-popup-title">Visszajelzés</span>
-        <button class="feedback-close-btn" onclick="closeFeedbackPopup()">
-          <img src="/EU2K-Hub/assets/close.svg" class="feedback-close-icon" alt="Bezárás">
-        </button>
-      </div>
-
-      <!-- Input textbox -->
-      <div class="feedback-input-container">
-        <textarea class="feedback-input" placeholder="Ide írj..."></textarea>
-        <div class="feedback-input-limit">Maximum 1000 karakter</div>
-      </div>
-
-      <!-- Kategória kártyák -->
-      <div class="feedback-category-section">
-        <div class="feedback-category-container">
-          <div class="feedback-category-header">
-            <span class="feedback-category-title">Kategória</span>
-          </div>
-
-          <div class="feedback-category-buttons">
-            <button class="feedback-category-btn active" data-category="function">
-              <span>Funkció amit javítani kéne</span>
-              <div class="feedback-category-check">
-                <img src="/EU2K-Hub/assets/check.svg" class="feedback-check-icon" alt="Check">
-              </div>
-            </button>
-
-            <button class="feedback-category-btn" data-category="feature">
-              <span>Funkció amit látni szeretnék</span>
-              <div class="feedback-category-check">
-                <img src="/EU2K-Hub/assets/check.svg" class="feedback-check-icon" alt="Check">
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <!-- Info chip -->
-        <div class="feedback-category-info">
-          <img src="/EU2K-Hub/assets/info.svg" class="feedback-info-icon" alt="Info">
-          <span>Nagyon köszönjük, hogy segítesz nekünk fejleszteni a Hubot! Ezek a
-            visszajelzések névtelenek, nem fogjuk tudni ki küldte be.</span>
-        </div>
-      </div>
-
-      <!-- Cím input és küldés gomb egy sorban -->
-      <div class="feedback-bottom-section">
-        <div class="feedback-title-container">
-          <input type="text" class="feedback-title-input" placeholder="Cím...">
-        </div>
-        <button class="feedback-send-btn" onclick="submitFeedback()">
-          <img src="/EU2K-Hub/assets/send.svg" class="feedback-send-icon" alt="Küldés">
-        </button>
-      </div>
-    </div>
-  </div>
+        <!-- Event Hub layout: Left column highlighted event card -->
+         <section class="event-hub-container">
+           <div class="event-columns">
+             <div class="left-column">
+               <article class="featured-event-card" aria-label="Kiemelt esemény">
+                 <div class="featured-content">
+                   <div class="featured-text">
+                     <h2 class="featured-title">Title</h2>
+                     <div class="featured-subtitle">Subtitle</div>
+                     <div class="chips-row">
+                       <button class="chip" type="button" aria-label="Add to my itinerary">
+                         <img src="/EU2K-Hub/assets/event_hub/calendar.svg" alt="naptár ikon" class="chip-icon" />
+                         <span>Add to my itinerary</span>
+                       </button>
+                       <div class="chip" aria-label="12 mins from hotel">
+                         <img src="/EU2K-Hub/assets/event_hub/walk.svg" alt="séta ikon" class="chip-icon" />
+                         <span>12 mins from hotel</span>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+                        <div class="featured-actions">
+                        <div class="featured-actions">
+                   <md-fab class="join-fab" label="+ Csatlakozás" aria-label="Csatlakozás"></md-fab>
+                 </div>
+               </article>
+             </div>
+             <div class="right-column">
+               <!-- Egyelőre üres: csak a bal oldali kiemelt kártyát készítjük el -->
+             </div>
+           </div>
+         </section>
 
   <script>
     // Feedback gomb és popup kezelése
