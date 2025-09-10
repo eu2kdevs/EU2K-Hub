@@ -92,6 +92,17 @@
     // Make db globally available
     window.db = db;
     
+    // Global onboarding debug functions
+    window.onboardingDebug = {
+      skip: () => window.debugAuth.skipOnboarding(),
+      reset: () => window.debugAuth.resetOnboarding(),
+      status: () => window.debugAuth.showOnboardingStatus(),
+      goToApp: () => {
+        console.log('🚀 Going directly to main app...');
+        window.location.href = '/EU2K-Hub/index.html';
+      }
+    };
+    
     // Debug functions for manual testing
     window.debugAuth = {
       checkCurrentUser: () => {
@@ -255,6 +266,71 @@
         console.log('🚀 QUICK FIX: Opening production URL...');
         console.log('This will work because production uses the correct Firebase auth flow');
         window.debugAuth.tryProductionAuth();
+      },
+      skipOnboarding: () => {
+        console.log('⏭️ SKIPPING ONBOARDING PROCESS...');
+        
+        // Set all required flags to skip welcome screen
+        localStorage.setItem('termsAccepted', 'true');
+        localStorage.setItem('eu2k-auth-logged-in', 'true');
+        localStorage.setItem('eu2k-auth-display-name', 'Debug User');
+        localStorage.setItem('onboardingCompleted', 'true');
+        localStorage.setItem('welcomeScreenVisited', 'true');
+        
+        console.log('✅ Set termsAccepted = true');
+        console.log('✅ Set auth logged in = true');
+        console.log('✅ Set display name = Debug User');
+        console.log('✅ Set onboarding completed = true');
+        console.log('✅ Set welcome screen visited = true');
+        
+        // Check if welcome screen manager exists and mark as visited
+        if (window.welcomeScreenManager) {
+          window.welcomeScreenManager.markAsVisited();
+          console.log('✅ Marked welcome screen as visited via manager');
+        }
+        
+        console.log('🚀 Redirecting to main app...');
+        
+        // Redirect to main app
+        setTimeout(() => {
+          window.location.href = '/EU2K-Hub/index.html';
+        }, 1000);
+      },
+      resetOnboarding: () => {
+        console.log('🔄 RESETTING ONBOARDING...');
+        
+        // Clear all onboarding related flags
+        localStorage.removeItem('termsAccepted');
+        localStorage.removeItem('eu2k-auth-logged-in');
+        localStorage.removeItem('eu2k-auth-display-name');
+        localStorage.removeItem('onboardingCompleted');
+        localStorage.removeItem('welcomeScreenVisited');
+        localStorage.removeItem('eu2k-auth-in-progress');
+        localStorage.removeItem('eu2k-auth-start-time');
+        
+        console.log('✅ Cleared all onboarding flags');
+        console.log('🔄 Reloading page...');
+        
+        // Reload to start fresh
+        window.location.reload();
+      },
+      showOnboardingStatus: () => {
+        console.log('📊 ONBOARDING STATUS:');
+        console.log('Terms accepted:', localStorage.getItem('termsAccepted'));
+        console.log('Auth logged in:', localStorage.getItem('eu2k-auth-logged-in'));
+        console.log('Display name:', localStorage.getItem('eu2k-auth-display-name'));
+        console.log('Onboarding completed:', localStorage.getItem('onboardingCompleted'));
+        console.log('Welcome screen visited:', localStorage.getItem('welcomeScreenVisited'));
+        console.log('Auth in progress:', localStorage.getItem('eu2k-auth-in-progress'));
+        
+        return {
+          termsAccepted: localStorage.getItem('termsAccepted'),
+          authLoggedIn: localStorage.getItem('eu2k-auth-logged-in'),
+          displayName: localStorage.getItem('eu2k-auth-display-name'),
+          onboardingCompleted: localStorage.getItem('onboardingCompleted'),
+          welcomeScreenVisited: localStorage.getItem('welcomeScreenVisited'),
+          authInProgress: localStorage.getItem('eu2k-auth-in-progress')
+        };
       }
     };
 
