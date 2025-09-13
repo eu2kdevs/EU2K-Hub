@@ -37,8 +37,7 @@ Megcsinálni az Account-ot teljesen (beleértve a fukciókat, és a biztonságot
 
 Kisebb dolgok:
 
-Kijavítani a placeholder színeket (a placeholder_img képre)
 QR-Kódhoz még a kamera frissítése gomb hozzáadása
-Események rendszer újradolgozása
 QR-Kód olvasó felgyorsítása, és tükrözése a jó irányba
 Kamera kikapcsolása gomb, amivel ki be tudod kapcsolni a kamerát ha már nincs rá szükséged
+görgetés megcsinálása a privacy-policy oldalon, (kisebb csatlakoztattot kártááykba, mint az experimentsnél)

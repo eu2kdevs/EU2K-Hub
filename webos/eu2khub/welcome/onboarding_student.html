@@ -31,7 +31,7 @@
     import { initializeApp } from "../assets/js/firebase-app-11.10.0.js";
     import { getAnalytics } from "../assets/js/firebase-analytics-11.10.0.js";
     import { getFirestore } from "../assets/js/firebase-firestore-11.10.0.js";
-    import { getAuth, OAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import { getAuth, OAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
@@ -53,8 +53,26 @@
     msProvider.setCustomParameters({ prompt: 'select_account' });
     try { msProvider.addScope('User.Read'); } catch (_) {}
 
-    window.startMicrosoftSignIn = () => {
-      signInWithRedirect(auth, msProvider);
+    window.startMicrosoftSignIn = async () => {
+      const isLocalhost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      const tryRedirect = async () => {
+        console.log('[Auth] Using redirect flow');
+        await signInWithRedirect(auth, msProvider);
+      };
+
+      if (isLocalhost) {
+        try {
+          console.log('[Auth] Trying popup flow (localhost)');
+          await signInWithPopup(auth, msProvider);
+          console.log('[Auth] Popup sign-in success');
+          proceedToProfileChooser(auth.currentUser);
+        } catch (err) {
+          console.warn('[Auth] Popup sign-in failed, falling back to redirect:', err);
+          await tryRedirect();
+        }
+      } else {
+        await tryRedirect();
+      }
     };
 
     const proceedToProfileChooser = (user) => {

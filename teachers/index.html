@@ -47,6 +47,45 @@
       /* WebKit */
     }
   </style>
+  
+  <!-- Common footer style (copied pattern from index.html) -->
+  <style id="footer-common-style">
+    /* Common footer style */
+    .footer { margin-top: 8px; position: relative; }
+    #site-footer .footer-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: #0E1512;
+    }
+    #site-footer .footer-left img,
+    #site-footer .footer-right img {
+      height: 28px;
+      object-fit: contain;
+    }
+    #site-footer .footer-center {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #site-footer .footer-privacy {
+      color: #C4C8C3;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    @media (max-width: 900px) {
+      #site-footer .footer-container {
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px 12px;
+      }
+    }
+  </style>
   <script type="importmap">
     {
       "imports": {
@@ -614,6 +653,45 @@
       handleNewsCardResize();
     });
   </script>
+<style id="footer-common-style">
+  /* Common footer + minimal main content padding */
+  .footer { margin-top: 8px; position: relative; }
+  /* Reserve space so footer doesn't overlap content */
+  .main-area .main-content { padding-bottom: 84px; }
+  #site-footer .footer-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: #0E1512;
+  }
+  #site-footer .footer-left img,
+  #site-footer .footer-right img {
+    height: 28px;
+    object-fit: contain;
+  }
+  #site-footer .footer-center {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #site-footer .footer-privacy {
+    color: #C4C8C3;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  @media (max-width: 900px) {
+    #site-footer .footer-container {
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 12px;
+    }
+  }
+</style>
 </head>
 
 <body>
@@ -837,6 +915,20 @@
         <section id="publish-section" style="display:none;"></section>
       </div>
     </main>
+    <div id="site-footer" class="footer" aria-label="Site footer">
+      <div class="footer-container">
+        <div class="footer-left">
+          <img src="../eu2k_hub_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Hub Logó">
+        </div>
+        <div class="footer-center">
+          <a class="footer-privacy" href="/EU2K-Hub/index.html#privacy-policy">Adatkezelési Tájékoztató</a>
+        </div>
+        <div class="footer-right">
+          <img src="../eu2k_devs_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Devs Logó">
+          <img src="../eu2k_dok_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K DÖK Logó">
+        </div>
+      </div>
+    </div>
   </div>
   <div id="event-mask"></div>
 
@@ -1418,5 +1510,20 @@
     </div>
   </div>
 </template>
+
+<div id="site-footer" class="footer" aria-label="Site footer">
+  <div class="footer-container">
+    <div class="footer-left">
+      <img src="../eu2k_hub_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Hub Logó">
+    </div>
+    <div class="footer-center">
+      <a class="footer-privacy" href="/EU2K-Hub/index.html#privacy-policy">Adatkezelési Tájékoztató</a>
+    </div>
+    <div class="footer-right">
+      <img src="../eu2k_devs_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Devs Logó">
+      <img src="../eu2k_dok_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K DÖK Logó">
+    </div>
+  </div>
+</div>
 
 </html>

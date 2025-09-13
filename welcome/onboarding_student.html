@@ -340,15 +340,13 @@
     // Log provider setup
     persistentLog.add('🔧 Setting up Microsoft OAuth provider...');
     
-    // Optional: force account selection each time
+    // Enforce single-tenant (org-only) login using specific Tenant ID
     msProvider.setCustomParameters({ 
-      prompt: 'select_account',
-      domain_hint: 'organizations', // Focus on organizational accounts
-      response_type: 'code',
-      response_mode: 'query'
+      tenant: 'ecc426dd-3c83-44af-aad4-85099364fb9e',
+      prompt: 'select_account'
     });
     
-    persistentLog.add('🔧 Custom parameters set: prompt=select_account, domain_hint=organizations');
+    persistentLog.add('🔧 Custom parameters set: prompt=select_account');
     
     // Request Graph profile access
     try { 
@@ -374,30 +372,27 @@
       persistentLog.add(`Auth provider configured: ${JSON.stringify(msProvider)}`);
       persistentLog.add(`🌐 Current URL: ${window.location.href}`);
       
-      // Check if we're on localhost
-      const isLocalhost = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
-      
-      if (isLocalhost) {
-        persistentLog.add('⚠️ LOCALHOST DETECTED - This may not work with Firebase Auth!');
-        persistentLog.add('💡 Try opening the app on: https://eu2k-hub.firebaseapp.com');
-        
-        // Show user-friendly error
-        alert(`⚠️ Localhost Auth Issue\n\nFirebase authentication may not work on localhost (${window.location.origin}).\n\nPlease try:\n1. Open https://eu2k-hub.firebaseapp.com\n2. Or add ${window.location.origin} to Firebase Authorized Domains\n\nFor now, I'll try the auth anyway...`);
-      }
-      
       // Mark that we're starting auth
       localStorage.setItem('eu2k-auth-in-progress', 'true');
       localStorage.setItem('eu2k-auth-start-time', Date.now().toString());
       
-      // Always use redirect for Microsoft (popup often doesn't work with Microsoft)
-      persistentLog.add('🔄 Using redirect sign-in for Microsoft OAuth');
+      // Show the auth-in-progress page without changing the hash
+      showPage('auth-in-progress');
       
-      try {
-        signInWithRedirect(auth, msProvider);
-      } catch (error) {
-        persistentLog.add(`❌ signInWithRedirect failed: ${error.message}`);
-        alert(`Authentication Error: ${error.message}`);
-      }
+      // Always use popup for authentication
+      persistentLog.add('🪟 Attempting signInWithPopup');
+      signInWithPopup(auth, msProvider)
+          .then((result) => {
+            persistentLog.add('✅ Popup auth successful');
+            localStorage.removeItem('eu2k-auth-in-progress');
+            proceedToProfileChooser(result.user);
+          })
+          .catch((error) => {
+            persistentLog.add(`❌ Popup auth failed: ${error?.code || ''} ${error?.message || error}`);
+            // Show login failed page
+            showPage('login-failed');
+            localStorage.removeItem('eu2k-auth-in-progress');
+          });
     };
 
     // After redirect, continue to profile chooser and prefill
@@ -407,9 +402,10 @@
         if (user) {
           console.log('👤 User data:', {
             displayName: user.displayName,
-            email: user.email,
+            email: user.mail,
             photoURL: user.photoURL,
-            uid: user.uid
+            uid: user.id,
+            jobTitle: user.jobTitle
           });
           
           const nameEl = document.querySelector('.main-avatar-name');
@@ -534,12 +530,19 @@
               if (currentUser) {
                 localStorage.removeItem('eu2k-auth-in-progress');
                 proceedToProfileChooser(currentUser);
+              } else {
+                // If still no user after waiting, show login failed
+                persistentLog.add('❌ No user after waiting, showing login failed');
+                localStorage.removeItem('eu2k-auth-in-progress');
+                localStorage.removeItem('eu2k-auth-start-time');
+                showPage('login-failed');
               }
             }, 3000);
           } else {
             persistentLog.add('⏰ Auth timeout, clearing flags');
             localStorage.removeItem('eu2k-auth-in-progress');
             localStorage.removeItem('eu2k-auth-start-time');
+            showPage('login-failed');
           }
         }
       }
@@ -547,6 +550,8 @@
       persistentLog.add(`❌ Microsoft sign-in error: ${error.message}`);
       persistentLog.add(`❌ Error details: ${JSON.stringify(error)}`);
       localStorage.removeItem('eu2k-auth-in-progress');
+      localStorage.removeItem('eu2k-auth-start-time');
+      showPage('login-failed');
     });
 
     // If already logged in (e.g., returning visitor), go on directly
@@ -565,16 +570,23 @@
         
         // Check if we're coming back from Microsoft auth
         const authInProgress = localStorage.getItem('eu2k-auth-in-progress');
-        const isStep2 = location.hash === '#step2' || location.hash === '';
         
         persistentLog.add(`🔍 Auth in progress: ${authInProgress}`);
-        persistentLog.add(`🔍 Is on step2 or empty hash: ${isStep2}`);
         
-        if (!authStateProcessed && (isStep2 || authInProgress)) {
-          persistentLog.add('🚀 Auto-proceeding to profile chooser for logged in user');
+        // Only proceed if auth was in progress and we have a user
+        if (!authStateProcessed && authInProgress) {
+          persistentLog.add('🚀 Auth was in progress and we have a user, proceeding to profile chooser');
           authStateProcessed = true;
           localStorage.removeItem('eu2k-auth-in-progress');
           proceedToProfileChooser(user);
+        }
+      } else {
+        // If auth state changed but no user, and auth was in progress, show login failed
+        const authInProgress = localStorage.getItem('eu2k-auth-in-progress');
+        if (authInProgress) {
+          persistentLog.add('❌ Auth was in progress but no user, showing login failed');
+          localStorage.removeItem('eu2k-auth-in-progress');
+          showPage('login-failed');
         }
       }
     });
@@ -584,51 +596,55 @@
     // Welcome onboarding navigation system
     let currentLanguage = 'hu'; // Default language
 
+    // Make showPage function global so it can be used by window.startMicrosoftSignIn
+    window.showPage = function(pageId) {
+      console.log('📄 Showing page:', pageId);
+
+      // First fade out all active pages
+      const currentActive = document.querySelector('.welcome-page.active');
+      if (currentActive) {
+        console.log('🔄 Hiding current active page:', currentActive.id);
+        currentActive.classList.remove('active');
+      }
+
+      // Show target page - handle both with and without '-page' suffix
+      let targetPage = document.getElementById(pageId + '-page');
+      if (!targetPage) {
+        targetPage = document.getElementById(pageId);
+      }
+
+      if (targetPage) {
+        console.log('✅ Found target page:', targetPage.id);
+        // Make sure it's visible but not active first
+        targetPage.style.display = 'flex';
+
+        // Small delay to ensure display change is processed
+        setTimeout(() => {
+          targetPage.classList.add('active');
+          console.log('🎯 Activated page:', targetPage.id);
+        }, 10);
+
+        console.log('✅ Successfully showed page:', targetPage.id);
+      } else {
+        console.error('❌ Page not found:', pageId);
+        console.log('🔍 Available pages:', Array.from(document.querySelectorAll('.welcome-page')).map(p => p.id));
+      }
+
+      // Hide non-active pages after transition
+      setTimeout(() => {
+        document.querySelectorAll('.welcome-page').forEach(page => {
+          if (!page.classList.contains('active')) {
+            page.style.display = 'none';
+          }
+        });
+      }, 500);
+    };
+    
     function initializeWelcome() {
       const welcomePages = document.querySelectorAll('.welcome-page');
 
-      function showPage(pageId) {
-        console.log('📄 Showing page:', pageId);
-
-        // First fade out all active pages
-        const currentActive = document.querySelector('.welcome-page.active');
-        if (currentActive) {
-          console.log('🔄 Hiding current active page:', currentActive.id);
-          currentActive.classList.remove('active');
-        }
-
-        // Show target page - handle both with and without '-page' suffix
-        let targetPage = document.getElementById(pageId + '-page');
-        if (!targetPage) {
-          targetPage = document.getElementById(pageId);
-        }
-
-        if (targetPage) {
-          console.log('✅ Found target page:', targetPage.id);
-          // Make sure it's visible but not active first
-          targetPage.style.display = 'flex';
-
-          // Small delay to ensure display change is processed
-          setTimeout(() => {
-            targetPage.classList.add('active');
-            console.log('🎯 Activated page:', targetPage.id);
-          }, 10);
-
-          console.log('✅ Successfully showed page:', targetPage.id);
-        } else {
-          console.error('❌ Page not found:', pageId);
-          console.log('🔍 Available pages:', Array.from(document.querySelectorAll('.welcome-page')).map(p => p.id));
-        }
-
-        // Hide non-active pages after transition
-        setTimeout(() => {
-          welcomePages.forEach(page => {
-            if (!page.classList.contains('active')) {
-              page.style.display = 'none';
-            }
-          });
-        }, 500);
-      }
+      // Use the global showPage function defined above
+      const showPage = window.showPage;
 
       function navigate(event, pageId) {
         event.preventDefault();
@@ -708,6 +724,13 @@
             console.log('🔐 Starting Microsoft sign-in...');
             if (window.startMicrosoftSignIn) {
               window.startMicrosoftSignIn();
+              
+              // Check login status after a delay
+              setTimeout(() => {
+                if (!window.checkLoginStatus()) {
+                  console.log('❌ Login failed, showing login-failed page');
+                }
+              }, 5000); // 5 másodperc várakozás a bejelentkezés ellenőrzésére
             } else {
               console.error('❌ Microsoft sign-in function not available');
               navigate(e, 'student-profile');
@@ -811,6 +834,81 @@
         continueButton.addEventListener('click', () => {
           showAvatarConfirmation();
         });
+      }
+      
+      // Login failed tracking
+      window.loginFailedCounter = 0;
+      window.checkLoginStatus = function() {
+        const user = auth.currentUser;
+        if (!user) {
+          window.loginFailedCounter++;
+          if (window.loginFailedCounter === 1) {
+            // Check if onboarding is already completed
+            if (localStorage.getItem('eu2k-first-visit') === 'false') {
+              // Show restart onboarding page instead of login failed
+              location.hash = 'restart-onboarding';
+            } else {
+              // Show login failed page only on first failure
+              location.hash = 'login-failed';
+            }
+          }
+          console.log('Login failed, counter:', window.loginFailedCounter);
+          return false;
+        }
+        return true;
+      }
+      
+      // Skip welcome screen function
+      window.skipWelcomeScreen = function() {
+        // Mark first visit as false
+        localStorage.setItem('eu2k-first-visit', 'false');
+        
+      // Handle restart onboarding confirmation
+      const confirmRestartBtn = document.getElementById('confirm-restart');
+      if (confirmRestartBtn) {
+        confirmRestartBtn.addEventListener('click', () => {
+          // Clear local storage data
+          localStorage.removeItem('eu2k-first-visit');
+          localStorage.removeItem('eu2k-terms-accepted');
+          localStorage.removeItem('eu2k-selected-avatar');
+          localStorage.removeItem('eu2k-selected-theme');
+          
+          // Reload the page to restart onboarding
+          window.location.reload();
+        });
+      }
+      
+      // Handle delete profile confirmation
+      const confirmDeleteProfileBtn = document.getElementById('confirm-delete-profile');
+      if (confirmDeleteProfileBtn) {
+        confirmDeleteProfileBtn.addEventListener('click', () => {
+          // TODO: Implement profile deletion logic
+          // This should be connected to the account.html delete profile button
+          console.log('Profile deletion confirmed');
+          
+          // Clear local storage data
+          localStorage.clear();
+          
+          // Sign out the user
+          auth.signOut().then(() => {
+            // Reload the page to restart onboarding
+            window.location.reload();
+          });
+        });
+      }
+        
+        // Mark terms as accepted
+        localStorage.setItem('termsAccepted', 'true');
+        
+        console.log('✅ Welcome screen skipped: first visit marked as false, terms accepted marked as true');
+        
+        // Redirect to main page if needed
+        if (window.welcomeScreenManager && typeof window.welcomeScreenManager.returnFromWelcomeScreen === 'function') {
+          window.welcomeScreenManager.returnFromWelcomeScreen();
+        } else {
+          // Fallback redirect
+          window.location.href = '/EU2K-Hub/index.html';
+        }
       }
 
       // Handle "Looks good" button click
@@ -1554,6 +1652,93 @@
           </div>
         </div>
 
+        <!-- Login Failed Page -->
+        <div id="login-failed-page" class="welcome-page">
+          <div class="welcome-container">
+            <!-- Hiba ikon -->
+            <img src="/EU2K-Hub/assets/warning.svg" class="welcome-hand-icon" alt="Error">
+
+            <!-- Hibaüzenet -->
+            <h1 class="welcome-title" data-translate="pages.onboarding_student.login_failed_title">Bejelentkezési hiba</h1>
+
+            <!-- Leírás -->
+            <p class="welcome-description-text" data-translate="pages.onboarding_student.login_failed_description">
+              A bejelentkezés sikertelen volt. Kérjük, próbáld újra!
+            </p>
+
+            <!-- Újrapróbálkozás gomb -->
+            <div class="welcome-navigation">
+              <button class="welcome-nav-button-primary nav-button" data-action="student">
+                <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="welcome-nav-icon" alt="Student">
+                <span class="welcome-nav-text" data-translate="onboarding.try_again">Újrapróbálkozás</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Auth In Progress Page -->
+        <div id="auth-in-progress-page" class="welcome-page">
+          <div class="welcome-container">
+            <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-hand-icon" alt="Welcome">
+
+            <!-- Üzenet -->
+            <h1 class="welcome-title" data-translate="pages.onboarding_student.auth_in_progress_title">Bejelentkeztetés folyamatban</h1>
+
+            <!-- Leírás -->
+            <p class="welcome-description-text" data-translate="pages.onboarding_student.auth_in_progress_description">
+              Kérlek várj...
+            </p>
+          </div>
+        </div>
+        
+        <!-- Restart Onboarding Page -->
+        <div id="restart-onboarding-page" class="welcome-page">
+          <div class="welcome-container">
+            <!-- Figyelmeztető ikon -->
+            <img src="/EU2K-Hub/assets/warning.svg" class="welcome-hand-icon" alt="Warning">
+
+            <!-- Üzenet -->
+            <h1 class="welcome-title" data-translate="pages.onboarding_student.restart_title">Biztos újra szeretnéd kezdeni?</h1>
+
+            <!-- Leírás -->
+            <p class="welcome-description-text" data-translate="pages.onboarding_student.restart_description">
+              Ezzel el fogja a Hub felejteni a mostani fiókod ezen a gépen, elvesznek a preferenciáid, és az üzeneteid, ha mást állítasz be újra, mint amit alapból beállítottál. Biztos folytatod?
+            </p>
+
+            <!-- Biztos gomb -->
+            <div class="welcome-navigation">
+              <button class="welcome-nav-button-primary nav-button" id="confirm-restart">
+                <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="welcome-nav-icon" alt="Student">
+                <span class="welcome-nav-text" data-translate="onboarding.confirm">Biztos</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Delete Profile Page -->
+        <div id="delete-profile-page" class="welcome-page">
+          <div class="welcome-container">
+            <!-- Figyelmeztető ikon -->
+            <img src="/EU2K-Hub/assets/warning.svg" class="welcome-hand-icon" alt="Warning">
+
+            <!-- Üzenet -->
+            <h1 class="welcome-title" data-translate="pages.onboarding_student.delete_profile_title">Biztos ki szeretnéd törölni a profilod?</h1>
+
+            <!-- Leírás -->
+            <p class="welcome-description-text" data-translate="pages.onboarding_student.delete_profile_description">
+              Ezt nem vonhatod vissza, minden adatod amit a Hubban tartottál elveszik örökre. Biztos vagy ebben?
+            </p>
+
+            <!-- Biztos gomb -->
+            <div class="welcome-navigation">
+              <button class="welcome-nav-button-primary nav-button" id="confirm-delete-profile">
+                <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="welcome-nav-icon" alt="Student">
+                <span class="welcome-nav-text" data-translate="onboarding.confirm">Biztos</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        
         <!-- Step 6: Terms of Service -->
         <div id="terms-setup-page" class="welcome-page">
           <div class="publish-layout">
@@ -1691,6 +1876,20 @@
               <img src="/EU2K-Hub/assets/welcome_icons/wave.svg" class="final-welcome-icon" alt="Wave">
               <span data-translate="pages.onboarding_student.final_welcome_start">Kezdés</span>
             </button>
+          </div>
+        </div>
+        <!-- Login Failed Page (hash: #login-failed) -->
+        <div id="login-failed-page" class="welcome-page" style="display:none;">
+          <div class="final-welcome-container" style="gap: 12px;">
+            <img src="/EU2K-Hub/assets/welcome_icons/warning.svg" class="final-welcome-gif" alt="Hiba" style="width:160px;height:160px;object-fit:contain;filter:invert(1) grayscale(1) contrast(20);">
+            <h1 class="final-welcome-title" style="margin-top: 0; color:#C4C8C3;">Nem sikerült a bejelentkezés.</h1>
+            <p style="margin:0; color:#C4C8C3; opacity:0.9;">Kérlek próbáld újra, vagy próbálkozz később.</p>
+            <div class="welcome-back-button-container" style="margin-top: 18px;">
+              <button class="welcome-back-button nav-button" data-action="back-step2" aria-label="Vissza a bejelentkezéshez">
+                <img src="/EU2K-Hub/assets/welcome_icons/back.svg" class="welcome-back-icon" alt="Back">
+                <span class="welcome-back-text">Vissza a bejelentkezéshez</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -124,16 +124,15 @@ body {
 .main-content {
   background: var(--main-bg);
   border-radius: 32px;
-  margin: 22px 22px 22px 0;
-  padding: 0 22px 22px 32px;
-  height: calc(100vh - 64px);
+  margin: 22px 22px 0px 0;
+  padding: 0 22px 0px 32px;
   display: flex;
   flex-direction: column;
   gap: 18px;
   box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
   max-width: calc(100% - 22px);
-  min-height: calc(100dvh - 64px); /* mobilbarát */
-  height: auto; /* engedd nőni/zsugorodni */
+  min-height: calc(100dvh - 104px); /* mobilbarát */
+  height: calc(100dvh - 104px)
 }
 
 .header {
@@ -340,6 +339,49 @@ body {
 
   .courses-title {
     font-size: 1.8rem;
+  }
+}
+
+.footer { 
+  margin-top: 8px; 
+  position: relative; 
+}
+
+#site-footer .footer-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-radius: 12px;
+  background: #0E1512;
+}
+#site-footer .footer-left img,
+#site-footer .footer-right img {
+  height: 65px;
+  object-fit: contain;
+}
+
+#site-footer .footer-right {
+  padding-right: 48px;
+}
+
+#site-footer .footer-center {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#site-footer .footer-privacy {
+  color: #C4C8C3;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+}
+@media (max-width: 900px) {
+  #site-footer .footer-container {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 12px;
   }
 }
 

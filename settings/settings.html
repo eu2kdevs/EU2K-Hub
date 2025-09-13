@@ -608,26 +608,46 @@
                 </div>
 
                 <div id="experiments-page" class="settings-page">
-                  <div class="general-beta-card">
+                  <div class="general-beta-card-first">
                     <span class="general-beta-text" data-translate="settings.experiments-welcome-screen">Üdvözlő
                       Képernyő</span>
                     <md-switch id="welcome-screen-switch" icons disabled selected></md-switch>
                   </div>
 
                   <!-- Tesztelési gomb az első látogatás visszaállításához -->
-                  <div class="general-beta-card" style="margin-top: 16px;">
+                  <div class="general-beta-card-last" style="margin-top: 16px;">
                     <span class="general-beta-text">Első Látogatás változó visszaállítása (teszteléshez)</span>
                     <md-filled-button disabled id="reset-first-visit-btn" style="margin-left: auto;">
                       Visszaállítás
                     </md-filled-button>
                   </div>
+
+                  <div class="general-beta-card">
+                    <span class="general-beta-text" data-translate="settings.experiments-youhub">YouHub</span>
+                    <md-switch id="welcome-screen-switch" icons selected></md-switch>
+                  </div>
+
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div id="site-footer" class="footer" aria-label="Site footer">
+      <div class="footer-container">
+        <div class="footer-left">
+          <img src="/EU2K-Hub/EU2K-Hub/eu2k_hub_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Hub Logó">
+        </div>
+        <div class="footer-center">
+          <a class="footer-privacy" href="/EU2K-Hub/index.html#privacy-policy">Adatkezelési Tájékoztató</a>
+        </div>
+        <div class="footer-right">
+          <img src="/EU2K-Hub/EU2K-Hub/eu2k_devs_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Devs Logó">
+          <img src="/EU2K-Hub/EU2K-Hub/eu2k_dok_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K DÖK Logó">
+        </div>
+      </div>
     </main>
+    </div>
   </div>
 </body>
 

@@ -303,8 +303,8 @@
       const minCards = 2; // Minimum 2 kártya mindig látható legyen
 
       // Számoljuk ki, hogy hány kártya fér el
-      let maxVisibleCards = 6;
-      for (let cardCount = 6; cardCount >= minCards; cardCount--) {
+      let maxVisibleCards = 7;
+      for (let cardCount = 7; cardCount >= minCards; cardCount--) {
         const totalWidth = (defaultCardWidth * cardCount) + (cardGap * (cardCount - 1));
         if (totalWidth <= containerWidth) {
           maxVisibleCards = cardCount;
@@ -807,6 +807,21 @@
             <button class="carousel-btn right">›</button>
           </div>
         </section>
+      </div>
+      <div id="site-footer" class="footer" aria-label="Site footer">
+        <div class="footer-container">
+          <div class="footer-left">
+            <img src="/EU2K-Hub/eu2k_hub_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Hub Logó">
+          </div>
+          <div class="footer-center">
+            <a class="footer-privacy" href="/EU2K-Hub/index.html#privacy-policy">Adatkezelési Tájékoztató</a>
+            <a class="footer-privacy" href="/EU2K-Hub/index.html#terms-of-service">Használati Feltételek</a>
+          </div>
+          <div class="footer-right">
+            <img src="/EU2K-Hub/eu2k_devs_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Devs Logó">
+            <img src="/EU2K-Hub/eu2k_dok_logo_hor_dark_smoller_by_width.png" class="footer-logo-wide" alt="EU2K DÖK Logó">
+          </div>
+        </div>
       </div>
     </main>
   </div>

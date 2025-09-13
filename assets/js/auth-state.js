@@ -88,6 +88,45 @@
   } else {
     init();
   }
+
+  // Expose a helper that other scripts can call to show the login-failed transitional page
+  window.showLoginFailedIfNotLoggedIn = function (opts = {}) {
+    // opts: { redirectPath } optional override
+    try {
+      if (!isLoggedIn()) {
+        const target = opts.redirectPath || '/EU2K-Hub/welcome/onboarding_student.html#login-failed';
+        window.location.href = target;
+      }
+    } catch (e) {
+      // ignore
+    }
+  };
+
+  // Automatic fallback: if user is on an onboarding page and an auth flow was started
+  // but after a timeout there's still no logged-in state, redirect to the login-failed page.
+  // This is a minimal safety net for failed OAuth/redirect flows.
+  document.addEventListener('DOMContentLoaded', function () {
+    try {
+      const path = window.location.pathname || '';
+      const onboardingPaths = [
+        '/EU2K-Hub/welcome/onboarding_student.html',
+        '/EU2K-Hub/webos/eu2khub/welcome/onboarding_student.html',
+        '/welcome/onboarding_student.html',
+        '/webos/eu2khub/welcome/onboarding_student.html'
+      ];
+      const authInProgress = localStorage.getItem('eu2k-auth-in-progress') === 'true';
+
+      if (onboardingPaths.includes(path) && authInProgress) {
+        // Wait 12 seconds for the auth flow to complete; if not, send to login-failed page.
+        setTimeout(function () {
+          if (!isLoggedIn()) {
+            // Clear the in-progress flag and redirect
+            try { localStorage.removeItem('eu2k-auth-in-progress'); } catch (_) {}
+            window.location.href = '/EU2K-Hub/welcome/onboarding_student.html#login-failed';
+          }
+        }, 12000);
+      }
+    } catch (err) { /* noop */ }
+  });
+
 })();
-
-
