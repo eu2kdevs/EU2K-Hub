@@ -30,6 +30,8 @@
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
     import { getFirestore } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
     import { getAuth, OAuthProvider, signInWithRedirect, signInWithPopup, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    // Import Google provider
+      import { GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -91,6 +93,17 @@
 
     // Make db globally available
     window.db = db;
+
+    // Import és inicializálás az onboarding handler modulból
+    import { initializeOnboarding } from '../assets/js/onboarding-handler.js';
+    
+    // Inicializáljuk az onboarding figyelést
+    initializeOnboarding(auth, db, 'student');
+
+    // Import Firestore debug module
+    import('../assets/js/firestore-debug.js').catch(err => {
+      console.warn('Firestore debug module not loaded:', err);
+    });
     
     // Global onboarding debug functions
     window.onboardingDebug = {
@@ -395,6 +408,62 @@
           });
     };
 
+    // Teacher Microsoft sign-in function
+    window.startMicrosoftSignInTeacher = () => {
+      persistentLog.add('👨‍🏫 Starting Microsoft Sign-In process for teacher...');
+      
+      // Mark that we're starting auth
+      localStorage.setItem('eu2k-auth-in-progress', 'true');
+      localStorage.setItem('eu2k-auth-start-time', Date.now().toString());
+      
+      // Show the auth-in-progress page
+      showPage('auth-in-progress');
+      
+      // Use popup for authentication
+      persistentLog.add('Attempting signInWithPopup for teacher');
+      signInWithPopup(auth, msProvider)
+          .then((result) => {
+            persistentLog.add('✅ Teacher popup auth successful');
+            localStorage.removeItem('eu2k-auth-in-progress');
+            proceedToTeacherProfileChooser(result.user);
+          })
+          .catch((error) => {
+            persistentLog.add(`❌ Teacher popup auth failed: ${error?.code || ''} ${error?.message || error}`);
+            showPage('login-failed');
+            localStorage.removeItem('eu2k-auth-in-progress');
+          });
+    };
+
+    // Google sign-in for parents
+    window.startGoogleSignInParent = () => {
+      persistentLog.add('👨‍👩‍👧‍👦 Starting Google Sign-In process for parent...');
+      
+      const googleProvider = new GoogleAuthProvider();
+      googleProvider.addScope('profile');
+      googleProvider.addScope('email');
+      
+      // Mark that we're starting auth
+      localStorage.setItem('eu2k-auth-in-progress', 'true');
+      localStorage.setItem('eu2k-auth-start-time', Date.now().toString());
+      
+      // Show the auth-in-progress page
+      showPage('auth-in-progress');
+      
+      // Use popup for authentication
+      persistentLog.add('Attempting signInWithPopup with Google for parent');
+      signInWithPopup(auth, googleProvider)
+          .then((result) => {
+            persistentLog.add('✅ Parent Google auth successful');
+            localStorage.removeItem('eu2k-auth-in-progress');
+            proceedToParentProfileChooser(result.user);
+          })
+          .catch((error) => {
+            persistentLog.add(`❌ Parent Google auth failed: ${error?.code || ''} ${error?.message || error}`);
+            showPage('login-failed');
+            localStorage.removeItem('eu2k-auth-in-progress');
+          });
+    };
+
     // After redirect, continue to profile chooser and prefill
     const proceedToProfileChooser = (user) => {
       console.log('✅ Proceeding to profile chooser with user:', user);
@@ -435,6 +504,64 @@
       
       console.log('🔄 Navigating to student-profile page...');
       location.hash = 'student-profile';
+    };
+
+    // After redirect, continue to teacher profile chooser
+    const proceedToTeacherProfileChooser = (user) => {
+      console.log('✅ Proceeding to teacher profile chooser with user:', user);
+      try {
+        if (user) {
+          console.log('👤 Teacher user data:', {
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            uid: user.uid
+          });
+          
+          // Persist minimal auth state
+          localStorage.setItem('eu2k-auth-logged-in', 'true');
+          if (user.displayName) localStorage.setItem('eu2k-auth-display-name', user.displayName);
+          console.log('💾 Saved teacher auth state to localStorage');
+        }
+      } catch (e) {
+        console.error('❌ Teacher prefill failed:', e);
+      }
+      try { 
+        localStorage.setItem('eu2k-onboarding-target', 'teacher-profile'); 
+        console.log('🎯 Set onboarding target to teacher-profile');
+      } catch (_) {}
+      
+      console.log('🔄 Navigating to teacher-profile page...');
+      location.hash = 'teacher-profile';
+    };
+
+    // After redirect, continue to parent profile chooser
+    const proceedToParentProfileChooser = (user) => {
+      console.log('✅ Proceeding to parent profile chooser with user:', user);
+      try {
+        if (user) {
+          console.log('👤 Parent user data:', {
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            uid: user.uid
+          });
+          
+          // Persist minimal auth state
+          localStorage.setItem('eu2k-auth-logged-in', 'true');
+          if (user.displayName) localStorage.setItem('eu2k-auth-display-name', user.displayName);
+          console.log('💾 Saved parent auth state to localStorage');
+        }
+      } catch (e) {
+        console.error('❌ Parent prefill failed:', e);
+      }
+      try { 
+        localStorage.setItem('eu2k-onboarding-target', 'parent-profile'); 
+        console.log('🎯 Set onboarding target to parent-profile');
+      } catch (_) {}
+      
+      console.log('🔄 Navigating to parent-profile page...');
+      location.hash = 'parent-profile';
     };
 
     // Handle redirect result when coming back from Microsoft login
@@ -554,39 +681,29 @@
       showPage('login-failed');
     });
 
-    // If already logged in (e.g., returning visitor), go on directly
+    // Az onboarding handler már kezeli az auth state változásokat
+    // Itt csak a navigációs logikát tartjuk meg
     let authStateProcessed = false;
     onAuthStateChanged(auth, (user) => {
       persistentLog.add(`🔄 Auth state changed. User: ${user ? 'logged in' : 'not logged in'}`);
       persistentLog.add(`📍 Current hash: ${location.hash}`);
       persistentLog.add(`🔄 Auth state already processed: ${authStateProcessed}`);
       
-      if (user) {
+      if (user && !authStateProcessed) {
         persistentLog.add(`👤 User details: ${JSON.stringify({
           uid: user.uid,
           email: user.email,
           displayName: user.displayName
         })}`);
         
-        // Check if we're coming back from Microsoft auth
+        // Check if we're coming back from auth
         const authInProgress = localStorage.getItem('eu2k-auth-in-progress');
         
-        persistentLog.add(`🔍 Auth in progress: ${authInProgress}`);
-        
-        // Only proceed if auth was in progress and we have a user
-        if (!authStateProcessed && authInProgress) {
-          persistentLog.add('🚀 Auth was in progress and we have a user, proceeding to profile chooser');
+        if (authInProgress) {
+          persistentLog.add('🚀 Auth completed, proceeding to profile chooser');
           authStateProcessed = true;
           localStorage.removeItem('eu2k-auth-in-progress');
           proceedToProfileChooser(user);
-        }
-      } else {
-        // If auth state changed but no user, and auth was in progress, show login failed
-        const authInProgress = localStorage.getItem('eu2k-auth-in-progress');
-        if (authInProgress) {
-          persistentLog.add('❌ Auth was in progress but no user, showing login failed');
-          localStorage.removeItem('eu2k-auth-in-progress');
-          showPage('login-failed');
         }
       }
     });
@@ -599,6 +716,30 @@
     // Make showPage function global so it can be used by window.startMicrosoftSignIn
     window.showPage = function(pageId) {
       console.log('📄 Showing page:', pageId);
+      
+      // Security check: prevent navigation to inappropriate pages based on auth state
+      const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
+      const userType = localStorage.getItem('eu2k-user-type') || 'student';
+      
+      // If logged in, only allow appropriate pages for this user type
+      if (isLoggedIn) {
+        const restrictedPages = ['step1', 'step2', 'step3-teacher', 'step3-parent', 'step3-adult'];
+        if (restrictedPages.includes(pageId)) {
+          console.log('🔒 Access denied to', pageId, 'for logged in user type:', userType);
+          // Redirect to appropriate profile page based on user type
+          if (userType === 'student') {
+            pageId = 'student-profile';
+          } else if (userType === 'parent') {
+            pageId = 'parent-profile';
+          } else if (userType === 'teacher') {
+            pageId = 'teacher-profile';
+          }
+          // Update URL hash to reflect the redirect
+          if (window.location.hash !== '#' + pageId) {
+            window.location.hash = '#' + pageId;
+          }
+        }
+      }
 
       // First fade out all active pages
       const currentActive = document.querySelector('.welcome-page.active');
@@ -736,7 +877,37 @@
               navigate(e, 'student-profile');
             }
           } else if (action === 'teacher') {
-            navigate(e, 'teacher');
+            e.preventDefault();
+            console.log('👨‍🏫 Teacher button clicked');
+            
+            // Check if already logged in
+            const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
+            console.log('🔍 Already logged in?', isLoggedIn);
+            
+            if (isLoggedIn) {
+              console.log('✅ User already logged in, going to teacher profile chooser');
+              showPage('teacher-profile');
+              return;
+            }
+            
+            console.log('🔐 Starting Microsoft sign-in for teacher...');
+            if (window.startMicrosoftSignInTeacher) {
+              window.startMicrosoftSignInTeacher();
+              
+              // Check login status after a delay
+              setTimeout(() => {
+                if (!window.checkLoginStatus()) {
+                  console.log('❌ Login failed, showing login-failed page');
+                }
+              }, 5000);
+            } else {
+              console.error('❌ Microsoft sign-in function not available');
+              navigate(e, 'teacher-profile');
+            }
+          } else if (action === 'parent') {
+            // Átirányítás onboarding_parent.html step2-jére és Google popup megnyitása
+            window.location.href = '/EU2K-Hub/welcome/onboarding_parent.html#step2';
+            // A Google popup automatikusan megnyílik az onboarding_parent.html-ben
           } else if (action === 'without-account') {
             navigate(e, 'adult');
           }
@@ -796,15 +967,80 @@
         });
       });
 
-      // Hash change listener
+      // Hash change listener with security checks
       window.addEventListener('hashchange', () => {
         const page = location.hash.substring(1) || 'step1';
+        const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
+        const userType = localStorage.getItem('eu2k-user-type') || 'student';
+        
+        // Additional security: prevent direct hash manipulation for logged in users
+        if (isLoggedIn) {
+          const restrictedPages = ['step1', 'step2', 'step3-teacher', 'step3-parent', 'step3-adult'];
+          if (restrictedPages.includes(page)) {
+            console.log('🔒 Blocked hash navigation to restricted page:', page);
+            let redirectPage = 'student-profile';
+            if (userType === 'parent') redirectPage = 'parent-profile';
+            else if (userType === 'teacher') redirectPage = 'teacher-profile';
+            
+            // Prevent infinite loop by checking if we're already redirecting
+            if (page !== redirectPage) {
+              window.location.hash = '#' + redirectPage;
+              return;
+            }
+          }
+        }
+        
+        // Biztonsági ellenőrzés: diák felhasználó ne tudjon szülő/tanár onboarding oldalakra menni
+        if (userType === 'student' && (page.includes('parent') || page.includes('teacher'))) {
+          console.warn('⚠️ Diák felhasználó nem férhet hozzá szülő/tanár oldalakhoz');
+          window.location.hash = '#student-profile';
+          return;
+        }
+        
+        // Hash navigáció korlátozása: csak engedélyezett oldalakra lehet navigálni
+        const allowedPages = ['step1', 'step2', 'student-profile', 'notifications-setup', 'message-settings', 'terms-setup', 'final-welcome-page', 'restart-onboarding', 'delete-profile'];
+        if (!allowedPages.includes(page) && !isLoggedIn) {
+          console.warn('⚠️ Nem engedélyezett oldal elérése hash-sel:', page);
+          window.location.hash = '#step1';
+          return;
+        }
+        
         showPage(page);
       });
 
-      // Initial page load
-      const initialPage = location.hash.substring(1) || 'step1';
-      showPage(initialPage);
+      // Initial page load with auth state check
+      const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
+      const userType = localStorage.getItem('eu2k-user-type') || 'student';
+      
+      if (isLoggedIn) {
+        console.log('✅ User already logged in as:', userType);
+        
+        // Check if onboarding was interrupted and restore progress
+        const onboardingProgress = checkOnboardingProgress();
+        if (onboardingProgress.interrupted && userType === 'student') {
+          console.log('🔄 Restoring interrupted onboarding from:', onboardingProgress.lastStep);
+          restoreOnboardingData();
+          showPage(onboardingProgress.lastStep);
+          location.hash = onboardingProgress.lastStep;
+          return;
+        }
+        
+        // Redirect to appropriate profile page instead of login screens
+        const hash = location.hash.substring(1);
+        if (!hash || hash === 'step1' || hash === 'step2' || hash.startsWith('step3-')) {
+          let profilePage = 'student-profile';
+          if (userType === 'parent') profilePage = 'parent-profile';
+          else if (userType === 'teacher') profilePage = 'teacher-profile';
+          
+          showPage(profilePage);
+          location.hash = profilePage;
+        } else {
+          showPage(hash);
+        }
+      } else {
+        const initialPage = location.hash.substring(1) || 'step1';
+        showPage(initialPage);
+      }
 
       // If an onboarding target was requested (e.g., after auth redirect), navigate there
       try {
@@ -832,7 +1068,48 @@
       const continueButton = document.getElementById('continue-with-avatar');
       if (continueButton) {
         continueButton.addEventListener('click', () => {
+          // Save avatar selection to localStorage for security
+          const selectedAvatar = document.querySelector('.avatar-option.active');
+          if (selectedAvatar) {
+            const avatarType = selectedAvatar.getAttribute('data-avatar');
+            localStorage.setItem('eu2k-onboarding-avatar', avatarType);
+            localStorage.setItem('eu2k-onboarding-use-provided-pfp', 'false');
+            console.log('💾 Avatar selection saved to localStorage:', avatarType);
+          }
           showAvatarConfirmation();
+        });
+      }
+
+      // Handle "Continue with school profile picture" button click
+      const schoolProfileButton = document.querySelector('.profile-button-secondary');
+      if (schoolProfileButton) {
+        schoolProfileButton.addEventListener('click', () => {
+          // Set to use provided profile picture from school account
+          localStorage.setItem('eu2k-onboarding-use-provided-pfp', 'true');
+          console.log('💾 School profile picture option selected');
+          showAvatarConfirmation();
+        });
+      }
+
+      // Handle parent Google sign-in button
+      const parentGoogleBtn = document.getElementById('parent-google-signin');
+      if (parentGoogleBtn) {
+        parentGoogleBtn.addEventListener('click', () => {
+          console.log('🔐 Parent Google sign-in clicked');
+          if (window.startGoogleSignInParent) {
+            window.startGoogleSignInParent();
+          } else {
+            console.error('❌ Google sign-in function not available');
+          }
+        });
+      }
+
+      // Handle parent Apple sign-in button (disabled for now)
+      const parentAppleBtn = document.getElementById('parent-apple-signin');
+      if (parentAppleBtn) {
+        parentAppleBtn.addEventListener('click', () => {
+          console.log('🍎 Parent Apple sign-in clicked (disabled)');
+          // Apple sign-in will be implemented later
         });
       }
       
@@ -843,8 +1120,12 @@
         if (!user) {
           window.loginFailedCounter++;
           if (window.loginFailedCounter === 1) {
-            // Check if onboarding is already completed
-            if (localStorage.getItem('eu2k-first-visit') === 'false') {
+            // Check if onboarding is already completed or skipped
+            const onboardingCompleted = localStorage.getItem('onboardingCompleted') === 'true';
+            const firstVisitDone = localStorage.getItem('eu2k-first-visit') === 'false';
+            const termsAccepted = localStorage.getItem('termsAccepted') === 'true';
+            
+            if (onboardingCompleted || firstVisitDone || termsAccepted) {
               // Show restart onboarding page instead of login failed
               location.hash = 'restart-onboarding';
             } else {
@@ -856,6 +1137,128 @@
           return false;
         }
         return true;
+      }
+      
+      // Check onboarding progress for interrupted sessions
+      function checkOnboardingProgress() {
+        const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
+        const termsAccepted = localStorage.getItem('eu2k-onboarding-terms-accepted') === 'true';
+        const profileConfirmed = localStorage.getItem('eu2k-onboarding-profile-confirmed') === 'true';
+        const avatarSelected = localStorage.getItem('eu2k-onboarding-avatar');
+        const notificationSettings = localStorage.getItem('eu2k-onboarding-notifications');
+        const messageSettings = localStorage.getItem('eu2k-onboarding-messages');
+        
+        // If user is logged in but hasn't completed onboarding
+        if (isLoggedIn && !termsAccepted) {
+          let lastStep = 'student-profile';
+          
+          if (messageSettings) {
+            lastStep = 'terms-setup';
+          } else if (notificationSettings) {
+            lastStep = 'messages-setup';
+          } else if (profileConfirmed) {
+            lastStep = 'notifications-setup';
+          } else if (avatarSelected) {
+            lastStep = 'student-profile';
+          }
+          
+          return {
+            interrupted: true,
+            lastStep: lastStep
+          };
+        }
+        
+        return {
+          interrupted: false,
+          lastStep: null
+        };
+      }
+      
+      // Restore onboarding data from localStorage
+      function restoreOnboardingData() {
+        console.log('🔄 Restoring onboarding data from localStorage...');
+        
+        // Restore avatar selection
+        const savedAvatar = localStorage.getItem('eu2k-onboarding-avatar');
+        if (savedAvatar) {
+          setTimeout(() => {
+            const avatarOption = document.querySelector(`.avatar-option[data-avatar="${savedAvatar}"]`);
+            if (avatarOption) {
+              avatarOption.click();
+              console.log('✅ Restored avatar selection:', savedAvatar);
+            }
+          }, 100);
+        }
+        
+        // Restore notification settings
+        const savedNotifications = localStorage.getItem('eu2k-onboarding-notifications');
+        if (savedNotifications) {
+          try {
+            const notificationSettings = JSON.parse(savedNotifications);
+            setTimeout(() => {
+              const notificationSwitches = document.querySelectorAll('#notifications-setup-page md-switch');
+              notificationSwitches.forEach((switchEl, index) => {
+                const shouldBeChecked = notificationSettings[`notification_${index}`];
+                if (shouldBeChecked) {
+                  switchEl.setAttribute('selected', '');
+                } else {
+                  switchEl.removeAttribute('selected');
+                }
+              });
+              console.log('✅ Restored notification settings:', notificationSettings);
+            }, 100);
+          } catch (error) {
+            console.error('❌ Error restoring notification settings:', error);
+          }
+        }
+        
+        // Restore message settings
+        const savedMessages = localStorage.getItem('eu2k-onboarding-messages');
+        if (savedMessages) {
+          try {
+            const messageSettings = JSON.parse(savedMessages);
+            setTimeout(() => {
+              const privateMessagesSwitch = document.querySelector('#messages-setup-page .card-top md-switch');
+              const messageRadios = document.querySelectorAll('#messages-setup-page md-radio[name="message-privacy"]');
+              
+              if (privateMessagesSwitch) {
+                if (messageSettings.privateMessages) {
+                  privateMessagesSwitch.setAttribute('selected', '');
+                } else {
+                  privateMessagesSwitch.removeAttribute('selected');
+                }
+              }
+              
+              messageRadios.forEach(radio => {
+                if (radio.value === messageSettings.messagePrivacy) {
+                  radio.setAttribute('checked', '');
+                } else {
+                  radio.removeAttribute('checked');
+                }
+              });
+              
+              console.log('✅ Restored message settings:', messageSettings);
+            }, 100);
+          } catch (error) {
+            console.error('❌ Error restoring message settings:', error);
+          }
+        }
+        
+        // Restore terms acceptance
+        const termsAccepted = localStorage.getItem('eu2k-onboarding-terms-accepted') === 'true';
+        if (termsAccepted) {
+          setTimeout(() => {
+            const termsCheckbox = document.getElementById('terms-checkbox');
+            const continueTermsButton = document.getElementById('continue-terms');
+            if (termsCheckbox) {
+              termsCheckbox.checked = true;
+              if (continueTermsButton) {
+                continueTermsButton.disabled = false;
+              }
+            }
+            console.log('✅ Restored terms acceptance');
+          }, 100);
+        }
       }
       
       // Skip welcome screen function
@@ -915,6 +1318,9 @@
       const looksGoodButton = document.getElementById('looks-good-button');
       if (looksGoodButton) {
         looksGoodButton.addEventListener('click', () => {
+          // Save profile confirmation to localStorage for security
+          localStorage.setItem('eu2k-onboarding-profile-confirmed', 'true');
+          console.log('💾 Profile confirmation saved to localStorage');
           showSuccessAnimation();
         });
       }
@@ -923,6 +1329,15 @@
       const continueNotificationsButton = document.getElementById('continue-notifications');
       if (continueNotificationsButton) {
         continueNotificationsButton.addEventListener('click', () => {
+          // Save notification settings to localStorage for security
+          const notificationSwitches = document.querySelectorAll('#notifications-setup-page md-switch');
+          const notificationSettings = {};
+          notificationSwitches.forEach((switchEl, index) => {
+            const isChecked = switchEl.hasAttribute('selected');
+            notificationSettings[`notification_${index}`] = isChecked;
+          });
+          localStorage.setItem('eu2k-onboarding-notifications', JSON.stringify(notificationSettings));
+          console.log('💾 Notification settings saved to localStorage:', notificationSettings);
           navigate(event, 'messages-setup');
         });
       }
@@ -931,6 +1346,24 @@
       const continueMessagesButton = document.getElementById('continue-messages');
       if (continueMessagesButton) {
         continueMessagesButton.addEventListener('click', () => {
+          // Save message settings to localStorage for security
+          const messageRadios = document.querySelectorAll('#messages-setup-page md-radio[name="message-privacy"]');
+          const privateMessagesSwitch = document.querySelector('#messages-setup-page .card-top md-switch');
+          
+          let selectedMessagePrivacy = 'everyone'; // default
+          messageRadios.forEach(radio => {
+            if (radio.hasAttribute('checked')) {
+              selectedMessagePrivacy = radio.value;
+            }
+          });
+          
+          const messageSettings = {
+            privateMessages: privateMessagesSwitch ? privateMessagesSwitch.hasAttribute('selected') : false,
+            messagePrivacy: selectedMessagePrivacy
+          };
+          
+          localStorage.setItem('eu2k-onboarding-messages', JSON.stringify(messageSettings));
+          console.log('💾 Message settings saved to localStorage:', messageSettings);
           showPage('terms-setup');
         });
       }
@@ -950,8 +1383,10 @@
         continueTermsButton.addEventListener('click', () => {
           const checkbox = document.getElementById('terms-checkbox');
           if (checkbox && checkbox.checked) {
-            // Store acceptance in localStorage
+            // Store acceptance in localStorage for security
             localStorage.setItem('termsAccepted', 'true');
+            localStorage.setItem('eu2k-onboarding-terms-accepted', 'true');
+            console.log('💾 Terms acceptance saved to localStorage');
             showPage('final-welcome-page');
           } else {
             alert('Kérlek fogadd el a használati feltételeket a folytatáshoz!');
@@ -1228,9 +1663,39 @@
     }
 
     // Check terms acceptance and redirect
-    function checkTermsAndRedirect() {
+    async function checkTermsAndRedirect() {
       const termsAccepted = localStorage.getItem('termsAccepted');
       if (termsAccepted === 'true') {
+        try {
+          // Jelöljük az onboarding befejezését lokálisan
+          localStorage.setItem('onboardingCompleted', 'true');
+
+          // Firestore mentés (lusta import, hogy ne kelljen globális importot módosítani)
+          // Onboarding befejezése az új handler modullal
+          if (typeof auth !== 'undefined' && typeof db !== 'undefined') {
+            const { completeOnboarding } = await import('../assets/js/onboarding-handler.js');
+            
+            // A handler már gyűjtötte az adatokat, most finalizáljuk
+            console.log('🚀 Finalizing onboarding with collected data...');
+            const success = await completeOnboarding(auth, db);
+            
+            if (!success) {
+              console.error('❌ Onboarding befejezése sikertelen!');
+              return;
+            }
+            localStorage.removeItem('eu2k-onboarding-terms-accepted');
+            console.log('🧹 Cleared onboarding security data from localStorage');
+            
+            // TODO: Még meg kell csinálni a settings kollekciót is a userid doksiban
+            // Ezt a kommentet itt hagyjuk, hogy emlékeztessen a settings kollekció létrehozására
+            
+          } else {
+            console.warn('ℹ️ Skipping Firestore write because user or db is not available.');
+          }
+        } catch (e) {
+          console.error('⚠️ Failed to save general profile document:', e);
+        }
+
         // Megjelöljük, hogy a felhasználó már látogatta az oldalt
         if (window.welcomeScreenManager) {
           window.welcomeScreenManager.markAsVisited();
@@ -1318,6 +1783,11 @@
                 <span class="welcome-nav-text" data-translate="onboarding.continue_as_teacher">Tovább tanárként</span>
               </button>
 
+              <button class="welcome-nav-button-primary nav-button" data-action="parent">
+                <img src="/EU2K-Hub/assets/welcome_icons/without_account.svg" class="welcome-nav-icon" alt="Parent">
+                <span class="welcome-nav-text" data-translate="onboarding.continue_as_parent">Tovább szülőként</span>
+              </button>
+
               <button class="welcome-nav-button-last nav-button" data-action="without-account">
                 <img src="/EU2K-Hub/assets/welcome_icons/without_account.svg" class="welcome-nav-icon"
                   alt="Without Account">
@@ -1343,6 +1813,43 @@
               végtelen lehetőségeket (na jó azért nem 😊), de a Hub a béta szakasz elején van.
               Tanároknak is nemsokára elérhető lesz!
             </p>
+
+            <!-- Vissza gomb -->
+            <div class="welcome-back-button-container">
+              <button class="welcome-back-button nav-button" data-action="back-step2">
+                <img src="/EU2K-Hub/assets/welcome_icons/back.svg" class="welcome-back-icon" alt="Back">
+                <span class="welcome-back-text" data-translate="navigation.back">Vissza</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Parent Page -->
+        <div id="parent-page" class="welcome-page">
+          <div class="welcome-container">
+            <!-- Kéz ikon -->
+            <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-hand-icon" alt="Waving Hand">
+
+            <!-- Üdvözlő Szöveg -->
+            <h1 class="welcome-title" data-translate="pages.onboarding_student.welcome_hub">Üdvözlünk a Hub-ban!</h1>
+
+            <!-- Leírás -->
+            <p class="welcome-description-text" data-translate="pages.onboarding_student.parent_description">
+              Szülőként szeretnél bejelentkezni a Hub-ba. Válaszd ki a bejelentkezési módot:
+            </p>
+
+            <!-- Bejelentkezési gombok -->
+            <div class="welcome-navigation" style="margin-top: 40px;">
+              <button class="welcome-nav-button nav-button" id="parent-apple-signin" disabled>
+                <img src="/EU2K-Hub/assets/welcome_icons/apple.svg" class="welcome-nav-icon" alt="Apple">
+                <span class="welcome-nav-text" data-translate="onboarding.signin_with_apple">Bejelentkezés Apple-lel</span>
+              </button>
+
+              <button class="welcome-nav-button-last nav-button" id="parent-google-signin">
+                <img src="/EU2K-Hub/assets/welcome_icons/google.svg" class="welcome-nav-icon" alt="Google">
+                <span class="welcome-nav-text" data-translate="onboarding.signin_with_google">Bejelentkezés Google-lel</span>
+              </button>
+            </div>
 
             <!-- Vissza gomb -->
             <div class="welcome-back-button-container">
@@ -1382,6 +1889,186 @@
 
         <!-- Step 3: Student Profile Setup -->
         <div id="student-profile-page" class="welcome-page">
+          <div class="publish-layout">
+            <div class="publish-content">
+              <div class="publish-content-header">
+                <button class="back-arrow-btn nav-button" data-action="back-step2">
+                  <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
+                </button>
+                <div class="welcome-container-header">
+                  <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-icon-header" alt="Welcome">
+                  <h1 class="welcome-text-header" data-translate="pages.onboarding_student.welcome_hub">Üdvözlünk a
+                    Hub-ban!</h1>
+                  <p class="welcome-description-header"
+                    data-translate="pages.onboarding_student.create_account_description">Kérlek válassz egy avatárt,
+                    vagy
+                    használd az iskolai fiókod által biztosítottat!</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile Setup Content - Right Column -->
+            <div class="profile-content">
+              <!-- Main Avatar -->
+              <div class="main-avatar-container">
+                <div class="main-avatar">
+                  <img src="/EU2K-Hub/assets/avatars/magenta.png" class="main-avatar-img" alt="Avatar">
+                </div>
+                <div class="main-avatar-name" data-translate="profile.student_name">Turóczi Ádám - 8.E</div>
+              </div>
+
+              <!-- Divider -->
+              <div class="profile-divider"></div>
+
+              <!-- Avatar Selection -->
+              <div class="avatar-selection">
+                <div class="avatar-row">
+                  <div class="avatar-option" data-avatar="magenta">
+                    <img src="/EU2K-Hub/assets/avatars/magenta.png" class="avatar-img" alt="Avatar 1">
+                  </div>
+                  <div class="avatar-option" data-avatar="green">
+                    <img src="/EU2K-Hub/assets/avatars/green.png" class="avatar-img" alt="Avatar 2">
+                  </div>
+                  <div class="avatar-option" data-avatar="blue">
+                    <img src="/EU2K-Hub/assets/avatars/blue.png" class="avatar-img" alt="Avatar 3">
+                  </div>
+                  <div class="avatar-option" data-avatar="orange">
+                    <img src="/EU2K-Hub/assets/avatars/orange.png" class="avatar-img" alt="Avatar 4">
+                  </div>
+                  <div class="avatar-option" data-avatar="purple">
+                    <img src="/EU2K-Hub/assets/avatars/purple.png" class="avatar-img" alt="Avatar 5">
+                  </div>
+                </div>
+                <div class="avatar-row">
+                  <div class="avatar-option" data-avatar="cyan">
+                    <img src="/EU2K-Hub/assets/avatars/light_blue.png" class="avatar-img" alt="Avatar 6">
+                  </div>
+                  <div class="avatar-option" data-avatar="red">
+                    <img src="/EU2K-Hub/assets/avatars/red.png" class="avatar-img" alt="Avatar 7">
+                  </div>
+                  <div class="avatar-option" data-avatar="gray">
+                    <img src="/EU2K-Hub/assets/avatars/black.png" class="avatar-img" alt="Avatar 8">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="profile-actions">
+                <button class="profile-button-secondary">
+                  <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="profile-button-icon"
+                    alt="School Account">
+                  <span class="profile-button-text" data-translate="profile.use_school_account">Tovább az iskolai
+                    profilképpel</span>
+                </button>
+                <button class="profile-button-primary" id="continue-with-avatar">
+                  <img src="/EU2K-Hub/assets/welcome_icons/arrow_right.svg" class="profile-button-icon" alt="Continue">
+                  <span class="profile-button-text" data-translate="profile.continue">Tovább ezzel</span>
+                </button>
+              </div>
+
+              <!-- Confirmation State (initially hidden) -->
+              <div class="profile-actions profile-actions-confirmation" style="display: none;">
+                <button class="profile-button-primary profile-button-confirmation" id="looks-good-button">
+                  <img src="/EU2K-Hub/assets/welcome_icons/smiley.svg" class="profile-button-icon" alt="Looks Good">
+                  <span class="profile-button-text" data-translate="profile.looks_good">Jól nézek ki!</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Teacher Profile Setup -->
+        <div id="teacher-profile-page" class="welcome-page">
+          <div class="publish-layout">
+            <div class="publish-content">
+              <div class="publish-content-header">
+                <button class="back-arrow-btn nav-button" data-action="back-step2">
+                  <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
+                </button>
+                <div class="welcome-container-header">
+                  <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-icon-header" alt="Welcome">
+                  <h1 class="welcome-text-header" data-translate="pages.onboarding_student.welcome_hub">Üdvözlünk a
+                    Hub-ban!</h1>
+                  <p class="welcome-description-header"
+                    data-translate="pages.onboarding_student.create_account_description">Kérlek válassz egy avatárt,
+                    vagy
+                    használd az iskolai fiókod által biztosítottat!</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile Setup Content - Right Column -->
+            <div class="profile-content">
+              <!-- Main Avatar -->
+              <div class="main-avatar-container">
+                <div class="main-avatar">
+                  <img src="/EU2K-Hub/assets/avatars/magenta.png" class="main-avatar-img" alt="Avatar">
+                </div>
+                <div class="main-avatar-name" data-translate="profile.student_name">Turóczi Ádám - 8.E</div>
+              </div>
+
+              <!-- Divider -->
+              <div class="profile-divider"></div>
+
+              <!-- Avatar Selection -->
+              <div class="avatar-selection">
+                <div class="avatar-row">
+                  <div class="avatar-option" data-avatar="magenta">
+                    <img src="/EU2K-Hub/assets/avatars/magenta.png" class="avatar-img" alt="Avatar 1">
+                  </div>
+                  <div class="avatar-option" data-avatar="green">
+                    <img src="/EU2K-Hub/assets/avatars/green.png" class="avatar-img" alt="Avatar 2">
+                  </div>
+                  <div class="avatar-option" data-avatar="blue">
+                    <img src="/EU2K-Hub/assets/avatars/blue.png" class="avatar-img" alt="Avatar 3">
+                  </div>
+                  <div class="avatar-option" data-avatar="orange">
+                    <img src="/EU2K-Hub/assets/avatars/orange.png" class="avatar-img" alt="Avatar 4">
+                  </div>
+                  <div class="avatar-option" data-avatar="purple">
+                    <img src="/EU2K-Hub/assets/avatars/purple.png" class="avatar-img" alt="Avatar 5">
+                  </div>
+                </div>
+                <div class="avatar-row">
+                  <div class="avatar-option" data-avatar="cyan">
+                    <img src="/EU2K-Hub/assets/avatars/light_blue.png" class="avatar-img" alt="Avatar 6">
+                  </div>
+                  <div class="avatar-option" data-avatar="red">
+                    <img src="/EU2K-Hub/assets/avatars/red.png" class="avatar-img" alt="Avatar 7">
+                  </div>
+                  <div class="avatar-option" data-avatar="gray">
+                    <img src="/EU2K-Hub/assets/avatars/black.png" class="avatar-img" alt="Avatar 8">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="profile-actions">
+                <button class="profile-button-secondary">
+                  <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="profile-button-icon"
+                    alt="School Account">
+                  <span class="profile-button-text" data-translate="profile.use_school_account">Tovább az iskolai
+                    profilképpel</span>
+                </button>
+                <button class="profile-button-primary" id="continue-with-avatar">
+                  <img src="/EU2K-Hub/assets/welcome_icons/arrow_right.svg" class="profile-button-icon" alt="Continue">
+                  <span class="profile-button-text" data-translate="profile.continue">Tovább ezzel</span>
+                </button>
+              </div>
+
+              <!-- Confirmation State (initially hidden) -->
+              <div class="profile-actions profile-actions-confirmation" style="display: none;">
+                <button class="profile-button-primary profile-button-confirmation" id="looks-good-button">
+                  <img src="/EU2K-Hub/assets/welcome_icons/smiley.svg" class="profile-button-icon" alt="Looks Good">
+                  <span class="profile-button-text" data-translate="profile.looks_good">Jól nézek ki!</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Parent Profile Setup -->
+        <div id="parent-profile-page" class="welcome-page">
           <div class="publish-layout">
             <div class="publish-content">
               <div class="publish-content-header">
@@ -1668,7 +2355,7 @@
 
             <!-- Újrapróbálkozás gomb -->
             <div class="welcome-navigation">
-              <button class="welcome-nav-button-primary nav-button" data-action="student">
+              <button class="welcome-nav-button-primary nav-button" data-action="back-step2">
                 <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="welcome-nav-icon" alt="Student">
                 <span class="welcome-nav-text" data-translate="onboarding.try_again">Újrapróbálkozás</span>
               </button>
@@ -1679,7 +2366,7 @@
         <!-- Auth In Progress Page -->
         <div id="auth-in-progress-page" class="welcome-page">
           <div class="welcome-container">
-            <img src="/EU2K-Hub/assets/welcome_hand_icon.svg" class="welcome-hand-icon" alt="Welcome">
+            <img src="/EU2K-Hub/assets/clock.svg" class="welcome-hand-icon" alt="Wait">
 
             <!-- Üzenet -->
             <h1 class="welcome-title" data-translate="pages.onboarding_student.auth_in_progress_title">Bejelentkeztetés folyamatban</h1>
@@ -1695,7 +2382,7 @@
         <div id="restart-onboarding-page" class="welcome-page">
           <div class="welcome-container">
             <!-- Figyelmeztető ikon -->
-            <img src="/EU2K-Hub/assets/warning.svg" class="welcome-hand-icon" alt="Warning">
+            <img src="/EU2K-Hub/assets/welcome_icons/belwarning.svg" class="welcome-hand-icon" alt="Warning">
 
             <!-- Üzenet -->
             <h1 class="welcome-title" data-translate="pages.onboarding_student.restart_title">Biztos újra szeretnéd kezdeni?</h1>
@@ -1708,7 +2395,7 @@
             <!-- Biztos gomb -->
             <div class="welcome-navigation">
               <button class="welcome-nav-button-primary nav-button" id="confirm-restart">
-                <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="welcome-nav-icon" alt="Student">
+                <img src="/EU2K-Hub/assets/arrow_next.svg" class="welcome-nav-icon" alt="Im Sure">
                 <span class="welcome-nav-text" data-translate="onboarding.confirm">Biztos</span>
               </button>
             </div>
@@ -1732,7 +2419,7 @@
             <!-- Biztos gomb -->
             <div class="welcome-navigation">
               <button class="welcome-nav-button-primary nav-button" id="confirm-delete-profile">
-                <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="welcome-nav-icon" alt="Student">
+                <img src="/EU2K-Hub/assets/arrow_next.svg" class="welcome-nav-icon" alt="Im Sure">
                 <span class="welcome-nav-text" data-translate="onboarding.confirm">Biztos</span>
               </button>
             </div>
@@ -1771,10 +2458,8 @@
                       felügyelet</span>
                   </h3>
                   <ul>
-                    <li data-translate="pages.onboarding_student.terms_messaging_1">A Hub lehetőséget biztosít közösségi
-                      és kurzuson belüli kommunikációra.</li>
-                    <li data-translate="pages.onboarding_student.terms_messaging_2">A Hub lehetőséget biztosít közösségi
-                      és kurzuson belüli kommunikációra.</li>
+                    <li data-translate="pages.onboarding_student.terms_messaging_1">A Hub lehetőséget biztosít közösségi és kurzuson belüli kommunikációra.</li>
+                    <li data-translate="pages.onboarding_student.terms_messaging_2">A felügyelet részleges lehet, különösen a béta időszakban. Kérünk, viselkedj tiszteletteljesen!</li>
                   </ul>
                 </div>
 
@@ -1786,19 +2471,11 @@
                       jogosultságok</span>
                   </h3>
                   <ul>
-                    <li data-translate="pages.onboarding_student.terms_accounts_1">A Hub egy központi, iskolai rendszer,
-                      melyet többféle szerepben (tanár, diák, szülő) lehet
-                      használni.</li>
-                    <li data-translate="pages.onboarding_student.terms_accounts_2">A diákok számára elkülönített részhez
-                      kizárólag iskolai fiókkal lehet hozzáférni.</li>
-                    <li data-translate="pages.onboarding_student.terms_accounts_3">A külsős email címek nem
-                      használhatók, csak szülői fiók létrehozására.</li>
-                    <li data-translate="pages.onboarding_student.terms_accounts_4">Amennyiben a rendszer visszaélést
-                      észlel (pl. szülői fiókot használó diák), fenntartjuk a jogot
-                      a fiók típusának módosítására, értesítés küldésére, és akár funkciók korlátozására is.</li>
-                    <li data-translate="pages.onboarding_student.terms_accounts_5">A rendszer bármilyen fajta
-                      kihasználása nem engedélyezett, kihasználása büntetést von maga után.
-                    </li>
+                    <li data-translate="pages.onboarding_student.terms_accounts_1">A Hub egy központi, iskolai rendszer, amelyet tanárok, diákok és szülők használhatnak.</li>
+                    <li data-translate="pages.onboarding_student.terms_accounts_2">A diákok számára elkülönített részhez kizárólag iskolai fiókkal lehet hozzáférni.</li>
+                    <li data-translate="pages.onboarding_student.terms_accounts_3">Külsős e-mail címek csak szülői fiók létrehozására használhatók.</li>
+                    <li data-translate="pages.onboarding_student.terms_accounts_4">Ha visszaélés történik (pl. szülői fiókot használó diák), fenntartjuk a jogot a fiók típusának módosítására, értesítés küldésére, és funkciók korlátozására.</li>
+                    <li data-translate="pages.onboarding_student.terms_accounts_5">A rendszer bármilyen jogosulatlan kihasználása szankciót von maga után.</li>
                   </ul>
                 </div>
 
@@ -1808,40 +2485,51 @@
                     <span data-translate="pages.onboarding_student.terms_responsibility_title">Felelősség</span>
                   </h3>
                   <ul>
-                    <li>A Hubban elérhető kurzusokat külső vagy belső szervezők („hostok”) működtetik.</li>
-                    <li>A kurzusokért kizárólag a kurzus hostja felel.</li>
-                    <li>A Hub, az iskola, és a platform fejlesztői nem vállalnak felelősséget a kurzusok tartalmáért,
-                      időpontjáért vagy esetleges technikai hibákért.</li>
-                    <li>A Hub a bétaszakaszban nem rendelkezik moderációs rendszerrel, emiatt a közösségi funckiók
-                      korlátozottak, vagy hiányzóak is lehetnek.</li>
+                    <li data-translate="pages.onboarding_student.terms_responsibility_1">A Hubban elérhető kurzusokat külső vagy belső szervezők (hostok) működtetik.</li>
+                    <li data-translate="pages.onboarding_student.terms_responsibility_2">A kurzusokért kizárólag a kurzus hostja felel.</li>
+                    <li data-translate="pages.onboarding_student.terms_responsibility_3">A Hub, az iskola és a platform fejlesztői nem vállalnak felelősséget a kurzusok tartalmáért, időpontjáért vagy technikai hibákért.</li>
+                    <li data-translate="pages.onboarding_student.terms_responsibility_4">A béta szakaszban moderációs rendszer nem feltétlenül áll rendelkezésre, emiatt a közösségi funkciók korlátozottak vagy hiányozhatnak.</li>
                   </ul>
                 </div>
 
-                <div class="terms-section terms-section-last">
+                <div class="terms-section terms-section-middle">
                   <h3>
                     <img src="/EU2K-Hub/assets/welcome_icons/feedback.svg" class="terms-icon" alt="Feedback">
                     <span data-translate="pages.onboarding_student.terms_feedback_title">Visszajelzések és béta
                       funkciók</span>
                   </h3>
                   <ul>
-                    <li data-translate="pages.onboarding_student.terms_feedback_1">Nagyra értékeljük a visszajelzéseidet
-                      – ezek segítik a Hub fejlődését!</li>
-                    <li data-translate="pages.onboarding_student.terms_feedback_2">Viszont, a visszajelző, hibabejelentő
-                      és javaslati funkciókat csak tiszteletteljes, jó szándékú
-                      módon lehet használni.</li>
-                    <li data-translate="pages.onboarding_student.terms_feedback_3">A rendszer visszaélésszerű használata
-                      (pl. spamelés, hamis jelentések, sértő hangnem) a
-                      visszajelzési lehetőségek korlátozását vonhatja maga után.</li>
-                    <li data-translate="pages.onboarding_student.terms_feedback_4">Ha béta verziót használsz, azonnali
-                      kizárásra kerülhetsz ezekből a programokból súlyosabb
-                      szabálysértés esetén.</li>
-                    <li data-translate="pages.onboarding_student.terms_feedback_5">Mivel a Hub még csak elő-béta
-                      szakaszban jár, nagyra értékeljük a visszajelzésed. Minden
-                      visszajelzés után valamilyen jutalmat tudunk neked adni, ha a visszajelzésed hasznos.</li>
-                    <li data-translate="pages.onboarding_student.terms_feedback_6">A visszajelzéseket egy ember
-                      értékeli.</li>
+                    <li data-translate="pages.onboarding_student.terms_feedback_1">Nagyra értékeljük a visszajelzéseidet – ezek segítik a Hub fejlődését!</li>
+                    <li data-translate="pages.onboarding_student.terms_feedback_2">A visszajelző és hibabejelentő funkciókat tiszteletteljesen és jó szándékkal kell használni.</li>
+                    <li data-translate="pages.onboarding_student.terms_feedback_3">Visszaélések (pl. spamelés, hamis jelentések, sértő hangnem) esetén a visszajelzési lehetőségek korlátozhatók.</li>
+                    <li data-translate="pages.onboarding_student.terms_feedback_4">Béta verzióban súlyos szabálysértés azonnali kizárással járhat.</li>
                   </ul>
                 </div>
+
+                <div class="terms-section terms-section-middle">
+                  <h3>
+                    <img src="/EU2K-Hub/assets/privacy_policy.svg" class="terms-icon" alt="Privacy">
+                    <span data-translate="pages.onboarding_student.terms_privacy_title">Adatvédelem és sütik</span>
+                  </h3>
+                  <ul>
+                    <li data-translate="pages.onboarding_student.terms_privacy_1">A Hub az iskolai fiókhoz kapcsolódó alapadatokat (név, e-mail, szerepkör) használja.</li>
+                    <li data-translate="pages.onboarding_student.terms_privacy_2">A sütiket kizárólag technikai működéshez (pl. bejelentkezés megjegyzése) alkalmazzuk.</li>
+                    <li data-translate="pages.onboarding_student.terms_privacy_3">Az adatkezelésről részletesebb információ az <a href="/EU2K-Hub/privacy.html">Adatvédelmi tájékoztatóban</a> található.</li>
+                  </ul>
+                </div>
+
+                <div class="terms-section terms-section-last">
+                  <h3>
+                    <img src="/EU2K-Hub/assets/settings_icon.svg" class="terms-icon" alt="Technical Terms">
+                    <span data-translate="pages.onboarding_student.terms_technical_title">Technikai feltételek</span>
+                  </h3>
+                  <ul>
+                    <li data-translate="pages.onboarding_student.terms_technical_1">A Hub modern böngészőkre optimalizált. Régebbi böngészőkben előfordulhatnak hibák.</li>
+                    <li data-translate="pages.onboarding_student.terms_technical_2">A szolgáltatás elő-béta szakaszban működik, így időnként instabilitás, hibák vagy funkcióhiány előfordulhat.</li>
+                  </ul>
+                </div>
+
+                <p class="terms-last-update" data-translate="pages.onboarding_student.terms_last_update">Utolsó frissítés dátuma: 2025. szeptember 13.</p>
               </div>
 
               <!-- Terms Acceptance -->
@@ -1886,7 +2574,7 @@
             <p style="margin:0; color:#C4C8C3; opacity:0.9;">Kérlek próbáld újra, vagy próbálkozz később.</p>
             <div class="welcome-back-button-container" style="margin-top: 18px;">
               <button class="welcome-back-button nav-button" data-action="back-step2" aria-label="Vissza a bejelentkezéshez">
-                <img src="/EU2K-Hub/assets/welcome_icons/back.svg" class="welcome-back-icon" alt="Back">
+                <img src="/EU2K-Hub/assets/arrow_back.svg" class="welcome-back-icon" alt="Back">
                 <span class="welcome-back-text">Vissza a bejelentkezéshez</span>
               </button>
             </div>

@@ -49,6 +49,11 @@
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
+
+    // Import Firestore debug module
+    import('../assets/js/firestore-debug.js').catch(err => {
+      console.warn('Firestore debug module not loaded:', err);
+    });
   </script>
 
   <script>

@@ -230,6 +230,27 @@
       "login_failed_title": "Login Failed",
       "login_failed_description": "The login was unsuccessful. Please try again!"
     },
+    "onboarding_parent": {
+      "title": "Welcome to the Hub!",
+      "welcome-title": "Welcome to the Hub!",
+      "welcome_hub": "Welcome to the Hub!",
+      "create_account_description": "Please choose an avatar or use the one provided by your Google account!",
+      "notifications_title": "Notification Settings",
+      "notifications_description": "Choose what notifications you want to receive!",
+      "messages_title": "Message Settings",
+      "messages_description": "Decide if you're open to private messages!",
+      "terms_title": "Please accept the terms of service!",
+      "terms_description": "Read through or learn more, and accept the information, and we're done!",
+      "terms_last_update": "Last updated: September 13, 2025.",
+      "terms_acceptance_text": "I accept the terms of service and privacy policy",
+      "final_welcome_title": "We're all set!",
+      "final_welcome_start": "Get Started",
+      "accept": "I Accept"
+    },
+    "onboarding_teacher": {
+      "title": "Welcome to the Hub!",
+      "welcome-title": "As a teacher, you want to sign in to the Hub. Choose your sign-in method:"
+    },
     "account": {
       "private_messages": "Private Messages",
       "who_can_message": "Who can send you messages?",
@@ -248,11 +269,15 @@
   },
   "onboarding": {
     "continue_as_student": "Continue as Student",
+    "signin_with_microsoft": "Sign in with Microsoft",
+    "signin_with_office365": "Sign in with Office 365",
     "continue_as_teacher": "Continue as Teacher",
+    "continue_as_parent": "Continue as Parent",
     "continue_without_account": "Continue as Adult"
   },
   "profile": {
     "student_name": "Turóczi Ádám - 8.E",
+    "parent_name": "Turóczi Ádám - Parent",
     "use_school_account": "Continue with school profile picture",
     "continue": "Continue with this",
     "looks_good": "I look good!",

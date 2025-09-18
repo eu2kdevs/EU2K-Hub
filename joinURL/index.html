@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EU2K Hub - Event Join</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+        }
+        .message {
+            font-size: 1.2rem;
+            margin: 1rem 0;
+        }
+        .loading {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 EU2K Hub Event Join</h1>
+        <div id="message" class="message loading">Ellenőrzés folyamatban...</div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        // Firebase konfiguráció
+        const firebaseConfig = {
+            apiKey: "AIzaSyBOoM5xydKUqBZNweKJOqBdBhHFYhJKhJE",
+            authDomain: "eu2k-hub.firebaseapp.com",
+            projectId: "eu2k-hub",
+            storageBucket: "eu2k-hub.appspot.com",
+            messagingSenderId: "1051317239736",
+            appId: "1:1051317239736:web:7b8b8b8b8b8b8b8b8b8b8b"
+        };
+
+        // Firebase inicializálás
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const messageEl = document.getElementById('message');
+
+        // URL paraméterek kiolvasása
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventCode = urlParams.get('id');
+
+        // Esemény kód ellenőrzése
+        if (!eventCode) {
+            messageEl.innerHTML = '❌ Nincs esemény kód az URL-ben!';
+            messageEl.className = 'message';
+        } else {
+            // Firebase Auth állapot figyelése
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // Felhasználó be van jelentkezve
+                    const userUID = user.uid;
+                    const redirectUrl = `/EU2K-Hub/event_hub/join/${eventCode}/${userUID}`;
+                    
+                    messageEl.innerHTML = `✅ Átirányítás az eseményhez...<br><small>${eventCode}</small>`;
+                    
+                    // Átirányítás 1 másodperc után
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 1000);
+                } else {
+                    // Felhasználó nincs bejelentkezve
+                    messageEl.innerHTML = '⚠️ Jelentkezz be a join linkhez!';
+                    messageEl.className = 'message';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

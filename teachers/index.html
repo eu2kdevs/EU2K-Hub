@@ -1157,12 +1157,34 @@
   <script src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
 
   <script>
-    // Check if user has accepted terms of service
+    // Check if user has accepted terms of service and redirect to appropriate onboarding
     document.addEventListener('DOMContentLoaded', () => {
       const termsAccepted = localStorage.getItem('termsAccepted');
       if (termsAccepted !== 'true') {
-        // Redirect to onboarding if terms not accepted
-        window.location.href = '/EU2K-Hub/welcome/onboarding_student.html';
+        // Check if user is logged in and what type they are
+        const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
+        const userType = localStorage.getItem('eu2k-user-type');
+        
+        if (isLoggedIn && userType) {
+          // Redirect to appropriate onboarding based on user type
+          switch (userType) {
+            case 'student':
+              window.location.href = '/EU2K-Hub/welcome/onboarding_student.html#student-profile';
+              break;
+            case 'parent':
+              window.location.href = '/EU2K-Hub/welcome/onboarding_parent.html#parent-profile';
+              break;
+            case 'teacher':
+              window.location.href = '/EU2K-Hub/welcome/onboarding_teacher.html#teacher-profile';
+              break;
+            default:
+              // Default to student onboarding if user type is unknown
+              window.location.href = '/EU2K-Hub/welcome/onboarding_student.html';
+          }
+        } else {
+          // Not logged in, redirect to default student onboarding
+          window.location.href = '/EU2K-Hub/welcome/onboarding_student.html';
+        }
       }
     });
   </script>

@@ -243,6 +243,27 @@
       "login_failed_title": "Bejelentkezési hiba",
       "login_failed_description": "A bejelentkezés sikertelen volt. Kérjük, próbáld újra!"
     },
+    "onboarding_parent": {
+      "title": "Üdvözlünk a Hub-ban!",
+      "welcome-title": "Üdvözöllek a Hub-ban!",
+      "welcome_hub": "Üdvözlünk a Hub-ban!",
+      "create_account_description": "Kérlek válassz egy avatárt, vagy használd a Google fiókod által biztosítottat!",
+      "notifications_title": "Értesítések beállítása",
+      "notifications_description": "Válaszd ki, milyen értesítéseket szeretnél kapni!",
+      "messages_title": "Üzenetek beállítása",
+      "messages_description": "Döntsd el, hogy nyitott vagy-e a privát üzenetekre!",
+      "terms_title": "Fogadd el kérlek a használati feltételeket!",
+      "terms_description": "Olvasd végig, vagy tudj meg többet, és fogadd el a tájékoztatót, és be is fejeztük!",
+      "terms_last_update": "Utolsó frissítés dátuma: 2025. szeptember 13.",
+      "terms_acceptance_text": "Elfogadom a használati feltételeket és az adatkezelési tájékoztatót",
+      "final_welcome_title": "Kész is vagyunk!",
+      "final_welcome_start": "Kezdés",
+      "accept": "Elfogadom"
+    },
+    "onboarding_teacher": {
+      "title": "Üdvözlünk a Hub-ban!",
+      "welcome-title": "Tanárként szeretnél bejelentkezni a Hub-ba. Válaszd ki a bejelentkezési módot:"
+    },
     "account": {
       "private_messages": "Privát Üzenetek",
       "who_can_message": "Ki küldhet neked üzeneteket?",
@@ -261,11 +282,15 @@
   },
   "onboarding": {
     "continue_as_student": "Tovább diákként",
+    "signin_with_microsoft": "Bejelentkezés Microsoft-tal",
+    "signin_with_office365": "Bejelentkezés Office 365-tel",
     "continue_as_teacher": "Tovább tanárként",
+    "continue_as_parent": "Tovább szülőként",
     "continue_without_account": "Tovább felnőttként"
   },
   "profile": {
     "student_name": "Turóczi Ádám - 8.E",
+    "parent_name": "Turóczi Ádám - Szülő",
     "use_school_account": "Tovább az iskolai profilképpel",
     "continue": "Tovább ezzel",
     "looks_good": "Jól nézek ki!",

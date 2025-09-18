@@ -30,6 +30,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
     import { getFirestore } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -47,8 +48,120 @@
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
 
+    enableIndexedDbPersistence(db).catch((err) => {
+      if (err.code == 'failed-precondition') {
+        console.log("Több tab nyitva, nem lehet offline módban persistálni");
+      } else if (err.code == 'unimplemented') {
+        console.log("A böngésző nem támogatja az offline persistenciát");
+      }
+    });
+
     // Make db globally available
     window.db = db;
+
+    // Load featured event data
+    import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    
+    async function loadFeaturedEvent() {
+       try {
+         const docRef = doc(db, 'event_hub', 'featured');
+         const docSnap = await getDoc(docRef);
+         
+         if (docSnap.exists()) {
+           const data = docSnap.data();
+           
+           // Update title
+           if (data.title) {
+             document.getElementById('featured-title').textContent = data.title;
+           }
+           
+           // Update subtitle with desc
+           if (data.desc) {
+             let descText = data.desc;
+             if (descText.length > 50) {
+               // Find the best break point around 50 characters
+               let firstLine = descText.substring(0, 50);
+               let lastSpaceIndex = firstLine.lastIndexOf(' ');
+               
+               if (lastSpaceIndex > 30) {
+                 firstLine = descText.substring(0, lastSpaceIndex);
+                 let secondLine = descText.substring(lastSpaceIndex + 1);
+                 
+                 if (secondLine.length > 50) {
+                   secondLine = secondLine.substring(0, 47) + '...';
+                 }
+                 
+                 descText = firstLine + '\n' + secondLine;
+               } else {
+                 // If no good break point, just cut at 47 and add ...
+                 descText = descText.substring(0, 47) + '...';
+               }
+             }
+             
+             document.getElementById('featured-subtitle').innerHTML = descText.replace(/\n/g, '<br>');
+           }
+           
+           // Update image if imageURL is not empty
+           if (data.imageURL && data.imageURL.trim() !== '') {
+             document.getElementById('featured-image').src = data.imageURL;
+           }
+           
+           // Store joinCode for later use
+           if (data.joinCode) {
+             window.featuredEventJoinCode = data.joinCode;
+           }
+         } else {
+           console.log('No featured event data found, creating sample data...');
+           // Create sample data for testing
+           const sampleData = {
+             title: 'Kiemelt Esemény',
+             desc: 'Ez egy hosszabb teszt esemény leírása, amely meghaladja az ötven karaktert és demonstrálja a sortörés funkcionalitást',
+             joinCode: 'TEST123',
+             imageURL: 'https://picsum.photos/800/400'
+           };
+           
+           await setDoc(docRef, sampleData);
+           console.log('Sample data created, reloading...');
+           
+           // Update UI with sample data
+           document.getElementById('featured-title').textContent = sampleData.title;
+           
+           // Apply same desc formatting for sample data
+           let descText = sampleData.desc;
+           if (descText.length > 50) {
+             let firstLine = descText.substring(0, 50);
+             let lastSpaceIndex = firstLine.lastIndexOf(' ');
+             
+             if (lastSpaceIndex > 30) {
+               firstLine = descText.substring(0, lastSpaceIndex);
+               let secondLine = descText.substring(lastSpaceIndex + 1);
+               
+               if (secondLine.length > 50) {
+                 secondLine = secondLine.substring(0, 47) + '...';
+               }
+               
+               descText = firstLine + '\n' + secondLine;
+             } else {
+               descText = descText.substring(0, 47) + '...';
+             }
+           }
+           
+           document.getElementById('featured-subtitle').innerHTML = descText.replace(/\n/g, '<br>');
+           document.getElementById('featured-image').src = sampleData.imageURL;
+           window.featuredEventJoinCode = sampleData.joinCode;
+         }
+       } catch (error) {
+         console.error('Error loading featured event:', error);
+       }
+     }
+    
+    // Load data when page loads
+    document.addEventListener('DOMContentLoaded', loadFeaturedEvent);
+
+    // Import Firestore debug module
+    import('./assets/js/firestore-debug.js').catch(err => {
+      console.warn('Firestore debug module not loaded:', err);
+    });
   </script>
 </head>
 
@@ -104,10 +217,19 @@
            <div class="event-columns">
              <div class="left-column">
                <article class="featured-event-card" aria-label="Kiemelt esemény">
+                <div class="featured-actions">
+                  <md-fab id="join-fab" class="join-fab" label="Csatlakozás" aria-label="Csatlakozás">
+                    <img src="/EU2K-Hub/assets/event_hub/add_light.svg" alt="Add" class="chip-icon" slot="icon" />
+                  </md-fab>
+               </div>
+                 <div class="featured-background">
+                   <img id="featured-image" src="assets/placeholder_img.svg" alt="Esemény kép" class="featured-bg-image" />
+                   <div class="featured-overlay"></div>
+                 </div>
                  <div class="featured-content">
                    <div class="featured-text">
-                     <h2 class="featured-title">Title</h2>
-                     <div class="featured-subtitle">Subtitle</div>
+                     <h2 id="featured-title" class="featured-title">Title</h2>
+                     <div id="featured-subtitle" class="featured-subtitle">Subtitle</div>
                      <div class="chips-row">
                        <button class="chip" type="button" aria-label="Add to my itinerary">
                          <img src="/EU2K-Hub/assets/event_hub/calendar.svg" alt="naptár ikon" class="chip-icon" />
@@ -120,10 +242,6 @@
                      </div>
                    </div>
                  </div>
-                        <div class="featured-actions">
-                        <div class="featured-actions">
-                   <md-fab class="join-fab" label="+ Csatlakozás" aria-label="Csatlakozás"></md-fab>
-                 </div>
                </article>
              </div>
              <div class="right-column">
@@ -131,6 +249,28 @@
              </div>
            </div>
          </section>
+         
+         <!-- Animált FAB gomb -->
+         <div class="floating-fab" id="floating-fab">
+            <span class="fab-text">Új esemény</span>
+            <span class="fab-icon">+</span>
+          </div>
+         
+         <!-- FAB opciók -->
+         <div id="fab-options" class="fab-options">
+           <div class="fab-option" data-action="event">
+             <img src="/EU2K-Hub/assets/event_hub/event.svg" alt="Esemény" class="fab-option-icon" />
+             <span>Esemény</span>
+           </div>
+           <div class="fab-option" data-action="meeting">
+             <img src="/EU2K-Hub/assets/event_hub/meeting.svg" alt="Találkozó" class="fab-option-icon" />
+             <span>Találkozó</span>
+           </div>
+           <div class="fab-option" data-action="course">
+             <img src="/EU2K-Hub/assets/event_hub/courses.svg" alt="Kurzus" class="fab-option-icon" />
+             <span>Kurzus</span>
+           </div>
+         </div>
        </div>
         <div id="site-footer" class="footer" aria-label="Site footer">
         <div class="footer-container">
@@ -152,6 +292,132 @@
   <div id="event-mask"></div>
 
   <script>
+    // Featured event betöltése Firestore-ból
+    async function loadFeaturedEvent() {
+      try {
+        // Ellenőrizzük, hogy a Firebase inicializálva van-e
+        if (typeof db === 'undefined') {
+          console.warn('Firebase nincs inicializálva, placeholder adatok használata');
+          return;
+        }
+        
+        const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+        
+        const featuredDocRef = doc(db, 'event_hub', 'featured');
+        const featuredDoc = await getDoc(featuredDocRef);
+        
+        if (featuredDoc.exists()) {
+          const data = featuredDoc.data();
+          
+          // Adatok frissítése
+          document.getElementById('featured-title').textContent = data.title || 'Title';
+          
+          // Apply desc formatting with line breaks
+          let descText = data.desc || 'Subtitle';
+          if (descText.length > 50) {
+            // Find the best break point around 50 characters
+            let firstLine = descText.substring(0, 50);
+            let lastSpaceIndex = firstLine.lastIndexOf(' ');
+            
+            if (lastSpaceIndex > 30) {
+              firstLine = descText.substring(0, lastSpaceIndex);
+              let secondLine = descText.substring(lastSpaceIndex + 1);
+              
+              if (secondLine.length > 50) {
+                secondLine = secondLine.substring(0, 47) + '...';
+              }
+              
+              descText = firstLine + '\n' + secondLine;
+            } else {
+              // If no good break point, just cut at 47 and add ...
+              descText = descText.substring(0, 47) + '...';
+            }
+          }
+          
+          document.getElementById('featured-subtitle').innerHTML = descText.replace(/\n/g, '<br>');
+          
+          if (data.photoURL) {
+            document.getElementById('featured-image').src = data.photoURL;
+          }
+          
+          // JoinCode tárolása a FAB gombban
+          if (data.joinCode) {
+            document.getElementById('join-fab').setAttribute('data-join-code', data.joinCode);
+          }
+        } else {
+          console.log('Nincs featured event dokumentum, placeholder adatok használata');
+        }
+      } catch (error) {
+        console.error('Hiba a featured event betöltésekor:', error);
+        console.log('Placeholder adatok használata');
+      }
+    }
+    
+    // FAB gomb animációk
+    let fabExpanded = false;
+    
+    function initializeFAB() {
+      const floatingFab = document.getElementById('floating-fab');
+      const fabOptions = document.getElementById('fab-options');
+      const fabIcon = floatingFab.querySelector('.fab-icon');
+      const fabText = floatingFab.querySelector('.fab-text');
+      
+      floatingFab.addEventListener('click', () => {
+        if (!fabExpanded) {
+          // Kinyitás
+          fabExpanded = true;
+          floatingFab.classList.add('expanded');
+          fabOptions.classList.add('visible');
+          fabIcon.textContent = '×';
+        } else {
+          // Bezárás
+          closeFAB();
+        }
+      });
+      
+      // Opciók kezelése
+      const options = document.querySelectorAll('.fab-option');
+      options.forEach(option => {
+        option.addEventListener('click', (e) => {
+          const action = e.currentTarget.getAttribute('data-action');
+          console.log('FAB opció kiválasztva:', action);
+          // Itt később hozzáadhatók a specifikus műveletek
+        });
+      });
+    }
+    
+    function closeFAB() {
+      const floatingFab = document.getElementById('floating-fab');
+      const fabOptions = document.getElementById('fab-options');
+      const fabIcon = floatingFab.querySelector('.fab-icon');
+      
+      fabExpanded = false;
+      floatingFab.classList.remove('expanded');
+      fabOptions.classList.remove('visible');
+      fabIcon.textContent = '+';
+    }
+    
+    // Join FAB kezelése
+    function initializeJoinFAB() {
+      const joinFab = document.getElementById('join-fab');
+      joinFab.addEventListener('click', () => {
+        const joinCode = joinFab.getAttribute('data-join-code');
+        if (joinCode) {
+          // Átirányítás a join URL-re
+          window.location.href = `/EU2K-Hub/joinURL?id=${joinCode}`;
+        } else {
+          console.warn('Nincs join kód beállítva');
+        }
+      });
+    }
+    
+    // Inicializálás oldal betöltésekor
+    document.addEventListener('DOMContentLoaded', () => {
+      loadFeaturedEvent();
+      initializeFAB();
+      initializeJoinFAB();
+    });
+    
     // Feedback gomb és popup kezelése
     const feedbackButton = document.querySelector('.feedback-button'); // Changed to querySelector
     const feedbackPopup = document.getElementById('feedbackPopup');

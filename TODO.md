@@ -6,6 +6,14 @@
 - [x] Létrehozni az "Újrakezdés" oldalt az onboarding_student.html-ben
 - [x] Létrehozni a "Profil törlés" oldalt az onboarding_student.html-ben
 - [ ] Hozzáadni a fordításokat a translations.js fájlhoz az új szövegekhez
+- [x] Microsoft Graph API integráció: displayName, photoURL, email, jobTitle lekérése
+- [x] Google API integráció: profilkép, email, teljes név lekérése
+- [x] Felhasználó típus felismerés: JobTitle alapú eldöntés (szám=diák, nincs szám=tanár), Google=szülő
+- [x] Átirányítási logika: meglévő user → bejelentkezés, új user → onboarding profilválasztó
+- [x] Adatok törlése gomb hozzáadása account.html-hez
+- [x] Onboarding.html frissítés: user típus felismerés, custom claims, Firestore dokumentum létrehozás
+- [x] Firestore dokumentum létrehozás: general_data/general kollekció megfelelő mezőkkel
+- [ ] Settings kollekció létrehozása a userid dokumentumokban (TODO komment hozzáadva az onboardinghoz)
   - "Biztos újra szeretnéd kezdeni?"
   - "Ezzel el fogja a Hub felejteni a mostani fiókod ezen a gépen, elvesznek a preferenciáid, és az üzeneteid, ha mást állítasz be újra, mint amit alapból beállítottál. Biztos folytatod?"
   - "Biztos ki szeretnéd törölni a profilod?"

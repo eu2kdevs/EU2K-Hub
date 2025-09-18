@@ -48,6 +48,11 @@
 
     // Make db globally available
     window.db = db;
+
+    // Import Firestore debug module
+    import('./assets/js/firestore-debug.js').catch(err => {
+      console.warn('Firestore debug module not loaded:', err);
+    });
   </script>
 </head>
 
