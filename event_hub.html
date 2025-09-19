@@ -403,8 +403,8 @@
       joinFab.addEventListener('click', () => {
         const joinCode = joinFab.getAttribute('data-join-code');
         if (joinCode) {
-          // Átirányítás a join URL-re
-          window.location.href = `/EU2K-Hub/joinURL?id=${joinCode}`;
+          // Átirányítás a join URL-re - GitHub Pages kompatibilis formátum
+          window.location.href = `https://eu2kdevs.github.io/EU2K-Hub/joinURL/?id=${joinCode}`;
         } else {
           console.warn('Nincs join kód beállítva');
         }
