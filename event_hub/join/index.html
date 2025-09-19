@@ -90,16 +90,21 @@
     
     console.log('Join parameters:', window.joinParams);
 
-    // Check authentication state
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
+    // Check authentication state using localStorage (same as auth-state.js)
+    function checkAuthState() {
+      const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
+      const userUID = localStorage.getItem('eu2k-auth-uid') || 'unknown';
+      
+      console.log('Auth check - isLoggedIn:', isLoggedIn, 'userUID:', userUID);
+      
+      if (isLoggedIn && eventCode) {
         // User is signed in - generate session ID and redirect to join page
         const sessionId = Math.random().toString(36).substring(2, 15);
-        const joinUrl = `/EU2K-Hub/event_hub/join/${eventCode}/${user.uid}+${sessionId}`;
+        const joinUrl = `/EU2K-Hub/event_hub/join/${eventCode}/${userUID}+${sessionId}`;
         
         console.log('User authenticated, redirecting to:', joinUrl);
         window.location.href = joinUrl;
-      } else {
+      } else if (!isLoggedIn) {
         // User is not signed in - redirect to login page with return URL
         const currentUrl = encodeURIComponent(window.location.href);
         
@@ -109,6 +114,20 @@
         setTimeout(() => {
           window.location.href = `/EU2K-Hub/welcome/onboarding_student.html?returnUrl=${currentUrl}`;
         }, 1500);
+      } else {
+        // Logged in but no event code - show error
+        document.getElementById('auth-message').textContent = 'Hiányzó esemény kód!';
+        document.getElementById('auth-message').style.display = 'block';
+      }
+    }
+
+    // Check auth state immediately and also listen for changes
+    checkAuthState();
+    
+    // Also listen for storage changes in case auth state changes in another tab
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'eu2k-auth-logged-in') {
+        checkAuthState();
       }
     });
 
