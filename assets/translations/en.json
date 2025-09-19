@@ -5,15 +5,23 @@
       "welcome": "Welcome to the Hub!",
       "upcoming_events": "Upcoming Events",
       "news": "News",
-      "event_name": "Event Name",
-      "event_description": "Event description",
-      "event_location": "Event Location",
+      "event_name": "If you're seeing this, the problem is on our side.",
+      "event_description": "If you're seeing this, the problem is on our side.",
+      "event_location": "If you're seeing this, the problem is on our side.",
       "new_things_title": "New things in the Hub",
-      "new_thing1": "NEW: Better animations for camera and microphone access indication",
-      "new_thing2": "NEW: In Settings tab: General, Notifications, Community completed.",
-      "more_info_link": "More on the eu2kdevs.hu page.",
+      "new_thing1": "If you're seeing this, the problem is on our side.",
+      "new_thing2": "If you're seeing this, the problem is on our side.",
+      "more_info_link": "Please report this issue through YouHub!",
       "terms_of_service": "Terms of Service",
       "privacy_policy": "Privacy Policy"
+    },
+    "join": {
+      "join-title": "Joining event...",
+      "page-title": "Join Portal",
+      "no-event-code": "Missing code, connecting to the event was unsuccessful.",
+      "redirecting-to-event": "Redirecting you to the event portal.",
+      "redirecting-to-login": "Something went wrong, please sign in again!",
+      "checking": "Checking is in progress..."
     },
     "terms_of_service": {
       "title": "Terms of Service",
@@ -276,8 +284,8 @@
     "continue_without_account": "Continue as Adult"
   },
   "profile": {
-    "student_name": "Turóczi Ádám - 8.E",
-    "parent_name": "Turóczi Ádám - Parent",
+    "student_name": "If you're seeing this, the problem is on our side.",
+    "parent_name": "If you're seeing this, the problem is on our side.",
     "use_school_account": "Continue with school profile picture",
     "continue": "Continue with this",
     "looks_good": "I look good!",
@@ -301,7 +309,7 @@
       "description": "Please write something!",
       "category": "Please select a category!"
     },
-    "success": "✓ Successfully submitted feedback!",
+    "success": "Successfully submitted feedback!",
     "error": "An error occurred during submission. Please try again!"
   },
   "suggestion": {

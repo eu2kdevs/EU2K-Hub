@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EU2K Hub - Event Join</title>
+    <title data-translate="join.page-title">Join Portal</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -12,14 +12,14 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: url("./assets/backgrounds/eu2k_background.png") no-repeat center center / cover;
             color: white;
         }
         .container {
             text-align: center;
             padding: 2rem;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
+            border-radius: 32px;
             backdrop-filter: blur(10px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             max-width: 400px;
@@ -33,11 +33,15 @@
             opacity: 0.8;
         }
     </style>
+    <script src="/EU2K-Hub/assets/js/permissions.js"></script>
+    <script src="/EU2K-Hub/assets/js/translations.js?v=1.1"></script>
+    <script src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
+    <script src="/EU2K-Hub/assets/js/auth-state.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>🎯 EU2K Hub Event Join</h1>
-        <div id="message" class="message loading">Ellenőrzés folyamatban...</div>
+        <h1 data-translate="join.join-title">Csatlakozás az eseményhez folyamatban...</h1>
+        <div id="message" class="message loading" data-translate="join.checking">Ellenőrzés folyamatban...</div>
     </div>
 
     <!-- Firebase SDK -->
@@ -61,13 +65,18 @@
         const auth = getAuth(app);
         const messageEl = document.getElementById('message');
 
-        // URL paraméterek kiolvasása
+        // URL paraméterek kiolvasása - támogatja a GitHub Pages hash formátumot is
         const urlParams = new URLSearchParams(window.location.search);
-        const eventCode = urlParams.get('id');
+        let eventCode = urlParams.get('id');
+        
+        // Ha nincs query paraméter, próbáljuk a hash formátumot
+        if (!eventCode && window.location.hash) {
+            eventCode = window.location.hash.substring(1);
+        }
 
         // Esemény kód ellenőrzése
         if (!eventCode) {
-            messageEl.innerHTML = '❌ Nincs esemény kód az URL-ben!';
+            messageEl.innerHTML = '<span data-translate="join.no-event-code">Hiányzó kód, nem sikerült csatlakozni az eseményhez.</span>';
             messageEl.className = 'message';
         } else {
             // Firebase Auth állapot figyelése (mint a testFirebase függvény)
@@ -78,22 +87,24 @@
                     
                     console.log('Firebase Auth - User authenticated:', userUID, 'eventCode:', eventCode);
                     
-                    messageEl.innerHTML = `✅ Átirányítás az eseményhez...<br><small>${eventCode}</small>`;
+                    messageEl.innerHTML = `<span data-translate="join.redirecting-to-event">Átirányítás az eseményportálra...</span><br><small>${eventCode}</small>`;
                     
                     const sessionId = Math.random().toString(36).substring(2, 15);
-                    const redirectUrl = `https://eu2kdevs.github.io/EU2K-Hub/event_hub/join/join.html?eventCode=${eventCode}&userUID=${userUID}&sessionId=${sessionId}`;
                     
-                    console.log('User authenticated, redirecting to:', redirectUrl);
+                    // Hash formátum használata: #eventCode/userUID+sessionId
+                    const joinUrl = `https://eu2kdevs.github.io/EU2K-Hub/event_hub/join/join.html#${eventCode}/${userUID}+${sessionId}`;
+                    
+                    console.log('User authenticated, redirecting to:', joinUrl);
                     
                     setTimeout(() => {
-                        window.location.href = redirectUrl;
+                        window.location.href = joinUrl;
                     }, 1000);
                     
                 } else {
                     // Felhasználó nincs bejelentkezve Firebase-ben
                     console.log('Firebase Auth - User not authenticated, eventCode:', eventCode);
                     
-                    messageEl.innerHTML = '⚠️ Átirányítás bejelentkezéshez...';
+                    messageEl.innerHTML = '<span data-translate="join.redirecting-to-login">Valami nem sült el jól, kérlek jelentkezz be újra!</span>';
                     messageEl.className = 'message';
                     
                     const currentUrl = window.location.href;

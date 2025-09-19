@@ -5,15 +5,23 @@
       "welcome": "Üdvözöllek a Hub-ban!",
       "upcoming_events": "Közelgő Események",
       "news": "Hírek",
-      "event_name": "Esemény Neve",
-      "event_description": "Esemény leírása",
-      "event_location": "Esemény Helye",
-      "new_things_title": "Új dolgok a Hub-ban",
-      "new_thing1": "ÚJ: Jobb animációk a kamera, és mikrofon hozzáférés jelzésére",
-      "new_thing2": "ÚJ: Beállítások lapban: Általános, Értesítések, Közösség befejezve.",
-      "more_info_link": "Továbbiak az eu2kdevs.hu oldalon.",
+      "event_name": "Ha ezt látod, a hiba a mi oldalunkon van.",
+      "event_description": "Ha ezt látod, a hiba a mi oldalunkon van.",
+      "event_location": "Ha ezt látod, a hiba a mi oldalunkon van.",
+      "new_things_title": "Ajjaj valami baj van.",
+      "new_thing1": "Ha ezt látod, a hiba a mi oldalunkon van.",
+      "new_thing2": "Ha ezt látod, a hiba a mi oldalunkon van.",
+      "more_info_link": "Kérlek jelezd ezt a hibát felénk a YouHubon keresztül!",
       "terms_of_service": "Használati feltételek",
       "privacy_policy": "Adatvédelmi irányelvek"
+    },
+    "join": {
+      "join-title": "Csatlakozás az eseményhez folyamatban...",
+      "page-title": "Csatlakozási Portál",
+      "no-event-code": "Hiányzó kód, nem sikerült csatlakozni az eseményhez.",
+      "redirecting-to-event": "Átirányítás az eseményportálra...",
+      "redirecting-to-login": "Valami nem sült el jól, kérlek jelentkezz be újra!",
+      "checking": "Ellenőrzés folyamatban..."
     },
     "terms_of_service": {
       "title": "Használati feltételek",
@@ -289,8 +297,8 @@
     "continue_without_account": "Tovább felnőttként"
   },
   "profile": {
-    "student_name": "Turóczi Ádám - 8.E",
-    "parent_name": "Turóczi Ádám - Szülő",
+    "student_name": "Ha ezt látod, a hiba a mi oldalunkon van.",
+    "parent_name": "Ha ezt látod, a hiba a mi oldalunkon van.",
     "use_school_account": "Tovább az iskolai profilképpel",
     "continue": "Tovább ezzel",
     "looks_good": "Jól nézek ki!",
@@ -314,7 +322,7 @@
       "description": "Kérlek írj le valamit!",
       "category": "Kérlek válassz kategóriát!"
     },
-    "success": "✓ Sikeresen beküldted a visszajelzést!",
+    "success": "Sikeresen beküldted a visszajelzést!",
     "error": "Hiba történt a beküldés során. Próbáld újra!"
   },
   "suggestion": {
