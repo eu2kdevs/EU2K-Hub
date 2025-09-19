@@ -852,6 +852,28 @@
                       userData.email = graphData.mail || graphData.userPrincipalName || userData.email;
                       userData.jobTitle = graphData.jobTitle || 'Diák';
                       userData.accountType = 'Iskolai Fiók';
+                      
+                      // Microsoft Graph photoURL javítása - blob URL helyett a Graph API URL használata
+                      try {
+                        const photoResponse = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+                          headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                          }
+                        });
+                        
+                        if (photoResponse.ok) {
+                          // Microsoft Graph photo URL használata blob helyett
+                          userData.photoURL = `https://graph.microsoft.com/v1.0/me/photo/$value`;
+                          console.log('🖼️ Microsoft Graph photoURL beállítva:', userData.photoURL);
+                        } else {
+                          console.warn('⚠️ Microsoft Graph photo nem elérhető, fallback használata');
+                          userData.photoURL = user.photoURL || '/EU2K-Hub/assets/avatars/magenta.png';
+                        }
+                      } catch (photoError) {
+                        console.warn('⚠️ Microsoft Graph photo lekérési hiba:', photoError);
+                        userData.photoURL = user.photoURL || '/EU2K-Hub/assets/avatars/magenta.png';
+                      }
+                      
                       console.log('✅ Microsoft Graph adatok betöltve és alkalmazva:', userData);
                     } else {
                       console.warn('❌ Microsoft Graph API hiba:', graphResponse.status, graphResponse.statusText);
@@ -888,8 +910,15 @@
                         console.log('📧 Email frissítve:', userData.email);
                       }
                       if (peopleData.photos && peopleData.photos[0]) {
-                        userData.photoURL = peopleData.photos[0].url || userData.photoURL;
-                        console.log('🖼️ Profilkép frissítve:', userData.photoURL);
+                        // Google photoURL javítása - blob URL elkerülése
+                        const photoUrl = peopleData.photos[0].url;
+                        if (photoUrl && !photoUrl.includes('blob:')) {
+                          userData.photoURL = photoUrl;
+                          console.log('🖼️ Google profilkép frissítve:', userData.photoURL);
+                        } else {
+                          console.warn('⚠️ Google photo blob URL észlelve, user.photoURL használata');
+                          userData.photoURL = user.photoURL || '/EU2K-Hub/assets/avatars/magenta.png';
+                        }
                       }
                       if (peopleData.organizations && peopleData.organizations[0]) {
                         userData.jobTitle = peopleData.organizations[0].title || userData.jobTitle;
@@ -939,6 +968,85 @@
       } catch (e) {
         console.error('⚠️ Felhasználói adatok betöltése sikertelen:', e);
         return null;
+      }
+    }
+
+    // Felhasználói profil frissítése Firebase-ben
+    async function updateUserProfile() {
+      try {
+        const { getAuth } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js');
+        const { doc, setDoc, getFirestore } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js');
+        
+        const auth = getAuth();
+        const db = getFirestore();
+        const user = auth.currentUser;
+        
+        if (!user) {
+          console.log('❌ Nincs bejelentkezett felhasználó a profil frissítéshez');
+          return;
+        }
+
+        console.log('🔄 Profil frissítés kezdése Firebase-ben...');
+        
+        // Felhasználói adatok összegyűjtése
+        const userData = await loadUserData();
+        if (!userData) {
+          console.log('❌ Nem sikerült betölteni a felhasználói adatokat');
+          return;
+        }
+
+        // Profil adatok objektum létrehozása
+        const profileData = {
+          displayName: userData.displayName || user.displayName || '',
+          email: userData.email || user.email || '',
+          jobTitle: userData.jobTitle || 'Diák', // Fix: jobTitle mentése
+          accountType: userData.accountType || 'Személyes Fiók',
+          photoURL: userData.photoURL || user.photoURL || '', // Fix: photoURL mentése Microsoft/Google linkkel
+          lastUpdated: new Date().toISOString(),
+          uid: user.uid
+        };
+
+        // Microsoft Graph photoURL javítása
+        if (user.providerData && user.providerData.some(p => p.providerId === 'microsoft.com')) {
+          try {
+            // Microsoft Graph photo URL lekérése
+            const accessToken = await user.getIdToken();
+            if (accessToken) {
+              const photoResponse = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+                headers: {
+                  'Authorization': `Bearer ${accessToken}`
+                }
+              });
+              
+              if (photoResponse.ok) {
+                // Microsoft Graph photo URL használata blob helyett
+                profileData.photoURL = `https://graph.microsoft.com/v1.0/me/photo/$value`;
+                console.log('🖼️ Microsoft Graph photoURL beállítva:', profileData.photoURL);
+              }
+            }
+          } catch (e) {
+            console.warn('⚠️ Microsoft Graph photo lekérése sikertelen:', e);
+          }
+        }
+
+        // Google photoURL javítása
+        if (user.providerData && user.providerData.some(p => p.providerId === 'google.com')) {
+          if (user.photoURL && !user.photoURL.includes('blob:')) {
+            profileData.photoURL = user.photoURL;
+            console.log('🖼️ Google photoURL beállítva:', profileData.photoURL);
+          }
+        }
+
+        console.log('💾 Profil adatok mentése:', profileData);
+
+        // Profil adatok mentése Firebase-be
+        const userDocRef = doc(db, 'users', user.uid, 'general_data', 'general');
+        await setDoc(userDocRef, profileData, { merge: true });
+        
+        console.log('✅ Profil sikeresen frissítve Firebase-ben');
+        
+      } catch (error) {
+        console.error('❌ Profil frissítési hiba:', error);
       }
     }
 
