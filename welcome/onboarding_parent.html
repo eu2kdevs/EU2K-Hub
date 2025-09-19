@@ -553,6 +553,7 @@
       // Mark that we're starting auth
       localStorage.setItem('eu2k-auth-in-progress', 'true');
       localStorage.setItem('eu2k-auth-start-time', Date.now().toString());
+      localStorage.setItem('eu2k-user-type', 'teacher');
       
       // Show the auth-in-progress page
       showPage('auth-in-progress');
@@ -563,13 +564,118 @@
           .then((result) => {
             persistentLog.add('✅ Teacher popup auth successful');
             localStorage.removeItem('eu2k-auth-in-progress');
-            proceedToTeacherProfileChooser(result.user);
+            
+            // Collect Microsoft Graph API data for teacher
+            collectMicrosoftGraphDataTeacher(result);
           })
           .catch((error) => {
             persistentLog.add(`❌ Teacher popup auth failed: ${error?.code || ''} ${error?.message || error}`);
             showPage('login-failed');
             localStorage.removeItem('eu2k-auth-in-progress');
           });
+    };
+
+    // Collect Microsoft Graph API data for teacher
+    window.collectMicrosoftGraphDataTeacher = function(result) {
+      persistentLog.add('📊 Starting Microsoft Graph API data collection for teacher...');
+      
+      try {
+        const credential = OAuthProvider.credentialFromResult(result);
+        const accessToken = credential && credential.accessToken;
+        persistentLog.add(`🔑 Teacher access token available: ${!!accessToken}`);
+        persistentLog.add(`🔑 Teacher access token length: ${accessToken ? accessToken.length : 0}`);
+        
+        if (accessToken) {
+          persistentLog.add('📡 Fetching teacher data from Microsoft Graph...');
+          
+          // Fetch basic user info including jobTitle
+          fetch('https://graph.microsoft.com/v1.0/me', {
+            headers: { 
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json'
+            }
+          }).then(response => {
+            persistentLog.add(`📡 Teacher Graph API /me response status: ${response.status}`);
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+          }).then(data => {
+            persistentLog.add(`📊 Teacher Graph API /me response: ${JSON.stringify(data)}`);
+            
+            // Store all teacher data
+            if (data.displayName) {
+              localStorage.setItem('eu2k-auth-display-name', data.displayName);
+              persistentLog.add(`💾 Saved teacher display name: ${data.displayName}`);
+            }
+            if (data.mail || data.userPrincipalName) {
+              const email = data.mail || data.userPrincipalName;
+              localStorage.setItem('eu2k-auth-email', email);
+              persistentLog.add(`💾 Saved teacher email: ${email}`);
+            }
+            if (data.jobTitle) {
+              localStorage.setItem('eu2k-auth-job-title', data.jobTitle);
+              persistentLog.add(`💾 Saved teacher job title: ${data.jobTitle}`);
+            }
+            
+            // Update result.user with Graph data
+            if (result.user) {
+              result.user.displayName = data.displayName || result.user.displayName;
+              result.user.email = data.mail || data.userPrincipalName || result.user.email;
+              result.user.jobTitle = data.jobTitle;
+            }
+            
+            // Now fetch profile picture
+            persistentLog.add('🖼️ Fetching teacher profile picture from Microsoft Graph...');
+            return fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+              headers: { 
+                'Authorization': `Bearer ${accessToken}`
+              }
+            });
+          }).then(photoResponse => {
+            persistentLog.add(`🖼️ Teacher Graph API photo response status: ${photoResponse.status}`);
+            
+            if (photoResponse.ok) {
+              return photoResponse.blob();
+            } else if (photoResponse.status === 404) {
+              persistentLog.add('ℹ️ No profile picture found in teacher Microsoft account');
+              return null;
+            } else {
+              throw new Error(`Teacher photo fetch failed: HTTP ${photoResponse.status}`);
+            }
+          }).then(photoBlob => {
+            if (photoBlob) {
+              const photoUrl = URL.createObjectURL(photoBlob);
+              persistentLog.add(`🖼️ Created teacher profile picture URL: ${photoUrl.substring(0, 50)}...`);
+              
+              // Store the photo URL
+              localStorage.setItem('eu2k-auth-photo-url', photoUrl);
+              persistentLog.add('💾 Saved teacher Microsoft profile picture URL');
+              
+              // Update the user object with photo URL
+              if (result.user) {
+                result.user.photoURL = photoUrl;
+              }
+            }
+            
+            // Proceed to teacher profile chooser with enriched data
+            proceedToTeacherProfileChooser(result.user);
+            
+          }).catch(error => {
+            persistentLog.add(`❌ Teacher Graph API error: ${error.message}`);
+            persistentLog.add(`❌ Teacher Graph API stack: ${error.stack}`);
+            
+            // Still proceed even if Graph API fails
+            proceedToTeacherProfileChooser(result.user);
+          });
+        } else {
+          persistentLog.add('⚠️ No access token available for teacher Graph API calls');
+          proceedToTeacherProfileChooser(result.user);
+        }
+      } catch (error) {
+        persistentLog.add(`❌ Teacher Graph data collection error: ${error.message}`);
+        proceedToTeacherProfileChooser(result.user);
+      }
     };
 
     // Google sign-in for parents
@@ -740,28 +846,124 @@
         // Clear auth in progress flag
         localStorage.removeItem('eu2k-auth-in-progress');
         
-        // Try to fetch Graph displayName using access token
+        // Try to fetch Graph displayName and profile picture using access token
         try {
           const credential = OAuthProvider.credentialFromResult(result);
           const accessToken = credential && credential.accessToken;
           persistentLog.add(`🔑 Access token available: ${!!accessToken}`);
+          persistentLog.add(`🔑 Access token length: ${accessToken ? accessToken.length : 0}`);
           
           if (accessToken) {
             persistentLog.add('📡 Fetching user data from Microsoft Graph...');
-            fetch('https://graph.microsoft.com/v1.0/me', {
-              headers: { Authorization: `Bearer ${accessToken}` }
-            }).then(r => r.json()).then(data => {
-              persistentLog.add(`📊 Graph API response: ${JSON.stringify(data)}`);
-              if (data && data.displayName) {
-                localStorage.setItem('eu2k-auth-display-name', data.displayName);
-                persistentLog.add(`💾 Saved Graph display name: ${data.displayName}`);
+            
+            // Fetch user profile data including photo
+            Promise.all([
+              fetch('https://graph.microsoft.com/v1.0/me', {
+                headers: { 
+                  'Authorization': `Bearer ${accessToken}`,
+                  'Content-Type': 'application/json'
+                }
+              }).then(response => {
+                persistentLog.add(`📡 Graph API /me response status: ${response.status}`);
+                if (!response.ok) {
+                  throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+              }),
+              fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+                headers: { 
+                  'Authorization': `Bearer ${accessToken}`
+                }
+              }).then(photoResponse => {
+                persistentLog.add(`🖼️ Graph API photo response status: ${photoResponse.status}`);
+                
+                if (photoResponse.ok) {
+                  return photoResponse.blob().then(blob => URL.createObjectURL(blob));
+                } else if (photoResponse.status === 404) {
+                  persistentLog.add('ℹ️ No profile picture found in Microsoft account');
+                  return null;
+                } else {
+                  throw new Error(`Photo fetch failed: HTTP ${photoResponse.status}`);
+                }
+              }).catch(() => null)
+            ]).then(([userData, photoURL]) => {
+              persistentLog.add(`📊 Graph API user data: ${JSON.stringify(userData)}`);
+              persistentLog.add(`🖼️ Graph API photo URL: ${photoURL ? 'obtained' : 'not available'}`);
+              
+              // Prepare user data for Firebase
+              const graphUserData = {
+                email: userData.mail || userData.userPrincipalName || result.user.email,
+                displayName: userData.displayName || result.user.displayName,
+                photoURL: photoURL || result.user.photoURL,
+                jobTitle: userData.jobTitle || null,
+                uid: result.user.uid,
+                provider: 'microsoft.com',
+                lastLogin: new Date().toISOString()
+              };
+              
+              persistentLog.add(`💾 Prepared user data for Firebase: ${JSON.stringify(graphUserData)}`);
+              
+              // Save to localStorage for immediate use
+              if (graphUserData.displayName) {
+                localStorage.setItem('eu2k-auth-display-name', graphUserData.displayName);
+                persistentLog.add(`💾 Saved display name: ${graphUserData.displayName}`);
               }
+              if (graphUserData.email) {
+                localStorage.setItem('eu2k-auth-email', graphUserData.email);
+                persistentLog.add(`💾 Saved email: ${graphUserData.email}`);
+              }
+              if (graphUserData.photoURL) {
+                localStorage.setItem('eu2k-auth-photo-url', graphUserData.photoURL);
+                persistentLog.add(`💾 Saved photo URL: ${graphUserData.photoURL}`);
+                
+                // Update the user object with photo URL
+                if (result.user) {
+                  result.user.photoURL = graphUserData.photoURL;
+                  persistentLog.add('✅ Updated user object with Microsoft profile picture');
+                }
+              }
+              if (graphUserData.jobTitle) {
+                localStorage.setItem('eu2k-auth-job-title', graphUserData.jobTitle);
+                persistentLog.add(`💾 Saved job title: ${graphUserData.jobTitle}`);
+              }
+              
+              // Save to Firebase (assuming Firebase functions are available)
+              if (typeof saveUserToFirebase === 'function') {
+                saveUserToFirebase(graphUserData).then(() => {
+                  persistentLog.add('✅ User data saved to Firebase successfully');
+                }).catch((error) => {
+                  persistentLog.add(`❌ Firebase save error: ${error.message}`);
+                });
+              } else {
+                persistentLog.add('⚠️ saveUserToFirebase function not available, data saved to localStorage only');
+              }
+              
             }).catch((error) => {
-              persistentLog.add(`❌ Graph API error: ${error.message}`);
+              persistentLog.add(`❌ Microsoft Graph API error: ${error.message}`);
+              persistentLog.add(`❌ Error details: ${JSON.stringify(error)}`);
+              
+              // Fallback to basic user data
+              const basicUserData = {
+                email: result.user.email,
+                displayName: result.user.displayName,
+                photoURL: result.user.photoURL,
+                uid: result.user.uid,
+                provider: 'microsoft.com',
+                lastLogin: new Date().toISOString()
+              };
+              
+              if (typeof saveUserToFirebase === 'function') {
+                saveUserToFirebase(basicUserData).catch((error) => {
+                  persistentLog.add(`❌ Firebase fallback save error: ${error.message}`);
+                });
+              }
             });
+          } else {
+            persistentLog.add('⚠️ No access token available for Microsoft Graph API calls');
           }
         } catch (error) {
           persistentLog.add(`❌ Credential extraction error: ${error.message}`);
+          persistentLog.add(`❌ Error stack: ${error.stack}`);
         }
         
         proceedToProfileChooser(result.user);
@@ -1288,12 +1490,59 @@
       const googleProfileButton = document.querySelector('.profile-button-secondary');
       if (googleProfileButton) {
         googleProfileButton.addEventListener('click', () => {
-          // Set to use provided profile picture from Google account
-          localStorage.setItem('eu2k-onboarding-use-provided-pfp', 'true');
-          console.log('💾 Google profile picture option selected');
-          showAvatarConfirmation();
+          console.log('🖼️ Google profile picture button clicked');
+          collectGoogleAPIData();
         });
       }
+
+      // Collect Google API data function
+      window.collectGoogleAPIData = function() {
+        console.log('🔍 Starting Google API data collection...');
+        
+        const user = auth.currentUser;
+        if (!user) {
+          console.error('❌ No authenticated user found');
+          alert('Hiba: Nincs bejelentkezett felhasználó!');
+          return;
+        }
+
+        console.log('👤 Current user:', user.displayName, user.email);
+        console.log('🖼️ User photoURL:', user.photoURL);
+
+        // Get the access token for Google API calls
+        user.getIdToken(true).then((idToken) => {
+          console.log('🔑 Got ID token, length:', idToken.length);
+          
+          // Try to get additional profile data from Google People API
+          const accessToken = user.accessToken;
+          console.log('🔑 Access token available:', !!accessToken);
+          
+          if (user.photoURL) {
+            console.log('✅ Using photoURL from Firebase user:', user.photoURL);
+            
+            // Set to use provided profile picture from Google account
+            localStorage.setItem('eu2k-onboarding-use-provided-pfp', 'true');
+            localStorage.setItem('eu2k-user-photo-url', user.photoURL);
+            
+            // Update the main avatar with the Google profile picture
+            const mainAvatarImg = document.querySelector('.main-avatar-img');
+            if (mainAvatarImg) {
+              mainAvatarImg.src = user.photoURL;
+              mainAvatarImg.style.borderRadius = '50%';
+              console.log('🖼️ Updated main avatar with Google profile picture');
+            }
+            
+            console.log('💾 Google profile picture option selected and saved');
+            showAvatarConfirmation();
+          } else {
+            console.warn('⚠️ No photoURL available from Google account');
+            alert('Nem található profilkép a Google fiókodban!');
+          }
+        }).catch((error) => {
+          console.error('❌ Error getting ID token:', error);
+          alert('Hiba történt a Google adatok lekérése során!');
+        });
+      };
 
       // Handle parent Google sign-in button
       const parentGoogleBtn = document.getElementById('parent-google-signin');

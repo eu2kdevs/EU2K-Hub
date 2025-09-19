@@ -593,19 +593,86 @@
           
           if (accessToken) {
             persistentLog.add('📡 Fetching user data from Microsoft Graph...');
-            fetch('https://graph.microsoft.com/v1.0/me', {
-              headers: { Authorization: `Bearer ${accessToken}` }
-            }).then(r => r.json()).then(data => {
-              persistentLog.add(`📊 Graph API response: ${JSON.stringify(data)}`);
-              if (data && data.displayName) {
-                localStorage.setItem('eu2k-auth-display-name', data.displayName);
-                persistentLog.add(`💾 Saved Graph display name: ${data.displayName}`);
+            
+            // Fetch user profile data including photo
+            Promise.all([
+              fetch('https://graph.microsoft.com/v1.0/me', {
+                headers: { Authorization: `Bearer ${accessToken}` }
+              }).then(r => r.json()),
+              fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+                headers: { Authorization: `Bearer ${accessToken}` }
+              }).then(r => {
+                if (r.ok) {
+                  return r.blob().then(blob => URL.createObjectURL(blob));
+                }
+                return null;
+              }).catch(() => null)
+            ]).then(([userData, photoURL]) => {
+              persistentLog.add(`📊 Graph API user data: ${JSON.stringify(userData)}`);
+              persistentLog.add(`🖼️ Graph API photo URL: ${photoURL ? 'obtained' : 'not available'}`);
+              
+              // Prepare user data for Firebase
+              const graphUserData = {
+                email: userData.mail || userData.userPrincipalName || result.user.email,
+                displayName: userData.displayName || result.user.displayName,
+                photoURL: photoURL || result.user.photoURL,
+                jobTitle: userData.jobTitle || null,
+                uid: result.user.uid,
+                provider: 'microsoft.com',
+                lastLogin: new Date().toISOString()
+              };
+              
+              persistentLog.add(`💾 Prepared user data for Firebase: ${JSON.stringify(graphUserData)}`);
+              
+              // Save to localStorage for immediate use
+              if (graphUserData.displayName) {
+                localStorage.setItem('eu2k-auth-display-name', graphUserData.displayName);
+                persistentLog.add(`💾 Saved display name: ${graphUserData.displayName}`);
               }
+              if (graphUserData.email) {
+                localStorage.setItem('eu2k-auth-email', graphUserData.email);
+                persistentLog.add(`💾 Saved email: ${graphUserData.email}`);
+              }
+              if (graphUserData.photoURL) {
+                localStorage.setItem('eu2k-auth-photo-url', graphUserData.photoURL);
+                persistentLog.add(`💾 Saved photo URL: ${graphUserData.photoURL}`);
+              }
+              if (graphUserData.jobTitle) {
+                localStorage.setItem('eu2k-auth-job-title', graphUserData.jobTitle);
+                persistentLog.add(`💾 Saved job title: ${graphUserData.jobTitle}`);
+              }
+              
+              // Save to Firebase (assuming Firebase functions are available)
+              if (typeof saveUserToFirebase === 'function') {
+                saveUserToFirebase(graphUserData).then(() => {
+                  persistentLog.add('✅ User data saved to Firebase successfully');
+                }).catch((error) => {
+                  persistentLog.add(`❌ Firebase save error: ${error.message}`);
+                });
+              } else {
+                persistentLog.add('⚠️ saveUserToFirebase function not available, data saved to localStorage only');
+              }
+              
             }).catch((error) => {
               persistentLog.add(`❌ Graph API error: ${error.message}`);
+              // Fallback to basic user data
+              const basicUserData = {
+                email: result.user.email,
+                displayName: result.user.displayName,
+                photoURL: result.user.photoURL,
+                uid: result.user.uid,
+                provider: 'microsoft.com',
+                lastLogin: new Date().toISOString()
+              };
+              
+              if (typeof saveUserToFirebase === 'function') {
+                saveUserToFirebase(basicUserData).catch((error) => {
+                  persistentLog.add(`❌ Firebase fallback save error: ${error.message}`);
+                });
+              }
             });
             
-            // Store the access token for later use (e.g., profile picture fetching)
+            // Store the access token for later use
             localStorage.setItem('eu2k-ms-access-token', accessToken);
             persistentLog.add('💾 Saved Microsoft access token for later use');
           }
