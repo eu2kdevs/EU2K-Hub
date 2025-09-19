@@ -49,6 +49,23 @@ export function initializeOnboarding(auth, db) {
         photoURL: user.photoURL
       };
       
+      // Ellenőrizzük, hogy a felhasználó már regisztrálva van-e Firebase-ben
+      const existingUser = await checkExistingUser(user.uid, db);
+      if (existingUser) {
+        console.log('✅ Felhasználó már regisztrálva van, átirányítás index.html-re');
+        // Beállítjuk a localStorage változókat
+        localStorage.setItem('eu2k-auth-logged-in', 'true');
+        localStorage.setItem('eu2k-auth-uid', user.uid);
+        localStorage.setItem('eu2k-auth-display-name', user.displayName || '');
+        localStorage.setItem('eu2k-auth-email', user.email || '');
+        localStorage.setItem('onboardingCompleted', 'true');
+        localStorage.setItem('termsAccepted', 'true');
+        
+        // Átirányítás az index.html-re
+        window.location.href = '/EU2K-Hub/index.html';
+        return;
+      }
+      
       // API adatok gyűjtése
       await collectAPIData();
     } else {
@@ -72,6 +89,22 @@ export function initializeOnboarding(auth, db) {
 async function collectAPIData() {
   console.log('📡 API adatok gyűjtése...');
   
+/**
+ * Ellenőrzi, hogy a felhasználó már létezik-e a Firestore adatbázisban
+ * @param {string} uid - Felhasználó azonosító
+ * @param {Object} db - Firestore database instance
+ * @returns {Promise<boolean>} - True ha a felhasználó már létezik
+ */
+async function checkExistingUser(uid, db) {
+  try {
+    const userDoc = await db.collection('users').doc(uid).get();
+    return userDoc.exists;
+  } catch (error) {
+    console.error('❌ Hiba a felhasználó ellenőrzése során:', error);
+    return false;
+  }
+}
+
   // Microsoft Graph API adatok
   try {
     const graphToken = localStorage.getItem('eu2k-graph-token');
@@ -94,6 +127,27 @@ async function collectAPIData() {
           officeLocation: data.officeLocation
         };
         console.log('✅ Microsoft Graph adatok:', collectedData.graphData);
+        
+        // Profilkép lekérése
+        try {
+          const photoResponse = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+            headers: {
+              'Authorization': `Bearer ${graphToken}`
+            }
+          });
+          
+          if (photoResponse.ok) {
+            const photoBlob = await photoResponse.blob();
+            const photoUrl = URL.createObjectURL(photoBlob);
+            collectedData.graphData.photoURL = photoUrl;
+            localStorage.setItem('eu2k-profile-picture', photoUrl);
+            console.log('✅ Microsoft Graph profilkép lekérve');
+          } else {
+            console.warn('⚠️ Microsoft Graph profilkép nem elérhető:', photoResponse.status);
+          }
+        } catch (photoError) {
+          console.error('❌ Microsoft Graph profilkép hiba:', photoError);
+        }
         
         // Mentés localStorage-ba is (kompatibilitás)
         localStorage.setItem('eu2k-graph-data', JSON.stringify(collectedData.graphData));
@@ -377,7 +431,16 @@ export async function completeOnboarding(auth, db) {
     
     // PhotoURL hozzáadása Google vagy Firebase Auth adatokból
     let photoURL = null;
-    if (collectedData.googleData && collectedData.googleData.picture) {
+    if (useSchoolPfp) {
+      // Ha iskolai profilképet használunk, próbáljuk meg lekérni a localStorage-ból
+      const schoolPhotoUrl = localStorage.getItem('eu2k-onboarding-school-photo-url') || 
+                            localStorage.getItem('eu2k-google-profile-url') || 
+                            localStorage.getItem('eu2k-profile-picture-url');
+      if (schoolPhotoUrl) {
+        photoURL = schoolPhotoUrl;
+        console.log('🖼️ Iskolai profilkép URL hozzáadva:', photoURL);
+      }
+    } else if (collectedData.googleData && collectedData.googleData.picture) {
       photoURL = collectedData.googleData.picture;
       console.log('🖼️ Google profilkép URL hozzáadva:', photoURL);
     } else if (user.photoURL) {

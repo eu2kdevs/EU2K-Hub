@@ -2605,6 +2605,32 @@
   </div>
   </main>
   </div>
+
+  <script>
+    // checkTermsAndRedirect függvény definíciója szülői onboarding számára
+    function checkTermsAndRedirect() {
+      const termsAccepted = localStorage.getItem('termsAccepted') === 'true' || 
+                           document.querySelector('input[type="checkbox"]:checked');
+      
+      if (!termsAccepted) {
+        alert('Kérjük, fogadja el a használati feltételeket!');
+        return;
+      }
+      
+      // Beállítjuk a localStorage változókat
+      localStorage.setItem('termsAccepted', 'true');
+      localStorage.setItem('onboardingCompleted', 'true');
+      localStorage.setItem('eu2k-user-type', 'parent');
+      
+      // Onboarding befejezése
+      import('../assets/js/onboarding-handler.js').then(module => {
+        module.completeOnboarding();
+      });
+      
+      // Töröljük az onboarding specifikus localStorage elemeket
+      localStorage.removeItem('eu2k-onboarding-terms-accepted');
+    }
+  </script>
 </body>
 
 </html>

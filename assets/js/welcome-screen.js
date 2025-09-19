@@ -7,7 +7,7 @@ class WelcomeScreenManager {
     constructor() {
         this.storageKey = 'eu2k-hub-welcome-screen';
         this.settingsKey = 'eu2k-hub-settings';
-        this.welcomeScreenUrl = '/EU2K-Hub/welcome/onboarding_student.html';
+        this.welcomeScreenUrl = this.determineWelcomeScreenUrl();
 
         // Ne futtassuk az init-et automatikusan, hanem várjuk meg a DOM betöltését
         if (document.readyState === 'loading') {
@@ -18,9 +18,28 @@ class WelcomeScreenManager {
         }
     }
 
+    /**
+     * Meghatározza a megfelelő üdvözlő képernyő URL-jét a felhasználó típusa alapján
+     */
+    determineWelcomeScreenUrl() {
+        // Ellenőrizzük a localStorage-ban tárolt felhasználó típust
+        const userType = localStorage.getItem('eu2k-user-type');
+        
+        if (userType === 'parent') {
+            return '/EU2K-Hub/welcome/onboarding_parent.html';
+        } else if (userType === 'teacher') {
+            return '/EU2K-Hub/welcome/onboarding_teacher.html';
+        } else {
+            // Alapértelmezett: diák onboarding
+            return '/EU2K-Hub/welcome/onboarding_student.html';
+        }
+    }
+
     init() {
         // Ne futtassuk a welcome screen-t, ha már az üdvözlő oldalon vagyunk
-        if (window.location.pathname.includes('/welcome/onboarding_student.html')) {
+        if (window.location.pathname.includes('/welcome/onboarding_student.html') || 
+            window.location.pathname.includes('/welcome/onboarding_parent.html') ||
+            window.location.pathname.includes('/welcome/onboarding_teacher.html')) {
             console.log('Already on welcome screen, skipping init');
             return;
         }
@@ -85,7 +104,10 @@ class WelcomeScreenManager {
         const currentUrl = window.location.href;
         sessionStorage.setItem('eu2k-hub-return-url', currentUrl);
 
-        console.log('Redirecting to welcome screen...');
+        // Frissítjük a welcome screen URL-jét a felhasználó típusa alapján
+        this.welcomeScreenUrl = this.determineWelcomeScreenUrl();
+
+        console.log('Redirecting to welcome screen...', this.welcomeScreenUrl);
         window.location.href = this.welcomeScreenUrl;
     }
 

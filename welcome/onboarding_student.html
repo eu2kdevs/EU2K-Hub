@@ -604,6 +604,10 @@
             }).catch((error) => {
               persistentLog.add(`❌ Graph API error: ${error.message}`);
             });
+            
+            // Store the access token for later use (e.g., profile picture fetching)
+            localStorage.setItem('eu2k-ms-access-token', accessToken);
+            persistentLog.add('💾 Saved Microsoft access token for later use');
           }
         } catch (error) {
           persistentLog.add(`❌ Credential extraction error: ${error.message}`);
@@ -1083,9 +1087,70 @@
       // Handle "Continue with school profile picture" button click
       const schoolProfileButton = document.querySelector('.profile-button-secondary');
       if (schoolProfileButton) {
-        schoolProfileButton.addEventListener('click', () => {
+        schoolProfileButton.addEventListener('click', async () => {
+          console.log('🏫 School profile picture button clicked');
+          
           // Set to use provided profile picture from school account
           localStorage.setItem('eu2k-onboarding-use-provided-pfp', 'true');
+          
+          try {
+            // Get the current user and access token
+            const user = auth.currentUser;
+            if (!user) {
+              console.error('❌ No authenticated user found');
+              showAvatarConfirmation();
+              return;
+            }
+
+            // Try to get the access token from localStorage or re-authenticate
+            const accessToken = localStorage.getItem('eu2k-ms-access-token');
+            
+            if (accessToken) {
+              console.log('📡 Fetching profile picture from Microsoft Graph...');
+              
+              // Fetch profile picture from Microsoft Graph API
+              const photoResponse = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+                headers: { 
+                  'Authorization': `Bearer ${accessToken}`,
+                  'Content-Type': 'image/jpeg'
+                }
+              });
+              
+              if (photoResponse.ok) {
+                // Convert the image to a blob and create a URL
+                const photoBlob = await photoResponse.blob();
+                const photoURL = URL.createObjectURL(photoBlob);
+                
+                console.log('✅ Successfully fetched profile picture from Microsoft Graph');
+                
+                // Update the main avatar image to show the school profile picture
+                const mainAvatarImg = document.querySelector('.main-avatar-img');
+                const mainAvatar = document.querySelector('.main-avatar');
+                
+                if (mainAvatarImg && mainAvatar) {
+                  mainAvatarImg.src = photoURL;
+                  // Set a neutral background for the school profile picture
+                  mainAvatar.style.background = '#f0f0f0';
+                  console.log('🖼️ Updated main avatar with school profile picture');
+                }
+                
+                // Store the photo URL for later Firebase saving
+                localStorage.setItem('eu2k-onboarding-school-photo-url', photoURL);
+                localStorage.setItem('eu2k-google-profile-url', photoURL); // For compatibility with onboarding handler
+                localStorage.setItem('eu2k-profile-picture-url', photoURL); // Additional storage for Firebase
+                
+              } else {
+                console.warn('⚠️ Could not fetch profile picture from Microsoft Graph, using default');
+                // If no profile picture available, continue with default
+              }
+            } else {
+              console.warn('⚠️ No access token available, cannot fetch profile picture');
+            }
+            
+          } catch (error) {
+            console.error('❌ Error fetching school profile picture:', error);
+          }
+          
           console.log('💾 School profile picture option selected');
           showAvatarConfirmation();
         });
