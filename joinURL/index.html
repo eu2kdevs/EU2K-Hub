@@ -12,7 +12,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background: url("./assets/backgrounds/eu2k_background.png") no-repeat center center / cover;
+            background: url("/EU2K-Hub/assets/backgrounds/eu2k_background.png") no-repeat center center / cover;
             color: white;
         }
         .container {
@@ -46,8 +46,8 @@
 
     <!-- Firebase SDK -->
     <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
 
         // Firebase konfiguráció
         const firebaseConfig = {
@@ -62,7 +62,7 @@
 
         // Firebase inicializálás
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+        const auth = window.auth || getAuth(app);
         const messageEl = document.getElementById('message');
 
         // URL paraméterek kiolvasása - támogatja a GitHub Pages hash formátumot is
@@ -79,26 +79,33 @@
             messageEl.innerHTML = '<span data-translate="join.no-event-code">Hiányzó kód, nem sikerült csatlakozni az eseményhez.</span>';
             messageEl.className = 'message';
         } else {
-            // Firebase Auth állapot figyelése (mint a testFirebase függvény)
-            onAuthStateChanged(auth, (user) => {
+            // Firebase Auth állapot figyelése - ugyanúgy mint test_firebase.js whoAmI függvényben
+            onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    // Felhasználó be van jelentkezve Firebase-ben
+                    // Felhasználó be van jelentkezve Firebase-ben - user.uid használata
                     const userUID = user.uid;
                     
                     console.log('Firebase Auth - User authenticated:', userUID, 'eventCode:', eventCode);
+                    console.log('User details:', {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName,
+                        emailVerified: user.emailVerified
+                    });
                     
                     messageEl.innerHTML = `<span data-translate="join.redirecting-to-event">Átirányítás az eseményportálra...</span><br><small>${eventCode}</small>`;
                     
                     const sessionId = Math.random().toString(36).substring(2, 15);
                     
-                    // Hash formátum használata: #eventCode/userUID+sessionId
-                    const joinUrl = `https://eu2kdevs.github.io/EU2K-Hub/event_hub/join/join.html#${eventCode}/${userUID}+${sessionId}`;
+                    // Hash formátum használata: #eventCode#userUID+sessionId (GitHub Pages kompatibilis)
+                    const joinUrl = `https://eu2kdevs.github.io/EU2K-Hub/event_hub/join/csehonap2025.html#${eventCode}#${userUID}+${sessionId}`;
                     
                     console.log('User authenticated, redirecting to:', joinUrl);
                     
+                    // 300ms késleltetés a redirect előtt
                     setTimeout(() => {
                         window.location.href = joinUrl;
-                    }, 1000);
+                    }, 300);
                     
                 } else {
                     // Felhasználó nincs bejelentkezve Firebase-ben

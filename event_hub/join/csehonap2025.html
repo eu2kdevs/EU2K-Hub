@@ -61,7 +61,7 @@
     // Make db globally available
     window.db = db;
 
-    // Parse URL parameters - support both query params and GitHub Pages path format
+    // Parse URL parameters - support both query params and GitHub Pages hash format
     const urlParams = new URLSearchParams(window.location.search);
     
     let eventCode, userUID, sessionId;
@@ -89,9 +89,11 @@
       }
     }
     
-    // Also try hash-based format: #eventCode/userUID+sessionId
+    // Also try hash-based format: #eventCode#userUID+sessionId (GitHub Pages compatible)
     if (!eventCode && window.location.hash) {
-      const hashParts = window.location.hash.substring(1).split('/');
+      const hashContent = window.location.hash.substring(1);
+      const hashParts = hashContent.split('#');
+      
       if (hashParts.length >= 2) {
         eventCode = hashParts[0];
         const userSessionPart = hashParts[1];
