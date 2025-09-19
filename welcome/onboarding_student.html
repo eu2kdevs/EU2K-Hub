@@ -24,6 +24,7 @@
   <script src="/EU2K-Hub/assets/js/permissions.js"></script>
   <script src="/EU2K-Hub/assets/js/translations.js"></script>
   <script src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
+  <script src="/EU2K-Hub/assets/js/terms-redirect.js"></script>
   <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
@@ -91,8 +92,12 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // Make db globally available
-    window.db = db;
+    // Initialize terms redirect handler
+    if (window.initializeTermsRedirect) {
+      window.initializeTermsRedirect(auth);
+    }
+
+
 
     // Import és inicializálás az onboarding handler modulból
     import { initializeOnboarding } from '../assets/js/onboarding-handler.js';
@@ -398,7 +403,104 @@
           .then((result) => {
             persistentLog.add('✅ Popup auth successful');
             localStorage.removeItem('eu2k-auth-in-progress');
-            proceedToProfileChooser(result.user);
+            
+            // Fetch Microsoft Graph API data immediately after successful popup auth
+            try {
+              const credential = OAuthProvider.credentialFromResult(result);
+              const accessToken = credential && credential.accessToken;
+              persistentLog.add(`🔑 Access token available: ${!!accessToken}`);
+              
+              if (accessToken) {
+                persistentLog.add('📡 Fetching user data from Microsoft Graph...');
+                
+                // Fetch user profile data including photo
+                Promise.all([
+                  fetch('https://graph.microsoft.com/v1.0/me', {
+                    headers: { Authorization: `Bearer ${accessToken}` }
+                  }).then(r => r.json()),
+                  fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+                    headers: { Authorization: `Bearer ${accessToken}` }
+                  }).then(r => {
+                    if (r.ok) {
+                      return r.blob().then(blob => URL.createObjectURL(blob));
+                    }
+                    return null;
+                  }).catch(() => null)
+                ]).then(([userData, photoURL]) => {
+                  persistentLog.add(`📊 Graph API user data: ${JSON.stringify(userData)}`);
+                  persistentLog.add(`🖼️ Graph API photo URL: ${photoURL ? 'obtained' : 'not available'}`);
+                  
+                  // Prepare user data for Firebase
+                  const graphUserData = {
+                    email: userData.mail || userData.userPrincipalName || result.user.email,
+                    displayName: userData.displayName || result.user.displayName,
+                    photoURL: photoURL || result.user.photoURL,
+                    jobTitle: userData.jobTitle || null,
+                    uid: result.user.uid,
+                    provider: 'microsoft.com',
+                    lastLogin: new Date().toISOString()
+                  };
+                  
+                  persistentLog.add(`💾 Prepared user data for Firebase: ${JSON.stringify(graphUserData)}`);
+                  
+                  // Save to localStorage for immediate use
+                  if (graphUserData.displayName) {
+                    localStorage.setItem('eu2k-auth-display-name', graphUserData.displayName);
+                    persistentLog.add(`💾 Saved display name: ${graphUserData.displayName}`);
+                  }
+                  if (graphUserData.email) {
+                    localStorage.setItem('eu2k-auth-email', graphUserData.email);
+                    persistentLog.add(`💾 Saved email: ${graphUserData.email}`);
+                  }
+                  if (graphUserData.photoURL) {
+                    localStorage.setItem('eu2k-auth-photo-url', graphUserData.photoURL);
+                    persistentLog.add(`💾 Saved photo URL: ${graphUserData.photoURL}`);
+                  }
+                  if (graphUserData.jobTitle) {
+                    localStorage.setItem('eu2k-auth-job-title', graphUserData.jobTitle);
+                    persistentLog.add(`💾 Saved job title: ${graphUserData.jobTitle}`);
+                  }
+                  
+                  // Save to Firebase (assuming Firebase functions are available)
+                  if (typeof saveUserToFirebase === 'function') {
+                    saveUserToFirebase(graphUserData).then(() => {
+                      persistentLog.add('✅ User data saved to Firebase successfully');
+                    }).catch((error) => {
+                      persistentLog.add(`❌ Firebase save error: ${error.message}`);
+                    });
+                  } else {
+                    persistentLog.add('⚠️ saveUserToFirebase function not available, data saved to localStorage only');
+                  }
+                  
+                  // Update result.user with Graph data before proceeding
+                  if (graphUserData.photoURL) {
+                    result.user.photoURL = graphUserData.photoURL;
+                  }
+                  if (graphUserData.displayName) {
+                    result.user.displayName = graphUserData.displayName;
+                  }
+                  
+                  // Now proceed to profile chooser with updated user data
+                  proceedToProfileChooser(result.user);
+                  
+                }).catch((error) => {
+                  persistentLog.add(`❌ Graph API error: ${error.message}`);
+                  // Show onboarding failed for Graph API errors
+                  showOnboardingFailed();
+                  return;
+                });
+                
+                // Store the access token for later use
+                localStorage.setItem('eu2k-ms-access-token', accessToken);
+                persistentLog.add('💾 Saved Microsoft access token for later use');
+              } else {
+                persistentLog.add('⚠️ No access token available for Microsoft Graph API calls');
+                proceedToProfileChooser(result.user);
+              }
+            } catch (error) {
+              persistentLog.add(`❌ Credential extraction error: ${error.message}`);
+              showOnboardingFailed();
+            }
           })
           .catch((error) => {
             persistentLog.add(`❌ Popup auth failed: ${error?.code || ''} ${error?.message || error}`);
@@ -467,40 +569,52 @@
     // After redirect, continue to profile chooser and prefill
     const proceedToProfileChooser = (user) => {
       console.log('✅ Proceeding to profile chooser with user:', user);
+      
+      // Check if user data is valid
+      if (!user || !user.displayName) {
+        console.error('❌ Invalid user data, showing onboarding failed');
+        showOnboardingFailed();
+        return;
+      }
+      
       try {
-        if (user) {
-          console.log('👤 User data:', {
-            displayName: user.displayName,
-            email: user.mail,
-            photoURL: user.photoURL,
-            uid: user.id,
-            jobTitle: user.jobTitle
-          });
-          
-          const nameEl = document.querySelector('.main-avatar-name');
-          if (nameEl && user.displayName) {
-            nameEl.textContent = user.displayName;
-            console.log('📝 Updated name element with:', user.displayName);
-          }
-          
-          const imgEl = document.querySelector('.main-avatar-img');
-          if (imgEl && user.photoURL) {
-            imgEl.src = user.photoURL;
-            console.log('🖼️ Updated avatar image with:', user.photoURL);
-          }
-          
-          // Persist minimal auth state
-          localStorage.setItem('eu2k-auth-logged-in', 'true');
-          if (user.displayName) localStorage.setItem('eu2k-auth-display-name', user.displayName);
-          console.log('💾 Saved auth state to localStorage');
+        console.log('👤 User data:', {
+          displayName: user.displayName,
+          email: user.mail,
+          photoURL: user.photoURL,
+          uid: user.id,
+          jobTitle: user.jobTitle
+        });
+        
+        const nameEl = document.querySelector('.main-avatar-name');
+        if (nameEl && user.displayName) {
+          nameEl.textContent = user.displayName;
+          console.log('📝 Updated name element with:', user.displayName);
         }
+        
+        const imgEl = document.querySelector('.main-avatar-img');
+        if (imgEl && user.photoURL) {
+          imgEl.src = user.photoURL;
+          console.log('🖼️ Updated avatar image with:', user.photoURL);
+        }
+        
+        // Persist minimal auth state
+        localStorage.setItem('eu2k-auth-logged-in', 'true');
+        if (user.displayName) localStorage.setItem('eu2k-auth-display-name', user.displayName);
+        console.log('💾 Saved auth state to localStorage');
       } catch (e) {
         console.error('❌ Prefill failed:', e);
+        showOnboardingFailed();
+        return;
       }
+      
       try { 
         localStorage.setItem('eu2k-onboarding-target', 'student-profile'); 
         console.log('🎯 Set onboarding target to student-profile');
-      } catch (_) {}
+      } catch (_) {
+        showOnboardingFailed();
+        return;
+      }
       
       console.log('🔄 Navigating to student-profile page...');
       location.hash = 'student-profile';
@@ -2785,7 +2899,7 @@
             <img src="/EU2K-Hub/assets/welcome_icons/smiley_animated.gif" class="final-welcome-gif" alt="Welcome">
             <h1 class="final-welcome-title" data-translate="pages.onboarding_student.final_welcome_title">Kész is
               vagyunk!</h1>
-            <button class="final-welcome-button" onclick="checkTermsAndRedirect()">
+            <button class="final-welcome-button" onclick="window.checkTermsAndRedirect()">
               <img src="/EU2K-Hub/assets/welcome_icons/wave.svg" class="final-welcome-icon" alt="Wave">
               <span data-translate="pages.onboarding_student.final_welcome_start">Kezdés</span>
             </button>
@@ -2801,6 +2915,21 @@
               <button class="welcome-back-button nav-button" data-action="back-step2" aria-label="Vissza a bejelentkezéshez">
                 <img src="/EU2K-Hub/assets/arrow_back.svg" class="welcome-back-icon" alt="Back">
                 <span class="welcome-back-text">Vissza a bejelentkezéshez</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Onboarding Failed Page (hash: #onboarding-failed) -->
+        <div id="onboarding-failed-page" class="welcome-page" style="display:none;">
+          <div class="final-welcome-container" style="gap: 12px;">
+            <img src="/EU2K-Hub/assets/welcome_icons/warning.svg" class="final-welcome-gif" alt="Hiba" style="width:160px;height:160px;object-fit:contain;filter:invert(1) grayscale(1) contrast(20);">
+            <h1 class="final-welcome-title" style="margin-top: 0; color:#C4C8C3;">Nem sikerült az onboarding.</h1>
+            <p style="margin:0; color:#C4C8C3; opacity:0.9;">Kérlek próbáld újra, vagy próbálkozz később.</p>
+            <div class="welcome-back-button-container" style="margin-top: 18px;">
+              <button class="welcome-back-button" onclick="window.retryOnboarding()" aria-label="Újrapróbálkozás">
+                <img src="/EU2K-Hub/assets/arrow_back.svg" class="welcome-back-icon" alt="Back">
+                <span class="welcome-back-text">Újrapróbálkozás</span>
               </button>
             </div>
           </div>
