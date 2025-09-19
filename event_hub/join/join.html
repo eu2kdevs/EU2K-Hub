@@ -61,25 +61,13 @@
     // Make db globally available
     window.db = db;
 
-    // Parse URL parameters
-    const urlParams = new URLSearchParams(window.location.pathname.split('/').pop());
-    const pathSegments = window.location.pathname.split('/');
+    // Parse URL parameters from query string instead of path
+    const urlParams = new URLSearchParams(window.location.search);
     
-    // Extract parameters from URL path: /EU2K-Hub/event_hub/join/{eventCode}/{userUID+sessionId}
-    let eventCode = null;
-    let userUID = null;
-    let sessionId = null;
-    
-    if (pathSegments.length >= 6) {
-      eventCode = pathSegments[4]; // event code
-      const userSession = pathSegments[5]; // userUID+sessionId
-      
-      if (userSession && userSession.includes('+')) {
-        const parts = userSession.split('+');
-        userUID = parts[0];
-        sessionId = parts[1];
-      }
-    }
+    // Extract parameters from URL query: ?eventCode=...&userUID=...&sessionId=...
+    const eventCode = urlParams.get('eventCode');
+    const userUID = urlParams.get('userUID');
+    const sessionId = urlParams.get('sessionId');
     
     // Store parameters globally
     window.joinParams = {
