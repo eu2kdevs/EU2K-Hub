@@ -74,7 +74,14 @@
                 if (user) {
                     // Felhasználó be van jelentkezve
                     const userUID = user.uid;
-                    const redirectUrl = `/EU2K-Hub/event_hub/join/${eventCode}/${userUID}`;
+                    
+                    // Session ID generálása
+                    function generateSessionId() {
+                        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+                    }
+                    
+                    const sessionId = generateSessionId();
+                    const redirectUrl = `/EU2K-Hub/event_hub/join/${eventCode}/${userUID}+${sessionId}`;
                     
                     messageEl.innerHTML = `✅ Átirányítás az eseményhez...<br><small>${eventCode}</small>`;
                     
@@ -83,9 +90,18 @@
                         window.location.href = redirectUrl;
                     }, 1000);
                 } else {
-                    // Felhasználó nincs bejelentkezve
-                    messageEl.innerHTML = '⚠️ Jelentkezz be a join linkhez!';
+                    // Felhasználó nincs bejelentkezve - átirányítás a főoldalra bejelentkezéshez
+                    messageEl.innerHTML = '⚠️ Átirányítás bejelentkezéshez...';
                     messageEl.className = 'message';
+                    
+                    // Return URL létrehozása a jelenlegi join URL-lel
+                    const currentUrl = window.location.href;
+                    const returnUrl = encodeURIComponent(currentUrl);
+                    
+                    // Átirányítás a főoldalra a return URL-lel
+                    setTimeout(() => {
+                        window.location.href = `/EU2K-Hub/index.html?returnUrl=${returnUrl}`;
+                    }, 1500);
                 }
             });
         }
