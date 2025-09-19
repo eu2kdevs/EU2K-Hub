@@ -1085,36 +1085,63 @@
       }
 
       // Handle "Continue with school profile picture" button click
-      const schoolProfileButton = document.querySelector('.profile-button-secondary');
+      const schoolProfileButton = document.getElementById('proceed-with-school-pfp');
       if (schoolProfileButton) {
-        schoolProfileButton.addEventListener('click', async () => {
+        console.log('🎯 School profile button found and event listener attached');
+        schoolProfileButton.addEventListener('click', async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
           console.log('🏫 School profile picture button clicked');
           
           // Set to use provided profile picture from school account
           localStorage.setItem('eu2k-onboarding-use-provided-pfp', 'true');
+          localStorage.setItem('useSchoolPfp', 'true');
           
           try {
             // Get the current user and access token
             const user = auth.currentUser;
+            console.log('👤 Current user:', user ? user.uid : 'No user');
+            
             if (!user) {
               console.error('❌ No authenticated user found');
-              showAvatarConfirmation();
+              alert('Nincs bejelentkezett felhasználó! Kérlek jelentkezz be először.');
               return;
             }
 
-            // Try to get the access token from localStorage or re-authenticate
+            // Try to get the access token from localStorage
             const accessToken = localStorage.getItem('eu2k-ms-access-token');
+            console.log('🔑 Access token found:', accessToken ? 'Yes' : 'No');
             
             if (accessToken) {
-              console.log('📡 Fetching profile picture from Microsoft Graph...');
+              console.log('📡 Fetching profile data from Microsoft Graph...');
+              
+              // First, fetch user profile data including jobTitle
+              const profileResponse = await fetch('https://graph.microsoft.com/v1.0/me', {
+                headers: { 
+                  'Authorization': `Bearer ${accessToken}`
+                }
+              });
+              
+              let jobTitle = '';
+              if (profileResponse.ok) {
+                const profileData = await profileResponse.json();
+                jobTitle = profileData.jobTitle || '';
+                console.log('👔 Job title from Microsoft:', jobTitle);
+                
+                // Store job title for Firebase saving
+                localStorage.setItem('eu2k-ms-job-title', jobTitle);
+              } else {
+                console.warn('⚠️ Could not fetch profile data from Microsoft Graph');
+              }
               
               // Fetch profile picture from Microsoft Graph API
               const photoResponse = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
                 headers: { 
-                  'Authorization': `Bearer ${accessToken}`,
-                  'Content-Type': 'image/jpeg'
+                  'Authorization': `Bearer ${accessToken}`
                 }
               });
+              
+              console.log('📸 Photo response status:', photoResponse.status);
               
               if (photoResponse.ok) {
                 // Convert the image to a blob and create a URL
@@ -1122,38 +1149,58 @@
                 const photoURL = URL.createObjectURL(photoBlob);
                 
                 console.log('✅ Successfully fetched profile picture from Microsoft Graph');
+                console.log('🖼️ Photo URL created:', photoURL);
                 
                 // Update the main avatar image to show the school profile picture
                 const mainAvatarImg = document.querySelector('.main-avatar-img');
                 const mainAvatar = document.querySelector('.main-avatar');
                 
+                console.log('🎯 Main avatar elements found:', {
+                  img: mainAvatarImg ? 'Yes' : 'No',
+                  container: mainAvatar ? 'Yes' : 'No'
+                });
+                
                 if (mainAvatarImg && mainAvatar) {
                   mainAvatarImg.src = photoURL;
                   // Set a neutral background for the school profile picture
                   mainAvatar.style.background = '#f0f0f0';
+                  mainAvatar.style.border = '3px solid #4CAF50';
                   console.log('🖼️ Updated main avatar with school profile picture');
+                } else {
+                  console.error('❌ Could not find main avatar elements');
                 }
                 
                 // Store the photo URL for later Firebase saving
                 localStorage.setItem('eu2k-onboarding-school-photo-url', photoURL);
-                localStorage.setItem('eu2k-google-profile-url', photoURL); // For compatibility with onboarding handler
-                localStorage.setItem('eu2k-profile-picture-url', photoURL); // Additional storage for Firebase
+                localStorage.setItem('eu2k-google-profile-url', photoURL);
+                localStorage.setItem('eu2k-profile-picture-url', photoURL);
+                
+                console.log('💾 Photo URLs saved to localStorage');
                 
               } else {
-                console.warn('⚠️ Could not fetch profile picture from Microsoft Graph, using default');
-                // If no profile picture available, continue with default
+                console.warn('⚠️ Could not fetch profile picture from Microsoft Graph, status:', photoResponse.status);
+                const errorText = await photoResponse.text();
+                console.error('❌ Error response:', errorText);
+                alert('Nem sikerült lekérni a profilképet a Microsoft-tól. Próbáld újra!');
+                return;
               }
             } else {
               console.warn('⚠️ No access token available, cannot fetch profile picture');
+              alert('Nincs elérhető Microsoft access token! Kérlek jelentkezz be újra.');
+              return;
             }
             
           } catch (error) {
             console.error('❌ Error fetching school profile picture:', error);
+            alert('Hiba történt a profilkép lekérése során: ' + error.message);
+            return;
           }
           
-          console.log('💾 School profile picture option selected');
+          console.log('💾 School profile picture option selected, showing confirmation');
           showAvatarConfirmation();
         });
+      } else {
+        console.error('❌ School profile button not found!');
       }
 
       // Handle parent Google sign-in button
@@ -1742,7 +1789,25 @@
             
             // A handler már gyűjtötte az adatokat, most finalizáljuk
             console.log('🚀 Finalizing onboarding with collected data...');
-            const success = await completeOnboarding(auth, db);
+            
+            // Get additional data from localStorage for school profile picture
+            const jobTitle = localStorage.getItem('eu2k-ms-job-title') || '';
+            const schoolPhotoURL = localStorage.getItem('eu2k-onboarding-school-photo-url') || 
+                                   localStorage.getItem('eu2k-google-profile-url') || 
+                                   localStorage.getItem('eu2k-profile-picture-url') || '';
+            
+            console.log('📊 Additional data for Firebase save:', {
+              jobTitle: jobTitle,
+              schoolPhotoURL: schoolPhotoURL ? 'Yes' : 'No'
+            });
+            
+            // Pass additional data to the handler
+            const additionalData = {
+              jobTitle: jobTitle,
+              photoURL: schoolPhotoURL
+            };
+            
+            const success = await completeOnboarding(auth, db, additionalData);
             
             if (!success) {
               console.error('❌ Onboarding befejezése sikertelen!');
@@ -2019,7 +2084,7 @@
 
               <!-- Action Buttons -->
               <div class="profile-actions">
-                <button class="profile-button-secondary">
+                <button class="profile-button-secondary" id="proceed-with-school-pfp">
                   <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="profile-button-icon"
                     alt="School Account">
                   <span class="profile-button-text" data-translate="profile.use_school_account">Tovább az iskolai
