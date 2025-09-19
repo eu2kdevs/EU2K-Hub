@@ -69,39 +69,47 @@
             messageEl.innerHTML = '❌ Nincs esemény kód az URL-ben!';
             messageEl.className = 'message';
         } else {
-            // Firebase Auth állapot figyelése
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    // Felhasználó be van jelentkezve
-                    const userUID = user.uid;
-                    
-                    // Session ID generálása
-                    function generateSessionId() {
-                        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-                    }
-                    
-                    const sessionId = generateSessionId();
-                    const redirectUrl = `/EU2K-Hub/event_hub/join/${eventCode}/${userUID}+${sessionId}`;
-                    
+            // Check authentication state using localStorage (same as auth-state.js)
+            function checkAuthAndRedirect() {
+                const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
+                const userUID = localStorage.getItem('eu2k-auth-uid') || 'unknown';
+                
+                console.log('Auth check - isLoggedIn:', isLoggedIn, 'userUID:', userUID, 'eventCode:', eventCode);
+                
+                if (isLoggedIn && userUID !== 'unknown') {
+                    // User is signed in - generate session ID and redirect to join page
                     messageEl.innerHTML = `✅ Átirányítás az eseményhez...<br><small>${eventCode}</small>`;
                     
-                    // Átirányítás 1 másodperc után
+                    const sessionId = Math.random().toString(36).substring(2, 15);
+                    const redirectUrl = `/EU2K-Hub/event_hub/join/${eventCode}/${userUID}+${sessionId}`;
+                    
+                    console.log('User authenticated, redirecting to:', redirectUrl);
+                    
                     setTimeout(() => {
                         window.location.href = redirectUrl;
                     }, 1000);
+                    
                 } else {
-                    // Felhasználó nincs bejelentkezve - átirányítás a főoldalra bejelentkezéshez
+                    // User is not signed in - redirect to login page with return URL
                     messageEl.innerHTML = '⚠️ Átirányítás bejelentkezéshez...';
                     messageEl.className = 'message';
                     
-                    // Return URL létrehozása a jelenlegi join URL-lel
                     const currentUrl = window.location.href;
                     const returnUrl = encodeURIComponent(currentUrl);
                     
-                    // Átirányítás a főoldalra a return URL-lel
                     setTimeout(() => {
-                        window.location.href = `/EU2K-Hub/index.html?returnUrl=${returnUrl}`;
+                        window.location.href = `/EU2K-Hub/welcome/onboarding_student.html?returnUrl=${returnUrl}`;
                     }, 1500);
+                }
+            }
+            
+            // Check auth state immediately
+            checkAuthAndRedirect();
+            
+            // Also listen for storage changes in case auth state changes in another tab
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'eu2k-auth-logged-in' || e.key === 'eu2k-auth-uid') {
+                    checkAuthAndRedirect();
                 }
             });
         }
