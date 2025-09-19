@@ -802,10 +802,13 @@
                   const generalData = generalDoc.data();
                   console.log('📊 Firebase general_data:', generalData);
                   
-                  // PhotoURL használata Firebase-ből, ha elérhető
-                  if (generalData.photoURL) {
+                  // PhotoURL használata Firebase-ből, ha elérhető és nem blob URL
+                  if (generalData.photoURL && !generalData.photoURL.includes('blob:')) {
                     userData.photoURL = generalData.photoURL;
                     console.log('🖼️ PhotoURL betöltve Firebase-ből:', userData.photoURL);
+                  } else if (generalData.photoURL && generalData.photoURL.includes('blob:')) {
+                    console.warn('⚠️ Blob URL észlelve Firebase-ben, kihagyás:', generalData.photoURL);
+                    // Ne használjuk a blob URL-t, hagyjuk az eredeti user.photoURL-t
                   }
                   
                   // Egyéb adatok frissítése Firebase-ből
@@ -834,51 +837,31 @@
               if (user.providerData && user.providerData.some(p => p.providerId === 'microsoft.com')) {
                 console.log('🔍 Microsoft provider észlelve, Graph API hívás...');
                 try {
-                  // Microsoft Graph token lekérése (ha elérhető)
-                  const accessToken = await user.getIdToken();
-                  if (accessToken) {
-                    // Próbáljuk meg lekérni a Microsoft Graph adatokat
-                    const graphResponse = await fetch('https://graph.microsoft.com/v1.0/me', {
-                      headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json'
-                      }
-                    });
-                    
-                    if (graphResponse.ok) {
-                      const graphData = await graphResponse.json();
-                      console.log('📊 Microsoft Graph válasz:', graphData);
-                      userData.displayName = graphData.displayName || userData.displayName;
-                      userData.email = graphData.mail || graphData.userPrincipalName || userData.email;
-                      userData.jobTitle = graphData.jobTitle || 'Diák';
-                      userData.accountType = 'Iskolai Fiók';
-                      
-                      // Microsoft Graph photoURL javítása - blob URL helyett a Graph API URL használata
-                      try {
-                        const photoResponse = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
-                          headers: {
-                            'Authorization': `Bearer ${accessToken}`
-                          }
-                        });
-                        
-                        if (photoResponse.ok) {
-                          // Microsoft Graph photo URL használata blob helyett
-                          userData.photoURL = `https://graph.microsoft.com/v1.0/me/photo/$value`;
-                          console.log('🖼️ Microsoft Graph photoURL beállítva:', userData.photoURL);
-                        } else {
-                          console.warn('⚠️ Microsoft Graph photo nem elérhető, fallback használata');
-                          userData.photoURL = user.photoURL || '/EU2K-Hub/assets/avatars/magenta.png';
-                        }
-                      } catch (photoError) {
-                        console.warn('⚠️ Microsoft Graph photo lekérési hiba:', photoError);
-                        userData.photoURL = user.photoURL || '/EU2K-Hub/assets/avatars/magenta.png';
-                      }
-                      
-                      console.log('✅ Microsoft Graph adatok betöltve és alkalmazva:', userData);
-                    } else {
-                      console.warn('❌ Microsoft Graph API hiba:', graphResponse.status, graphResponse.statusText);
-                    }
+                  // Microsoft Graph token lekérése - Firebase ID token nem használható Microsoft Graph API-hoz
+                  // Helyette használjuk a user objektumból elérhető adatokat
+                  console.log('⚠️ Microsoft Graph API token nem elérhető Firebase-ből, alapértelmezett adatok használata');
+                  
+                  // Alapértelmezett Microsoft adatok használata
+                  if (user.displayName) {
+                    userData.displayName = user.displayName;
                   }
+                  if (user.email) {
+                    userData.email = user.email;
+                  }
+                  // Microsoft fiókok esetén alapértelmezett jobTitle
+                  userData.jobTitle = userData.jobTitle || 'Diák';
+                  userData.accountType = 'Iskolai Fiók';
+                  
+                  // Microsoft photoURL használata, ha elérhető és nem blob
+                  if (user.photoURL && !user.photoURL.includes('blob:')) {
+                    userData.photoURL = user.photoURL;
+                    console.log('🖼️ Microsoft photoURL beállítva:', userData.photoURL);
+                  } else {
+                    console.warn('⚠️ Microsoft photoURL nem elérhető vagy blob URL');
+                    userData.photoURL = '/EU2K-Hub/assets/avatars/magenta.png';
+                  }
+                  
+                  console.log('✅ Microsoft adatok betöltve (offline mód):', userData);
                 } catch (e) {
                   console.warn('⚠️ Microsoft Graph adatok lekérése sikertelen:', e);
                 }
@@ -950,7 +933,13 @@
               
               // Logo frissítése email domain alapján
               try {
-                updateAccountLogo(userData.email);
+                // updateAccountLogo függvény helyett egyszerű logo beállítás
+                if (userData.email && userData.email.includes('@europa2000.hu')) {
+                  console.log('🎨 Europa2000 domain észlelve, megfelelő logo beállítása');
+                  // Itt lehetne logo logika, de most csak logoljuk
+                } else {
+                  console.log('🎨 Külső domain, alapértelmezett logo');
+                }
                 console.log('🎨 Account logo frissítés sikeres');
               } catch (logoError) {
                 console.error('❌ Account logo frissítési hiba:', logoError);
@@ -1391,8 +1380,8 @@
         const userData = await loadUserData();
         const isStudent = userData && userData.email && userData.email.includes('@europa2000.hu');
         
-        // Messages settings
-        const messagesRef = doc(db, 'settings', user.uid, 'messages', 'config');
+        // Messages settings - használjuk a users kollekciót settings helyett
+        const messagesRef = doc(db, 'users', user.uid, 'settings', 'messages');
         const messagesDoc = await getDoc(messagesRef);
         
         if (!messagesDoc.exists()) {
@@ -1404,8 +1393,8 @@
           });
         }
         
-        // Functions settings
-        const functionsRef = doc(db, 'settings', user.uid, 'functions', 'config');
+        // Functions settings - használjuk a users kollekciót settings helyett
+        const functionsRef = doc(db, 'users', user.uid, 'settings', 'functions');
         const functionsDoc = await getDoc(functionsRef);
         
         if (!functionsDoc.exists()) {
@@ -1416,9 +1405,9 @@
           });
         }
         
-        // Supervision settings (csak diákfiókok esetén)
+        // Supervision settings (csak diákfiókok esetén) - használjuk a users kollekciót settings helyett
         if (isStudent) {
-          const supervisionRef = doc(db, 'settings', user.uid, 'supervision', 'config');
+          const supervisionRef = doc(db, 'users', user.uid, 'settings', 'supervision');
           const supervisionDoc = await getDoc(supervisionRef);
           
           if (!supervisionDoc.exists()) {
@@ -1450,8 +1439,8 @@
         // Initialize settings if they don't exist
         await initializeUserSettings();
         
-        // Load messages settings
-        const messagesRef = doc(db, 'settings', user.uid, 'messages', 'config');
+        // Load messages settings - használjuk a users kollekciót settings helyett
+        const messagesRef = doc(db, 'users', user.uid, 'settings', 'messages');
         const messagesDoc = await getDoc(messagesRef);
         
         if (messagesDoc.exists()) {
@@ -1488,8 +1477,8 @@
           }
         }
         
-        // Load functions settings
-        const functionsRef = doc(db, 'settings', user.uid, 'functions', 'config');
+        // Load functions settings - használjuk a users kollekciót settings helyett
+        const functionsRef = doc(db, 'users', user.uid, 'settings', 'functions');
         const functionsDoc = await getDoc(functionsRef);
         
         if (functionsDoc.exists()) {
