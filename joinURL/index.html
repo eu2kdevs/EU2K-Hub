@@ -43,45 +43,56 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
+        // Firebase konfiguráció
         const firebaseConfig = {
-        apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
-        authDomain: "eu2k-hub.firebaseapp.com",
-        projectId: "eu2k-hub",
-        storageBucket: "eu2k-hub.firebasestorage.app",
-        messagingSenderId: "560244867055",
-        appId: "1:560244867055:web:3cd51b85baead94989001a",
-        measurementId: "G-2JDPR089WD"
+            apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
+            authDomain: "eu2k-hub.firebaseapp.com",
+            projectId: "eu2k-hub",
+            storageBucket: "eu2k-hub.firebasestorage.app",
+            messagingSenderId: "560244867055",
+            appId: "1:560244867055:web:3cd51b85baead94989001a",
+            measurementId: "G-2JDPR089WD"
         };
 
+        // Firebase inicializálás
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const messageEl = document.getElementById('message');
 
+        // URL paraméterek kiolvasása
         const urlParams = new URLSearchParams(window.location.search);
         const eventCode = urlParams.get('id');
 
+        // Esemény kód ellenőrzése
         if (!eventCode) {
             messageEl.innerHTML = '❌ Nincs esemény kód az URL-ben!';
             messageEl.className = 'message';
         } else {
-            function checkAuthAndRedirect() {
-                const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
-                const userUID = localStorage.getItem('eu2k-auth-uid') || 'unknown';
-                
-                if (isLoggedIn && userUID !== 'unknown') {
+            // Firebase Auth állapot figyelése (mint a testFirebase függvény)
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // Felhasználó be van jelentkezve Firebase-ben
+                    const userUID = user.uid;
+                    
+                    console.log('Firebase Auth - User authenticated:', userUID, 'eventCode:', eventCode);
+                    
                     messageEl.innerHTML = `✅ Átirányítás az eseményhez...<br><small>${eventCode}</small>`;
                     
                     const sessionId = Math.random().toString(36).substring(2, 15);
-                    // Itt a formátum, amit kértél: {eventid}{userid}{sessionid}
-                    const redirectUrl = `/EU2K-Hub/event_hub/join/${eventCode}${userUID}${sessionId}`;
+                    const redirectUrl = `https://eu2kdevs.github.io/EU2K-Hub/event_hub/join/join.html?eventCode=${eventCode}&userUID=${userUID}&sessionId=${sessionId}`;
+                    
+                    console.log('User authenticated, redirecting to:', redirectUrl);
                     
                     setTimeout(() => {
                         window.location.href = redirectUrl;
                     }, 1000);
                     
                 } else {
+                    // Felhasználó nincs bejelentkezve Firebase-ben
+                    console.log('Firebase Auth - User not authenticated, eventCode:', eventCode);
+                    
                     messageEl.innerHTML = '⚠️ Átirányítás bejelentkezéshez...';
                     messageEl.className = 'message';
                     
@@ -89,16 +100,8 @@
                     const returnUrl = encodeURIComponent(currentUrl);
                     
                     setTimeout(() => {
-                        window.location.href = `/EU2K-Hub/welcome/onboarding_student.html?returnUrl=${returnUrl}`;
+                        window.location.href = `https://eu2kdevs.github.io/EU2K-Hub/welcome/onboarding_student.html?returnUrl=${returnUrl}`;
                     }, 1500);
-                }
-            }
-            
-            checkAuthAndRedirect();
-            
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'eu2k-auth-logged-in' || e.key === 'eu2k-auth-uid') {
-                    checkAuthAndRedirect();
                 }
             });
         }
