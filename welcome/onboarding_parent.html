@@ -1016,6 +1016,25 @@
             } else {
               navigate(e, 'step2');
             }
+          } else if (action === 'logout-and-restart') {
+            e.preventDefault();
+            console.log('🚪 Logout and restart clicked');
+            
+            // Sign out from Firebase
+            if (auth && auth.currentUser) {
+              auth.signOut().then(() => {
+                console.log('✅ Successfully signed out from Firebase');
+              }).catch((error) => {
+                console.error('❌ Error signing out:', error);
+              });
+            }
+            
+            // Clear localStorage
+            localStorage.clear();
+            console.log('🧹 Cleared localStorage');
+            
+            // Navigate to step1
+            navigate(e, 'step1');
           } else if (action === 'back-parent-profile') {
             // Reset the parent profile page to its original state
             resetParentProfilePage();
@@ -1912,7 +1931,7 @@
           <div class="publish-layout">
             <div class="publish-content">
               <div class="publish-content-header">
-                <button class="back-arrow-btn nav-button" data-action="back-step2">
+                <button class="back-arrow-btn nav-button" data-action="logout-and-restart" id="parent-logout-back-btn">
                   <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
                 </button>
                 <div class="welcome-container-header">
@@ -2002,7 +2021,7 @@
           <div class="publish-layout">
             <div class="publish-content">
               <div class="publish-content-header">
-                <button class="back-arrow-btn nav-button" data-action="back-step2">
+                <button class="back-arrow-btn nav-button" data-action="logout-and-restart" id="teacher-logout-back-btn">
                   <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
                 </button>
                 <div class="welcome-container-header">

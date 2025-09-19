@@ -852,6 +852,34 @@
             navigate(e, 'notifications-setup');
           } else if (action === 'back-messages-setup') {
             navigate(e, 'messages-setup');
+          } else if (action === 'logout-and-restart') {
+            // Logout functionality for profile picture selection pages
+            e.preventDefault();
+            console.log('🚪 Logout and restart requested');
+            
+            // Sign out from Firebase
+            if (window.auth) {
+              window.auth.signOut().then(() => {
+                console.log('✅ Firebase sign out successful');
+              }).catch((error) => {
+                console.error('❌ Firebase sign out error:', error);
+              });
+            }
+            
+            // Clear all localStorage data
+            localStorage.removeItem('eu2k-auth-logged-in');
+            localStorage.removeItem('eu2k-user-type');
+            localStorage.removeItem('eu2k-access-token');
+            localStorage.removeItem('eu2k-display-name');
+            localStorage.removeItem('eu2k-job-title');
+            localStorage.removeItem('eu2k-school-photo-url');
+            localStorage.removeItem('eu2k-auth-in-progress');
+            localStorage.removeItem('onboardingCompleted');
+            
+            console.log('🧹 Cleared all localStorage data');
+            
+            // Navigate back to step1
+            navigate(e, 'step1');
           } else if (action === 'student') {
             e.preventDefault();
             console.log('🎓 Student button clicked');
@@ -2022,7 +2050,7 @@
           <div class="publish-layout">
             <div class="publish-content">
               <div class="publish-content-header">
-                <button class="back-arrow-btn nav-button" data-action="back-step2">
+                <button class="back-arrow-btn nav-button" data-action="logout-and-restart" id="student-logout-back-btn">
                   <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
                 </button>
                 <div class="welcome-container-header">
@@ -2112,7 +2140,7 @@
           <div class="publish-layout">
             <div class="publish-content">
               <div class="publish-content-header">
-                <button class="back-arrow-btn nav-button" data-action="back-step2">
+                <button class="back-arrow-btn nav-button" data-action="logout-and-restart" id="teacher-logout-back-btn">
                   <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
                 </button>
                 <div class="welcome-container-header">
@@ -2202,7 +2230,7 @@
           <div class="publish-layout">
             <div class="publish-content">
               <div class="publish-content-header">
-                <button class="back-arrow-btn nav-button" data-action="back-step2">
+                <button class="back-arrow-btn nav-button" data-action="logout-and-restart" id="parent-logout-back-btn">
                   <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
                 </button>
                 <div class="welcome-container-header">
