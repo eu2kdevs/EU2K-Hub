@@ -586,11 +586,12 @@
             console.log('📝 Updated name element with:', user.displayName);
           }
           
-          const imgEl = document.querySelector('.main-avatar-img');
-          if (imgEl && user.photoURL) {
-            imgEl.src = user.photoURL;
-            console.log('🖼️ Updated avatar image with:', user.photoURL);
-          }
+          // Commented out profile image filling to prevent white avatar issue
+          // const imgEl = document.querySelector('.main-avatar-img');
+          // if (imgEl && user.photoURL) {
+          //   imgEl.src = user.photoURL;
+          //   console.log('🖼️ Updated avatar image with:', user.photoURL);
+          // }
           
           // Persist minimal auth state
           localStorage.setItem('eu2k-auth-logged-in', 'true');
@@ -1221,9 +1222,13 @@
         console.error('❌ Error checking onboarding target:', error);
       }
 
-      // Set default avatar selection (magenta)
+      // Set default avatar selection (random color)
       setTimeout(() => {
-        const defaultAvatar = document.querySelector('.avatar-option[data-avatar="magenta"]');
+        const avatarOptions = ['magenta', 'green', 'blue', 'orange', 'purple', 'cyan', 'red', 'gray'];
+        const randomAvatar = avatarOptions[Math.floor(Math.random() * avatarOptions.length)];
+        console.log('🎲 Randomly selected avatar:', randomAvatar);
+        
+        const defaultAvatar = document.querySelector(`.avatar-option[data-avatar="${randomAvatar}"]`);
         if (defaultAvatar) {
           defaultAvatar.click();
         }
@@ -1813,7 +1818,7 @@
 
               <!-- Action Buttons -->
               <div class="profile-actions">
-                <button class="profile-button-secondary">
+                <button class="profile-button-secondary" disabled style="opacity: 0.5; cursor: not-allowed;">
                   <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="profile-button-icon"
                     alt="School Account">
                   <span class="profile-button-text" data-translate="profile.use_school_account">Tovább az iskolai
@@ -1903,7 +1908,7 @@
 
               <!-- Action Buttons -->
               <div class="profile-actions">
-                <button class="profile-button-secondary">
+                <button class="profile-button-secondary" disabled style="opacity: 0.5; cursor: not-allowed;">
                   <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="profile-button-icon"
                     alt="School Account">
                   <span class="profile-button-text" data-translate="profile.use_school_account">Tovább az iskolai
