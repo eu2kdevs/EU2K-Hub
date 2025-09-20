@@ -110,6 +110,101 @@
       console.warn('Firestore debug module not loaded:', err);
     });
     
+    // Firebase helper functions
+    window.checkExistingUser = async (uid) => {
+      try {
+        persistentLog.add(`🔍 Checking if user exists in Firebase: ${uid}`);
+        const userRef = doc(db, 'users', uid);
+        const userSnap = await getDoc(userRef);
+        
+        if (userSnap.exists()) {
+          persistentLog.add(`✅ User found in Firebase: ${uid}`);
+          return userSnap.data();
+        } else {
+          persistentLog.add(`❌ User not found in Firebase: ${uid}`);
+          return null;
+        }
+      } catch (error) {
+        persistentLog.add(`❌ Error checking existing user: ${error.message}`);
+        throw error;
+      }
+    };
+
+    window.saveUserToFirebase = async (userData) => {
+      try {
+        persistentLog.add(`💾 Saving user data to Firebase: ${userData.uid}`);
+        
+        // Check if user already exists
+        const existingUser = await checkExistingUser(userData.uid);
+        
+        const userRef = doc(db, 'users', userData.uid);
+        const now = new Date().toISOString();
+        
+        if (existingUser) {
+          // Update existing user
+          const updateData = {
+            lastLogin: now,
+            email: userData.email,
+            displayName: userData.displayName,
+            photoURL: userData.photoURL
+          };
+          
+          // Only update jobTitle if it's provided and different
+          if (userData.jobTitle && userData.jobTitle !== existingUser.jobTitle) {
+            updateData.jobTitle = userData.jobTitle;
+          }
+          
+          await updateDoc(userRef, updateData);
+          persistentLog.add(`✅ Updated existing user in Firebase: ${userData.uid}`);
+        } else {
+          // Create new user with complete data structure
+          const newUserData = {
+            uid: userData.uid,
+            email: userData.email,
+            displayName: userData.displayName,
+            photoURL: userData.photoURL || '/EU2K-Hub/assets/avatars/magenta.png',
+            profilePictureUrl: userData.photoURL || '',
+            jobTitle: userData.jobTitle || '',
+            accessLevel: 'basic',
+            accountType: 'Iskolai Fiók',
+            birthDate: '',
+            comment: 'General profile document created at the end of onboarding with security layer data.',
+            createdAt: now,
+            lastUpdated: now,
+            onboardingCompleted: true,
+            termsAccepted: 'true',
+            welcomeScreenVisited: true,
+            pfpColor: '',
+            selectedAvatar: null,
+            useProvidedPfp: true,
+            messageSettings: {
+              messagePrivacy: 'nobody',
+              privateMessages: true
+            },
+            notificationSettings: {
+              notification_0: true,
+              notification_1: false,
+              notification_2: true,
+              notification_3: false,
+              notification_4: false,
+              notification_5: false,
+              notification_6: true,
+              notification_7: true,
+              notification_8: false
+            }
+          };
+          
+          await setDoc(userRef, newUserData);
+          persistentLog.add(`✅ Created new user in Firebase: ${userData.uid}`);
+        }
+        
+        return true;
+      } catch (error) {
+        persistentLog.add(`❌ Error saving user to Firebase: ${error.message}`);
+        throw error;
+      }
+    };
+
     // Global onboarding debug functions
     window.onboardingDebug = {
       skip: () => window.debugAuth.skipOnboarding(),
@@ -567,7 +662,7 @@
     };
 
     // After redirect, continue to profile chooser and prefill
-    const proceedToProfileChooser = (user) => {
+    const proceedToProfileChooser = async (user) => {
       console.log('✅ Proceeding to profile chooser with user:', user);
       
       // Check if user data is valid
@@ -575,6 +670,45 @@
         console.error('❌ Invalid user data, showing onboarding failed');
         showOnboardingFailed();
         return;
+      }
+      
+      // Check if user already exists in Firebase
+      try {
+        const existingUser = await checkExistingUser(user.uid);
+        
+        if (existingUser && existingUser.onboardingCompleted) {
+          console.log('✅ Existing user found with completed onboarding, redirecting to index.html');
+          
+          // Set up localStorage with existing user data
+          localStorage.setItem('eu2k-auth-logged-in', 'true');
+          localStorage.setItem('eu2k-auth-display-name', existingUser.displayName || user.displayName);
+          localStorage.setItem('eu2k-auth-email', existingUser.email || user.email);
+          localStorage.setItem('onboardingCompleted', 'true');
+          localStorage.setItem('termsAccepted', existingUser.termsAccepted || 'true');
+          localStorage.setItem('welcomeScreenVisited', 'true');
+          
+          if (existingUser.photoURL) {
+            localStorage.setItem('eu2k-auth-photo-url', existingUser.photoURL);
+          }
+          if (existingUser.jobTitle) {
+            localStorage.setItem('eu2k-auth-job-title', existingUser.jobTitle);
+          }
+          
+          // Update last login in Firebase
+          const userRef = doc(db, 'users', user.uid);
+          await updateDoc(userRef, {
+            lastUpdated: new Date().toISOString()
+          });
+          
+          console.log('🚀 Redirecting to main app...');
+          setTimeout(() => {
+            window.location.href = '/EU2K-Hub/index.html';
+          }, 1000);
+          return;
+        }
+      } catch (error) {
+        console.error('❌ Error checking existing user:', error);
+        // Continue with normal onboarding flow if check fails
       }
       
       try {
@@ -1353,12 +1487,11 @@
               console.log('📸 Photo response status:', photoResponse.status);
               
               if (photoResponse.ok) {
-                // Convert the image to a blob and create a URL
-                const photoBlob = await photoResponse.blob();
-                const photoURL = URL.createObjectURL(photoBlob);
+                // Microsoft Graph photo URL használata blob helyett
+                const photoURL = `https://graph.microsoft.com/v1.0/me/photo/$value`;
                 
                 console.log('✅ Successfully fetched profile picture from Microsoft Graph');
-                console.log('🖼️ Photo URL created:', photoURL);
+                console.log('🖼️ Photo URL created (Graph API):', photoURL);
                 
                 // Update the main avatar image to show the school profile picture
                 const mainAvatarImg = document.querySelector('.main-avatar-img');
@@ -1701,13 +1834,32 @@
 
       // Handle "Continue terms" button click
       if (continueTermsButton) {
-        continueTermsButton.addEventListener('click', () => {
+        continueTermsButton.addEventListener('click', async () => {
           const checkbox = document.getElementById('terms-checkbox');
           if (checkbox && checkbox.checked) {
             // Store acceptance in localStorage for security
             localStorage.setItem('termsAccepted', 'true');
             localStorage.setItem('eu2k-onboarding-terms-accepted', 'true');
             console.log('💾 Terms acceptance saved to localStorage');
+            
+            // Save terms acceptance to Firebase if user is authenticated
+            if (auth.currentUser) {
+              try {
+                const userRef = doc(db, 'users', auth.currentUser.uid);
+                const now = new Date().toISOString();
+                
+                await updateDoc(userRef, {
+                  'general_data.termsAccepted': now,
+                  'general_data.termsAcceptedVersion': '1.0'
+                });
+                
+                persistentLog.add(`✅ Terms acceptance saved to Firebase: ${auth.currentUser.uid}`);
+              } catch (error) {
+                persistentLog.add(`❌ Error saving terms acceptance to Firebase: ${error.message}`);
+                console.error('Terms acceptance Firebase save error:', error);
+              }
+            }
+            
             showPage('final-welcome-page');
           } else {
             alert('Kérlek fogadd el a használati feltételeket a folytatáshoz!');
@@ -2231,7 +2383,7 @@
           <div class="publish-layout">
             <div class="publish-content">
               <div class="publish-content-header">
-                <button class="back-arrow-btn nav-button" data-action="logout-and-restart" id="student-logout-back-btn">
+                <button class="back-arrow-btn nav-button" onclick="localStorage.clear(); location.hash = 'step1';" id="student-logout-back-btn">
                   <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
                 </button>
                 <div class="welcome-container-header">
@@ -2321,7 +2473,7 @@
           <div class="publish-layout">
             <div class="publish-content">
               <div class="publish-content-header">
-                <button class="back-arrow-btn nav-button" data-action="logout-and-restart" id="teacher-logout-back-btn">
+                <button class="back-arrow-btn nav-button" onclick="localStorage.clear(); location.hash = 'step1';" id="teacher-logout-back-btn">
                   <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
                 </button>
                 <div class="welcome-container-header">
@@ -2694,7 +2846,7 @@
 
             <!-- Újrapróbálkozás gomb -->
             <div class="welcome-navigation">
-              <button class="welcome-nav-button-primary nav-button" data-action="back-step2">
+              <button class="welcome-nav-button-primary nav-button" onclick="localStorage.clear(); location.hash = 'step1';">
                 <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="welcome-nav-icon" alt="Student">
                 <span class="welcome-nav-text" data-translate="onboarding.try_again">Újrapróbálkozás</span>
               </button>

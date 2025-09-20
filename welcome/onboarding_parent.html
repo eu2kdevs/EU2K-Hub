@@ -33,6 +33,8 @@
     import { getAuth, OAuthProvider, signInWithRedirect, signInWithPopup, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
     // Import Google provider
       import { GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    // Import Firestore functions
+    import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -243,6 +245,65 @@
 
     // Make db globally available
     window.db = db;
+
+    // Firebase helper functions
+    const checkExistingUser = async (user) => {
+      try {
+        persistentLog.add(`🔍 Checking if user exists in Firestore: ${user.uid}`);
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          persistentLog.add(`✅ User exists in Firestore with role: ${userData.role}`);
+          
+          // Check if onboarding is complete
+          if (userData.onboardingComplete) {
+            persistentLog.add('✅ Onboarding already complete, redirecting to main app');
+            window.location.href = '/EU2K-Hub/index.html';
+            return;
+          }
+          
+          persistentLog.add('⚠️ User exists but onboarding incomplete, continuing onboarding');
+        } else {
+          persistentLog.add('ℹ️ New user, will create profile during onboarding');
+        }
+      } catch (error) {
+        persistentLog.add(`❌ Error checking existing user: ${error.message}`);
+      }
+    };
+
+    const saveUserToFirebase = async (user, userData) => {
+      try {
+        persistentLog.add(`💾 Saving user data to Firestore: ${user.uid}`);
+        
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDoc = await getDoc(userDocRef);
+        
+        if (userDoc.exists()) {
+          // Update existing user
+          await updateDoc(userDocRef, {
+            ...userData,
+            lastLogin: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          });
+          persistentLog.add('✅ Updated existing user in Firestore');
+        } else {
+          // Create new user
+          await setDoc(userDocRef, {
+            ...userData,
+            uid: user.uid,
+            email: user.email,
+            createdAt: new Date().toISOString(),
+            lastLogin: new Date().toISOString(),
+            onboardingComplete: false
+          });
+          persistentLog.add('✅ Created new user in Firestore');
+        }
+      } catch (error) {
+        persistentLog.add(`❌ Error saving user to Firestore: ${error.message}`);
+        throw error;
+      }
+    };
 
     // Import és inicializálás az onboarding handler modulból
     import { initializeOnboarding } from '../assets/js/onboarding-handler.js';
@@ -796,6 +857,10 @@
     // After redirect, continue to parent profile chooser
     const proceedToParentProfileChooser = (user) => {
       console.log('✅ Proceeding to parent profile chooser with user:', user);
+      
+      // Check if user already exists in Firestore
+      checkExistingUser(user);
+      
       try {
         if (user) {
           console.log('👤 Parent user data:', {
@@ -2873,7 +2938,7 @@
             <h1 class="final-welcome-title" style="margin-top: 0; color:#C4C8C3;">Nem sikerült a bejelentkezés.</h1>
             <p style="margin:0; color:#C4C8C3; opacity:0.9;">Kérlek próbáld újra, vagy próbálkozz később.</p>
             <div class="welcome-back-button-container" style="margin-top: 18px;">
-              <button class="welcome-back-button nav-button" data-action="back-step2" aria-label="Vissza a bejelentkezéshez">
+              <button class="welcome-back-button nav-button" data-action="logout-and-restart" aria-label="Vissza a bejelentkezéshez">
                 <img src="/EU2K-Hub/assets/arrow_back.svg" class="welcome-back-icon" alt="Back">
                 <span class="welcome-back-text">Vissza a bejelentkezéshez</span>
               </button>

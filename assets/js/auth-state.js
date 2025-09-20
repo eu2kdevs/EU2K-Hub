@@ -1,6 +1,7 @@
 // Minimal shared auth state helper
 // - Reads localStorage flags written by onboarding
 // - Shows a large hover indicator near the account icon with the user's name
+// - Checks terms acceptance and redirects if needed
 (function () {
   function getDisplayName() {
     return localStorage.getItem('eu2k-auth-display-name') || '';
@@ -8,6 +9,27 @@
 
   function isLoggedIn() {
     return localStorage.getItem('eu2k-auth-logged-in') === 'true';
+  }
+
+  function hasAcceptedTerms() {
+    return localStorage.getItem('termsAccepted') === 'true';
+  }
+
+  function checkTermsAcceptance() {
+    // Only check if user is logged in and not already on onboarding page
+    if (isLoggedIn() && !hasAcceptedTerms()) {
+      const currentPath = window.location.pathname || '';
+      const isOnOnboardingPage = currentPath.includes('onboarding_student.html') || 
+                                 currentPath.includes('onboarding_parent.html') ||
+                                 currentPath.includes('onboarding_teacher.html');
+      
+      if (!isOnOnboardingPage) {
+        console.log('⚠️ User has not accepted terms, redirecting to onboarding...');
+        window.location.href = '/EU2K-Hub/welcome/onboarding_student.html#terms-setup';
+        return false;
+      }
+    }
+    return true;
   }
 
   function ensureIndicator() {
@@ -76,6 +98,9 @@
   }
 
   function init() {
+    // Check terms acceptance on page load
+    checkTermsAcceptance();
+    
     // Prefer account icon in header
     const accountLink = document.querySelector('.header .header-icons a[href*="account"], .header .header-icons a');
     if (accountLink) {
@@ -88,6 +113,9 @@
   } else {
     init();
   }
+
+  // Expose terms checking function for other scripts
+  window.checkTermsAcceptance = checkTermsAcceptance;
 
   // Expose a helper that other scripts can call to show the login-failed transitional page
   window.showLoginFailedIfNotLoggedIn = function (opts = {}) {

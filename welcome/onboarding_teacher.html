@@ -33,6 +33,8 @@
     import { getAuth, OAuthProvider, signInWithRedirect, signInWithPopup, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
     // Import Google provider
       import { GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    // Import Firestore functions
+    import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -116,6 +118,101 @@
     import('../assets/js/firestore-debug.js').catch(err => {
       console.warn('Firestore debug module not loaded:', err);
     });
+    
+    // Firebase helper functions
+    window.checkExistingUser = async (uid) => {
+      try {
+        persistentLog.add(`🔍 Checking if user exists in Firebase: ${uid}`);
+        const userRef = doc(db, 'users', uid);
+        const userSnap = await getDoc(userRef);
+        
+        if (userSnap.exists()) {
+          persistentLog.add(`✅ User found in Firebase: ${uid}`);
+          return userSnap.data();
+        } else {
+          persistentLog.add(`❌ User not found in Firebase: ${uid}`);
+          return null;
+        }
+      } catch (error) {
+        persistentLog.add(`❌ Error checking existing user: ${error.message}`);
+        throw error;
+      }
+    };
+
+    window.saveUserToFirebase = async (userData) => {
+      try {
+        persistentLog.add(`💾 Saving user data to Firebase: ${userData.uid}`);
+        
+        // Check if user already exists
+        const existingUser = await checkExistingUser(userData.uid);
+        
+        const userRef = doc(db, 'users', userData.uid);
+        const now = new Date().toISOString();
+        
+        if (existingUser) {
+          // Update existing user
+          const updateData = {
+            lastLogin: now,
+            email: userData.email,
+            displayName: userData.displayName,
+            photoURL: userData.photoURL
+          };
+          
+          // Only update jobTitle if it's provided and different
+          if (userData.jobTitle && userData.jobTitle !== existingUser.jobTitle) {
+            updateData.jobTitle = userData.jobTitle;
+          }
+          
+          await updateDoc(userRef, updateData);
+          persistentLog.add(`✅ Updated existing user in Firebase: ${userData.uid}`);
+        } else {
+          // Create new user with complete data structure
+          const newUserData = {
+            uid: userData.uid,
+            email: userData.email,
+            displayName: userData.displayName,
+            photoURL: userData.photoURL || '/EU2K-Hub/assets/avatars/magenta.png',
+            profilePictureUrl: userData.photoURL || '',
+            jobTitle: userData.jobTitle || '',
+            accessLevel: 'basic',
+            accountType: 'Iskolai Fiók',
+            birthDate: '',
+            comment: 'General profile document created at the end of onboarding with security layer data.',
+            createdAt: now,
+            lastUpdated: now,
+            onboardingCompleted: true,
+            termsAccepted: 'true',
+            welcomeScreenVisited: true,
+            pfpColor: '',
+            selectedAvatar: null,
+            useProvidedPfp: true,
+            messageSettings: {
+              messagePrivacy: 'nobody',
+              privateMessages: true
+            },
+            notificationSettings: {
+              notification_0: true,
+              notification_1: false,
+              notification_2: true,
+              notification_3: false,
+              notification_4: false,
+              notification_5: false,
+              notification_6: true,
+              notification_7: true,
+              notification_8: false
+            }
+          };
+          
+          await setDoc(userRef, newUserData);
+          persistentLog.add(`✅ Created new user in Firebase: ${userData.uid}`);
+        }
+        
+        return true;
+      } catch (error) {
+        persistentLog.add(`❌ Error saving user to Firebase: ${error.message}`);
+        throw error;
+      }
+    };
     
     // Global onboarding debug functions
     window.onboardingDebug = {
@@ -324,16 +421,10 @@
       resetOnboarding: () => {
         console.log('🔄 RESETTING ONBOARDING...');
         
-        // Clear all onboarding related flags
-        localStorage.removeItem('termsAccepted');
-        localStorage.removeItem('eu2k-auth-logged-in');
-        localStorage.removeItem('eu2k-auth-display-name');
-        localStorage.removeItem('onboardingCompleted');
-        localStorage.removeItem('welcomeScreenVisited');
-        localStorage.removeItem('eu2k-auth-in-progress');
-        localStorage.removeItem('eu2k-auth-start-time');
+        // Clear entire localStorage
+        localStorage.clear();
         
-        console.log('✅ Cleared all onboarding flags');
+        console.log('✅ Cleared entire localStorage');
         console.log('🔄 Reloading page...');
         
         // Reload to start fresh
@@ -519,8 +610,40 @@
     };
 
     // After redirect, continue to teacher profile chooser
-    const proceedToTeacherProfileChooser = (user) => {
+    const proceedToTeacherProfileChooser = async (user) => {
       console.log('✅ Proceeding to teacher profile chooser with user:', user);
+      
+      // Check if user already exists and has completed onboarding
+      try {
+        const existingUser = await checkExistingUser(user.uid);
+        if (existingUser && existingUser.onboardingCompleted) {
+          console.log('🔄 Existing user with completed onboarding, redirecting to index.html');
+          
+          // Set localStorage for existing user
+          localStorage.setItem('eu2k-auth-logged-in', 'true');
+          localStorage.setItem('eu2k-user-type', 'teacher');
+          localStorage.setItem('onboardingCompleted', 'true');
+          if (user.displayName) localStorage.setItem('eu2k-auth-display-name', user.displayName);
+          if (user.email) localStorage.setItem('eu2k-auth-email', user.email);
+          
+          // Update lastUpdated in Firebase
+          try {
+            await updateDoc(doc(db, 'users', user.uid), {
+              lastUpdated: new Date().toISOString()
+            });
+            console.log('✅ Updated lastUpdated for existing user');
+          } catch (updateError) {
+            console.error('❌ Failed to update lastUpdated:', updateError);
+          }
+          
+          // Redirect to main app
+          window.location.href = '../index.html';
+          return;
+        }
+      } catch (error) {
+        console.error('❌ Error checking existing user:', error);
+      }
+      
       try {
         if (user) {
           console.log('👤 Teacher user data:', {
@@ -1628,7 +1751,7 @@
           <div class="publish-layout">
             <div class="publish-content">
               <div class="publish-content-header">
-                <button class="back-arrow-btn nav-button" data-action="back-step2">
+                <button class="back-arrow-btn nav-button" onclick="localStorage.clear(); location.hash = 'step1';">
                   <img src="/EU2K-Hub/assets/welcome_icons/back.svg" alt="Vissza" class="arrow-img">
                 </button>
                 <div class="welcome-container-header">
@@ -2091,7 +2214,7 @@
 
             <!-- Újrapróbálkozás gomb -->
             <div class="welcome-navigation">
-              <button class="welcome-nav-button-primary nav-button" data-action="back-step2">
+              <button class="welcome-nav-button-primary nav-button" onclick="localStorage.clear(); location.hash = 'step1';">
                 <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="welcome-nav-icon" alt="Student">
                 <span class="welcome-nav-text" data-translate="onboarding.try_again">Újrapróbálkozás</span>
               </button>
