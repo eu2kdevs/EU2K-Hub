@@ -685,7 +685,15 @@
           localStorage.setItem('eu2k-auth-email', existingUser.email || user.email);
           localStorage.setItem('onboardingCompleted', 'true');
           localStorage.setItem('termsAccepted', existingUser.termsAccepted || 'true');
-          localStorage.setItem('welcomeScreenVisited', 'true');
+          
+          // Mark welcome screen as visited to prevent redirect loops
+          // Use the correct storage key that welcome-screen.js uses
+          const visitData = {
+            hasVisited: true,
+            firstVisitDate: new Date().toISOString(),
+            lastVisitDate: new Date().toISOString()
+          };
+          localStorage.setItem('eu2k-hub-welcome-screen', JSON.stringify(visitData));
           
           if (existingUser.photoURL) {
             localStorage.setItem('eu2k-auth-photo-url', existingUser.photoURL);

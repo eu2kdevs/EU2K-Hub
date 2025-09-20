@@ -1065,10 +1065,31 @@
   <script>
     // Check if user has accepted terms of service and redirect to appropriate onboarding
     document.addEventListener('DOMContentLoaded', () => {
-      const termsAccepted = localStorage.getItem('termsAccepted');
+      // FIRST: Check if user is already logged in and has completed onboarding
+      const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
+      const onboardingCompleted = localStorage.getItem('onboardingCompleted') === 'true';
+      const termsAccepted = localStorage.getItem('termsAccepted') === 'true';
+      
+      console.log('🔍 Index.html redirect check:', {
+        isLoggedIn,
+        onboardingCompleted,
+        termsAccepted
+      });
+      
+      // If user is logged in and onboarding is completed, stay on index.html
+      if (isLoggedIn && onboardingCompleted && termsAccepted) {
+        console.log('✅ User is fully set up, staying on index.html');
+        // Mark as visited to prevent welcome screen redirect
+        if (window.welcomeScreenManager) {
+          window.welcomeScreenManager.markAsVisited();
+        }
+        return;
+      }
+      
+      // Only redirect to onboarding if terms are not accepted
       if (termsAccepted !== 'true') {
-        // Check if user is logged in and what type they are
-        const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
+        console.log('📋 Terms not accepted, redirecting to onboarding...');
+        
         const userType = localStorage.getItem('eu2k-user-type');
         
         if (isLoggedIn && userType) {
