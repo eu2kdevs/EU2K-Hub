@@ -142,7 +142,7 @@
       if (isLoggedIn && eventCode) {
         // User is signed in - generate session ID and redirect to join page
         const sessionId = Math.random().toString(36).substring(2, 15);
-        const joinUrl = `/EU2K-Hub/event_hub/join/${eventCode}/${userUID}+${sessionId}`;
+        const joinUrl = `/EU2K-Hub/event_hub/join/${eventCode}.html#${userUID}+${sessionId}`;
         
         console.log('User authenticated, redirecting to:', joinUrl);
         window.location.href = joinUrl;
