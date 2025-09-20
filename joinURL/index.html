@@ -97,8 +97,8 @@
                     
                     const sessionId = Math.random().toString(36).substring(2, 15);
                     
-                    // Hash formátum használata: /event_hub/join/{eventCode}#{userUID}+{sessionId}
-                    const joinUrl = `https://eu2kdevs.github.io/EU2K-Hub/event_hub/join/${eventCode}#${userUID}+${sessionId}`;
+                    // Hash formátum használata: /event_hub/join/{eventCode}.html#{userUID}+{sessionId}
+                    const joinUrl = `https://eu2kdevs.github.io/EU2K-Hub/event_hub/join/${eventCode}.html#${userUID}+${sessionId}`;
                     
                     console.log('User authenticated, redirecting to:', joinUrl);
                     

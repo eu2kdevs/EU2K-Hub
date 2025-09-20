@@ -61,7 +61,7 @@
     // Make db globally available
     window.db = db;
 
-    // Parse URL parameters - support hash format: /event_hub/join/eventCode#userUID+sessionId
+    // Parse URL parameters - support hash format: /event_hub/join/eventCode.html#userUID+sessionId
     const urlParams = new URLSearchParams(window.location.search);
     
     let eventCode, userUID, sessionId;
@@ -71,7 +71,8 @@
     const joinIndex = pathParts.indexOf('join');
     
     if (joinIndex !== -1 && pathParts.length > joinIndex + 1) {
-      eventCode = pathParts[joinIndex + 1];
+      // Remove .html extension from eventCode
+      eventCode = pathParts[joinIndex + 1].replace('.html', '');
       
       // Parse hash for userUID+sessionId
       if (window.location.hash) {
