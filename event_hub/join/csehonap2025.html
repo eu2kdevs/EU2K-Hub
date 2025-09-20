@@ -5,8 +5,9 @@
   <meta charset="UTF-8">
   <meta name="description" content="Csatlakozás az eseményhez - Event Hub">
 
-  <title data-translate="pages.event_hub.join.title">Csatlakozás - Event Hub</title>
+  <title data-translate="pages.event_hub.join.title">Csatlakozás a CSE-HO Naphoz:</title>
   <link rel="stylesheet" href="/EU2K-Hub/event_hub.css">
+  <link rel="stylesheet" href="/EU2K-Hub/csehonap2025.css">
   <link rel="icon" href="/EU2K-Hub/favicon.ico">
   <script type="importmap">
     {
@@ -294,55 +295,183 @@
             </a>
           </div>
         </header>
-        <!-- Event Hub layout: Left column highlighted event card -->
-         <section class="event-hub-container">
-           <div class="event-columns">
-             <div class="left-column">
-               <article class="featured-event-card" aria-label="Kiemelt esemény">
-                <div class="featured-actions">
-                  <md-fab id="join-fab" class="join-fab joined" label="Csatlakozva" aria-label="Csatlakozva">
-                    <img src="/EU2K-Hub/assets/check.svg" alt="Csatlakozva" class="chip-icon" slot="icon" />
-                  </md-fab>
-               </div>
-                 <div class="featured-background">
-                   <img id="featured-image" src="/EU2K-Hub/assets/placeholder_img.svg" alt="Esemény kép" class="featured-bg-image" />
-                   <div class="featured-overlay"></div>
-                 </div>
-                 <div class="featured-content">
-                   <div class="featured-text">
-                     <h2 id="featured-title" class="featured-title">Title</h2>
-                     <div id="featured-subtitle" class="featured-subtitle">Subtitle</div>
-                     <div class="chips-row">
-                       <button class="chip" type="button" aria-label="Add to my itinerary">
-                         <img src="/EU2K-Hub/assets/event_hub/calendar.svg" alt="naptár ikon" class="chip-icon" />
-                         <span>Add to my itinerary</span>
-                       </button>
-                       <div class="chip" aria-label="12 mins from hotel">
-                         <img src="/EU2K-Hub/assets/event_hub/walk.svg" alt="séta ikon" class="chip-icon" />
-                         <span>12 mins from hotel</span>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               </article>
-             </div>
-             <div class="right-column">
-               <!-- Join information panel -->
-               <div class="join-info-panel">
-                 <h3>Csatlakozási információk</h3>
-                 <div class="join-details">
-                   <p><strong>Esemény kód:</strong> <span id="event-code-display">-</span></p>
-                   <p><strong>Felhasználó ID:</strong> <span id="user-id-display">-</span></p>
-                   <p><strong>Session ID:</strong> <span id="session-id-display">-</span></p>
-                   <p><strong>Csatlakozás ideje:</strong> <span id="join-time-display">-</span></p>
-                 </div>
-                 <div class="join-actions">
-                   <button class="btn-secondary" onclick="goBackToEventHub()">Vissza az Event Hub-ra</button>
-                 </div>
-               </div>
-             </div>
-           </div>
-         </section>
+        <!-- Main join page content -->
+        <div id="main-join-page" class="join-page-content">
+          <!-- Basic Information Section -->
+          <div class="info-section">
+            <h2 class="section-title" style="color: #E0E4DB;" data-translate="pages.event_hub.join.basic_info">Alap információk</h2>
+            
+            <!-- Group Name Input -->
+            <div class="input-group">
+              <img src="/EU2K-Hub/assets/events/csehonap/group_name.svg" class="input-icon" alt="Csapat név">
+              <md-outlined-text-field 
+                id="group-name-input" 
+                label="Csapat neve" 
+                supporting-text="Add meg a csapatod nevét"
+                style="flex: 1;">
+              </md-outlined-text-field>
+            </div>
+            
+            <!-- Class Teacher Input -->
+            <div class="input-group">
+              <img src="/EU2K-Hub/assets/events/csehonap/class_teacher.svg" class="input-icon" alt="Osztályfőnök">
+              <md-outlined-text-field 
+                id="class-teacher-input" 
+                label="Osztályfőnök neve" 
+                supporting-text="Add meg az osztályfőnököd nevét"
+                style="flex: 1;">
+              </md-outlined-text-field>
+            </div>
+            
+            <!-- Group Description Input -->
+            <div class="input-group">
+              <img src="/EU2K-Hub/assets/events/csehonap/group_description.svg" class="input-icon" alt="Leírás">
+              <md-outlined-text-field 
+                id="group-description-input" 
+                label="Leírás a csapatról" 
+                supporting-text="Rövid leírás a csapatotokról"
+                type="textarea"
+                rows="3"
+                style="flex: 1;">
+              </md-outlined-text-field>
+            </div>
+          </div>
+          
+          <!-- What is CSE-HO Day Section -->
+          <div class="info-section">
+            <h2 class="section-title" style="color: #E0E4DB;">Mi az a CSE-HO Nap?</h2>
+            
+            <!-- Main Info Container -->
+            <div class="info-container" style="background-color: #272B26; border-radius: 12px; padding: 24px; position: relative;">
+              <h3 style="color: #E0E4DB; margin-top: 0; text-align: center;">Mi az a CSE-HO Nap?</h3>
+              
+              <!-- Image Carousel -->
+              <div class="carousel-container">
+                <img id="carousel-image" src="/EU2K-Hub/assets/placeholder_img.svg" alt="CSE-HO Nap információ" class="carousel-image">
+                <!-- <img id="carousel-image-2" src="/EU2K-Hub/assets/placeholder_img.svg" alt="CSE-HO Nap információ 2" class="carousel-image" style="display: none;"> -->
+              </div>
+              
+              <!-- Progress Bar -->
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div class="progress-segment active" id="progress-1"></div>
+                  <div class="progress-segment" id="progress-2"></div>
+                  <div class="progress-segment" id="progress-3"></div>
+                  <div class="progress-segment" id="progress-4"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Continue Button -->
+          <div class="button-container">
+            <md-filled-button id="continue-btn" onclick="navigateToFinishJoin()">
+              Csatlakozás
+            </md-filled-button>
+          </div>
+        </div>
+        
+        <!-- Finish Join Page (hidden initially) -->
+        <div id="finish-join-page" class="join-page-content" style="display: none;">
+          <!-- Food Information Section -->
+          <div class="info-section">
+            <h2 class="section-title" style="color: #E0E4DB;">Fogás információk</h2>
+            
+            <!-- Food Icon -->
+            <div class="input-group">
+              <img src="/EU2K-Hub/assets/events/csehonap/food_icon.svg" class="input-icon" alt="Étel">
+            </div>
+            
+            <!-- Food List Section -->
+            <h3 class="section-title" style="color: #E0E4DB; margin-top: 24px;">Ételek:</h3>
+            
+            <!-- Food Items List -->
+            <div id="food-items-list" class="food-list">
+              <!-- Food items will be added dynamically -->
+            </div>
+            
+            <!-- Add Food FAB -->
+            <md-fab id="add-food-fab" class="add-food-fab" style="background-color: #9CD49F;" onclick="addFoodItem()">
+              <img src="/EU2K-Hub/assets/add.svg" alt="Hozzáadás" slot="icon">
+            </md-fab>
+          </div>
+          
+          <!-- QR Code Section -->
+          <div class="qr-section">
+            <div class="qr-container">
+              <div class="qr-background"></div>
+              <img id="qr-code-image" src="/EU2K-Hub/assets/preset_qrcode.png" alt="QR Kód" class="qr-image">
+            </div>
+            
+            <!-- Connected Button Group -->
+            <div class="button-group">
+              <button class="btn-primary active" id="qr-btn">
+                QR-Kód
+              </button>
+              <button class="btn-secondary" id="share-btn">
+                Megosztás
+              </button>
+            </div>
+          </div>
+          
+          <!-- Join Button -->
+          <div class="button-container">
+            <md-filled-button id="final-join-btn" onclick="finalizeJoin()">
+              Csatlakozás
+            </md-filled-button>
+          </div>
+        </div>
+        
+        <!-- Finish Join Page (hidden initially) -->
+        <div id="finish-join-page" class="join-page-content" style="display: none;">
+          <!-- Food Information Section -->
+          <div class="info-section">
+            <h2 class="section-title" style="color: #E0E4DB;">Fogás információk</h2>
+            
+            <!-- Food Icon -->
+            <div class="input-group">
+              <img src="/EU2K-Hub/assets/events/csehonap/food_icon.svg" class="input-icon" alt="Étel">
+            </div>
+            
+            <!-- Food List Section -->
+            <h3 class="section-title" style="color: #E0E4DB; margin-top: 24px;">Ételek:</h3>
+            
+            <!-- Food Items List -->
+            <div id="food-items-list" class="food-list">
+              <!-- Food items will be added dynamically -->
+            </div>
+            
+            <!-- Add Food FAB -->
+            <md-fab id="add-food-fab" class="add-food-fab" style="background-color: #9CD49F;" onclick="addFoodItem()">
+              <img src="/EU2K-Hub/assets/add.svg" alt="Hozzáadás" slot="icon">
+            </md-fab>
+          </div>
+          
+          <!-- QR Code Section -->
+          <div class="qr-section">
+            <div class="qr-container">
+              <div class="qr-background"></div>
+              <img id="qr-code-image" src="/EU2K-Hub/assets/preset_qrcode.png" alt="QR Kód" class="qr-image">
+            </div>
+            
+            <!-- Connected Button Group -->
+            <div class="button-group">
+              <button class="btn-primary active" id="qr-btn">
+                QR-Kód
+              </button>
+              <button class="btn-secondary" id="share-btn">
+                Megosztás
+              </button>
+            </div>
+          </div>
+          
+          <!-- Join Button -->
+          <div class="button-container">
+            <md-filled-button id="final-join-btn" onclick="finalizeJoin()">
+              Csatlakozás
+            </md-filled-button>
+          </div>
+        </div>
          
          <!-- Animált FAB gomb -->
          <div class="floating-fab" id="floating-fab">
@@ -670,10 +799,176 @@
       }, 3000);
     }
 
+    // Progress carousel functionality
+    let currentSlide = 0;
+    const totalSlides = 4;
+    let carouselInterval;
+    
+    function startCarousel() {
+      carouselInterval = setInterval(() => {
+        // Update progress segments
+        document.getElementById(`progress-${currentSlide + 1}`).classList.remove('active');
+        
+        currentSlide = (currentSlide + 1) % totalSlides;
+        
+        // Update active progress segment
+        document.getElementById(`progress-${currentSlide + 1}`).classList.add('active');
+        
+        // Update image (for now just log, later can switch between different images)
+        console.log(`Switching to slide ${currentSlide + 1}`);
+        
+        // Example of switching images (uncomment when you have multiple images):
+        // if (currentSlide === 1) {
+        //   document.getElementById('carousel-image').src = '/EU2K-Hub/assets/placeholder_img_2.svg';
+        // } else {
+        //   document.getElementById('carousel-image').src = '/EU2K-Hub/assets/placeholder_img.svg';
+        // }
+        
+      }, 20000); // 20 seconds
+    }
+    
+    // Navigation functions
+    function navigateToFinishJoin() {
+      // Generate group ID based on group name
+      const groupName = document.getElementById('group-name-input').value || 'DefaultGroup';
+      const groupId = generateGroupId(groupName);
+      
+      // Update hash to finish-join page
+      const currentHash = location.hash.substring(1);
+      const [userUID, sessionId] = currentHash.split('+');
+      const newHash = `${groupId}+${sessionId}#finish-join`;
+      
+      console.log('Navigating to finish-join with hash:', newHash);
+      
+      if (window.location.hash !== '#' + newHash) {
+        window.location.hash = '#' + newHash;
+      }
+    }
+    
+    function generateGroupId(groupName) {
+      // Generate 15 character ID based on group name
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      
+      // Use group name as seed for consistency
+      let seed = 0;
+      for (let i = 0; i < groupName.length; i++) {
+        seed += groupName.charCodeAt(i);
+      }
+      
+      // Generate pseudo-random but consistent ID
+      for (let i = 0; i < 15; i++) {
+        seed = (seed * 9301 + 49297) % 233280;
+        result += chars[Math.floor((seed / 233280) * chars.length)];
+      }
+      
+      return result;
+    }
+    
+    // Food item management
+    let foodItemCount = 0;
+    
+    function addFoodItem() {
+      foodItemCount++;
+      const foodList = document.getElementById('food-items-list');
+      
+      const foodItem = document.createElement('div');
+      foodItem.className = 'food-item';
+      foodItem.id = `food-item-${foodItemCount}`;
+      
+      foodItem.innerHTML = `
+        <div class="food-item-container">
+          <div class="food-image-container" style="background-color: #272B26;">
+            <img src="/EU2K-Hub/assets/placeholder_img.svg" alt="Étel kép" class="food-image">
+          </div>
+          <div class="food-details">
+            <div class="food-input-group">
+              <input type="text" class="food-name-input" placeholder="Név" />
+            </div>
+            <div class="food-input-group">
+              <input type="text" class="food-description-input" placeholder="Rövid leírás" />
+            </div>
+            <button class="save-later-btn" disabled style="background-color: #9CD49F;">
+              <img src="/EU2K-Hub/assets/events/csehonap/save.svg" alt="Mentés" class="save-icon">
+              Mentés későbbre
+            </button>
+          </div>
+        </div>
+        <div class="divider"></div>
+      `;
+      
+      foodList.appendChild(foodItem);
+      
+      // Move FAB button down
+      const fab = document.getElementById('add-food-fab');
+      fab.style.marginTop = '16px';
+    }
+    
+    function finalizeJoin() {
+      // Show success popup
+      showPopup('Sikerült a csatlakozás!', 'success');
+      
+      // Redirect back to event hub after 5 seconds
+      setTimeout(() => {
+        window.location.href = '/EU2K-Hub/event_hub.html';
+      }, 5000);
+    }
+    
+    function showPopup(message, type) {
+      // Create popup element
+      const popup = document.createElement('div');
+      popup.className = `popup-notification ${type}`;
+      popup.innerHTML = `
+        <div class="popup-content">
+          <div class="popup-icon">
+            ${type === 'success' ? 
+              '<svg viewBox="0 0 24 24"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>' : 
+              '<svg viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>'
+            }
+          </div>
+          <span class="popup-message">${message}</span>
+        </div>
+      `;
+      
+      // Add popup to body
+      document.body.appendChild(popup);
+      
+      // Animate in
+      setTimeout(() => {
+        popup.classList.add('show');
+      }, 100);
+      
+      // Remove after 5 seconds
+      setTimeout(() => {
+        popup.classList.remove('show');
+        setTimeout(() => {
+          document.body.removeChild(popup);
+        }, 300);
+      }, 5000);
+    }
+
     // Hash change listener - same pattern as onboarding files
     window.addEventListener('hashchange', () => {
       const hashValue = location.hash.substring(1);
       console.log('Hash changed to:', hashValue);
+      
+      if (hashValue.includes('#finish-join')) {
+        // Show finish-join page
+        document.getElementById('main-join-page').style.display = 'none';
+        document.getElementById('finish-join-page').style.display = 'block';
+        
+        // Stop carousel when on finish page
+        if (carouselInterval) {
+          clearInterval(carouselInterval);
+        }
+      } else {
+        // Show main join page
+        document.getElementById('main-join-page').style.display = 'block';
+        document.getElementById('finish-join-page').style.display = 'none';
+        
+        // Start carousel on main page
+        startCarousel();
+      }
       
       if (hashValue && hashValue.includes('+')) {
         // Hash contains user session data (userUID+sessionId)
@@ -693,6 +988,11 @@
         console.log('Initial hash detected:', initialHash);
         const [userUID, sessionId] = initialHash.split('+');
         console.log('Initial session data - userUID:', userUID, 'sessionId:', sessionId);
+      }
+      
+      // Start carousel on page load if on main page
+      if (!initialHash.includes('#finish-join')) {
+        startCarousel();
       }
     });
   </script>
