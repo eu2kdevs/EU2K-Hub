@@ -61,49 +61,65 @@
     // Make db globally available
     window.db = db;
 
-    // Parse URL parameters - support both query params and GitHub Pages hash format
+    // Parse URL parameters - support hash format: /event_hub/join/eventCode#userUID+sessionId
     const urlParams = new URLSearchParams(window.location.search);
     
     let eventCode, userUID, sessionId;
     
-    // First try query parameters (current format)
-    eventCode = urlParams.get('eventCode');
-    userUID = urlParams.get('userUID');
-    sessionId = urlParams.get('sessionId');
+    // Parse from URL path and hash
+    const pathParts = window.location.pathname.split('/');
+    const joinIndex = pathParts.indexOf('join');
     
-    // If no query params, try GitHub Pages path format: /event_hub/join/eventCode/userUID+sessionId
-    if (!eventCode) {
-      const pathParts = window.location.pathname.split('/');
-      const joinIndex = pathParts.indexOf('join');
+    if (joinIndex !== -1 && pathParts.length > joinIndex + 1) {
+      eventCode = pathParts[joinIndex + 1];
       
-      if (joinIndex !== -1 && pathParts.length > joinIndex + 2) {
-        eventCode = pathParts[joinIndex + 1];
-        const userSessionPart = pathParts[joinIndex + 2];
+      // Parse hash for userUID+sessionId
+      if (window.location.hash) {
+        const hashContent = window.location.hash.substring(1);
         
-        // Split userUID+sessionId
-        if (userSessionPart && userSessionPart.includes('+')) {
-          const parts = userSessionPart.split('+');
+        if (hashContent && hashContent.includes('+')) {
+          const parts = hashContent.split('+');
           userUID = parts[0];
           sessionId = parts[1];
         }
       }
     }
     
-    // Also try hash-based format: #eventCode#userUID+sessionId (GitHub Pages compatible)
-    if (!eventCode && window.location.hash) {
-      const hashContent = window.location.hash.substring(1);
-      const hashParts = hashContent.split('#');
-      
-      if (hashParts.length >= 2) {
-        eventCode = hashParts[0];
-        const userSessionPart = hashParts[1];
-        
-        if (userSessionPart && userSessionPart.includes('+')) {
-          const parts = userSessionPart.split('+');
-          userUID = parts[0];
-          sessionId = parts[1];
-        }
+    // Validation function
+    function validateJoinParameters() {
+      // Check if all required parameters are present
+      if (!eventCode || !userUID || !sessionId) {
+        console.error('Missing join parameters:', { eventCode, userUID, sessionId });
+        return false;
       }
+      
+      // Validate eventCode format (should be alphanumeric)
+      if (!/^[a-zA-Z0-9]+$/.test(eventCode)) {
+        console.error('Invalid event code format:', eventCode);
+        return false;
+      }
+      
+      // Validate userUID format (Firebase UID format)
+      if (!/^[a-zA-Z0-9]{20,}$/.test(userUID)) {
+        console.error('Invalid user UID format:', userUID);
+        return false;
+      }
+      
+      // Validate sessionId format (should be alphanumeric, 10+ chars)
+      if (!/^[a-zA-Z0-9]{10,}$/.test(sessionId)) {
+        console.error('Invalid session ID format:', sessionId);
+        return false;
+      }
+      
+      return true;
+    }
+    
+    // Validate parameters on page load
+    if (!validateJoinParameters()) {
+      console.log('Invalid parameters, redirecting to event hub...');
+      setTimeout(() => {
+        window.location.href = '/EU2K-Hub/event_hub.html';
+      }, 1000);
     }
     
     // Store parameters globally
