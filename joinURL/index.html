@@ -74,11 +74,25 @@
             eventCode = window.location.hash.substring(1);
         }
 
-        // Esemény kód ellenőrzése
-        if (!eventCode) {
-            messageEl.innerHTML = '<span data-translate="join.no-event-code">Hiányzó kód, nem sikerült csatlakozni az eseményhez.</span>';
-            messageEl.className = 'message';
-        } else {
+        // Hash change listener - ugyanúgy mint az onboarding fájlokban
+        window.addEventListener('hashchange', () => {
+            const newEventCode = window.location.hash.substring(1);
+            if (newEventCode && newEventCode !== eventCode) {
+                eventCode = newEventCode;
+                console.log('Hash changed, new eventCode:', eventCode);
+                // Restart the auth check with new event code
+                checkAuthAndRedirect();
+            }
+        });
+
+        function checkAuthAndRedirect() {
+            // Esemény kód ellenőrzése
+            if (!eventCode) {
+                messageEl.innerHTML = '<span data-translate="join.no-event-code">Hiányzó kód, nem sikerült csatlakozni az eseményhez.</span>';
+                messageEl.className = 'message';
+                return;
+            }
+
             // Firebase Auth állapot figyelése - ugyanúgy mint test_firebase.js whoAmI függvényben
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
@@ -123,6 +137,9 @@
                 }
             });
         }
+
+        // Initial check
+        checkAuthAndRedirect();
     </script>
 </body>
 </html>

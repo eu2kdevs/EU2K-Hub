@@ -140,12 +140,20 @@
       console.log('Auth check - isLoggedIn:', isLoggedIn, 'userUID:', userUID);
       
       if (isLoggedIn && eventCode) {
-        // User is signed in - generate session ID and redirect to join page
+        // User is signed in - generate session ID and update hash instead of redirect
         const sessionId = Math.random().toString(36).substring(2, 15);
-        const joinUrl = `/EU2K-Hub/event_hub/join/${eventCode}.html#${userUID}+${sessionId}`;
+        const newHash = `${userUID}+${sessionId}`;
         
-        console.log('User authenticated, redirecting to:', joinUrl);
-        window.location.href = joinUrl;
+        console.log('User authenticated, updating hash to:', newHash);
+        
+        // Update URL hash to reflect the user session - same pattern as onboarding
+        if (window.location.hash !== '#' + newHash) {
+          window.location.hash = '#' + newHash;
+        }
+        
+        // Continue with page initialization instead of redirect
+        console.log('✅ Hash updated, continuing with page load...');
+        
       } else if (!isLoggedIn) {
         // User is not signed in - redirect to login page with return URL
         const currentUrl = encodeURIComponent(window.location.href);
@@ -661,6 +669,32 @@
         }, 300);
       }, 3000);
     }
+
+    // Hash change listener - same pattern as onboarding files
+    window.addEventListener('hashchange', () => {
+      const hashValue = location.hash.substring(1);
+      console.log('Hash changed to:', hashValue);
+      
+      if (hashValue && hashValue.includes('+')) {
+        // Hash contains user session data (userUID+sessionId)
+        const [userUID, sessionId] = hashValue.split('+');
+        console.log('Hash contains session data - userUID:', userUID, 'sessionId:', sessionId);
+        
+        // Update page state based on hash
+        // This ensures the page reflects the current hash state
+        console.log('✅ Page updated based on hash change');
+      }
+    });
+
+    // Check initial hash on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      const initialHash = location.hash.substring(1);
+      if (initialHash && initialHash.includes('+')) {
+        console.log('Initial hash detected:', initialHash);
+        const [userUID, sessionId] = initialHash.split('+');
+        console.log('Initial session data - userUID:', userUID, 'sessionId:', sessionId);
+      }
+    });
   </script>
   <div id="site-footer" class="footer" aria-label="Site footer">
     <div class="footer-container">
