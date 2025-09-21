@@ -107,9 +107,15 @@
 .join-page-content {
   display: flex;
   flex-direction: column;
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
 .info-section {
+  background-color: var(--card-bg);
+  border-radius: var(--card-radius);
   padding: 20px;
 }
 
@@ -177,12 +183,16 @@
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #272B26;
 }
 
 .carousel-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
 }
 
 .button-container {
