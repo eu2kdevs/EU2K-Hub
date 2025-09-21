@@ -81,7 +81,6 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 32px;
   padding: 8px;
 }
 
@@ -108,15 +107,9 @@
 .join-page-content {
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
 }
 
 .info-section {
-  background-color: var(--card-bg);
-  border-radius: var(--card-radius);
   padding: 20px;
 }
 
@@ -127,6 +120,14 @@
   color: #E0E4DB;
 }
 
+.food-title {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 20px;
+  color: #E0E4DB;
+  margin-top: 24px;
+}
+
 .input-icon {
   width: 24px;
   height: 24px;
@@ -134,8 +135,8 @@
 }
 
 .info-container {
-  background-color: var(--red);
-  border-radius: 12px;
+  background-color: #272B26;
+  border-radius: 32px;
   padding: 20px;
   position: relative;
   display: grid;
@@ -175,7 +176,6 @@
   height: 180px;
   border-radius: 12px;
   overflow: hidden;
-  background-color: #272B26;
   margin-bottom: 16px;
 }
 
@@ -219,6 +219,7 @@
   position: relative;
   margin: 0 auto;
   display: block;
+  background-color: #9CD49F;
 }
 
 /* QR Code section */

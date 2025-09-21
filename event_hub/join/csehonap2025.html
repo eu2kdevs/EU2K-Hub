@@ -7,6 +7,7 @@
 
   <title data-translate="pages.event_hub.join.title">Csatlakozás a CSE-HO Naphoz:</title>
   <link rel="stylesheet" href="csehonap2025.css">
+  <link rel="stylesheet" href="/EU2K-Hub/event_hub.css">
   <link rel="icon" href="/EU2K-Hub/favicon.ico">
   <script type="importmap">
     {
@@ -326,34 +327,17 @@
               <md-outlined-text-field 
                 id="group-description-input" 
                 label="Leírás a csapatról" 
-                supporting-text="Rövid leírás a csapatotokról"
-                type="textarea"
-                style="flex: 1;">
+                type="textarea">
               </md-outlined-text-field>
             </div>
           </div>
           
           <!-- What is CSE-HO Day Section -->
           <div class="info-section">
-            <h2 class="section-title" style="color: #E0E4DB;">Mi az a CSE-HO Nap?</h2>
+            <h2 class="section-title">Mi az a CSE-HO Nap?</h2>
             
             <!-- Main Info Container with Two Columns -->
             <div class="info-container">
-              <!-- Left Column -->
-              <div class="info-text-content">
-                <h3 style="color: #E0E4DB; margin-top: 0; text-align: center;">Mi az a CSE-HO Nap?</h3>
-                <p style="color: #B8CCB5; line-height: 1.6; margin-bottom: 24px;">
-                  A CSE-HO Nap egy különleges kulturális esemény, ahol a diákok megismerkedhetnek a cseh kultúrával, hagyományokkal és gasztronómiával.
-                </p>
-                <p style="color: #B8CCB5; line-height: 1.6; margin-bottom: 24px;">
-                  Az esemény során különböző programok várják a résztvevőket: kulturális bemutatók, hagyományos cseh ételek kóstolása, és interaktív tevékenységek.
-                </p>
-                <p style="color: #B8CCB5; line-height: 1.6;">
-                  Csatlakozz te is, és fedezd fel a cseh kultúra szépségeit!
-                </p>
-              </div>
-              
-              <!-- Right Column - Image Carousel -->
               <div class="carousel-column">
                 <div class="carousel-container">
                   <img id="carousel-image" src="/EU2K-Hub/assets/placeholder_img.svg" alt="CSE-HO Nap információ" class="carousel-image">
@@ -384,7 +368,7 @@
         <div id="finish-join-page" class="join-page-content" style="display: none;">
           <!-- Food Information Section -->
           <div class="info-section">
-            <h2 class="section-title" style="color: #E0E4DB;">Fogás információk</h2>
+            <h2 class="section-title">Fogás információk</h2>
             
             <!-- Food Icon -->
             <div class="input-group">
@@ -392,7 +376,7 @@
             </div>
             
             <!-- Food List Section -->
-            <h3 class="section-title" style="color: #E0E4DB; margin-top: 24px;">Ételek:</h3>
+            <h3 class="section-title">Ételek:</h3>
             
             <!-- Food Items List -->
             <div id="food-items-list" class="food-list">
@@ -400,7 +384,7 @@
             </div>
             
             <!-- Add Food FAB -->
-            <md-fab id="add-food-fab" class="add-food-fab" style="background-color: #9CD49F;" onclick="addFoodItem()">
+            <md-fab id="add-food-fab" class="add-food-fab" onclick="addFoodItem()">
               <img src="/EU2K-Hub/assets/add.svg" alt="Hozzáadás" slot="icon">
             </md-fab>
           </div>
@@ -472,7 +456,7 @@
             <!-- Connected Button Group -->
             <div class="button-group">
               <button class="btn-primary active" id="qr-btn">
-                QR-Kód
+                QR-Kód Mentése
               </button>
               <button class="btn-secondary" id="share-btn">
                 Megosztás
@@ -487,29 +471,6 @@
             </md-filled-button>
           </div>
         </div>
-         
-         <!-- Animált FAB gomb -->
-         <div class="floating-fab" id="floating-fab">
-            <span class="fab-text">Új esemény</span>
-            <span class="fab-icon">+</span>
-          </div>
-         
-         <!-- FAB opciók -->
-         <div id="fab-options" class="fab-options">
-           <div class="fab-option" data-action="event">
-             <img src="/EU2K-Hub/assets/event_hub/event.svg" alt="Esemény" class="fab-option-icon" />
-             <span>Esemény</span>
-           </div>
-           <div class="fab-option" data-action="meeting">
-             <img src="/EU2K-Hub/assets/event_hub/meeting.svg" alt="Találkozó" class="fab-option-icon" />
-             <span>Találkozó</span>
-           </div>
-           <div class="fab-option" data-action="course">
-             <img src="/EU2K-Hub/assets/event_hub/courses.svg" alt="Kurzus" class="fab-option-icon" />
-             <span>Kurzus</span>
-           </div>
-         </div>
-       </div>
         <div id="site-footer" class="footer" aria-label="Site footer">
         <div class="footer-container">
           <div class="footer-left">
@@ -1023,21 +984,7 @@
       }
     });
   </script>
-  <div id="site-footer" class="footer" aria-label="Site footer">
-    <div class="footer-container">
-      <div class="footer-left">
-        <img src="/EU2K-Hub/eu2k_hub_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Hub Logó">
-      </div>
-      <div class="footer-center">
-        <a class="footer-privacy" data-translate="pages.index.privacy_policy" href="/EU2K-Hub/privacy_policy.html">Adatkezelési Tájékoztató</a>
-            <a class="footer-privacy" data-translate="pages.index.terms_of_service" href="/EU2K-Hub/terms_of_service.html">Használati Feltételek</a>
-      </div>
-      <div class="footer-right">
-        <img src="/EU2K-Hub/eu2k_devs_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Devs Logó">
-        <img src="/EU2K-Hub/eu2k_dok_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K DÖK Logó">
-      </div>
-    </div>
-  </div>
+
 </body>
 
 </html>
