@@ -315,7 +315,6 @@
               <md-outlined-text-field 
                 id="class-teacher-input" 
                 label="Osztályfőnök neve" 
-                supporting-text="Add meg az osztályfőnököd nevét"
                 required
                 style="flex: 1;">
               </md-outlined-text-field>
@@ -327,7 +326,8 @@
               <md-outlined-text-field 
                 id="group-description-input" 
                 label="Leírás a csapatról" 
-                type="textarea">
+                type="textarea"
+                style="flex: 1;">
               </md-outlined-text-field>
             </div>
           </div>
@@ -342,26 +342,24 @@
                 <div class="carousel-container">
                   <img id="carousel-image" src="/EU2K-Hub/assets/placeholder_img.svg" alt="CSE-HO Nap információ" class="carousel-image">
                 </div>
-                
-                <!-- Progress Bar -->
-                <div class="progress-container">
-                  <div class="progress-bar">
-                    <div class="progress-segment active" id="progress-1"></div>
-                    <div class="progress-segment" id="progress-2"></div>
-                    <div class="progress-segment" id="progress-3"></div>
-                    <div class="progress-segment" id="progress-4"></div>
-                  </div>
-                </div>
+              </div>
+            </div>
+            <!-- Progress Bar -->
+            <div class="progress-container">
+              <div class="progress-bar">
+                <div class="progress-segment active" id="progress-1"></div>
+                <div class="progress-segment" id="progress-2"></div>
+                <div class="progress-segment" id="progress-3"></div>
+                <div class="progress-segment" id="progress-4"></div>
               </div>
             </div>
           </div>
-          
-          <!-- Continue Button -->
-          <div class="button-container">
-            <md-filled-button id="continue-btn" onclick="navigateToFinishJoin()">
-              Csatlakozás
-            </md-filled-button>
-          </div>
+        </div>
+        <!-- Continue Button -->
+        <div class="button-container">
+          <md-filled-button id="continue-btn" onclick="navigateToFinishJoin()">
+            Csatlakozás
+          </md-filled-button>
         </div>
         
         <!-- Finish Join Page (hidden initially) -->
@@ -406,72 +404,21 @@
               </button>
             </div>
           </div>
-          
-          <!-- Join Button -->
-          <div class="button-container" style="display: flex; gap: 16px; align-items: center; justify-content: center;">
-            <md-filled-button id="back-btn" onclick="navigateBackToMainJoin()" style="display: flex; align-items: center; gap: 8px;">
-              <svg slot="icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-              </svg>
-              Vissza
-            </md-filled-button>
-            <md-filled-button id="final-join-btn" onclick="finalizeJoin()">
-              Csatlakozás
-            </md-filled-button>
-          </div>
         </div>
-        
-        <!-- Finish Join Page (hidden initially) -->
-        <div id="finish-join-page" class="join-page-content" style="display: none;">
-          <!-- Food Information Section -->
-          <div class="info-section">
-            <h2 class="section-title" style="color: #E0E4DB;">Fogás információk</h2>
-            
-            <!-- Food Icon -->
-            <div class="input-group">
-              <img src="/EU2K-Hub/assets/events/csehonap/food_icon.svg" class="input-icon" alt="Étel">
-            </div>
-            
-            <!-- Food List Section -->
-            <h3 class="section-title" style="color: #E0E4DB; margin-top: 24px;">Ételek:</h3>
-            
-            <!-- Food Items List -->
-            <div id="food-items-list" class="food-list">
-              <!-- Food items will be added dynamically -->
-            </div>
-            
-            <!-- Add Food FAB -->
-            <md-fab id="add-food-fab" class="add-food-fab" style="background-color: #9CD49F;" onclick="addFoodItem()">
-              <img src="/EU2K-Hub/assets/add.svg" alt="Hozzáadás" slot="icon">
-            </md-fab>
-          </div>
-          
-          <!-- QR Code Section -->
-          <div class="qr-section">
-            <div class="qr-container">
-              <div class="qr-background"></div>
-              <img id="qr-code-image" src="/EU2K-Hub/assets/preset_qrcode.png" alt="QR Kód" class="qr-image">
-            </div>
-            
-            <!-- Connected Button Group -->
-            <div class="button-group">
-              <button class="btn-primary active" id="qr-btn">
-                QR-Kód Mentése
-              </button>
-              <button class="btn-secondary" id="share-btn">
-                Megosztás
-              </button>
-            </div>
-          </div>
-          
-          <!-- Join Button -->
-          <div class="button-container">
-            <md-filled-button id="final-join-btn" onclick="finalizeJoin()">
-              Csatlakozás
-            </md-filled-button>
-          </div>
+        <!-- Join Button -->
+        <div class="button-container" style="display: flex; gap: 16px; align-items: center; justify-content: center;">
+          <md-filled-button id="back-btn" onclick="navigateBackToMainJoin()" style="display: flex; align-items: center; gap: 8px;">
+            <svg slot="icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+            Vissza
+          </md-filled-button>
+          <md-filled-button id="final-join-btn" onclick="finalizeJoin()">
+            Csatlakozás
+          </md-filled-button>
         </div>
-        <div id="site-footer" class="footer" aria-label="Site footer">
+      </div>
+      <div id="site-footer" class="footer" aria-label="Site footer">
         <div class="footer-container">
           <div class="footer-left">
             <img src="/EU2K-Hub/eu2k_hub_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Hub Logó">

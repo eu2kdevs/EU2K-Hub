@@ -69,527 +69,6 @@
   --transition: 0.2s cubic-bezier(.4, 0, .2, 1);
 }
 
-/* Progress bar styles */
-.progress-container {
-  display: flex;
-  gap: 8px;
-  margin-top: 16px;
-  justify-content: center;
-}
-
-.input-group {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 8px;
-}
-
-.progress-bar {
-  display: flex;
-  gap: 8px;
-  width: 100%;
-  max-width: 240px;
-}
-
-.progress-segment {
-  height: 4px;
-  background-color: rgba(224, 228, 219, 0.3);
-  border-radius: 2px;
-  flex: 1;
-  transition: background-color 0.3s ease;
-}
-
-.progress-segment.active {
-  background-color: var(--md-sys-color-primary);
-}
-
-/* Join page specific styles */
-.join-page-content {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-.info-section {
-  background-color: var(--card-bg);
-  border-radius: var(--card-radius);
-  padding: 20px;
-}
-
-.section-title {
-  font-size: 1.1rem;
-  font-weight: 400;
-  margin-bottom: 20px;
-  color: #E0E4DB;
-}
-
-.food-title {
-  font-size: 1.1rem;
-  font-weight: 400;
-  margin-bottom: 20px;
-  color: #E0E4DB;
-  margin-top: 24px;
-}
-
-.input-icon {
-  width: 24px;
-  height: 24px;
-  opacity: 0.7;
-}
-
-.info-container {
-  background-color: #272B26;
-  border-radius: 32px;
-  padding: 20px;
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 24px;
-  align-items: start;
-  min-height: 200px;
-}
-
-.info-text-content h3 {
-  color: var(--text-main);
-  margin-top: 0;
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 500;
-}
-
-.info-text-content p {
-  color: #B8CCB5;
-  line-height: 1.6;
-  margin-bottom: 24px;
-}
-
-.info-text-content p:last-child {
-  margin-bottom: 0;
-}
-
-.carousel-column {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-
-.carousel-container {
-  width: 100%;
-  height: 180px;
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #272B26;
-}
-
-.carousel-image {
-  width: 80%;
-  height: 80%;
-  object-fit: contain;
-}
-
-.button-container {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  align-items: center;
-  margin-top: 24px;
-}
-
-/* Food list styles */
-.food-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.food-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background-color: rgba(224, 228, 219, 0.05);
-  border-radius: 8px;
-  border: 1px solid rgba(224, 228, 219, 0.1);
-}
-
-.food-item md-outlined-text-field {
-  flex: 1;
-}
-
-.add-food-fab {
-  position: relative;
-  margin: 0 auto;
-  display: block;
-  background-color: #9CD49F;
-}
-
-/* QR Code section */
-.qr-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  padding: 24px;
-  background-color: var(--card-bg);
-  border-radius: var(--card-radius);
-}
-
-.qr-container {
-  position: relative;
-  width: 200px;
-  height: 200px;
-}
-
-.qr-background {
-  position: absolute;
-  inset: 0;
-  background-color: white;
-  border-radius: 12px;
-}
-
-.qr-image {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  padding: 12px;
-}
-
-.button-group {
-  display: flex;
-  gap: 8px;
-  background-color: rgba(224, 228, 219, 0.1);
-  border-radius: 24px;
-  padding: 4px;
-}
-
-.btn-primary, .btn-secondary {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-primary {
-  background-color: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  color: var(--text-secondary);
-}
-
-.btn-secondary:hover {
-  background-color: rgba(224, 228, 219, 0.1);
-}
-
-/* Textarea resize disable */
-md-outlined-text-field[type="textarea"] {
-  resize: none !important;
-}
-
-md-outlined-text-field[type="textarea"]::part(field) {
-  resize: none !important;
-}
-
-md-outlined-text-field[type="textarea"] textarea {
-  resize: none !important;
-}
-
-/* Carousel styles */
-.carousel-container {
-  width: 100%;
-  height: 200px;
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(224, 228, 219, 0.1);
-}
-
-.carousel-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Food items styles */
-.food-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.food-item {
-  opacity: 0;
-  animation: fadeInUp 0.3s ease forwards;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.food-item-container {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-}
-
-.food-image-container {
-  width: 80px;
-  height: 80px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.food-image {
-  width: 48px;
-  height: 48px;
-  opacity: 0.6;
-}
-
-.food-details {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.food-input-group {
-  position: relative;
-}
-
-.food-name-input,
-.food-description-input {
-  width: 100%;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgba(224, 228, 219, 0.3);
-  padding: 8px 0;
-  color: #E0E4DB;
-  font-size: 16px;
-  font-family: 'Inter', sans-serif;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.food-name-input:focus,
-.food-description-input:focus {
-  border-bottom-color: #9CD49F;
-}
-
-.food-name-input::placeholder,
-.food-description-input::placeholder {
-  color: rgba(224, 228, 219, 0.5);
-}
-
-.save-later-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #243425;
-  cursor: not-allowed;
-  opacity: 0.7;
-  transition: all 0.3s ease;
-  align-self: flex-start;
-}
-
-.save-icon {
-  width: 16px;
-  height: 16px;
-}
-
-.divider {
-  height: 1px;
-  background: rgba(224, 228, 219, 0.1);
-  margin: 16px 0;
-}
-
-.add-food-fab {
-  width: 48px;
-  height: 48px;
-  border: none;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin: 16px auto 0;
-}
-
-.add-food-fab:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(156, 212, 159, 0.4);
-}
-
-/* QR Code styles */
-.qr-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  margin-top: 32px;
-}
-
-.qr-container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-
-.qr-background {
-  position: absolute;
-  top: -12px;
-  left: -12px;
-  right: -12px;
-  bottom: -12px;
-  background: white;
-  border-radius: 16px;
-  z-index: -1;
-}
-
-.qr-image {
-  width: 200px;
-  height: 200px;
-  border-radius: 8px;
-}
-
-/* Button group styles */
-.button-group {
-  display: flex;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.btn-primary,
-.btn-secondary {
-  padding: 12px 24px;
-  border: none;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.btn-primary {
-  background-color: #B8CCB5;
-  color: #243425;
-}
-
-.btn-secondary {
-  background-color: #3A4B3A;
-  color: #D4E8D1;
-}
-
-.btn-primary:hover,
-.btn-secondary:hover {
-  opacity: 0.8;
-}
-
-.btn-primary.active {
-  background-color: #9CD49F;
-}
-
-.btn-secondary.active {
-  background-color: #4A5B4A;
-}
-
-/* Popup notification styles */
-.popup-notification {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  background: rgba(39, 43, 38, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(224, 228, 219, 0.2);
-  border-radius: 12px;
-  padding: 16px 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  z-index: 10000;
-  transform: translateX(100%);
-  opacity: 0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  max-width: 320px;
-}
-
-.popup-notification.show {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-.popup-notification.success {
-  border-left: 4px solid #9CD49F;
-}
-
-.popup-notification.error {
-  border-left: 4px solid #FF6B6B;
-}
-
-.popup-content {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.popup-icon {
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-}
-
-.popup-icon svg {
-  width: 100%;
-  height: 100%;
-  fill: #9CD49F;
-}
-
-.popup-notification.error .popup-icon svg {
-  fill: #FF6B6B;
-}
-
-.popup-message {
-  color: #E0E4DB;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.4;
-}
-
 html, body {
   height: 100%;
   margin: 0;
@@ -904,4 +383,496 @@ body {
     gap: 8px;
     padding: 10px 12px;
   }
+}
+
+/* Progress bar styles */
+.progress-container {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  justify-content: center;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px;
+}
+
+.progress-bar {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  max-width: 240px;
+}
+
+.progress-segment {
+  height: 4px;
+  background-color: rgba(224, 228, 219, 0.3);
+  border-radius: 2px;
+  flex: 1;
+  transition: background-color 0.3s ease;
+}
+
+.progress-segment.active {
+  background-color: var(--md-sys-color-primary);
+}
+
+/* Join page specific styles */
+.join-page-content {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+}
+
+.info-section {
+  padding: 20px;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 20px;
+  color: #E0E4DB;
+}
+
+.food-title {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 20px;
+  color: #E0E4DB;
+  margin-top: 24px;
+}
+
+.input-icon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.7;
+}
+
+.info-container {
+  background-color: #272B26;
+  border-radius: 32px;
+  padding: 20px;
+  position: relative;
+  display: flex;
+  gap: 24px;
+  align-items: start;
+  min-height: 200px;
+  width: calc(100% + 285px);
+  justify-content: center;
+}
+
+.info-text-content h3 {
+  color: var(--text-main);
+  margin-top: 0;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.info-text-content p {
+  color: #B8CCB5;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.info-text-content p:last-child {
+  margin-bottom: 0;
+}
+
+.carousel-column {
+  align-items: center;
+}
+
+.carousel-container {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-image {
+  width: calc(100% + 40px);
+  height: calc(100% + 40px);
+  object-fit: cover;
+}
+
+.button-container {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 24px;
+}
+
+/* Food list styles */
+.food-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.food-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background-color: rgba(224, 228, 219, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(224, 228, 219, 0.1);
+}
+
+.food-item md-outlined-text-field {
+  flex: 1;
+}
+
+.add-food-fab {
+  position: relative;
+  margin: 0 auto;
+  display: block;
+  background-color: #9CD49F;
+}
+
+/* QR Code section */
+.qr-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 24px;
+  background-color: var(--card-bg);
+  border-radius: var(--card-radius);
+}
+
+.qr-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.qr-background {
+  position: absolute;
+  inset: 0;
+  background-color: white;
+  border-radius: 12px;
+}
+
+.qr-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 12px;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px;
+  background-color: rgba(224, 228, 219, 0.1);
+  border-radius: 24px;
+  padding: 4px;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-secondary:hover {
+  background-color: rgba(224, 228, 219, 0.1);
+}
+
+/* Textarea resize disable */
+md-outlined-text-field[type="textarea"] {
+  resize: none !important;
+}
+
+md-outlined-text-field[type="textarea"]::part(field) {
+  resize: none !important;
+}
+
+md-outlined-text-field[type="textarea"] textarea {
+  resize: none !important;
+}
+
+/* Food items styles */
+.food-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.food-item {
+  opacity: 0;
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.food-item-container {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.food-image-container {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.food-image {
+  width: 48px;
+  height: 48px;
+  opacity: 0.6;
+}
+
+.food-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.food-input-group {
+  position: relative;
+}
+
+.food-name-input,
+.food-description-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(224, 228, 219, 0.3);
+  padding: 8px 0;
+  color: #E0E4DB;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.food-name-input:focus,
+.food-description-input:focus {
+  border-bottom-color: #9CD49F;
+}
+
+.food-name-input::placeholder,
+.food-description-input::placeholder {
+  color: rgba(224, 228, 219, 0.5);
+}
+
+.save-later-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #243425;
+  cursor: not-allowed;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+}
+
+.save-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(224, 228, 219, 0.1);
+  margin: 16px 0;
+}
+
+.add-food-fab {
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 16px auto 0;
+}
+
+.add-food-fab:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(156, 212, 159, 0.4);
+}
+
+/* QR Code styles */
+.qr-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.qr-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.qr-background {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  right: -12px;
+  bottom: -12px;
+  background: white;
+  border-radius: 16px;
+  z-index: -1;
+}
+
+.qr-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 8px;
+}
+
+/* Button group styles */
+.button-group {
+  display: flex;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 12px 24px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background-color: #B8CCB5;
+  color: #243425;
+}
+
+.btn-secondary {
+  background-color: #3A4B3A;
+  color: #D4E8D1;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+  opacity: 0.8;
+}
+
+.btn-primary.active {
+  background-color: #9CD49F;
+}
+
+.btn-secondary.active {
+  background-color: #4A5B4A;
+}
+
+/* Popup notification styles */
+.popup-notification {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  background: rgba(39, 43, 38, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(224, 228, 219, 0.2);
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  z-index: 10000;
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 320px;
+}
+
+.popup-notification.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.popup-notification.success {
+  border-left: 4px solid #9CD49F;
+}
+
+.popup-notification.error {
+  border-left: 4px solid #FF6B6B;
+}
+
+.popup-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.popup-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.popup-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: #9CD49F;
+}
+
+.popup-notification.error .popup-icon svg {
+  fill: #FF6B6B;
+}
+
+.popup-message {
+  color: #E0E4DB;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
 }
