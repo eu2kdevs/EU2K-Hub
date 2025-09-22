@@ -3,8 +3,8 @@
 # EU2K Hub
 
 **Status:** ⚠️ Closed Beta  
-**Version:** 0.3abc (experimental, closed beta)  
-**Known issues:** Scrolling not working on homepage, settings general page resizeability is broken, news carousel on homepage is broken, teacher hub broken
+**Version:** 0.5abc (experimental, closed beta)  
+**Known issues:** Event Hub not fully working, QR-Code site is going to be under renovation
 
 --- 
 
@@ -18,7 +18,7 @@ It combines multiple features to support school life, communication, and learnin
 - **Home:** Displays the latest news and events.
 - **QR-Code:** Quick access for mobile users.
 - **YouHub:** Student dashboard with stats, schedule, notifications, and creative suggestions.
-- **Event Hub:** Collection of educational materials and subjects.
+- **Event Hub:** A place to post and advertise Events, Meetings, and Courses to other people on the Hub.
 
 ---
 
@@ -32,16 +32,16 @@ It combines multiple features to support school life, communication, and learnin
 
 ## YouHub Features
 
-- **Statistics:**
-  - *My Month* - Monthly performance overview
-    - See your progress up to 8 months prior
-    - See how you're going to perform in the upcoming 2 months
-  - *My Strengths* - Student strengths
-    - See your worst and best performing subjects
-    - And pin out your target, for example to get better in maths
-      - Get daily or weekly fun reminders to study, and improve your grades
-  - *My Streak* - Grade/activity series
-    - Choose a subject, get good grades one after another, and see your streak go up for cool rewards, badges, and advantages!
+- **My Class:**
+  - *Class's Month* - Monthly performance overview
+    - See your class's progress up to 8 months prior
+    - See how your class going to perform in the upcoming 2 months
+  - *Class Suggestions* - Suggestions restricted to only your class
+    - See suggestions submitted to your class
+  - *Information* - Other important information
+    - See your class's headcount, and absent students reported for today
+    - See your class's classroom layout
+    - Make and post a publicly (only to the school) available profile for your class, include a banner picture, a name, a short description, and you're done, the Hub wil take care of the rest.
 
 - **Calendar:**
   - Daily schedule with class times and locations.
