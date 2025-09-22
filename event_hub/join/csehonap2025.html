@@ -160,7 +160,7 @@
         const currentUrl = encodeURIComponent(window.location.href);
         
         document.getElementById('auth-message').textContent = 'Bejelentkezés szükséges...';
-        document.getElementById('auth-message').style.display = 'block';
+        document.getElementById('auth-message').style.display = 'flex';
         
         setTimeout(() => {
           window.location.href = `/EU2K-Hub/welcome/onboarding_student.html?returnUrl=${currentUrl}`;
@@ -168,7 +168,7 @@
       } else {
         // Logged in but no event code - show error
         document.getElementById('auth-message').textContent = 'Hiányzó esemény kód!';
-        document.getElementById('auth-message').style.display = 'block';
+        document.getElementById('auth-message').style.display = 'flex';
       }
     }
 
@@ -356,7 +356,7 @@
           </div>
         </div>
         <!-- Continue Button -->
-        <div class="button-container">
+        <div class="button-container main-join-buttons">
           <md-filled-button id="continue-btn" onclick="navigateToFinishJoin()">
             Csatlakozás
           </md-filled-button>
@@ -406,7 +406,7 @@
           </div>
         </div>
         <!-- Join Button -->
-        <div class="button-container" style="display: flex; gap: 16px; align-items: center; justify-content: center;">
+        <div class="button-container finish-join-buttons" style="display: flex; gap: 16px; align-items: center; justify-content: center;">
           <md-filled-button id="back-btn" onclick="navigateBackToMainJoin()" style="display: flex; align-items: center; gap: 8px;">
             <svg slot="icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
               <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
@@ -726,28 +726,98 @@
     let currentSlide = 0;
     const totalSlides = 4;
     let carouselInterval;
+    let carouselImages = {};
+    
+    // Preload images from Firebase
+    async function preloadCarouselImages() {
+      try {
+        // Import Firebase functions
+        const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+        
+        // Get the csehonap2025 document
+        const docRef = doc(db, 'events', 'csehonap2025');
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          
+          // Preload images for each slide
+          for (let i = 1; i <= 4; i++) {
+            const imageUrl = data[`pic${i}URL`];
+            if (imageUrl) {
+              try {
+                // Test if image loads successfully
+                const img = new Image();
+                img.onload = () => {
+                  carouselImages[i] = imageUrl;
+                  console.log(`✅ Loaded image ${i}:`, imageUrl);
+                };
+                img.onerror = () => {
+                  console.log(`❌ Failed to load image ${i}, using placeholder`);
+                  carouselImages[i] = '/EU2K-Hub/assets/placeholder_img.svg';
+                };
+                img.src = imageUrl;
+              } catch (error) {
+                console.log(`❌ Error loading image ${i}:`, error);
+                carouselImages[i] = '/EU2K-Hub/assets/placeholder_img.svg';
+              }
+            } else {
+              console.log(`⚠️ No URL found for pic${i}URL, using placeholder`);
+              carouselImages[i] = '/EU2K-Hub/assets/placeholder_img.svg';
+            }
+          }
+        } else {
+          console.log('❌ csehonap2025 document not found, using placeholders');
+          for (let i = 1; i <= 4; i++) {
+            carouselImages[i] = '/EU2K-Hub/assets/placeholder_img.svg';
+          }
+        }
+      } catch (error) {
+        console.error('❌ Error preloading carousel images:', error);
+        // Fallback to placeholders
+        for (let i = 1; i <= 4; i++) {
+          carouselImages[i] = '/EU2K-Hub/assets/placeholder_img.svg';
+        }
+      }
+    }
+    
+    function updateCarouselImage() {
+      const imageElement = document.getElementById('carousel-image');
+      const imageUrl = carouselImages[currentSlide + 1];
+      
+      if (imageUrl && imageElement) {
+        imageElement.src = imageUrl;
+        console.log(`🖼️ Updated carousel to slide ${currentSlide + 1} with image:`, imageUrl);
+      }
+    }
     
     function startCarousel() {
+      // Set initial slide to 0 (first segment)
+      currentSlide = 0;
+      
+      // Set initial active segment
+      document.querySelectorAll('.progress-segment').forEach(segment => segment.classList.remove('active'));
+      document.getElementById(`progress-${currentSlide + 1}`).classList.add('active');
+      
+      // Set initial image
+      updateCarouselImage();
+      
       carouselInterval = setInterval(() => {
-        // Update progress segments
+        // Remove current active segment
         document.getElementById(`progress-${currentSlide + 1}`).classList.remove('active');
         
+        // Move to next slide (0, 1, 2, 3, 0, 1, 2, 3...)
         currentSlide = (currentSlide + 1) % totalSlides;
         
-        // Update active progress segment
+        // Add active class to new segment
         document.getElementById(`progress-${currentSlide + 1}`).classList.add('active');
         
-        // Update image (for now just log, later can switch between different images)
-        console.log(`Switching to slide ${currentSlide + 1}`);
+        // Update image
+        updateCarouselImage();
         
-        // Example of switching images (uncomment when you have multiple images):
-        // if (currentSlide === 1) {
-        //   document.getElementById('carousel-image').src = '/EU2K-Hub/assets/placeholder_img_2.svg';
-        // } else {
-        //   document.getElementById('carousel-image').src = '/EU2K-Hub/assets/placeholder_img.svg';
-        // }
+        console.log(`📊 Progress bar now on segment ${currentSlide + 1}`);
         
-      }, 20000); // 20 seconds
+      }, 5000); // 5 seconds for testing, change back to 20000 for production
     }
     
     // Navigation functions
@@ -887,10 +957,15 @@
       const hashValue = location.hash.substring(1);
       console.log('Hash changed to:', hashValue);
       
+      const mainContent = document.querySelector('.main-content');
+      
       if (hashValue.includes('#finish-join')) {
         // Show finish-join page
         document.getElementById('main-join-page').style.display = 'none';
-        document.getElementById('finish-join-page').style.display = 'block';
+        document.getElementById('finish-join-page').style.display = 'flex';
+        
+        // Add class to control button visibility
+        mainContent.classList.add('finish-join-active');
         
         // Stop carousel when on finish page
         if (carouselInterval) {
@@ -898,8 +973,11 @@
         }
       } else {
         // Show main join page
-        document.getElementById('main-join-page').style.display = 'block';
+        document.getElementById('main-join-page').style.display = 'flex';
         document.getElementById('finish-join-page').style.display = 'none';
+        
+        // Remove class to show main join buttons
+        mainContent.classList.remove('finish-join-active');
         
         // Start carousel on main page
         startCarousel();
@@ -917,7 +995,10 @@
     });
 
     // Check initial hash on page load
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
+      // Preload carousel images first
+      await preloadCarouselImages();
+      
       const initialHash = location.hash.substring(1);
       if (initialHash && initialHash.includes('+')) {
         console.log('Initial hash detected:', initialHash);

@@ -427,7 +427,7 @@ body {
 }
 
 .info-section {
-  padding: 20px;
+  padding: 0;
 }
 
 .section-title {
@@ -817,7 +817,23 @@ md-outlined-text-field[type="textarea"] textarea {
   background-color: #4A5B4A;
 }
 
-/* Popup notification styles */
+/* Button visibility control */
+.main-join-buttons {
+  display: block;
+}
+
+.finish-join-buttons {
+  display: none;
+}
+
+/* When on finish join page */
+.finish-join-active .main-join-buttons {
+  display: none;
+}
+
+.finish-join-active .finish-join-buttons {
+  display: flex !important;
+}
 .popup-notification {
   position: fixed;
   top: 24px;
