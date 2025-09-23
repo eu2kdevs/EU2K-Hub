@@ -132,7 +132,8 @@ body {
   box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
   max-width: calc(100% - 22px);
   min-height: calc(100dvh - 104px); /* mobilbarát */
-  height: calc(100dvh - 104px)
+  height: calc(100dvh - 104px);
+  flex: 1; /* dinamikus méretezés engedélyezése */
 }
 
 .header {
@@ -310,6 +311,22 @@ body {
 
   .main-content {
     margin-left: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .info-container {
+    flex-direction: column; /* mobil nézetben egymás alá */
+    align-items: center;
+  }
+  
+  .info-text-content {
+    min-width: 100%; /* teljes szélesség mobil nézetben */
+    max-width: 100%;
+  }
+  
+  .carousel-column {
+    min-width: 100%; /* teljes szélesség mobil nézetben */
   }
 }
 
@@ -492,6 +509,14 @@ body {
   min-height: 200px;
   width: 100%;
   justify-content: center;
+  flex-wrap: wrap; /* tartalom tördelése szükség esetén */
+  box-sizing: border-box; /* padding beleszámítása a szélességbe */
+}
+
+.info-text-content {
+  flex: 1; /* dinamikus méretezés */
+  min-width: 300px; /* minimum szélesség */
+  max-width: 600px; /* maximum szélesség */
 }
 
 .info-text-content h3 {
@@ -514,6 +539,8 @@ body {
 
 .carousel-column {
   align-items: center;
+  flex: 0 0 auto; /* fix méret, nem nyúlik */
+  min-width: 200px; /* minimum szélesség */
 }
 
 .carousel-container {
@@ -523,10 +550,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 32px;
 }
 
 .carousel-image {
-  width: calc(100% + 40px);
+  width: auto;
   height: calc(100% + 40px);
   object-fit: cover;
 }
