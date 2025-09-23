@@ -371,7 +371,13 @@
             
             <!-- Food Icon -->
             <div class="input-group">
-              <img src="/EU2K-Hub/assets/events/csehonap/food_icon.svg" class="input-icon" alt="Étel">
+              <img src="/EU2K-Hub/assets/events/csehonap/food_icon.svg" class="input-icon" alt="Étel Ikon">
+              <md-outlined-text-field 
+                id="food-name-input" 
+                label="Fogás Neve" 
+                required
+                style="flex: 1;">
+              </md-outlined-text-field>
             </div>
             
             <!-- Food List Section -->
@@ -914,6 +920,7 @@
             groupName: document.getElementById('group-name-input').value.trim(),
             classTeacher: document.getElementById('class-teacher-input').value.trim(),
             description: document.getElementById('group-description-input').value.trim(),
+            foodName: document.getElementById('food-name-input').value.trim(),
             lastUpdated: new Date().toISOString()
           });
           
@@ -1046,6 +1053,7 @@
     // Add event listeners to textboxes
     function addTextboxListeners() {
       const groupNameInput = document.getElementById('group-name-input');
+      const foodpNameInput = document.getElementById('food-name-input');
       const classTeacherInput = document.getElementById('class-teacher-input');
       const groupDescriptionInput = document.getElementById('group-description-input');
       
