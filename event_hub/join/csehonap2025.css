@@ -428,6 +428,7 @@ body {
 
 .info-section {
   padding: 0;
+  flex: 1;
 }
 
 .section-title {
@@ -489,7 +490,7 @@ body {
   gap: 24px;
   align-items: start;
   min-height: 200px;
-  width: calc(100% + 285px);
+  width: 100%;
   justify-content: center;
 }
 
