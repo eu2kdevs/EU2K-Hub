@@ -1024,7 +1024,8 @@
       
       const mainContent = document.querySelector('.main-content');
       
-      if (hashValue === 'finish-join') {
+      // Check if hash starts with 'finish-join' (handles both 'finish-join' and 'finish-join#userid+sessionid')
+      if (hashValue.startsWith('finish-join')) {
         // Show finish-join page
         document.getElementById('main-join-page').style.display = 'none';
         document.getElementById('finish-join-page').style.display = 'flex';
@@ -1035,6 +1036,18 @@
         // Stop carousel when on finish page
         if (carouselInterval) {
           clearInterval(carouselInterval);
+        }
+        
+        // Extract user and session data if present
+        if (hashValue.includes('#') && hashValue.includes('+')) {
+          const hashParts = hashValue.split('#');
+          if (hashParts.length > 1) {
+            const [userId, sessionId] = hashParts[1].split('+');
+            console.log('🔗 Extracted session data - userId:', userId, 'sessionId:', sessionId);
+            // Store for later use
+            window.currentUserId = userId;
+            window.currentSessionId = sessionId;
+          }
         }
       } else {
         // Show main join page
@@ -1093,14 +1106,14 @@
       await preloadCarouselImages();
       
       const initialHash = location.hash.substring(1);
-      if (initialHash && initialHash.includes('+')) {
-        console.log('Initial hash detected:', initialHash);
-        const [userUID, sessionId] = initialHash.split('+');
-        console.log('Initial session data - userUID:', userUID, 'sessionId:', sessionId);
-      }
+      console.log('Initial hash on load:', initialHash);
       
-      // Start carousel on page load if on main page
-      if (!initialHash.includes('#finish-join')) {
+      // Handle initial hash - trigger hashchange event manually
+      if (initialHash) {
+        // Manually trigger the hashchange logic
+        window.dispatchEvent(new HashChangeEvent('hashchange'));
+      } else {
+        // Start carousel on page load if no hash (main page)
         startCarousel();
       }
     });
