@@ -383,15 +383,10 @@
             <!-- Food List Section -->
             <h3 class="section-title">Ételek:</h3>
             
-            <!-- Food Items List -->
-            <div id="food-items-list" class="food-list">
-              <!-- Food items will be added dynamically -->
+            <!-- Question Mark Text -->
+            <div class="question-mark-container">
+              <div class="question-mark-text">?</div>
             </div>
-            
-            <!-- Add Food FAB -->
-            <md-fab id="add-food-fab" class="add-food-fab" onclick="addFoodItem()">
-              <img src="/EU2K-Hub/assets/add.svg" alt="Hozzáadás" slot="icon">
-            </md-fab>
           </div>
           
           <!-- QR Code Section -->
@@ -836,7 +831,11 @@
         console.log(`🆔 Generated Group ID: ${window.currentGroupId}`);
       }
       
-      window.location.hash = 'finish-join';
+      // Generate session ID (placeholder for now)
+      const sessionId = 'y3o4bby5re'; // This should be generated dynamically
+      const userId = 'CUvAu5ZLjQV4FJcd3JpzeqF8cJu2'; // This should come from auth
+      
+      window.location.hash = `finish-join#${userId}+${sessionId}`;
     }
     
     function navigateBackToMainJoin() {

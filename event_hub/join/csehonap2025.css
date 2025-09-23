@@ -566,33 +566,20 @@ body {
   margin-top: 88px;
 }
 
-/* Food list styles */
-.food-list {
+/* Question mark text styling */
+.question-mark-container {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.food-item {
-  display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background-color: rgba(224, 228, 219, 0.05);
-  border-radius: 8px;
-  border: 1px solid rgba(224, 228, 219, 0.1);
+  margin: 24px 0;
 }
 
-.food-item md-outlined-text-field {
-  flex: 1;
-}
-
-.add-food-fab {
-  position: relative;
-  margin: 0 auto;
-  display: block;
-  background-color: #9CD49F;
+.question-mark-text {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #E0E4DB;
+  text-align: center;
+  line-height: 1;
 }
 
 /* QR Code section */

@@ -9,6 +9,21 @@
       ]
     },
     {
+      "codebase": "gemini",
+      "source": "functions/gemini",
+      "runtime": "nodejs22",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run build"
+      ]
+    },
+    {
       "codebase": "groupsclaims",
       "source": "functions/groupsclaims",
       "runtime": "nodejs22",
