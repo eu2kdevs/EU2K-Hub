@@ -823,39 +823,110 @@
     // Navigation functions
     function navigateToFinishJoin() {
       // Generate group ID based on group name
-      const groupName = document.getElementById('group-name-input').value || 'DefaultGroup';
-      const groupId = generateGroupId(groupName);
-      
-      // Update hash to finish-join page
-      const currentHash = location.hash.substring(1);
-      const [userUID, sessionId] = currentHash.split('+');
-      const newHash = `${groupId}+${sessionId}#finish-join`;
-      
-      console.log('Navigating to finish-join with hash:', newHash);
-      
-      if (window.location.hash !== '#' + newHash) {
-        window.location.hash = '#' + newHash;
+      const groupNameInput = document.getElementById('group-name-input');
+      if (groupNameInput && groupNameInput.value.trim()) {
+        window.currentGroupId = generateGroupId(groupNameInput.value.trim());
+        console.log(`🆔 Generated Group ID: ${window.currentGroupId}`);
       }
+      
+      window.location.hash = 'finish-join';
     }
     
+    function navigateBackToMainJoin() {
+      window.location.hash = 'main-join';
+    }
+    
+    // Generate group ID from group name
     function generateGroupId(groupName) {
-      // Generate 15 character ID based on group name
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let result = '';
+      // Convert to lowercase and remove special characters like ., /, spaces
+      let cleanName = groupName.toLowerCase()
+        .replace(/[.\s\/]/g, '') // Remove dots, spaces, slashes
+        .replace(/[^\w]/g, ''); // Remove any remaining special characters
       
-      // Use group name as seed for consistency
-      let seed = 0;
-      for (let i = 0; i < groupName.length; i++) {
-        seed += groupName.charCodeAt(i);
+      // Add current year
+      const currentYear = new Date().getFullYear();
+      return `${cleanName}${currentYear}`;
+    }
+    
+    // Finalize join process
+    async function finalizeJoin() {
+      try {
+        // Check if user is authenticated
+        if (!auth.currentUser) {
+          showPopup('❌ Hiba', 'Be kell jelentkezned a csatlakozáshoz!', 'error');
+          return;
+        }
+        
+        const currentUser = auth.currentUser;
+        const groupId = window.currentGroupId;
+        
+        if (!groupId) {
+          showPopup('❌ Hiba', 'Nincs érvényes csoport azonosító!', 'error');
+          return;
+        }
+        
+        console.log(`🔍 Checking group validation for user ${currentUser.uid} in group ${groupId}`);
+        
+        // Import Firestore functions
+        const { doc, getDoc, setDoc, collection } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+        
+        // Check if user is in the class students list
+        const studentsDocRef = doc(db, 'calendar', 'classes', groupId, 'students');
+        const studentsDoc = await getDoc(studentsDocRef);
+        
+        if (!studentsDoc.exists()) {
+          showPopup('❌ Hiba', `A csoport (${groupId}) nem található a rendszerben!`, 'error');
+          return;
+        }
+        
+        const studentsData = studentsDoc.data();
+        const studentsString = studentsData.students || '';
+        const studentIds = studentsString.split(',').map(id => id.trim()).filter(id => id.length > 0);
+        
+        console.log(`📋 Students in group ${groupId}:`, studentIds);
+        
+        if (!studentIds.includes(currentUser.uid)) {
+          showPopup('❌ Hiba', 'Nem vagy tagja ennek az osztálynak/csapatnak!', 'error');
+          return;
+        }
+        
+        console.log(`✅ User ${currentUser.uid} is authorized for group ${groupId}`);
+        
+        // Get user display name
+        const userName = currentUser.displayName || currentUser.email || 'Névtelen felhasználó';
+        
+        // Create document in groups/events/csehonap2025/{groupId}
+        const groupDocRef = doc(db, 'groups', 'events', 'csehonap2025', groupId);
+        const groupDoc = await getDoc(groupDocRef);
+        
+        let existingUsers = [];
+        if (groupDoc.exists()) {
+          existingUsers = groupDoc.data().users || [];
+        }
+        
+        // Add user if not already in the list
+        if (!existingUsers.includes(userName)) {
+          existingUsers.push(userName);
+          
+          await setDoc(groupDocRef, {
+            users: existingUsers,
+            groupName: document.getElementById('group-name-input').value.trim(),
+            classTeacher: document.getElementById('class-teacher-input').value.trim(),
+            description: document.getElementById('group-description-input').value.trim(),
+            lastUpdated: new Date().toISOString()
+          });
+          
+          console.log(`📝 Added user ${userName} to group ${groupId}`);
+          showPopup('✅ Sikeres csatlakozás!', `Sikeresen csatlakoztál a ${groupId} csoporthoz. A jogosultságok automatikusan beállításra kerülnek.`, 'success');
+        } else {
+          console.log(`ℹ️ User ${userName} already in group ${groupId}`);
+          showPopup('ℹ️ Már tag vagy!', `Már tagja vagy a ${groupId} csoportnak.`, 'info');
+        }
+        
+      } catch (error) {
+        console.error('❌ Error during join process:', error);
+        showPopup('❌ Hiba', `Hiba történt a csatlakozás során: ${error.message}`, 'error');
       }
-      
-      // Generate pseudo-random but consistent ID
-      for (let i = 0; i < 15; i++) {
-        seed = (seed * 9301 + 49297) % 233280;
-        result += chars[Math.floor((seed / 233280) * chars.length)];
-      }
-      
-      return result;
     }
     
     // Food item management
@@ -897,29 +968,9 @@
       fab.style.marginTop = '16px';
     }
     
-    function finalizeJoin() {
-      // Show success popup
-      showPopup('Sikerült a csatlakozás!', 'success');
-      
-      // Redirect back to event hub after 5 seconds
-      setTimeout(() => {
-        window.location.href = '/EU2K-Hub/event_hub.html';
-      }, 5000);
-    }
+
     
-    function navigateBackToMainJoin() {
-      // Navigate back to main join page by removing the finish-join hash
-      const currentHash = location.hash.substring(1);
-      const newHash = currentHash.replace('#finish-join', '');
-      
-      console.log('Navigating back to main join page with hash:', newHash);
-      
-      if (window.location.hash !== '#' + newHash) {
-        window.location.hash = '#' + newHash;
-      }
-    }
-    
-    function showPopup(message, type) {
+    function showPopup(title, message, type) {
       // Create popup element
       const popup = document.createElement('div');
       popup.className = `popup-notification ${type}`;
@@ -928,10 +979,15 @@
           <div class="popup-icon">
             ${type === 'success' ? 
               '<svg viewBox="0 0 24 24"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>' : 
-              '<svg viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>'
+              type === 'error' ?
+              '<svg viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>' :
+              '<svg viewBox="0 0 24 24"><path d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg>'
             }
           </div>
-          <span class="popup-message">${message}</span>
+          <div class="popup-text">
+            <div class="popup-title">${title}</div>
+            <div class="popup-message">${message}</div>
+          </div>
         </div>
       `;
       
@@ -947,7 +1003,9 @@
       setTimeout(() => {
         popup.classList.remove('show');
         setTimeout(() => {
-          document.body.removeChild(popup);
+          if (document.body.contains(popup)) {
+            document.body.removeChild(popup);
+          }
         }, 300);
       }, 5000);
     }
@@ -959,7 +1017,7 @@
       
       const mainContent = document.querySelector('.main-content');
       
-      if (hashValue.includes('#finish-join')) {
+      if (hashValue === 'finish-join') {
         // Show finish-join page
         document.getElementById('main-join-page').style.display = 'none';
         document.getElementById('finish-join-page').style.display = 'flex';
@@ -982,20 +1040,47 @@
         // Start carousel on main page
         startCarousel();
       }
-      
-      if (hashValue && hashValue.includes('+')) {
-        // Hash contains user session data (userUID+sessionId)
-        const [userUID, sessionId] = hashValue.split('+');
-        console.log('Hash contains session data - userUID:', userUID, 'sessionId:', sessionId);
-        
-        // Update page state based on hash
-        // This ensures the page reflects the current hash state
-        console.log('✅ Page updated based on hash change');
-      }
     });
 
+    // Add event listeners to textboxes
+    function addTextboxListeners() {
+      const groupNameInput = document.getElementById('group-name-input');
+      const classTeacherInput = document.getElementById('class-teacher-input');
+      const groupDescriptionInput = document.getElementById('group-description-input');
+      
+      // Group name input listener
+      if (groupNameInput) {
+        groupNameInput.addEventListener('input', function() {
+          const value = this.value.trim();
+          if (value) {
+            const groupId = generateGroupId(value);
+            console.log(`🆔 Group ID preview: ${groupId}`);
+          }
+        });
+      }
+      
+      // Class teacher input listener
+      if (classTeacherInput) {
+        classTeacherInput.addEventListener('input', function() {
+          console.log(`👨‍🏫 Class teacher: ${this.value}`);
+        });
+      }
+      
+      // Group description input listener
+      if (groupDescriptionInput) {
+        groupDescriptionInput.addEventListener('input', function() {
+          console.log(`📝 Description: ${this.value}`);
+        });
+      }
+    }
+    
     // Check initial hash on page load
     window.addEventListener('DOMContentLoaded', async () => {
+      console.log('🚀 CSE-HO 2025 Join page loaded');
+      
+      // Add textbox listeners
+      addTextboxListeners();
+      
       // Preload carousel images first
       await preloadCarouselImages();
       
