@@ -61,10 +61,12 @@
       }
     });
 
-    // Make db and functions globally available
+    // Make db, functions, auth and other Firebase objects globally available
     window.db = db;
+    window.auth = auth;
     window.functions = functions;
     window.httpsCallable = httpsCallable;
+    window.onAuthStateChanged = onAuthStateChanged;
 
     // Parse URL parameters - support hash format: /event_hub/join/eventCode.html#userUID+sessionId
     const urlParams = new URLSearchParams(window.location.search);
@@ -401,7 +403,7 @@
           <div class="qr-section">
             <div class="qr-container">
               <div class="qr-background"></div>
-              <img id="qr-code-image" src="/EU2K-Hub/assets/preset_qrcode.png" alt="QR Kód" class="qr-image">
+              <img id="qr-code-image" src="/EU2K-Hub/assets/events/csehonap/preset_qrcode.png" alt="QR Kód" class="qr-image">
             </div>
             
             <!-- Connected Button Group -->
