@@ -1119,6 +1119,38 @@
       try {
         console.log('🤖 Getting Gemini API key and calling for food breakdown...');
         
+        // Check if user is authenticated and wait for auth state
+        if (!auth.currentUser) {
+          console.error('User not authenticated');
+          showPopup('Bejelentkezés szükséges', 'Kérjük jelentkezzen be a funkció használatához', 'error');
+          return;
+        }
+
+        // Wait for auth state to be fully loaded
+        await new Promise((resolve) => {
+          if (auth.currentUser) {
+            resolve();
+          } else {
+            const unsubscribe = onAuthStateChanged(auth, (user) => {
+              if (user) {
+                unsubscribe();
+                resolve();
+              }
+            });
+            // Timeout after 5 seconds if no auth
+            setTimeout(() => {
+              unsubscribe();
+              resolve();
+            }, 5000);
+          }
+        });
+
+        if (!auth.currentUser) {
+          console.error('❌ Authentication timeout');
+          showPopup('Hiba: Hitelesítési időtúllépés!', 'error');
+          return;
+        }
+        
         // First get the API key from Firebase Function
         const getGeminiApiKey = httpsCallable(functions, 'getGeminiApiKey');
         const apiKeyResult = await getGeminiApiKey();
@@ -1224,6 +1256,13 @@
     async function generateFoodImage(imagePrompt, itemIndex) {
       try {
         console.log(`🎨 Generating image for: ${imagePrompt}`);
+        
+        // Check if user is authenticated
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+          console.error('User not authenticated for image generation');
+          return;
+        }
         
         // Get the API key from Firebase Function
         const getGeminiApiKey = httpsCallable(functions, 'getGeminiApiKey');
