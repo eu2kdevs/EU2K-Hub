@@ -784,13 +784,57 @@ md-outlined-text-field[type="textarea"] textarea {
   box-shadow: 0 4px 12px rgba(156, 212, 159, 0.4);
 }
 
-/* QR Code styles */
-.qr-section {
+/* Finish Join Page Layout */
+#finish-join-page {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  height: 100%;
+  min-height: 500px;
+}
+
+.info-section {
+  flex: 0 0 35%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-right: 16px;
+}
+
+/* Question Mark Container */
+.question-mark-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.question-mark-text {
+  font-size: 48px;
+  font-weight: bold;
+  color: var(--md-sys-color-primary);
+  opacity: 0.8;
+}
+
+.question-mark-description {
+  color: var(--text-secondary);
+  font-size: 14px;
+  text-align: center;
+  line-height: 1.4;
+  max-width: 280px;
+}
+
+/* QR Code styles */
+.qr-section {
+  flex: 0 0 65%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 24px;
-  margin-top: 32px;
+  padding-left: 16px;
+  border-left: 1px solid rgba(224, 228, 219, 0.1);
 }
 
 .qr-container {
@@ -929,6 +973,127 @@ md-outlined-text-field[type="textarea"] textarea {
 
 .popup-notification.error .popup-icon svg {
   fill: #FF6B6B;
+}
+
+/* Food Items Container Styles */
+.food-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.food-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(39, 43, 38, 0.3);
+  border: 1px solid rgba(224, 228, 219, 0.1);
+  transition: all 0.3s ease;
+}
+
+.food-item:hover {
+  background: rgba(39, 43, 38, 0.5);
+  border-color: rgba(155, 212, 160, 0.3);
+}
+
+.food-item-image {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(224, 228, 219, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.food-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.food-item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.food-item-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.food-item-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+/* Completion Section Styles */
+.completion-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(39, 43, 38, 0.5);
+  border: 1px solid rgba(224, 228, 219, 0.1);
+}
+
+.completion-message {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--md-sys-color-primary);
+  text-align: center;
+}
+
+.completion-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.4;
+}
+
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 24px;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+  background: var(--md-sys-color-primary-container);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(155, 212, 160, 0.3);
+}
+
+.refresh-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.refresh-btn:hover .refresh-icon {
+  transform: rotate(180deg);
 }
 
 .popup-message {

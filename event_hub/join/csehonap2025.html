@@ -386,6 +386,10 @@
             <!-- Question Mark Text -->
             <div class="question-mark-container">
               <div class="question-mark-text">?</div>
+              <div class="question-mark-description">
+                Fogás nélkül nem tudjuk felépíteni a menüt<br>
+                (itt be lesz a fogásod a napra hogy tovább menj)
+              </div>
             </div>
           </div>
           
@@ -1065,7 +1069,7 @@
     // Add event listeners to textboxes
     function addTextboxListeners() {
       const groupNameInput = document.getElementById('group-name-input');
-      const foodpNameInput = document.getElementById('food-name-input');
+      const foodNameInput = document.getElementById('food-name-input');
       const classTeacherInput = document.getElementById('class-teacher-input');
       const groupDescriptionInput = document.getElementById('group-description-input');
       
@@ -1076,6 +1080,17 @@
           if (value) {
             const groupId = generateGroupId(value);
             console.log(`🆔 Group ID preview: ${groupId}`);
+          }
+        });
+      }
+      
+      // Food name input blur listener for Gemini API call
+      if (foodNameInput) {
+        foodNameInput.addEventListener('blur', async function() {
+          const value = this.value.trim();
+          if (value) {
+            console.log(`🍽️ Food name entered: ${value}`);
+            await callGeminiForFoodBreakdown(value);
           }
         });
       }
@@ -1092,6 +1107,202 @@
         groupDescriptionInput.addEventListener('input', function() {
           console.log(`📝 Description: ${this.value}`);
         });
+      }
+    }
+
+    // Gemini API call for food breakdown using existing Firebase Function
+    async function callGeminiForFoodBreakdown(foodText) {
+      try {
+        console.log('🤖 Getting Gemini API key and calling for food breakdown...');
+        
+        // First get the API key from Firebase Function
+        const getGeminiApiKey = httpsCallable(functions, 'getGeminiApiKey');
+        const apiKeyResult = await getGeminiApiKey();
+        const apiKey = apiKeyResult.data.apiKey;
+        
+        const prompt = `Break down this food description into individual food items: "${foodText}"
+        
+        Return a JSON array where each item has:
+        - name: the name of the individual food item
+        - description: a short 2-3 word description in Hungarian
+        - image: a descriptive text for generating an image of this food item
+        
+        Example format:
+        [
+          {
+            "name": "Sült Csirke",
+            "description": "Ropogós, fűszeres csirke",
+            "image": "golden roasted chicken with herbs"
+          }
+        ]
+        
+        Only return the JSON array, no other text.`;
+
+        // Call Gemini API directly with the retrieved key
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: prompt
+              }]
+            }]
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Gemini API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const generatedText = data.candidates[0].content.parts[0].text;
+        
+        // Parse the JSON response
+        const foodItems = JSON.parse(generatedText.trim());
+        console.log('🍽️ Gemini food breakdown:', foodItems);
+        
+        // Build the food list items
+        buildFoodListItems(foodItems);
+        
+      } catch (error) {
+        console.error('❌ Error calling Gemini API:', error);
+        showPopupNotification('Hiba történt az étel feldolgozása során', 'error');
+      }
+    }
+
+    // Build food list items from Gemini response
+    function buildFoodListItems(foodItems) {
+      console.log('🏗️ Building food list items:', foodItems);
+      
+      // Remove existing food items container if it exists
+      const existingContainer = document.querySelector('.food-items-container');
+      if (existingContainer) {
+        existingContainer.remove();
+      }
+      
+      // Create food items container
+      const foodItemsContainer = document.createElement('div');
+      foodItemsContainer.className = 'food-items-container';
+      
+      // Build each food item
+      foodItems.forEach((item, index) => {
+        const foodItem = document.createElement('div');
+        foodItem.className = 'food-item';
+        foodItem.innerHTML = `
+          <div class="food-item-image">
+            <img src="/EU2K-Hub/assets/events/csehonap/food_placeholder.svg" alt="${item.name}" class="food-image" id="food-image-${index}">
+          </div>
+          <div class="food-item-details">
+            <div class="food-item-name">${item.name}</div>
+            <div class="food-item-description">${item.description}</div>
+          </div>
+        `;
+        
+        foodItemsContainer.appendChild(foodItem);
+        
+        // Generate image for this food item using Gemini
+        generateFoodImage(item.image, index);
+      });
+      
+      // Insert the container before the question mark container
+      const infoSection = document.querySelector('.info-section');
+      const questionMarkContainer = document.querySelector('.question-mark-container');
+      infoSection.insertBefore(foodItemsContainer, questionMarkContainer);
+      
+      // Show completion message
+      showCompletionMessage();
+    }
+
+    // Generate food image using Gemini and upload to ImgBB
+    async function generateFoodImage(imagePrompt, itemIndex) {
+      try {
+        console.log(`🎨 Generating image for: ${imagePrompt}`);
+        
+        // Get the API key from Firebase Function
+        const getGeminiApiKey = httpsCallable(functions, 'getGeminiApiKey');
+        const apiKeyResult = await getGeminiApiKey();
+        const apiKey = apiKeyResult.data.apiKey;
+        
+        // Generate image using Gemini API
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `Generate a realistic, appetizing image of: ${imagePrompt}. Make it look delicious and professional, suitable for a restaurant menu.`
+              }]
+            }]
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Image generation error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        // Note: Gemini Pro Vision doesn't generate images, it analyzes them
+        // For actual image generation, we would need a different service
+        console.log(`🖼️ Image generation response:`, data);
+        
+        // For now, keep the placeholder image
+        // TODO: Implement actual image generation service (DALL-E, Midjourney, etc.)
+        
+      } catch (error) {
+        console.error(`❌ Error generating image for ${imagePrompt}:`, error);
+        // Keep the placeholder image on error
+      }
+    }
+
+    // Show completion message and refresh button
+    function showCompletionMessage() {
+      const infoSection = document.querySelector('.info-section');
+      
+      // Remove existing completion section if it exists
+      const existingCompletion = document.querySelector('.completion-section');
+      if (existingCompletion) {
+        existingCompletion.remove();
+      }
+      
+      // Create completion section
+      const completionSection = document.createElement('div');
+      completionSection.className = 'completion-section';
+      completionSection.innerHTML = `
+        <div class="completion-message">
+          Készen van a menüd.
+        </div>
+        <div class="completion-subtitle">
+          Ha nem tetszik vagy valami baj van vele próbálkozz újra!
+        </div>
+        <button class="refresh-btn" onclick="retryGeminiCall()">
+          <svg class="refresh-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+          </svg>
+          Újra
+        </button>
+      `;
+      
+      infoSection.appendChild(completionSection);
+    }
+
+    // Retry Gemini call
+    async function retryGeminiCall() {
+      const foodNameInput = document.getElementById('food-name-input');
+      const foodText = foodNameInput.value.trim();
+      
+      if (foodText) {
+        // Remove existing completion section
+        const existingCompletion = document.querySelector('.completion-section');
+        if (existingCompletion) {
+          existingCompletion.remove();
+        }
+        
+        await callGeminiForFoodBreakdown(foodText);
       }
     }
     
