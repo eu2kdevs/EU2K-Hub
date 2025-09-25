@@ -34,6 +34,7 @@
     import { enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
     import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js";
+    import { GoogleGenAI } from "https://esm.run/@google/genai";
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -453,12 +454,26 @@
   <script>
     // Singleton API key cache to avoid multiple Firebase Function calls
     let geminiApiKeyCache = null;
+    let googleGenAIInstance = null;
     
     // Firebase Auth state tracking to prevent multiple sign-in attempts
     let isAuthenticating = false;
     let authPromise = null;
 
-    // Cached function to get Gemini API key only once
+    // Cached function to get Gemini API key and initialize GoogleGenAI
+    async function getGoogleGenAI() {
+      if (googleGenAIInstance) return googleGenAIInstance;
+      
+      const getGeminiApiKey = httpsCallable(functions, 'getGeminiApiKey');
+      const apiKeyResult = await getGeminiApiKey();
+      geminiApiKeyCache = apiKeyResult.data.apiKey;
+      
+      // Initialize GoogleGenAI with the API key
+      googleGenAIInstance = new GoogleGenAI({ apiKey: geminiApiKeyCache });
+      return googleGenAIInstance;
+    }
+
+    // Legacy function for backward compatibility
     async function getGeminiApiKeyCached() {
       if (geminiApiKeyCache) return geminiApiKeyCache;
       
@@ -1189,7 +1204,7 @@
       }
     }
 
-    // Gemini API call for food breakdown using Firebase Callable Function
+    // Gemini API call for food breakdown using GoogleGenAI SDK
     async function callGeminiForFoodBreakdown(foodText) {
       try {
         // Ensure Firebase Auth using singleton function
@@ -1201,12 +1216,8 @@
           return;
         }
 
-        // ✅ Get the API key from cached Firebase Callable Function
-        const apiKey = await getGeminiApiKeyCached();
-
-        if (!apiKey) {
-          throw new Error("❌ Gemini API key not returned from Firebase Function");
-        }
+        // Get GoogleGenAI instance
+        const ai = await getGoogleGenAI();
 
         // Build the prompt
         const prompt = `Break down this food description into individual food items: "${foodText}"
@@ -1227,31 +1238,18 @@
 
     Only return the JSON array, no other text.`;
 
-        // Call Gemini API directly with the retrieved key
-        const response = await fetch(
-          'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
+        // Call Gemini API using GoogleGenAI SDK
+        const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: prompt,
+          config: {
+            thinkingConfig: {
+              thinkingBudget: 0, // Disables thinking
             },
-            body: JSON.stringify({
-              contents: [{
-                parts: [{
-                  text: prompt
-                }]
-              }]
-            }),
           }
-        );
+        });
 
-
-        if (!response.ok) {
-          throw new Error(`Gemini API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const generatedText = data.candidates[0].content.parts[0].text;
+        const generatedText = response.text;
 
         // Safer JSON parsing with try/catch and regex extraction
         let foodItems;
@@ -1328,7 +1326,7 @@
       showCompletionMessage();
     }
 
-    // Generate food image using Gemini 2.5 Flash Image and upload to ImgBB
+    // Generate food image using GoogleGenAI SDK with Gemini 2.5 Flash Image
     async function generateFoodImage(imagePrompt, itemIndex) {
       try {
         // Ensure Firebase Auth using singleton function
@@ -1339,34 +1337,22 @@
           return;
         }
         
-        // Get the API key from cached Firebase Function
-        const apiKey = await getGeminiApiKeyCached();
+        // Get GoogleGenAI instance
+        const ai = await getGoogleGenAI();
         
-        // Generate image using Gemini 2.5 Flash Image model
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `Generate a high-quality, appetizing, photorealistic image of: ${imagePrompt}. The image should be professional, well-lit, and suitable for a restaurant menu. Make it look delicious and appealing with vibrant colors and good composition.`
-              }]
-            }]
-          })
+        // Generate image using GoogleGenAI SDK
+        const prompt = `Generate a high-quality, appetizing, photorealistic image of: ${imagePrompt}. The image should be professional, well-lit, and suitable for a restaurant menu. Make it look delicious and appealing with vibrant colors and good composition.`;
+        
+        const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash-image-preview",
+          contents: prompt,
         });
 
-        if (!response.ok) {
-          throw new Error(`Image generation error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log(`🖼️ Image generation response:`, data);
+        console.log(`🖼️ Image generation response:`, response);
         
         // Check if image was generated successfully
-        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
-          for (const part of data.candidates[0].content.parts) {
+        if (response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
+          for (const part of response.candidates[0].content.parts) {
             if (part.inlineData && part.inlineData.data) {
               // Convert base64 to blob and upload to ImgBB
               const imageData = part.inlineData.data;
