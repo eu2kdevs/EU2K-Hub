@@ -1,32 +1,30 @@
-/**
- * Firebase Functions for EU2K Hub
- * API Key retrieval functions
- */
-
 const { onRequest } = require("firebase-functions/v2/https");
 const { defineSecret } = require("firebase-functions/params");
 const logger = require("firebase-functions/logger");
-const cors = require("cors")({ origin: "https://eu2kdevs.github.io" });
 
-// Define secrets for API keys
+// Secret API key
 const geminiApiKey = defineSecret("GEMINI_API_KEY");
 
-/**
- * Cloud Function to retrieve Gemini API key via HTTP request
- * Supports CORS so it can be called from GitHub Pages
- */
 exports.getGeminiApiKey = onRequest({ region: "europe-west1" }, async (req, res) => {
-  cors(req, res, async () => {
-    try {
-      logger.info("API key requested via HTTP");
+  try {
+    logger.info("API key requested via HTTP");
 
-      res.json({
-        apiKey: geminiApiKey.value(),
-        success: true,
-      });
-    } catch (error) {
-      logger.error("Error retrieving API key:", error);
-      res.status(500).json({ error: "Failed to retrieve API key" });
+    // CORS headers
+    res.set("Access-Control-Allow-Origin", "https://eu2kdevs.github.io");
+    res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+
+    // Handle preflight OPTIONS request
+    if (req.method === "OPTIONS") {
+      return res.status(204).send("");
     }
-  });
+
+    res.json({
+      apiKey: geminiApiKey.value(),
+      success: true,
+    });
+  } catch (error) {
+    logger.error("Error retrieving API key:", error);
+    res.status(500).json({ error: "Failed to retrieve API key" });
+  }
 });

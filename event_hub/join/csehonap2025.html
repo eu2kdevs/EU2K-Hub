@@ -51,7 +51,7 @@
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
     const auth = getAuth(app);
-    const functions = getFunctions(app);
+    const functions = getFunctions(app, 'europe-west1');
 
     enableIndexedDbPersistence(db).catch((err) => {
       if (err.code == 'failed-precondition') {
