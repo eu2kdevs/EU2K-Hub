@@ -1146,15 +1146,6 @@
     // Gemini API call for food breakdown using GoogleGenAI SDK
     async function callGeminiForFoodBreakdown(foodText) {
       try {
-        // Ensure Firebase Auth using singleton function
-        try {
-          await ensureFirebaseAuth();
-        } catch (authError) {
-          console.error('❌ Firebase Auth failed:', authError);
-          showPopup('Hitelesítési hiba', 'Nem sikerült bejelentkezni a Firebase rendszerbe', 'error');
-          return;
-        }
-
         // Get GoogleGenAI instance
         const ai = await getGoogleGenAI();
 
@@ -1268,14 +1259,6 @@
     // Generate food image using GoogleGenAI SDK with Gemini 2.5 Flash Image
     async function generateFoodImage(imagePrompt, itemIndex) {
       try {
-        // Ensure Firebase Auth using singleton function
-        try {
-          await ensureFirebaseAuth();
-        } catch (authError) {
-          console.error('❌ Firebase Auth failed for image generation:', authError);
-          return;
-        }
-        
         // Get GoogleGenAI instance
         const ai = await getGoogleGenAI();
         
