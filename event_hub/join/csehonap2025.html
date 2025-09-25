@@ -54,6 +54,7 @@
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
     const auth = getAuth(app);
+    window.auth = getAuth(app);
     const functions = getFunctions(app, 'europe-west1');
 
     enableIndexedDbPersistence(db).catch((err) => {
@@ -482,10 +483,11 @@
     }
 
     // Singleton Firebase Auth function to prevent multiple sign-in attempts
+    // Singleton Firebase Auth function to prevent multiple sign-in attempts
     async function ensureFirebaseAuth() {
       // If already authenticated, return immediately
-      if (auth.currentUser) {
-        return auth.currentUser;
+      if (window.auth.currentUser) {
+        return window.auth.currentUser;
       }
 
       // If authentication is in progress, wait for it
@@ -498,15 +500,15 @@
       authPromise = (async () => {
         try {
           console.log('🔐 Signing in to Firebase Auth...');
-           await auth.signInAnonymously();
+           await window.auth.signInAnonymously();
            console.log('✅ Anonymous sign-in successful');
 
           // Wait for auth state to be fully loaded
           await new Promise((resolve) => {
-            if (auth.currentUser) {
+            if (window.auth.currentUser) {
               resolve();
             } else {
-              const unsubscribe = onAuthStateChanged(auth, (user) => {
+              const unsubscribe = onAuthStateChanged(window.auth, (user) => {
                 if (user) {
                   unsubscribe();
                   resolve();
@@ -519,11 +521,11 @@
             }
           });
 
-          if (!auth.currentUser) {
+          if (!window.auth.currentUser) {
             throw new Error('Authentication timeout');
           }
 
-          return auth.currentUser;
+          return window.auth.currentUser;
         } catch (authError) {
           console.error('❌ Firebase Auth sign-in failed:', authError);
           throw authError;
