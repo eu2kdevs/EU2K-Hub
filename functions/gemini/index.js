@@ -3,8 +3,8 @@
  * API Key retrieval functions
  */
 
-const {onCall} = require("firebase-functions/v2/https");
-const {defineSecret} = require("firebase-functions/params");
+const { onCall } = require("firebase-functions/v2/https");
+const { defineSecret } = require("firebase-functions/params");
 const logger = require("firebase-functions/logger");
 
 // Define secrets for API keys
@@ -17,18 +17,15 @@ const geminiApiKey = defineSecret("GEMINI_API_KEY");
 exports.getGeminiApiKey = onCall(
   {
     secrets: [geminiApiKey],
-    cors: true,
   },
-  async (request) => {
+  async (context) => {
     try {
-      logger.info(`API key requested`);
-      
-      // Return the API key
+      logger.info("API key requested");
+
       return {
         apiKey: geminiApiKey.value(),
-        success: true
+        success: true,
       };
-      
     } catch (error) {
       logger.error("Error retrieving API key:", error);
       throw new Error("Failed to retrieve API key");
