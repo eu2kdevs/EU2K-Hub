@@ -458,10 +458,6 @@
     let geminiApiKeyCache = null;
     let googleGenAIInstance = null;
     
-    // Firebase Auth state tracking to prevent multiple sign-in attempts
-    let isAuthenticating = false;
-    let authPromise = null;
-
     // Cached function to get Gemini API key and initialize GoogleGenAI
     async function getGoogleGenAI() {
       // Itt a Firebase Function-ből kapott kulcsot használod
@@ -479,62 +475,6 @@
       const apiKeyResult = await getGeminiApiKey();
       geminiApiKeyCache = apiKeyResult.data.apiKey;
       return geminiApiKeyCache;
-    }
-
-    // Singleton Firebase Auth function to prevent multiple sign-in attempts
-    // Singleton Firebase Auth function to prevent multiple sign-in attempts
-    async function ensureFirebaseAuth() {
-      // If already authenticated, return immediately
-      if (window.auth.currentUser) {
-        return window.auth.currentUser;
-      }
-
-      // If authentication is in progress, wait for it
-      if (isAuthenticating && authPromise) {
-        return await authPromise;
-      }
-
-      // Start authentication process
-      isAuthenticating = true;
-      authPromise = (async () => {
-        try {
-          console.log('🔐 Signing in to Firebase Auth...');
-           await window.auth.signInAnonymously();
-           console.log('✅ Anonymous sign-in successful');
-
-          // Wait for auth state to be fully loaded
-          await new Promise((resolve) => {
-            if (window.auth.currentUser) {
-              resolve();
-            } else {
-              const unsubscribe = onAuthStateChanged(window.auth, (user) => {
-                if (user) {
-                  unsubscribe();
-                  resolve();
-                }
-              });
-              setTimeout(() => {
-                unsubscribe();
-                resolve();
-              }, 5000);
-            }
-          });
-
-          if (!window.auth.currentUser) {
-            throw new Error('Authentication timeout');
-          }
-
-          return window.auth.currentUser;
-        } catch (authError) {
-          console.error('❌ Firebase Auth sign-in failed:', authError);
-          throw authError;
-        } finally {
-          isAuthenticating = false;
-          authPromise = null;
-        }
-      })();
-
-      return await authPromise;
     }
 
     // Featured event betöltése Firestore-ból
