@@ -1,6 +1,6 @@
 /**
  * Firebase Functions for EU2K Hub
- * API Key retrieval and authentication functions
+ * API Key retrieval functions
  */
 
 const {onCall} = require("firebase-functions/v2/https");
@@ -11,7 +11,7 @@ const logger = require("firebase-functions/logger");
 const geminiApiKey = defineSecret("GEMINI_API_KEY");
 
 /**
- * Cloud Function to retrieve Gemini API key for authenticated users
+ * Cloud Function to retrieve Gemini API key
  * Returns the API key securely without exposing it in frontend code
  */
 exports.getGeminiApiKey = onCall(
@@ -20,16 +20,10 @@ exports.getGeminiApiKey = onCall(
     cors: true,
   },
   async (request) => {
-    // Check if user is authenticated
-    if (!request.auth) {
-      logger.warn("Unauthorized request for API key");
-      throw new Error("Authentication required");
-    }
-
     try {
-      logger.info(`API key requested by user: ${request.auth.uid}`);
+      logger.info(`API key requested`);
       
-      // Return the API key to authenticated users
+      // Return the API key
       return {
         apiKey: geminiApiKey.value(),
         success: true
