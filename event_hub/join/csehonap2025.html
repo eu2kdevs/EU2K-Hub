@@ -464,15 +464,11 @@
 
     // Cached function to get Gemini API key and initialize GoogleGenAI
     async function getGoogleGenAI() {
-      if (googleGenAIInstance) return googleGenAIInstance;
+      // Itt a Firebase Function-ből kapott kulcsot használod
+      const apiKey = await getGeminiApiKeyCached();
       
-      const getGeminiApiKey = httpsCallable(functions, 'getGeminiApiKey');
-      const apiKeyResult = await getGeminiApiKey();
-      geminiApiKeyCache = apiKeyResult.data.apiKey;
-      
-      // Initialize GoogleGenAI with the API key
-      googleGenAIInstance = new GoogleGenAI({ apiKey: geminiApiKeyCache });
-      return googleGenAIInstance;
+      const ai = new GoogleGenAI({ apiKey });
+      return ai;
     }
 
     // Legacy function for backward compatibility
