@@ -3,32 +3,31 @@
  * API Key retrieval functions
  */
 
-const { onCall } = require("firebase-functions/v2/https");
+const { onRequest } = require("firebase-functions/v2/https");
 const { defineSecret } = require("firebase-functions/params");
 const logger = require("firebase-functions/logger");
+const cors = require("cors")({ origin: "https://eu2kdevs.github.io" });
 
 // Define secrets for API keys
 const geminiApiKey = defineSecret("GEMINI_API_KEY");
 
 /**
- * Cloud Function to retrieve Gemini API key
- * Returns the API key securely without exposing it in frontend code
+ * Cloud Function to retrieve Gemini API key via HTTP request
+ * Supports CORS so it can be called from GitHub Pages
  */
-exports.getGeminiApiKey = onCall(
-  {
-    secrets: [geminiApiKey],
-  },
-  async (context) => {
+exports.getGeminiApiKey = onRequest(async (req, res) => {
+  cors(req, res, async () => {
     try {
-      logger.info("API key requested");
+      logger.info("API key requested via HTTP");
 
-      return {
+      // Return the API key
+      res.json({
         apiKey: geminiApiKey.value(),
         success: true,
-      };
+      });
     } catch (error) {
       logger.error("Error retrieving API key:", error);
-      throw new Error("Failed to retrieve API key");
+      res.status(500).json({ error: "Failed to retrieve API key" });
     }
-  }
-);
+  });
+});
