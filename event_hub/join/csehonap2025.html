@@ -34,7 +34,9 @@
     import { enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
     import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js";
-    import { GoogleGenAI } from "https://esm.run/@google/genai";
+    import { GoogleGenAI } from "https://cdn.jsdelivr.net/npm/@google-ai/generativelanguage/dist/index.js";
+
+    window.GoogleGenAI = GoogleGenAI;
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
