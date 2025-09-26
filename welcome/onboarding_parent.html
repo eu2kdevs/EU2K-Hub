@@ -608,6 +608,17 @@
       signInWithPopup(auth, msProvider)
           .then((result) => {
             persistentLog.add('✅ Popup auth successful');
+            
+            // Immediately set localStorage keys to prevent race conditions
+            localStorage.setItem('eu2k-auth-logged-in', 'true');
+            localStorage.setItem('eu2k-user-type', 'parent');
+            if (result.user.displayName) localStorage.setItem('eu2k-auth-display-name', result.user.displayName);
+            if (result.user.email) localStorage.setItem('eu2k-auth-email', result.user.email);
+            if (result.user.photoURL) localStorage.setItem('eu2k-auth-photo-url', result.user.photoURL);
+            
+            // Reset login failed counter on successful login
+            window.loginFailedCounter = 0;
+            
             localStorage.removeItem('eu2k-auth-in-progress');
             proceedToProfileChooser(result.user);
           })
@@ -636,6 +647,17 @@
       signInWithPopup(auth, msProvider)
           .then((result) => {
             persistentLog.add('✅ Teacher popup auth successful');
+            
+            // Immediately set localStorage keys to prevent race conditions
+            localStorage.setItem('eu2k-auth-logged-in', 'true');
+            localStorage.setItem('eu2k-user-type', 'teacher');
+            if (result.user.displayName) localStorage.setItem('eu2k-auth-display-name', result.user.displayName);
+            if (result.user.email) localStorage.setItem('eu2k-auth-email', result.user.email);
+            if (result.user.photoURL) localStorage.setItem('eu2k-auth-photo-url', result.user.photoURL);
+            
+            // Reset login failed counter on successful login
+            window.loginFailedCounter = 0;
+            
             localStorage.removeItem('eu2k-auth-in-progress');
             
             // Collect Microsoft Graph API data for teacher
@@ -771,6 +793,17 @@
       signInWithPopup(auth, googleProvider)
           .then((result) => {
             persistentLog.add('✅ Parent Google auth successful');
+            
+            // Immediately set localStorage keys to prevent race conditions
+            localStorage.setItem('eu2k-auth-logged-in', 'true');
+            localStorage.setItem('eu2k-user-type', 'parent');
+            if (result.user.displayName) localStorage.setItem('eu2k-auth-display-name', result.user.displayName);
+            if (result.user.email) localStorage.setItem('eu2k-auth-email', result.user.email);
+            if (result.user.photoURL) localStorage.setItem('eu2k-auth-photo-url', result.user.photoURL);
+            
+            // Reset login failed counter on successful login
+            window.loginFailedCounter = 0;
+            
             localStorage.removeItem('eu2k-auth-in-progress');
             
             // Collect Google API data and check birth date

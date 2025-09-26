@@ -497,6 +497,23 @@
       signInWithPopup(auth, msProvider)
           .then((result) => {
             persistentLog.add('✅ Popup auth successful');
+            
+            // IMMEDIATELY write essential localStorage keys to prevent race conditions
+            localStorage.setItem('eu2k-auth-logged-in', 'true');
+            localStorage.setItem('eu2k-user-type', 'student');
+            if (result.user.displayName) {
+              localStorage.setItem('eu2k-auth-display-name', result.user.displayName);
+            }
+            if (result.user.email) {
+              localStorage.setItem('eu2k-auth-email', result.user.email);
+            }
+            if (result.user.photoURL) {
+              localStorage.setItem('eu2k-auth-photo-url', result.user.photoURL);
+            }
+            
+            // Reset login failed counter on successful login
+            window.loginFailedCounter = 0;
+            
             localStorage.removeItem('eu2k-auth-in-progress');
             
             // Fetch Microsoft Graph API data immediately after successful popup auth
@@ -1582,27 +1599,30 @@
       // Login failed tracking
       window.loginFailedCounter = 0;
       window.checkLoginStatus = function() {
-        const user = auth.currentUser;
-        if (!user) {
-          window.loginFailedCounter++;
-          if (window.loginFailedCounter === 1) {
-            // Check if onboarding is already completed or skipped
-            const onboardingCompleted = localStorage.getItem('onboardingCompleted') === 'true';
-            const firstVisitDone = localStorage.getItem('eu2k-first-visit') === 'false';
-            const termsAccepted = localStorage.getItem('termsAccepted') === 'true';
-            
-            if (onboardingCompleted || firstVisitDone || termsAccepted) {
-              // Show restart onboarding page instead of login failed
-              location.hash = 'restart-onboarding';
-            } else {
-              // Show login failed page only on first failure
-              location.hash = 'login-failed';
+        // Add delay to allow auth state to settle before checking
+        setTimeout(() => {
+          const user = auth.currentUser;
+          if (!user) {
+            window.loginFailedCounter++;
+            if (window.loginFailedCounter === 1) {
+              // Check if onboarding is already completed or skipped
+              const onboardingCompleted = localStorage.getItem('onboardingCompleted') === 'true';
+              const firstVisitDone = localStorage.getItem('eu2k-first-visit') === 'false';
+              const termsAccepted = localStorage.getItem('eu2k-onboarding-terms-accepted') === 'true';
+              
+              if (onboardingCompleted || firstVisitDone || termsAccepted) {
+                // Show restart onboarding page instead of login failed
+                location.hash = 'restart-onboarding';
+              } else {
+                // Show login failed page only on first failure
+                location.hash = 'login-failed';
+              }
             }
+            console.log('Login failed, counter:', window.loginFailedCounter);
+            return false;
           }
-          console.log('Login failed, counter:', window.loginFailedCounter);
-          return false;
-        }
-        return true;
+          return true;
+        }, 2000); // Wait 2 seconds for auth state to settle
       }
       
       // Check onboarding progress for interrupted sessions
