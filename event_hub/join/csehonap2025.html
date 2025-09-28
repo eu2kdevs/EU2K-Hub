@@ -68,7 +68,12 @@
     window.db = db;
     window.auth = auth;
     window.functions = functions;
-    window.httpsCallable = httpsCallable;
+    
+    // Create a wrapper function for httpsCallable to make it globally accessible
+    window.createHttpsCallable = function(functionName) {
+      return httpsCallable(functions, functionName);
+    };
+    
     window.onAuthStateChanged = onAuthStateChanged;
     window.signInAnonymously = signInAnonymously;
 
@@ -472,11 +477,11 @@
       if (geminiApiKeyCache) return geminiApiKeyCache;
       
       // Ensure Firebase Functions is available
-      if (!window.functions || !window.httpsCallable) {
+      if (!window.createHttpsCallable) {
         throw new Error('Firebase Functions not initialized');
       }
       
-      const getGeminiApiKey = window.httpsCallable(window.functions, 'getGeminiApiKey');
+      const getGeminiApiKey = window.createHttpsCallable('getGeminiApiKey');
       const apiKeyResult = await getGeminiApiKey();
       geminiApiKeyCache = apiKeyResult.data.apiKey;
       return geminiApiKeyCache;
