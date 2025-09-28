@@ -471,6 +471,11 @@
     async function getGeminiApiKeyCached() {
       if (geminiApiKeyCache) return geminiApiKeyCache;
       
+      // Ensure Firebase Functions is available
+      if (!window.functions || !window.httpsCallable) {
+        throw new Error('Firebase Functions not initialized');
+      }
+      
       const getGeminiApiKey = window.httpsCallable(window.functions, 'getGeminiApiKey');
       const apiKeyResult = await getGeminiApiKey();
       geminiApiKeyCache = apiKeyResult.data.apiKey;
