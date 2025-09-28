@@ -77,6 +77,39 @@
     window.onAuthStateChanged = onAuthStateChanged;
     window.signInAnonymously = signInAnonymously;
 
+    // Signal that Firebase is fully initialized
+    window.firebaseInitialized = true;
+    console.log('🔥 Firebase initialized and ready');
+
+    // Singleton API key cache to avoid multiple Firebase Function calls
+    let geminiApiKeyCache = null;
+    
+    // Cached function to get Gemini API key and initialize GoogleGenAI
+    async function getGoogleGenAI() {
+      // Itt a Firebase Function-ből kapott kulcsot használod
+      const apiKey = await getGeminiApiKeyCached();
+      
+      const ai = new GoogleGenAI({ apiKey });
+      return ai;
+    }
+
+    // Legacy function for backward compatibility
+    async function getGeminiApiKeyCached() {
+      if (geminiApiKeyCache) return geminiApiKeyCache;
+      
+      console.log('🔍 Getting Gemini API key from Firebase Functions...');
+      
+      const getGeminiApiKey = httpsCallable(functions, 'getGeminiApiKey');
+      const apiKeyResult = await getGeminiApiKey();
+      geminiApiKeyCache = apiKeyResult.data.apiKey;
+      console.log('🔑 Gemini API key cached successfully');
+      return geminiApiKeyCache;
+    }
+
+    // Make functions globally available
+    window.getGoogleGenAI = getGoogleGenAI;
+    window.getGeminiApiKeyCached = getGeminiApiKeyCached;
+
     // Parse URL parameters - support hash format: /event_hub/join/eventCode.html#userUID+sessionId
     const urlParams = new URLSearchParams(window.location.search);
     
@@ -459,42 +492,9 @@
   <div id="event-mask"></div>
 
   <script>
-    // Singleton API key cache to avoid multiple Firebase Function calls
-    let geminiApiKeyCache = null;
-    let googleGenAIInstance = null;
+    // These functions are now defined in the module script above
+    // and made globally available through window object
     
-    // Cached function to get Gemini API key and initialize GoogleGenAI
-    async function getGoogleGenAI() {
-      // Itt a Firebase Function-ből kapott kulcsot használod
-      const apiKey = await getGeminiApiKeyCached();
-      
-      const ai = new GoogleGenAI({ apiKey });
-      return ai;
-    }
-
-    // Legacy function for backward compatibility
-    async function getGeminiApiKeyCached() {
-      if (geminiApiKeyCache) return geminiApiKeyCache;
-      
-      // Wait for Firebase to be initialized
-      let attempts = 0;
-      const maxAttempts = 50; // 5 seconds max wait
-      
-      while (!window.createHttpsCallable && attempts < maxAttempts) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        attempts++;
-      }
-      
-      if (!window.createHttpsCallable) {
-        throw new Error('Firebase Functions not initialized after waiting');
-      }
-      
-      const getGeminiApiKey = window.createHttpsCallable('getGeminiApiKey');
-      const apiKeyResult = await getGeminiApiKey();
-      geminiApiKeyCache = apiKeyResult.data.apiKey;
-      return geminiApiKeyCache;
-    }
-
     // Featured event betöltése Firestore-ból
     async function loadFeaturedEvent() {
       try {
@@ -1165,7 +1165,7 @@
     async function callGeminiForFoodBreakdown(foodText) {
       try {
         // Get GoogleGenAI instance
-        const ai = await getGoogleGenAI();
+        const ai = await window.getGoogleGenAI();
 
         // Build the prompt
         const prompt = `Break down this food description into individual food items: "${foodText}"
