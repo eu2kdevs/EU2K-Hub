@@ -471,7 +471,7 @@
     async function getGeminiApiKeyCached() {
       if (geminiApiKeyCache) return geminiApiKeyCache;
       
-      const getGeminiApiKey = httpsCallable(functions, 'getGeminiApiKey');
+      const getGeminiApiKey = window.httpsCallable(window.functions, 'getGeminiApiKey');
       const apiKeyResult = await getGeminiApiKey();
       geminiApiKeyCache = apiKeyResult.data.apiKey;
       return geminiApiKeyCache;
