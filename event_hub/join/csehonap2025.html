@@ -114,6 +114,79 @@
     window.geminiAPIReady = true;
     console.log('✅ Gemini API functions are ready');
 
+    // Gemini API call for food breakdown using GoogleGenAI SDK
+    async function callGeminiForFoodBreakdown(foodText) {
+      try {
+        console.log('🔍 Calling Gemini API for food breakdown...');
+        
+        // Get GoogleGenAI instance directly (no need to wait since we're in the same scope)
+        const ai = await getGoogleGenAI();
+
+        // Build the prompt
+        const prompt = `Break down this food description into individual food items: "${foodText}"
+
+    Return a JSON array where each item has:
+    - name: the name of the individual food item
+    - description: a short 2-3 word description in Hungarian
+    - image: a descriptive text for generating an image of this food item
+
+    Example format:
+    [
+      {
+        "name": "Paradicsomos tészta",
+        "description": "olasz tésztaétel",
+        "image": "spaghetti with tomato sauce on a white plate"
+      },
+      {
+        "name": "Sajttorta",
+        "description": "krémes desszert",
+        "image": "slice of cheesecake with berry topping"
+      }
+    ]
+
+    Please respond with ONLY the JSON array, no additional text.`;
+
+        console.log('🤖 Sending prompt to Gemini...');
+        
+        // Generate content
+        const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        
+        console.log('📝 Gemini response:', text);
+
+        // Parse JSON response
+        try {
+          const foodItems = JSON.parse(text.trim());
+          console.log('🍽️ Parsed food items:', foodItems);
+          
+          // Display the food items (you can customize this part)
+          displayFoodItems(foodItems);
+          
+        } catch (parseError) {
+          console.error('❌ Failed to parse Gemini response as JSON:', parseError);
+          console.log('Raw response:', text);
+        }
+
+      } catch (error) {
+        console.error('❌ Error calling Gemini API:', error);
+      }
+    }
+
+    // Function to display food items in the UI
+    function displayFoodItems(foodItems) {
+      console.log('🎨 Displaying food items:', foodItems);
+      // Add your UI update logic here
+      // For now, just log the items
+      foodItems.forEach((item, index) => {
+        console.log(`${index + 1}. ${item.name} - ${item.description}`);
+      });
+    }
+
+    // Make the function globally available
+    window.callGeminiForFoodBreakdown = callGeminiForFoodBreakdown;
+
     // Parse URL parameters - support hash format: /event_hub/join/eventCode.html#userUID+sessionId
     const urlParams = new URLSearchParams(window.location.search);
     
@@ -1145,7 +1218,7 @@
           const value = this.value.trim();
           if (value) {
             console.log(`🍽️ Food name entered: ${value}`);
-            await callGeminiForFoodBreakdown(value);
+            await window.callGeminiForFoodBreakdown(value);
           }
         });
       }
@@ -1168,19 +1241,30 @@
     // Gemini API call for food breakdown using GoogleGenAI SDK
     async function callGeminiForFoodBreakdown(foodText) {
       try {
+        console.log('🔍 Checking Gemini API availability...');
+        console.log('geminiAPIReady:', window.geminiAPIReady);
+        console.log('getGoogleGenAI available:', typeof window.getGoogleGenAI);
+        
         // Wait for Gemini API functions to be ready
         let attempts = 0;
         const maxAttempts = 50; // 5 seconds max wait
         
-        while (!window.geminiAPIReady && attempts < maxAttempts) {
+        while ((!window.geminiAPIReady || typeof window.getGoogleGenAI !== 'function') && attempts < maxAttempts) {
+          console.log(`⏳ Waiting for Gemini API... attempt ${attempts + 1}/${maxAttempts}`);
           await new Promise(resolve => setTimeout(resolve, 100));
           attempts++;
         }
         
-        if (!window.getGoogleGenAI) {
+        if (typeof window.getGoogleGenAI !== 'function') {
+          console.error('❌ Gemini API function check failed:', {
+            geminiAPIReady: window.geminiAPIReady,
+            getGoogleGenAI: typeof window.getGoogleGenAI,
+            windowKeys: Object.keys(window).filter(k => k.includes('gemini') || k.includes('Google'))
+          });
           throw new Error('Gemini API functions not available');
         }
         
+        console.log('✅ Gemini API ready, getting instance...');
         // Get GoogleGenAI instance
         const ai = await window.getGoogleGenAI();
 
