@@ -476,9 +476,17 @@
     async function getGeminiApiKeyCached() {
       if (geminiApiKeyCache) return geminiApiKeyCache;
       
-      // Ensure Firebase Functions is available
+      // Wait for Firebase to be initialized
+      let attempts = 0;
+      const maxAttempts = 50; // 5 seconds max wait
+      
+      while (!window.createHttpsCallable && attempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+      }
+      
       if (!window.createHttpsCallable) {
-        throw new Error('Firebase Functions not initialized');
+        throw new Error('Firebase Functions not initialized after waiting');
       }
       
       const getGeminiApiKey = window.createHttpsCallable('getGeminiApiKey');
