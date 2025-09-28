@@ -110,6 +110,10 @@
     window.getGoogleGenAI = getGoogleGenAI;
     window.getGeminiApiKeyCached = getGeminiApiKeyCached;
 
+    // Also add a ready flag
+    window.geminiAPIReady = true;
+    console.log('✅ Gemini API functions are ready');
+
     // Parse URL parameters - support hash format: /event_hub/join/eventCode.html#userUID+sessionId
     const urlParams = new URLSearchParams(window.location.search);
     
@@ -1164,6 +1168,19 @@
     // Gemini API call for food breakdown using GoogleGenAI SDK
     async function callGeminiForFoodBreakdown(foodText) {
       try {
+        // Wait for Gemini API functions to be ready
+        let attempts = 0;
+        const maxAttempts = 50; // 5 seconds max wait
+        
+        while (!window.geminiAPIReady && attempts < maxAttempts) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          attempts++;
+        }
+        
+        if (!window.getGoogleGenAI) {
+          throw new Error('Gemini API functions not available');
+        }
+        
         // Get GoogleGenAI instance
         const ai = await window.getGoogleGenAI();
 
