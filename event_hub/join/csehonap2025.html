@@ -110,6 +110,36 @@
     window.getGoogleGenAI = getGoogleGenAI;
     window.getGeminiApiKeyCached = getGeminiApiKeyCached;
 
+    // Expose a console helper to list available Gemini models via REST
+    async function listGeminiModels(options = {}) {
+      const apiKey = await getGeminiApiKeyCached();
+      const url = new URL('https://generativelanguage.googleapis.com/v1beta/models');
+      if (options.pageSize) url.searchParams.set('pageSize', String(options.pageSize));
+      if (options.pageToken) url.searchParams.set('pageToken', String(options.pageToken));
+      const res = await fetch(url.toString(), {
+        headers: {
+          'X-goog-api-key': apiKey
+        }
+      });
+      if (!res.ok) {
+        throw new Error(`ListModels HTTP ${res.status}`);
+      }
+      const data = await res.json();
+      console.log('📚 Gemini models:', data);
+      return data;
+    }
+
+    // Convenience: list only models supporting generateContent
+    async function listGeminiModelsForGenerateContent() {
+      const data = await listGeminiModels({ pageSize: 200 });
+      const models = (data.models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent'));
+      console.table(models.map(m => ({ name: m.name, methods: m.supportedGenerationMethods })));
+      return models;
+    }
+
+    window.listGeminiModels = listGeminiModels;
+    window.listGeminiModelsForGenerateContent = listGeminiModelsForGenerateContent;
+
     // Also add a ready flag
     window.geminiAPIReady = true;
     console.log('✅ Gemini API functions are ready');
