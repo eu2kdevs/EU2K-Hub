@@ -1423,14 +1423,18 @@
       if (loader && loader.parentElement) loader.parentElement.removeChild(loader);
     }
 
-    // Generate food image using Imagen REST API (imagen-4.0-fast-generate-001)
+    // Generate food image using Google Generative Language Images API (imagegeneration@005)
     async function generateFoodImage(imagePrompt, itemIndex) {
       try {
         const apiKey = await getGeminiApiKeyCached();
-        const url = 'https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-fast-generate-001:predict';
+        const url = 'https://generativelanguage.googleapis.com/v1beta/models/imagegeneration@005:generate';
         const body = {
-          instances: [ { prompt: imagePrompt } ],
-          parameters: { sampleCount: 1 }
+          prompt: { text: imagePrompt },
+          imageGenerationConfig: {
+            numberOfImages: 1,
+            size: '1024x1024',
+            quality: 'standard'
+          }
         };
         const res = await fetch(url, {
           method: 'POST',
@@ -1444,17 +1448,12 @@
           throw new Error(`Imagen HTTP ${res.status}`);
         }
         const data = await res.json();
-        // Try multiple known shapes per docs
-        let base64 = null;
-        if (data && Array.isArray(data.generatedImages) && data.generatedImages[0] && data.generatedImages[0].image && data.generatedImages[0].image.imageBytes) {
-          base64 = data.generatedImages[0].image.imageBytes;
-        } else if (data && Array.isArray(data.predictions) && data.predictions[0]) {
-          const p0 = data.predictions[0];
-          base64 = p0.bytesBase64 || p0.imageBytes || (p0.image && p0.image.bytesBase64) || null;
-        }
         const imageElement = document.getElementById(`food-image-${itemIndex}`);
-        if (base64 && imageElement) {
-          imageElement.src = `data:image/png;base64,${base64}`;
+        // Response shape: { images: [ { inlineData: { mimeType, data } } ] }
+        const inline = data && Array.isArray(data.images) && data.images[0] && data.images[0].inlineData;
+        if (inline && inline.data && imageElement) {
+          const mime = inline.mimeType || 'image/png';
+          imageElement.src = `data:${mime};base64,${inline.data}`;
           imageElement.alt = `Generated image of ${imagePrompt}`;
           return;
         }
@@ -1463,10 +1462,8 @@
           imageElement.src = '/EU2K-Hub/assets/placeholder_img.svg';
           imageElement.alt = `No image generated for ${imagePrompt}`;
         }
-        
       } catch (error) {
         console.error(`❌ Error generating image for ${imagePrompt}:`, error);
-        // Set error fallback image on error
         const imageElement = document.getElementById(`food-image-${itemIndex}`);
         if (imageElement) {
           imageElement.src = '/EU2K-Hub/assets/placeholder_img.svg';
