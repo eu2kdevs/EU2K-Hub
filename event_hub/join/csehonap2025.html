@@ -206,8 +206,8 @@
           const foodItems = JSON.parse(jsonCandidate);
           console.log('🍽️ Parsed food items:', foodItems);
           
-          // Display the food items (you can customize this part)
-          displayFoodItems(foodItems);
+          // Render the food items into the UI
+          buildFoodListItems(foodItems);
           
         } catch (parseError) {
           console.error('❌ Failed to parse Gemini response as JSON:', parseError);
@@ -1319,42 +1319,81 @@
 
     // Build food list items from Gemini response
     function buildFoodListItems(foodItems) {
-      // Remove existing food items container if it exists
-      const existingContainer = document.querySelector('.food-items-container');
-      if (existingContainer) {
-        existingContainer.remove();
+      // Remove any previous list or UI
+      const oldList = document.getElementById('food-items-list');
+      if (oldList) oldList.remove();
+      const oldAdd = document.getElementById('add-food-fab');
+      if (oldAdd) oldAdd.remove();
+
+      // Target: insert into the finish-join info section before the help text
+      const infoSection = document.querySelector('#finish-join-page .info-section');
+      const questionMarkContainer = infoSection ? infoSection.querySelector('.question-mark-container') : null;
+      if (!infoSection || !questionMarkContainer) {
+        console.warn('Food list target container not found');
+        return;
       }
-      
-      // Create food items container
-      const foodItemsContainer = document.createElement('div');
-      foodItemsContainer.className = 'food-items-container';
-      
-      // Build each food item
+
+      // Create the list container expected by addFoodItem()
+      const listContainer = document.createElement('div');
+      listContainer.id = 'food-items-list';
+      listContainer.className = 'food-items-list';
+
+      // Build rows using the same structure as addFoodItem() so styles apply
       foodItems.forEach((item, index) => {
-        const foodItem = document.createElement('div');
-        foodItem.className = 'food-item';
-        foodItem.innerHTML = `
-          <div class="food-item-image">
-            <img src="/EU2K-Hub/assets/events/csehonap/food_placeholder.svg" alt="${item.name}" class="food-image" id="food-image-${index}">
+        const row = document.createElement('div');
+        row.className = 'food-item';
+        row.id = `food-item-${index + 1}`;
+        row.innerHTML = `
+          <div class="food-item-container">
+            <div class="food-image-container" style="background-color: #272B26;">
+              <img src="/EU2K-Hub/assets/placeholder_img.svg" alt="Étel kép" class="food-image" id="food-image-${index}">
+            </div>
+            <div class="food-details">
+              <div class="food-input-group">
+                <input type="text" class="food-name-input" placeholder="Név" value="${item.name || ''}" />
+              </div>
+              <div class="food-input-group">
+                <input type="text" class="food-description-input" placeholder="Rövid leírás" value="${item.description || ''}" />
+              </div>
+              <button class="save-later-btn" disabled style="background-color: #9CD49F;">
+                <img src="/EU2K-Hub/assets/events/csehonap/save.svg" alt="Mentés" class="save-icon">
+                Mentés későbbre
+              </button>
+            </div>
           </div>
-          <div class="food-item-details">
-            <div class="food-item-name">${item.name}</div>
-            <div class="food-item-description">${item.description}</div>
-          </div>
+          <div class="divider"></div>
         `;
-        
-        foodItemsContainer.appendChild(foodItem);
-        
-        // Generate image for this food item using Gemini
-        generateFoodImage(item.image, index);
+        listContainer.appendChild(row);
+
+        // Kick off image generation per item
+        if (item.image) {
+          generateFoodImage(item.image, index);
+        }
       });
-      
-      // Insert the container before the question mark container
-      const infoSection = document.querySelector('.info-section');
-      const questionMarkContainer = document.querySelector('.question-mark-container');
-      infoSection.insertBefore(foodItemsContainer, questionMarkContainer);
-      
-      // Show completion message
+
+      // Insert list before the help block
+      infoSection.insertBefore(listContainer, questionMarkContainer);
+
+      // Create the Add button matching the screenshot and hook to addFoodItem()
+      const addBtnWrapper = document.createElement('div');
+      addBtnWrapper.className = 'button-container';
+      const addBtn = document.createElement('button');
+      addBtn.id = 'add-food-fab';
+      addBtn.className = 'btn-primary';
+      addBtn.style.display = 'flex';
+      addBtn.style.alignItems = 'center';
+      addBtn.style.gap = '8px';
+      addBtn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+        </svg>
+        Hozzáadás
+      `;
+      addBtn.addEventListener('click', addFoodItem);
+      addBtnWrapper.appendChild(addBtn);
+      infoSection.insertBefore(addBtnWrapper, questionMarkContainer.nextSibling);
+
+      // Show completion message below the list
       showCompletionMessage();
     }
 
