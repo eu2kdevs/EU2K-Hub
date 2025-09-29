@@ -1238,101 +1238,7 @@
       }
     }
 
-    // Gemini API call for food breakdown using GoogleGenAI SDK
-    async function callGeminiForFoodBreakdown(foodText) {
-      try {
-        console.log('🔍 Checking Gemini API availability...');
-        console.log('geminiAPIReady:', window.geminiAPIReady);
-        console.log('getGoogleGenAI available:', typeof window.getGoogleGenAI);
-        
-        // Wait for Gemini API functions to be ready
-        let attempts = 0;
-        const maxAttempts = 50; // 5 seconds max wait
-        
-        while ((!window.geminiAPIReady || typeof window.getGoogleGenAI !== 'function') && attempts < maxAttempts) {
-          console.log(`⏳ Waiting for Gemini API... attempt ${attempts + 1}/${maxAttempts}`);
-          await new Promise(resolve => setTimeout(resolve, 100));
-          attempts++;
-        }
-        
-        if (typeof window.getGoogleGenAI !== 'function') {
-          console.error('❌ Gemini API function check failed:', {
-            geminiAPIReady: window.geminiAPIReady,
-            getGoogleGenAI: typeof window.getGoogleGenAI,
-            windowKeys: Object.keys(window).filter(k => k.includes('gemini') || k.includes('Google'))
-          });
-          throw new Error('Gemini API functions not available');
-        }
-        
-        console.log('✅ Gemini API ready, getting instance...');
-        // Get GoogleGenAI instance
-        const ai = await window.getGoogleGenAI();
-
-        // Build the prompt
-        const prompt = `Break down this food description into individual food items: "${foodText}"
-
-    Return a JSON array where each item has:
-    - name: the name of the individual food item
-    - description: a short 2-3 word description in Hungarian
-    - image: a descriptive text for generating an image of this food item
-
-    Example format:
-    [
-      {
-        "name": "Sült Csirke",
-        "description": "Ropogós, fűszeres csirke",
-        "image": "golden roasted chicken with herbs"
-      }
-    ]
-
-    Only return the JSON array, no other text.`;
-
-        // Call Gemini API using GoogleGenAI SDK
-        const response = await ai.models.generateContent({
-          model: "gemini-2.5-flash",
-          contents: prompt,
-          config: {
-            thinkingConfig: {
-              thinkingBudget: 0, // Disables thinking
-            },
-          }
-        });
-
-        const generatedText = response.text;
-
-        // Safer JSON parsing with try/catch and regex extraction
-        let foodItems;
-        try {
-          // First try direct parsing
-          foodItems = JSON.parse(generatedText.trim());
-        } catch (parseError) {
-          console.error('❌ Direct JSON parse failed, trying regex extraction:', parseError);
-          
-          // Try to extract JSON array using regex
-          const jsonMatch = generatedText.match(/\[[\s\S]*\]/);
-          if (jsonMatch) {
-            try {
-              foodItems = JSON.parse(jsonMatch[0]);
-            } catch (regexParseError) {
-              console.error('❌ Regex JSON parse also failed:', regexParseError);
-              throw new Error('Unable to parse Gemini response as JSON');
-            }
-          } else {
-            console.error('❌ No JSON array found in response:', generatedText);
-            throw new Error('No valid JSON array found in Gemini response');
-          }
-        }
-
-        console.log('🍽️ Gemini food breakdown:', foodItems);
-
-        // Build the food list items
-        buildFoodListItems(foodItems);
-
-      } catch (error) {
-        console.error('❌ Error calling Gemini API:', error);
-        showPopup('Hiba történt az étel feldolgozása során', 'Kérjük próbálja újra később', 'error');
-      }
-    }
+    // Duplicate removed: Gemini food breakdown is handled in module script via window.callGeminiForFoodBreakdown
 
     // Build food list items from Gemini response
     function buildFoodListItems(foodItems) {
@@ -1505,7 +1411,7 @@
           existingCompletion.remove();
         }
         
-        await callGeminiForFoodBreakdown(foodText);
+        await window.callGeminiForFoodBreakdown(foodText);
       }
     }
     
