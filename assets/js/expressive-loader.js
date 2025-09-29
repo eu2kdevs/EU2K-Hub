@@ -12,7 +12,7 @@
       this._size = this.getAttribute('size') || '64';
       this._variant = this.getAttribute('variant') || 'shape';
       this._frameIndex = 0;
-      this._raf = null;
+      this._timer = null;
       this._frames = [
         '/EU2K-Hub/assets/animation/shape1.svg',
         '/EU2K-Hub/assets/animation/shape2.svg',
@@ -23,28 +23,17 @@
         '/EU2K-Hub/assets/animation/shape7.svg',
         '/EU2K-Hub/assets/animation/shape8.svg'
       ];
-      this._lastSwitch = 0;
       this._frameDuration = 800; // ms per shape frame
-      this._crossfade = 180; // ms crossfade duration
+      this._dList = [];
       this._render();
     }
 
     connectedCallback(){
-      this._tick = (t)=>{
-        if (!this.isConnected) return;
-        if (this._lastSwitch === 0) this._lastSwitch = t;
-        const elapsed = t - this._lastSwitch;
-        if (elapsed >= this._frameDuration){
-          this._advanceFrame();
-          this._lastSwitch = t;
-        }
-        this._raf = requestAnimationFrame(this._tick);
-      };
-      this._raf = requestAnimationFrame(this._tick);
+      this._init();
     }
 
     disconnectedCallback(){
-      if (this._raf) cancelAnimationFrame(this._raf);
+      if (this._timer) clearTimeout(this._timer);
     }
 
     attributeChangedCallback(name){
@@ -55,30 +44,57 @@
       }
     }
 
-    _advanceFrame(){
-      const nextIndex = (this._frameIndex + 1) % this._frames.length;
-      const nextUrl = this._frames[nextIndex];
-      const current = this._front;
-      const next = this._back;
+    async _init(){
+      if (!this._dList.length){
+        try {
+          const ds = await Promise.all(this._frames.map(u => this._fetchPathD(u)));
+          this._dList = ds.filter(Boolean);
+        } catch (e) {
+          this._dList = [];
+        }
+      }
+      // Fallback if we couldn't load any paths
+      if (!this._dList.length){
+        this._dList = ['M0,0h1v1h-1z'];
+      }
+      // Seed current path
+      if (this._path){
+        this._path.setAttribute('d', this._dList[this._frameIndex]);
+      }
+      this._loop();
+    }
 
-      // Prepare back layer
-      next.style.maskImage = `url(${nextUrl})`;
-      next.style.webkitMaskImage = `url(${nextUrl})`;
-      // Bounce animation on the incoming shape
-      next.classList.remove('bounce');
-      // Force reflow to restart animation
-      void next.offsetWidth;
-      next.classList.add('bounce');
+    _loop(){
+      if (!this.isConnected) return;
+      const nextIndex = (this._frameIndex + 1) % this._dList.length;
+      const fromD = this._dList[this._frameIndex];
+      const toD = this._dList[nextIndex];
+      this._morph(fromD, toD);
+      this._frameIndex = nextIndex;
+      this._timer = setTimeout(()=> this._loop(), this._frameDuration);
+    }
 
-      // Crossfade
-      next.style.opacity = '1';
-      current.style.opacity = '0';
+    _morph(fromD, toD){
+      if (!this._path || !this._anim) return;
+      // Restart bounce on group
+      this._g.classList.remove('bounce');
+      void this._g.offsetWidth;
+      this._g.classList.add('bounce');
+      // Configure and start SMIL animate on 'd'
+      this._anim.setAttribute('from', fromD);
+      this._anim.setAttribute('to', toD);
+      this._anim.setAttribute('dur', this._frameDuration + 'ms');
+      this._anim.beginElement();
+    }
 
-      // Swap references after crossfade
-      setTimeout(()=>{
-        const tmp = this._front; this._front = this._back; this._back = tmp;
-        this._frameIndex = nextIndex;
-      }, this._crossfade);
+    async _fetchPathD(url){
+      try {
+        const res = await fetch(url, { cache: 'force-cache' });
+        const text = await res.text();
+        const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+        const path = doc.querySelector('path');
+        return path ? path.getAttribute('d') : null;
+      } catch (e) { return null; }
     }
 
     _render(){
@@ -92,8 +108,9 @@
         :host{ display:inline-flex; align-items:center; justify-content:center; }
         .wrapper{ position:relative; width:${size}px; height:${size}px; }
         .ring{ position:absolute; inset:0; border-radius:9999px; background: var(--md-sys-color-primary, #6750A4); opacity:0.12; }
-        .plane{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-        .shape-figure{ width:${shapeSize}px; height:${shapeSize}px; background: var(--md-sys-color-primary, #6750A4); opacity:1; transition: opacity ${this._crossfade}ms ease; mask-repeat:no-repeat; mask-position:center; mask-size:contain; -webkit-mask-repeat:no-repeat; -webkit-mask-position:center; -webkit-mask-size:contain; }
+        .svgbox{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+        svg{ width:${shapeSize}px; height:${shapeSize}px; overflow:visible; }
+        path{ fill: var(--md-sys-color-primary, #6750A4); }
         .bounce{ animation: m3bounce ${this._frameDuration}ms cubic-bezier(.2,.6,.2,1) 1; }
         @keyframes m3bounce{ 0%{ transform:scale(0.96); } 50%{ transform:scale(1.04); } 100%{ transform:scale(1.0); } }
       `;
@@ -107,32 +124,34 @@
         wrapper.appendChild(ringEl);
       }
 
-      // Two planes for crossfade
-      const planeA = document.createElement('div');
-      planeA.className = 'plane';
-      const figA = document.createElement('div');
-      figA.className = 'shape-figure bounce';
-      figA.style.maskImage = `url(${this._frames[this._frameIndex]})`;
-      figA.style.webkitMaskImage = `url(${this._frames[this._frameIndex]})`;
-      figA.style.opacity = '1';
-      planeA.appendChild(figA);
-
-      const planeB = document.createElement('div');
-      planeB.className = 'plane';
-      const figB = document.createElement('div');
-      figB.className = 'shape-figure';
-      figB.style.opacity = '0';
-      planeB.appendChild(figB);
-
-      wrapper.appendChild(planeA);
-      wrapper.appendChild(planeB);
+      // Inline SVG with <animate> on path 'd'
+      const svgBox = document.createElement('div');
+      svgBox.className = 'svgbox';
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(svgNS, 'svg');
+      svg.setAttribute('viewBox', '0 0 100 100');
+      const g = document.createElementNS(svgNS, 'g');
+      const path = document.createElementNS(svgNS, 'path');
+      path.setAttribute('d', '');
+      const animate = document.createElementNS(svgNS, 'animate');
+      animate.setAttribute('attributeName', 'd');
+      animate.setAttribute('fill', 'freeze');
+      animate.setAttribute('begin', 'indefinite');
+      g.appendChild(path);
+      path.appendChild(animate);
+      svg.appendChild(g);
+      svgBox.appendChild(svg);
+      wrapper.appendChild(svgBox);
 
       this._shadow.appendChild(style);
       this._shadow.appendChild(wrapper);
 
       // Keep refs
-      this._front = figA;
-      this._back = figB;
+      this._svg = svg;
+      this._g = g;
+      this._path = path;
+      this._anim = animate;
+      this._g.classList.add('bounce');
     }
   }
 
