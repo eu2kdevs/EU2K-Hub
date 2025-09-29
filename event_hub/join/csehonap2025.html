@@ -182,6 +182,8 @@
         const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" });
         const result = await model.generateContent(prompt);
         const response = await result.response;
+        // Show loader while waiting for parsing/rendering
+        showFoodLoading();
         const text = response.text();
         let cleaned = text.trim();
         // Strip markdown code fences like ```json ... ``` if present
@@ -418,6 +420,26 @@
 </head>
 
 <body>
+  <style>
+    /* Food list layout + interactions */
+    #finish-join-page .food-items-list { display: flex; flex-direction: column; gap: 8px; }
+    #finish-join-page .food-item { background: transparent; border: none; }
+    #finish-join-page .food-item-container { display: flex; align-items: stretch; gap: 12px; }
+    #finish-join-page .food-image-container { width: 72px; border-radius: 12px; overflow: hidden; background: transparent; }
+    #finish-join-page .food-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #finish-join-page .food-details { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    #finish-join-page .food-input-group input { width: 100%; }
+    #finish-join-page .food-actions { display: flex; align-items: center; }
+    #finish-join-page .save-later-btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 9999px; padding: 4px; background-color: #9CD49F; color: #0B0F0A; transition: padding 120ms ease, gap 120ms ease; }
+    #finish-join-page .save-later-btn .save-text { display: none; }
+    #finish-join-page .food-item:hover .save-later-btn { padding: 8px 12px; }
+    #finish-join-page .food-item:hover .save-later-btn .save-text { display: inline; }
+    #finish-join-page .divider { height: 1px; background: #2E332D; opacity: 0.6; }
+    /* Loading placeholder occupying the same region */
+    #finish-join-page .food-loading { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
+    #finish-join-page .spinner { width: 18px; height: 18px; border: 3px solid rgba(255,255,255,0.2); border-top-color: #9CD49F; border-radius: 50%; animation: sp 1s linear infinite; }
+    @keyframes sp { to { transform: rotate(360deg); } }
+  </style>
   <div class="app-bg">
     <aside class="sidebar">
       <nav class="nav-menu">
@@ -1319,6 +1341,10 @@
 
     // Build food list items from Gemini response
     function buildFoodListItems(foodItems) {
+      // Hide question/help section when items present
+      const questionMarkContainer = document.querySelector('#finish-join-page .question-mark-container');
+      if (questionMarkContainer) questionMarkContainer.style.display = 'none';
+      hideFoodLoading();
       // Remove any previous list or UI
       const oldList = document.getElementById('food-items-list');
       if (oldList) oldList.remove();
@@ -1327,8 +1353,8 @@
 
       // Target: insert into the finish-join info section before the help text
       const infoSection = document.querySelector('#finish-join-page .info-section');
-      const questionMarkContainer = infoSection ? infoSection.querySelector('.question-mark-container') : null;
-      if (!infoSection || !questionMarkContainer) {
+      const qmTarget = infoSection ? infoSection.querySelector('.question-mark-container') : null;
+      if (!infoSection || !qmTarget) {
         console.warn('Food list target container not found');
         return;
       }
@@ -1345,7 +1371,7 @@
         row.id = `food-item-${index + 1}`;
         row.innerHTML = `
           <div class="food-item-container">
-            <div class="food-image-container" style="background-color: #272B26;">
+            <div class="food-image-container">
               <img src="/EU2K-Hub/assets/placeholder_img.svg" alt="Étel kép" class="food-image" id="food-image-${index}">
             </div>
             <div class="food-details">
@@ -1355,9 +1381,11 @@
               <div class="food-input-group">
                 <input type="text" class="food-description-input" placeholder="Rövid leírás" value="${item.description || ''}" />
               </div>
-              <button class="save-later-btn" disabled style="background-color: #9CD49F;">
+            </div>
+            <div class="food-actions">
+              <button class="save-later-btn" disabled>
                 <img src="/EU2K-Hub/assets/events/csehonap/save.svg" alt="Mentés" class="save-icon">
-                Mentés későbbre
+                <span class="save-text">Mentés későbbre</span>
               </button>
             </div>
           </div>
@@ -1372,7 +1400,7 @@
       });
 
       // Insert list before the help block
-      infoSection.insertBefore(listContainer, questionMarkContainer);
+      infoSection.insertBefore(listContainer, qmTarget);
 
       // Create the Add button matching the screenshot and hook to addFoodItem()
       const addBtnWrapper = document.createElement('div');
@@ -1391,31 +1419,53 @@
       `;
       addBtn.addEventListener('click', addFoodItem);
       addBtnWrapper.appendChild(addBtn);
-      infoSection.insertBefore(addBtnWrapper, questionMarkContainer.nextSibling);
+      infoSection.insertBefore(addBtnWrapper, qmTarget.nextSibling);
 
       // Show completion message below the list
       showCompletionMessage();
     }
 
-    // Generate food image using GoogleGenAI SDK with Gemini 2.5 Flash Image
+    // Loading indicator handling
+    function showFoodLoading() {
+      const infoSection = document.querySelector('#finish-join-page .info-section');
+      const qm = infoSection ? infoSection.querySelector('.question-mark-container') : null;
+      if (qm) qm.style.display = 'none';
+      if (!infoSection) return;
+      if (document.getElementById('food-loading')) return;
+      const loader = document.createElement('div');
+      loader.id = 'food-loading';
+      loader.className = 'food-loading';
+      loader.innerHTML = `
+        <div class="spinner"></div>
+        <div>Ételek generálása folyamatban…</div>
+      `;
+      infoSection.appendChild(loader);
+    }
+
+    function hideFoodLoading() {
+      const loader = document.getElementById('food-loading');
+      if (loader && loader.parentElement) loader.parentElement.removeChild(loader);
+    }
+
+    // Generate food image using GoogleGenAI SDK
     async function generateFoodImage(imagePrompt, itemIndex) {
       try {
         // Get GoogleGenAI instance
         const ai = await getGoogleGenAI();
         
-        // Generate image using GoogleGenAI SDK
+        // Generate image using Gemini 2.0 Flash with image response
+        const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" });
         const prompt = `Generate a high-quality, appetizing, photorealistic image of: ${imagePrompt}. The image should be professional, well-lit, and suitable for a restaurant menu. Make it look delicious and appealing with vibrant colors and good composition.`;
-        
-        const response = await ai.models.generateContent({
-          model: "gemini-2.5-flash-image-preview",
-          contents: prompt,
+        const result = await model.generateContent({
+          contents: [{ role: "user", parts: [{ text: prompt }]}],
+          generationConfig: { responseMimeType: "image/png" }
         });
-
-        console.log(`🖼️ Image generation response:`, response);
+        const resp = result.response;
+        console.log(`🖼️ Image generation response:`, resp);
         
         // Check if image was generated successfully
-        if (response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
-          for (const part of response.candidates[0].content.parts) {
+        if (resp && resp.candidates && resp.candidates[0] && resp.candidates[0].content && resp.candidates[0].content.parts) {
+          for (const part of resp.candidates[0].content.parts) {
             if (part.inlineData && part.inlineData.data) {
               // Convert base64 to blob and upload to ImgBB
               const imageData = part.inlineData.data;
@@ -1429,7 +1479,7 @@
         // Set error fallback image when no image data is found
         const imageElement = document.getElementById(`food-image-${itemIndex}`);
         if (imageElement) {
-          imageElement.src = '/EU2K-Hub/assets/events/csehonap/error_image.svg';
+          imageElement.src = '/EU2K-Hub/assets/placeholder_img.svg';
           imageElement.alt = `Error generating image for ${imagePrompt}`;
         }
         
@@ -1438,7 +1488,7 @@
         // Set error fallback image on error
         const imageElement = document.getElementById(`food-image-${itemIndex}`);
         if (imageElement) {
-          imageElement.src = '/EU2K-Hub/assets/events/csehonap/error_image.svg';
+          imageElement.src = '/EU2K-Hub/assets/placeholder_img.svg';
           imageElement.alt = `Error generating image for ${imagePrompt}`;
         }
       }
