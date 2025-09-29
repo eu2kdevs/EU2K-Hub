@@ -1218,6 +1218,17 @@
           const value = this.value.trim();
           if (value) {
             console.log(`🍽️ Food name entered: ${value}`);
+            // Wait until the global function from module script is available
+            let tries = 0;
+            const maxTries = 50;
+            while (typeof window.callGeminiForFoodBreakdown !== 'function' && tries < maxTries) {
+              await new Promise(r => setTimeout(r, 100));
+              tries++;
+            }
+            if (typeof window.callGeminiForFoodBreakdown !== 'function') {
+              console.error('❌ window.callGeminiForFoodBreakdown is not available after waiting');
+              return;
+            }
             await window.callGeminiForFoodBreakdown(value);
           }
         });
@@ -1411,6 +1422,17 @@
           existingCompletion.remove();
         }
         
+        // Wait until the global function from module script is available
+        let tries2 = 0;
+        const maxTries2 = 50;
+        while (typeof window.callGeminiForFoodBreakdown !== 'function' && tries2 < maxTries2) {
+          await new Promise(r => setTimeout(r, 100));
+          tries2++;
+        }
+        if (typeof window.callGeminiForFoodBreakdown !== 'function') {
+          console.error('❌ window.callGeminiForFoodBreakdown is not available after waiting');
+          return;
+        }
         await window.callGeminiForFoodBreakdown(foodText);
       }
     }
