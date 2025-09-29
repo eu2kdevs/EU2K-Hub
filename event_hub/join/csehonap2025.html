@@ -1391,7 +1391,7 @@
 
         // Kick off image generation per item
         if (item.image) {
-          generateFoodImage(item.image, index);
+          generatefoodimage(item.image, index);
         }
       });
 
@@ -1423,52 +1423,61 @@
       if (loader && loader.parentElement) loader.parentElement.removeChild(loader);
     }
 
-    // Generate food image using Google Generative Language Images API (imagegeneration@005)
-    async function generateFoodImage(imagePrompt, itemIndex) {
+    // Generate food image via Firebase Callable Function proxy to avoid browser CORS
+    async function generatefoodimage(imagePrompt, itemIndex) {
+      const imageElement = document.getElementById(`food-image-${itemIndex}`);
       try {
-        const apiKey = await getGeminiApiKeyCached();
-        const url = 'https://generativelanguage.googleapis.com/v1beta/models/imagegeneration@005:generate';
-        const body = {
-          prompt: { text: imagePrompt },
-          imageGenerationConfig: {
-            numberOfImages: 1,
-            size: '1024x1024',
-            quality: 'standard'
-          }
+        // Prefer server-side proxy callable to bypass CORS
+        const tryCallable = async (name) => {
+          const callable = (window.createHttpsCallable ? window.createHttpsCallable(name) : null);
+          if (!callable) throw new Error('httpsCallable not available');
+          return await callable({
+            prompt: imagePrompt,
+            config: { numberOfImages: 1, size: '1024x1024', quality: 'standard' }
+          });
         };
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-goog-api-key': apiKey
-          },
-          body: JSON.stringify(body)
-        });
-        if (!res.ok) {
-          throw new Error(`Imagen HTTP ${res.status}`);
+        let result = null;
+        try {
+          // First try a canonical function name
+          result = await tryCallable('generatefoodimage');
+        } catch (e1) {
+          // Fallback to an alternate proxy name if deployed differently
+          try {
+            result = await tryCallable('proxyGenerateImage');
+          } catch (e2) {
+            throw e2;
+          }
         }
-        const data = await res.json();
-        const imageElement = document.getElementById(`food-image-${itemIndex}`);
-        // Response shape: { images: [ { inlineData: { mimeType, data } } ] }
-        const inline = data && Array.isArray(data.images) && data.images[0] && data.images[0].inlineData;
-        if (inline && inline.data && imageElement) {
-          const mime = inline.mimeType || 'image/png';
-          imageElement.src = `data:${mime};base64,${inline.data}`;
+        const data = result && result.data ? result.data : null;
+        // Expecting { mimeType, base64 } or { images: [{ inlineData: { mimeType, data } } ] }
+        let mimeType = 'image/png';
+        let base64Data = null;
+        if (data) {
+          if (data.base64) {
+            base64Data = data.base64;
+            mimeType = data.mimeType || mimeType;
+          } else if (Array.isArray(data.images) && data.images[0] && data.images[0].inlineData) {
+            mimeType = data.images[0].inlineData.mimeType || mimeType;
+            base64Data = data.images[0].inlineData.data || null;
+          }
+        }
+        if (base64Data && imageElement) {
+          imageElement.src = `data:${mimeType};base64,${base64Data}`;
           imageElement.alt = `Generated image of ${imagePrompt}`;
           return;
         }
-        // Fallback to placeholder if no data
         if (imageElement) {
           imageElement.src = '/EU2K-Hub/assets/placeholder_img.svg';
           imageElement.alt = `No image generated for ${imagePrompt}`;
         }
       } catch (error) {
         console.error(`❌ Error generating image for ${imagePrompt}:`, error);
-        const imageElement = document.getElementById(`food-image-${itemIndex}`);
         if (imageElement) {
           imageElement.src = '/EU2K-Hub/assets/placeholder_img.svg';
           imageElement.alt = `Error generating image for ${imagePrompt}`;
         }
+        // Optionally inform user when blocked by CORS / missing proxy
+        showToast('A képgenerálás szerveroldali engedélyt igényel. Kérjük, próbáld meg később.', 'info');
       }
     }
 
