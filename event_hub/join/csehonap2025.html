@@ -87,9 +87,9 @@
       // Itt a Firebase Function-ből kapott kulcsot használod
       const apiKey = await getGeminiApiKeyCached();
       
-      // Dynamically import GoogleGenAI to ensure availability
-      const { GoogleGenAI } = await import("https://cdn.jsdelivr.net/npm/@google-ai/generativelanguage/dist/index.js");
-      const ai = new GoogleGenAI({ apiKey });
+      // Dynamically import Google Generative AI (browser SDK)
+      const { GoogleGenerativeAI: GoogleGenAI } = await import("https://esm.run/@google/generative-ai");
+      const ai = new GoogleGenAI(apiKey);
       return ai;
     }
 
