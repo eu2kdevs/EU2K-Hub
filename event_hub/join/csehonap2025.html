@@ -34,9 +34,7 @@
     import { enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
     import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js";
-    import { GoogleGenAI } from "https://cdn.jsdelivr.net/npm/@google-ai/generativelanguage/dist/index.js";
-
-    window.GoogleGenAI = GoogleGenAI;
+    // GoogleGenAI will be dynamically imported inside getGoogleGenAI() to avoid early module aborts
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -89,6 +87,8 @@
       // Itt a Firebase Function-ből kapott kulcsot használod
       const apiKey = await getGeminiApiKeyCached();
       
+      // Dynamically import GoogleGenAI to ensure availability
+      const { GoogleGenAI } = await import("https://cdn.jsdelivr.net/npm/@google-ai/generativelanguage/dist/index.js");
       const ai = new GoogleGenAI({ apiKey });
       return ai;
     }
@@ -712,11 +712,32 @@
     
     // Inicializálás oldal betöltésekor
     document.addEventListener('DOMContentLoaded', () => {
-      loadFeaturedEvent();
-      initializeFAB();
-      initializeJoinFAB();
-      displayJoinInfo();
-    });
+       loadFeaturedEvent();
+       initializeFAB();
+       initializeJoinFAB();
+       displayJoinInfo();
+       
+       // Attach blur listener only after module functions are exposed
+       const foodNameInput = document.getElementById('food-name-input');
+       if (foodNameInput) {
+         foodNameInput.addEventListener('blur', async function() {
+           const value = this.value.trim();
+           if (!value) return;
+           // Wait until the module-exposed function becomes available
+           let tries = 0;
+           const maxTries = 50;
+           while (typeof window.callGeminiForFoodBreakdown !== 'function' && tries < maxTries) {
+             await new Promise(r => setTimeout(r, 100));
+             tries++;
+           }
+           if (typeof window.callGeminiForFoodBreakdown !== 'function') {
+             console.error('❌ window.callGeminiForFoodBreakdown is not available after waiting');
+             return;
+           }
+           await window.callGeminiForFoodBreakdown(value);
+         });
+       }
+     });
     
     // Feedback gomb és popup kezelése
     const feedbackButton = document.querySelector('.feedback-button'); // Changed to querySelector
