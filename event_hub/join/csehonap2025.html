@@ -425,20 +425,16 @@
     #finish-join-page .food-items-list { display: flex; flex-direction: column; gap: 8px; }
     #finish-join-page .food-item { background: transparent; border: none; }
     #finish-join-page .food-item-container { display: flex; align-items: stretch; gap: 12px; }
-    #finish-join-page .food-image-container { width: 72px; border-radius: 12px; overflow: hidden; background: transparent; }
-    #finish-join-page .food-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #finish-join-page .food-image-container { width: 72px; border-radius: 12px; overflow: hidden; background: #272B26; }
+    #finish-join-page .food-image { width: 100%; height: 100%; object-fit: cover; display: block; background: #272B26; }
     #finish-join-page .food-details { flex: 1; display: flex; flex-direction: column; gap: 8px; }
     #finish-join-page .food-input-group input { width: 100%; }
     #finish-join-page .food-actions { display: flex; align-items: center; }
-    #finish-join-page .save-later-btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 9999px; padding: 4px; background-color: #9CD49F; color: #0B0F0A; transition: padding 120ms ease, gap 120ms ease; }
+    #finish-join-page .save-later-btn { display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px; padding: 4px; background-color: #9CD49F; color: #0B0F0A; }
     #finish-join-page .save-later-btn .save-text { display: none; }
-    #finish-join-page .food-item:hover .save-later-btn { padding: 8px 12px; }
-    #finish-join-page .food-item:hover .save-later-btn .save-text { display: inline; }
     #finish-join-page .divider { height: 1px; background: #2E332D; opacity: 0.6; }
     /* Loading placeholder occupying the same region */
-    #finish-join-page .food-loading { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
-    #finish-join-page .spinner { width: 18px; height: 18px; border: 3px solid rgba(255,255,255,0.2); border-top-color: #9CD49F; border-radius: 50%; animation: sp 1s linear infinite; }
-    @keyframes sp { to { transform: rotate(360deg); } }
+    #finish-join-page .food-loading { display: flex; align-items: center; justify-content: center; padding: 16px 0; }
   </style>
   <div class="app-bg">
     <aside class="sidebar">
@@ -1418,10 +1414,7 @@
       const loader = document.createElement('div');
       loader.id = 'food-loading';
       loader.className = 'food-loading';
-      loader.innerHTML = `
-        <div class="spinner"></div>
-        <div>Ételek generálása folyamatban…</div>
-      `;
+      loader.innerHTML = `<md-circular-progress indeterminate></md-circular-progress>`;
       infoSection.appendChild(loader);
     }
 
