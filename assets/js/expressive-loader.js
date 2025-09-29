@@ -25,6 +25,7 @@
       ];
       this._frameDuration = 800; // ms per shape frame
       this._dList = [];
+      this._normList = [];
       this._render();
     }
 
@@ -57,18 +58,20 @@
       if (!this._dList.length){
         this._dList = ['M0,0h1v1h-1z'];
       }
+      // Normalize to consistent command counts via polygon approximation
+      this._normList = this._dList.map(d => this._normalizePathD(d, 96));
       // Seed current path
       if (this._path){
-        this._path.setAttribute('d', this._dList[this._frameIndex]);
+        this._path.setAttribute('d', this._normList[this._frameIndex]);
       }
       this._loop();
     }
 
     _loop(){
       if (!this.isConnected) return;
-      const nextIndex = (this._frameIndex + 1) % this._dList.length;
-      const fromD = this._dList[this._frameIndex];
-      const toD = this._dList[nextIndex];
+      const nextIndex = (this._frameIndex + 1) % this._normList.length;
+      const fromD = this._normList[this._frameIndex];
+      const toD = this._normList[nextIndex];
       this._morph(fromD, toD);
       this._frameIndex = nextIndex;
       this._timer = setTimeout(()=> this._loop(), this._frameDuration);
@@ -97,10 +100,40 @@
       } catch (e) { return null; }
     }
 
+    _normalizePathD(d, samples){
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const tmpPath = document.createElementNS(svgNS, 'path');
+      tmpPath.setAttribute('d', d);
+      // Use a hidden SVG to ensure geometry works in all browsers
+      const tmpSvg = document.createElementNS(svgNS, 'svg');
+      tmpSvg.setAttribute('width', '0');
+      tmpSvg.setAttribute('height', '0');
+      tmpSvg.appendChild(tmpPath);
+      document.body.appendChild(tmpSvg);
+      const len = tmpPath.getTotalLength();
+      const pts = [];
+      for (let i = 0; i < samples; i++){
+        const p = tmpPath.getPointAtLength((i / samples) * len);
+        pts.push([p.x, p.y]);
+      }
+      // close back to start
+      const p0 = tmpPath.getPointAtLength(0);
+      pts.push([p0.x, p0.y]);
+      document.body.removeChild(tmpSvg);
+      // Build polygon path
+      let out = '';
+      for (let i = 0; i < pts.length; i++){
+        const [x,y] = pts[i];
+        if (i === 0) out += `M ${x} ${y}`; else out += ` L ${x} ${y}`;
+      }
+      out += ' Z';
+      return out;
+    }
+
     _render(){
       const size = parseInt(this._size, 10) || 64;
       const showRing = this._variant === 'ring' || this._variant === 'shape-with-ring';
-      const shapeSize = Math.round(size * 0.56);
+      const shapeSize = Math.round(size * 0.72);
 
       this._shadow.innerHTML = '';
       const style = document.createElement('style');
@@ -111,7 +144,7 @@
         .svgbox{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
         svg{ width:${shapeSize}px; height:${shapeSize}px; overflow:visible; }
         path{ fill: var(--md-sys-color-primary, #6750A4); }
-        .bounce{ animation: m3bounce ${this._frameDuration}ms cubic-bezier(.2,.6,.2,1) 1; }
+        .bounce{ animation: m3bounce ${this._frameDuration}ms cubic-bezier(.2,.6,.2,1) 1; transform-box: fill-box; transform-origin: 50% 50%; }
         @keyframes m3bounce{ 0%{ transform:scale(0.96); } 50%{ transform:scale(1.04); } 100%{ transform:scale(1.0); } }
       `;
 
@@ -129,8 +162,9 @@
       svgBox.className = 'svgbox';
       const svgNS = 'http://www.w3.org/2000/svg';
       const svg = document.createElementNS(svgNS, 'svg');
-      svg.setAttribute('viewBox', '0 0 100 100');
+      svg.setAttribute('viewBox', '0 0 75.75 75.75');
       const g = document.createElementNS(svgNS, 'g');
+      g.setAttribute('transform', 'translate(0,75.75) scale(.075,.075)');
       const path = document.createElementNS(svgNS, 'path');
       path.setAttribute('d', '');
       const animate = document.createElementNS(svgNS, 'animate');
