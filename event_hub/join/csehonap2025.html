@@ -1441,11 +1441,15 @@
           // First try a canonical function name
           result = await tryCallable('generatefoodimage');
         } catch (e1) {
-          // Fallback to an alternate proxy name if deployed differently
+          // Fallbacks for alternate names
           try {
-            result = await tryCallable('proxyGenerateImage');
+            result = await tryCallable('generateFoodImage');
           } catch (e2) {
-            throw e2;
+            try {
+              result = await tryCallable('proxyGenerateImage');
+            } catch (e3) {
+              throw e3;
+            }
           }
         }
         const data = result && result.data ? result.data : null;
