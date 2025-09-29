@@ -183,12 +183,27 @@
         const result = await model.generateContent(prompt);
         const response = await result.response;
         const text = response.text();
+        let cleaned = text.trim();
+        // Strip markdown code fences like ```json ... ``` if present
+        if (cleaned.startsWith('```')) {
+          cleaned = cleaned.replace(/^```[a-zA-Z]*\s*/i, '');
+          cleaned = cleaned.replace(/```\s*$/i, '').trim();
+        }
+        // If still not pure JSON, try to extract array block
+        let jsonCandidate = cleaned;
+        if (!(jsonCandidate.startsWith('[') || jsonCandidate.startsWith('{'))) {
+          const startIdx = cleaned.indexOf('[');
+          const endIdx = cleaned.lastIndexOf(']');
+          if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+            jsonCandidate = cleaned.substring(startIdx, endIdx + 1).trim();
+          }
+        }
         
         console.log('📝 Gemini response:', text);
 
         // Parse JSON response
         try {
-          const foodItems = JSON.parse(text.trim());
+          const foodItems = JSON.parse(jsonCandidate);
           console.log('🍽️ Parsed food items:', foodItems);
           
           // Display the food items (you can customize this part)
