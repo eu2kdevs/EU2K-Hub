@@ -22,8 +22,8 @@
         '/EU2K-Hub/assets/animation/shape6.svg',
         '/EU2K-Hub/assets/animation/shape7.svg'
       ];
-      this._frameDuration = 1300; // ms per shape frame (total cycle time)
-      this._morphDuration = 500; // ms for morphing animation (shorter)
+      this._frameDuration = 2500; // ms per shape frame (total cycle time)
+      this._morphDuration = 400; // ms for morphing animation (shorter)
       this._dList = [];
       this._normList = [];
       this._render();
@@ -35,6 +35,7 @@
 
     disconnectedCallback(){
       if (this._timer) clearTimeout(this._timer);
+      if (this._morphTimer) clearTimeout(this._morphTimer);
     }
 
     attributeChangedCallback(name){
@@ -72,9 +73,16 @@
       const nextIndex = (this._frameIndex + 1) % this._normList.length;
       const fromD = this._normList[this._frameIndex];
       const toD = this._normList[nextIndex];
-      this._morph(fromD, toD);
-      this._frameIndex = nextIndex;
-      this._timer = setTimeout(()=> this._loop(), this._frameDuration);
+      
+      // Wait for the static hold time, then morph
+      const staticHoldTime = this._frameDuration - this._morphDuration;
+      this._timer = setTimeout(() => {
+        if (!this.isConnected) return;
+        this._morph(fromD, toD);
+        this._frameIndex = nextIndex;
+        // Schedule next loop after morph completes
+        this._timer = setTimeout(() => this._loop(), this._morphDuration);
+      }, staticHoldTime);
     }
 
     _morph(fromD, toD){
