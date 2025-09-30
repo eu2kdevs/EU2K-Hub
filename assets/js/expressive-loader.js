@@ -20,10 +20,10 @@
         '/EU2K-Hub/assets/animation/shape4.svg',
         '/EU2K-Hub/assets/animation/shape5.svg',
         '/EU2K-Hub/assets/animation/shape6.svg',
-        '/EU2K-Hub/assets/animation/shape7.svg',
-        '/EU2K-Hub/assets/animation/shape8.svg'
+        '/EU2K-Hub/assets/animation/shape7.svg'
       ];
-      this._frameDuration = 800; // ms per shape frame
+      this._frameDuration = 1300; // ms per shape frame (total cycle time)
+      this._morphDuration = 500; // ms for morphing animation (shorter)
       this._dList = [];
       this._normList = [];
       this._render();
@@ -83,10 +83,10 @@
       this._g.classList.remove('bounce');
       void this._g.offsetWidth;
       this._g.classList.add('bounce');
-      // Configure and start SMIL animate on 'd'
+      // Configure and start SMIL animate on 'd' with shorter duration
       this._anim.setAttribute('from', fromD);
       this._anim.setAttribute('to', toD);
-      this._anim.setAttribute('dur', this._frameDuration + 'ms');
+      this._anim.setAttribute('dur', this._morphDuration + 'ms'); // Use shorter morph duration
       this._anim.beginElement();
     }
 
@@ -134,17 +134,27 @@
       const size = parseInt(this._size, 10) || 64;
       const showRing = this._variant === 'ring' || this._variant === 'shape-with-ring';
       const shapeSize = Math.round(size * 0.72);
+      const ringSize = Math.round(size * 0.72); // Slightly smaller ring for better alignment
 
       this._shadow.innerHTML = '';
       const style = document.createElement('style');
       style.textContent = `
         :host{ display:inline-flex; align-items:center; justify-content:center; }
         .wrapper{ position:relative; width:${size}px; height:${size}px; }
-        .ring{ position:absolute; inset:0; border-radius:9999px; background: var(--md-sys-color-primary, #6750A4); opacity:0.12; }
+        .ring{ 
+          position:absolute; 
+          top:50%; left:50%; 
+          transform:translate(-50%, -50%);
+          width:${ringSize}px; 
+          height:${ringSize}px; 
+          border-radius:50%; 
+          background: var(--md-sys-color-primary, #6750A4); 
+          opacity:0.12; 
+        }
         .svgbox{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
         svg{ width:${shapeSize}px; height:${shapeSize}px; overflow:visible; }
         path{ fill: var(--md-sys-color-primary, #6750A4); }
-        .bounce{ animation: m3bounce ${this._frameDuration}ms cubic-bezier(.2,.6,.2,1) 1; transform-box: fill-box; transform-origin: 50% 50%; }
+        .bounce{ animation: m3bounce ${this._morphDuration}ms cubic-bezier(.2,.6,.2,1) 1; transform-box: fill-box; transform-origin: 50% 50%; }
         @keyframes m3bounce{ 0%{ transform:scale(0.96); } 50%{ transform:scale(1.04); } 100%{ transform:scale(1.0); } }
       `;
 
