@@ -59,6 +59,7 @@
     overlayEl.style.zIndex = '9999';
     overlayEl.style.opacity = '1';
     overlayEl.style.transition = 'opacity 300ms ease-in-out';
+    overlayEl.style.borderRadius = '32px';
     copyVisualStyle(mainContentEl, overlayEl);
 
     const inner = document.createElement('div');
@@ -89,6 +90,8 @@
 
   async function showFlutterIndicator() {
     try {
+      // Ensure dependencies loaded
+      await ensureDependencies();
       // Prefer contained for background circle
       const handle = await window.insertLoadingIndicator('contained', { container: mountEl, fadeIn: true, fadeInDuration: 150 });
       console.log('EU2K Flutter indicator shown');
@@ -105,6 +108,7 @@
     } catch (e) {
       // Fallback: try uncontained
       try {
+          await ensureDependencies();
         const handle = await window.insertLoadingIndicator('uncontained', { container: mountEl, fadeIn: true, fadeInDuration: 150 });
           console.log('EU2K Flutter indicator shown');
         if (window.flutterHandler && window.flutterHandler.iframes) {
@@ -167,9 +171,43 @@
     const placeholders = collectDeferredScripts();
     for (const ph of placeholders) {
       const s = document.createElement('script');
-      s.src = ph.getAttribute('data-src');
-      if (ph.type) s.type = ph.type;
+      const src = ph.getAttribute('data-src');
+      const dtype = ph.getAttribute('data-type');
+      if (src) {
+        s.src = src;
+      }
+      s.type = dtype || ph.type || 'text/javascript';
+      if (!src) {
+        s.textContent = ph.textContent || '';
+      }
+      // Copy non-data attributes
+      for (const { name, value } of Array.from(ph.attributes)) {
+        if (!name.startsWith('data-') && name !== 'type') {
+          s.setAttribute(name, value);
+        }
+      }
       ph.replaceWith(s);
+    }
+  }
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  async function ensureDependencies() {
+    if (window.insertLoadingIndicator && window.flutterHandler) return;
+    // Load handler first, then injector
+    if (!window.flutterHandler) {
+      await loadScript('/EU2K-Hub/assets/js/flutter-handler.js');
+    }
+    if (!window.insertLoadingIndicator) {
+      await loadScript('/EU2K-Hub/assets/js/flutter-loading-injector.js');
     }
   }
 
