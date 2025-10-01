@@ -10,8 +10,13 @@ class UncontainedApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = const ColorScheme.dark(
+      primary: Color(0xFF9BD4A0),
+      background: Color(0xFF101510),
+    );
+
     return MaterialApp(
-      theme: ThemeData(),
+      theme: ThemeData(colorScheme: colorScheme, useMaterial3: true),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.transparent,
@@ -24,7 +29,12 @@ class UncontainedApp extends StatelessWidget {
               child: SizedBox(
                 width: size,
                 height: size,
-                child: LoadingIndicator(),
+                child: LoadingIndicatorTheme(
+                  data: const LoadingIndicatorThemeData(
+                    activeIndicatorColor: Color(0xFF9BD4A0),
+                  ),
+                  child: LoadingIndicator(),
+                ),
               ),
             );
           },

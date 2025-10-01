@@ -10,8 +10,15 @@ class ContainedApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = const ColorScheme.dark(
+      primary: Color(0xFF9BD4A0),
+      primaryContainer: Color(0xFF1B5129),
+      onPrimaryContainer: Color(0xFFB6F1BB),
+      background: Color(0xFF101510),
+    );
+
     return MaterialApp(
-      theme: ThemeData(),
+      theme: ThemeData(colorScheme: colorScheme, useMaterial3: true),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.transparent,
@@ -26,7 +33,15 @@ class ContainedApp extends StatelessWidget {
                 child: SizedBox(
                   width: size,
                   height: size,
-                  child: LoadingIndicator.contained(),
+                  child: LoadingIndicatorTheme(
+                    data: const LoadingIndicatorThemeData(
+                      // Subtle green circle behind
+                      containerColor: Color(0x339BD4A0),
+                      // Active indicator green
+                      activeIndicatorColor: Color(0xFF9BD4A0),
+                    ),
+                    child: LoadingIndicator.contained(),
+                  ),
                 ),
               ),
             );
