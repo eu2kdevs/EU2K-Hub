@@ -37,10 +37,52 @@ class TranslationManager {
             }
 
             this.isInitialized = true;
-            console.log('Translation system initialized successfully');
+            
+            // Wait for Flutter iframes to be ready before logging success
+            this.waitForFlutterReady().then(() => {
+                console.log('Translation system initialized successfully');
+            }).catch(() => {
+                // Fallback: log after timeout if Flutter doesn't load
+                setTimeout(() => {
+                    console.log('Translation system initialized successfully');
+                }, 1000);
+            });
         } catch (error) {
             console.error('Error initializing translation system:', error);
         }
+    }
+
+    // Wait for Flutter iframes to be ready
+    async waitForFlutterReady() {
+        return new Promise((resolve, reject) => {
+            // Check if Flutter handler is available
+            const checkFlutterHandler = () => {
+                if (window.flutterHandler) {
+                    // Check if both contained and uncontained iframes are ready
+                    const containedReady = window.flutterHandler.isReady('contained');
+                    const uncontainedReady = window.flutterHandler.isReady('uncontained');
+                    
+                    if (containedReady && uncontainedReady) {
+                        console.log('Flutter iframes are ready, translation system can proceed');
+                        resolve();
+                    } else {
+                        // Keep checking every 100ms
+                        setTimeout(checkFlutterHandler, 100);
+                    }
+                } else {
+                    // Keep checking for Flutter handler every 100ms
+                    setTimeout(checkFlutterHandler, 100);
+                }
+            };
+            
+            // Start checking
+            checkFlutterHandler();
+            
+            // Timeout after 5 seconds
+            setTimeout(() => {
+                reject(new Error('Flutter iframes not ready within timeout'));
+            }, 5000);
+        });
     }
 
     // Load translation file
