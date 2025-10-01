@@ -266,7 +266,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  max-height: calc(100dvh - 320px);
+  max-height: calc(90dvh - 320px);
   overflow-y: auto;
   border-radius: 32px;
 }
@@ -347,12 +347,16 @@ body {
 }
 
 .footer-privacy { 
-  margin-top: 14px;
+  margin-top: 16px;
 }
 
 .footer { 
   margin-top: 8px; 
   position: relative; 
+}
+
+.last-modified-notice { 
+  margin-top: 8px; 
 }
 
 #site-footer .footer-container {
