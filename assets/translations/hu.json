@@ -26,6 +26,7 @@
     "terms_of_service": {
       "title": "Használati feltételek",
       "intro": "Kérlek, olvasd el figyelmesen a használati feltételeket, mielőtt elkezded használni az EU2K Hubot. A szolgáltatás használatával elfogadod az alábbi szabályokat és feltételeket.",
+      "hint": "Ha más nyelven szeretnéd elolvasni a Használati Feltételeket, navigálj a <a href=\"/EU2K-Hub/settings/settings.html\">Beállítások oldalra</a>, és válaszd ki a preferált nyelvedet.",
       "messaging_title": "Üzenetküldés és felügyelet",
       "messaging_1": "A Hub lehetőséget biztosít közösségi és kurzuson belüli kommunikációra.",
       "messaging_2": "A felügyelet részleges lehet, különösen a béta időszakban. Kérünk, viselkedj tiszteletteljesen!",
@@ -52,18 +53,19 @@
       "privacy_1": "A Hub az iskolai fiókhoz kapcsolódó alapadatokat (név, e-mail, szerepkör) használja.",
       "privacy_2": "A sütiket kizárólag technikai működéshez (pl. bejelentkezés megjegyzése) alkalmazzuk.",
       "privacy_3": "Az adatkezelésről részletesebb információ az <a href=\"/EU2K-Hub/privacy.html\">Adatvédelmi tájékoztatóban</a> található.",
-      "last_update": "Utolsó frissítés: 2025. szeptember 13."
+      "last_update": "Utolsó frissítés: 2025. szeptember 13.",
+      "privacy_policy": "Adatvédelmi irányelvek"
     },
     "privacy_policy": {
-      "title": "EU2K Hub Adatvédelmi Irányelvek",
+      "title": "Adatvédelmi irányelvek",
       "effective_date": "Hatálybalépés dátuma: 2025. szeptember 13., Utoljára módosítva: 2025. szeptember 13.",
       "intro_title": "1. Bevezetés",
       "intro_text": "Az EU2K Hub egy iskolai közösségi és információs platform, amely célja, hogy egyszerűbbé és élvezetesebbé tegye a diákok, tanárok és szülők mindennapjait. Adataink kezelésében átláthatóságra és biztonságra törekszünk, miközben barátságos és felhasználóbarát környezetet biztosítunk.",
       "data_collection_title": "2. Milyen adatokat gyűjtünk?",
-      "data_collection_1": "Profiladataid: Microsoft, Google vagy Apple fiók alapinformációi (név, e-mail, profilkép).",
-      "data_collection_2": "Iskolai adatok: osztályod neve, osztálytársak és tanárok nevei, elérhetőségei, jegyek, órarend, dolgozatok.",
-      "data_collection_3": "Közösségi tartalmak: posztok, hozzászólások, szavazások, események.",
-      "data_collection_4": "Extra funkciókhoz kapcsolódó adatok: például emlékek a Memories Hubban, statisztikák a School Wrappedből, osztály- és csoportinfók.",
+      "data_collection_1": "<strong>Profiladataid:</strong> Microsoft, Google vagy Apple fiók alapinformációi (név, e-mail, profilkép).",
+      "data_collection_2": "<strong>Iskolai adatok:</strong> osztályod neve, osztálytársak és tanárok nevei, elérhetőségei, jegyek, órarend, dolgozatok.",
+      "data_collection_3": "<strong>Közösségi tartalmak:</strong> posztok, hozzászólások, szavazások, események.",
+      "data_collection_4": "<strong>Extra funkciókhoz kapcsolódó adatok:</strong> például emlékek a Memories Hubban, statisztikák a School Wrappedből, osztály- és csoportinfók.",
       "data_usage_title": "3. Hogyan használjuk az adatokat?",
       "data_usage_text": "Az adatokat kizárólag az iskolai élet szervezésére, kommunikációra és közösségi funkciók biztosítására használjuk. Nem adjuk el és nem osztjuk meg őket külső cégekkel kereskedelmi célokra.",
       "data_access_title": "4. Kik férhetnek hozzá az adatokhoz?",
@@ -74,7 +76,7 @@
       "data_rights_text": "Jogod van hozzáférni az adataidhoz, kijavítani őket, kérni a törlésüket, valamint korlátozni bizonyos felhasználásukat. Ha bármilyen kérdésed vagy kétséged van, bármikor felveheted velünk a kapcsolatot.",
       "data_contact_title": "7. Kapcsolat",
       "data_contact_text": "Ha kérdésed van az adatvédelemmel kapcsolatban, írj nekünk az alábbi e-mail címre: <a href=\"mailto:turoczi.adam@europa2000.hu\">turoczi.adam@europa2000.hu</a>",
-      "footer_text": "2025 EU2K Hub – Minden jog fenntartva."
+      "footer_text": "\u00A9 2025 EU2K Hub – Minden jog fenntartva."
     },
     "youhub": {
       "title": "YouHub",

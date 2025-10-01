@@ -26,6 +26,7 @@
     "terms_of_service": {
       "title": "Terms of Service",
       "intro": "Please read these terms of service carefully before using the EU2K Hub. By using the service, you agree to the following rules and conditions.",
+      "hint": "If you want to read the Terms Of Service in your preferred language, navigate to the <a href=\"/EU2K-Hub/settings/settings.html\">Settings</a> page, and change the language to your preferred one.",
       "messaging_title": "Messaging and Supervision",
       "messaging_1": "The Hub provides opportunities for community and course-based communication.",
       "messaging_2": "Supervision may be partial, especially during the beta period. Please behave respectfully!",
@@ -51,18 +52,19 @@
       "privacy_title": "Privacy and Cookies",
       "privacy_1": "The Hub uses the basic data linked to the school account (name, email, role).",
       "privacy_2": "Cookies are used exclusively for technical operation (e.g., remembering login).",
-      "privacy_3": "More detailed information about data management can be found in the <a href=\"/EU2K-Hub/privacy.html\">Privacy Policy</a>.",
+      "privacy_3": "More detailed information about data privacy on the Hub, check the <a href=\"/EU2K-Hub/privacy.html\">Privacy Policy</a> page.",
       "last_update": "Last update: 2025. September 13."
     },
     "privacy_policy": {
+      "title": "Privacy Policy",
       "effective_date": "Effective date: September 13, 2025, Last Modified: 13, 2025.",
       "intro_title": "1. Introduction",
       "intro_text": "EU2K Hub is a school community and information platform designed to make everyday life easier and more enjoyable for students, teachers, and parents. We strive for transparency and security in handling our data while providing a friendly and user-friendly environment.",
       "data_collection_title": "2. What data do we collect?",
-      "data_collection_1": "Your profile data: Basic information from Microsoft, Google, or Apple accounts (name, email, profile picture).",
-      "data_collection_2": "School data: your class name, classmates and teachers names, contact information, grades, schedule, exams.",
-      "data_collection_3": "Community content: posts, comments, votes, events.",
-      "data_collection_4": "Data related to extra features: for example, memories in Memories Hub, statistics from School Wrapped, class and group information.",
+      "data_collection_1": "<strong>Your profile data:</strong> Basic info from your Microsoft, Google, or Apple account (name, email, profile picture).",
+      "data_collection_2": "<strong>School data:</strong> Your class name, names and contacts of classmates and teachers, grades, schedule, exams.",
+      "data_collection_3": "<strong>Community content:</strong> Posts, comments, polls, events.",
+      "data_collection_4": "<strong>Extra features data:</strong> For example, memories in the Memories Hub, stats from School Wrapped, class and group info.",
       "data_usage_title": "3. How do we use the data?",
       "data_usage_text": "We use the data exclusively for organizing school life, communication, and providing community functions. We do not sell or share them with external companies for commercial purposes.",
       "data_access_title": "4. Who has access to the data?",
@@ -73,7 +75,7 @@
       "data_rights_text": "You have the right to access your data, correct it, request its deletion, and restrict certain uses of it. If you have any questions or concerns, you can contact us at any time.",
       "data_contact_title": "7. Contact",
       "data_contact_text": "If you have any questions about data protection, please write to us at the following email address: <a href=\"mailto:turoczi.adam@europa2000.hu\">turoczi.adam@europa2000.hu</a>",
-      "footer_text": "2025 EU2K Hub – All rights reserved."
+      "footer_text": "\u00A9 2025 EU2K Hub – All rights reserved."
     },
     "youhub": {
       "title": "YouHub",

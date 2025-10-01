@@ -350,6 +350,11 @@ body {
   position: relative; 
 }
 
+.footer-terms { 
+  justify-content: center;
+  align-items: center;
+}
+
 #site-footer .footer-container {
   display: flex;
   align-items: center;

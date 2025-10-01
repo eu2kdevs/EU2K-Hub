@@ -266,7 +266,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  max-height: calc(90dvh - 320px);
+  max-height: calc(93dvh - 320px);
   overflow-y: auto;
   border-radius: 32px;
 }

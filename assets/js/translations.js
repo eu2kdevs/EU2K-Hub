@@ -67,60 +67,48 @@ class TranslationManager {
         }
     }
 
-    // Apply translations to all elements with data-translate attribute
     applyTranslations() {
-        const elements = document.querySelectorAll('[data-translate]');
-        console.log(`Found ${elements.length} translatable elements`);
-        
-        elements.forEach(element => {
+        // Plain text elemek
+        document.querySelectorAll('[data-translate]').forEach(element => {
             const key = element.getAttribute('data-translate');
             const fallback = element.getAttribute('data-translate-fallback') || element.textContent;
-            
-            try {
-                const translation = this.getTranslation(key);
-                if (translation) {
-                    element.textContent = translation;
-                    console.log(`Translated ${key} to: ${translation}`);
-                } else {
-                    console.warn(`Translation not found for key: ${key}`);
-                    if (fallback) {
-                        element.textContent = fallback;
-                    }
-                }
-            } catch (error) {
-                console.error(`Error translating ${key}:`, error);
-                if (fallback) {
-                    element.textContent = fallback;
-                }
+            const translation = this.getTranslation(key);
+
+            if (translation) {
+                element.textContent = translation; // ✅ csak sima szöveg
+            } else if (fallback) {
+                element.textContent = fallback;
             }
         });
 
-        // Apply translations to all elements with data-translate-placeholder attribute
+        // HTML-t tartalmazó elemek
+        document.querySelectorAll('[data-translate-html]').forEach(element => {
+            const key = element.getAttribute('data-translate-html');
+            const fallback = element.getAttribute('data-translate-fallback') || element.innerHTML;
+            const translation = this.getTranslation(key);
+
+            if (translation) {
+                element.innerHTML = translation; // ✅ itt a link is kattintható lesz
+            } else if (fallback) {
+                element.innerHTML = fallback;
+            }
+        });
+
+        // Placeholder-ek
         const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
-        console.log(`Found ${placeholderElements.length} elements with translatable placeholders`);
         placeholderElements.forEach(element => {
             const key = element.getAttribute('data-translate-placeholder');
-            const fallback = element.placeholder; // Use current placeholder as fallback
+            const fallback = element.placeholder;
+            const translation = this.getTranslation(key);
 
-            try {
-                const translation = this.getTranslation(key);
-                if (translation) {
-                    element.placeholder = translation;
-                    console.log(`Translated placeholder ${key} to: ${translation}`);
-                } else {
-                    console.warn(`Translation not found for placeholder key: ${key}`);
-                    if (fallback) {
-                        element.placeholder = fallback;
-                    }
-                }
-            } catch (error) {
-                console.error(`Error translating placeholder ${key}:`, error);
-                if (fallback) {
-                    element.placeholder = fallback;
-                }
+            if (translation) {
+                element.placeholder = translation;
+            } else if (fallback) {
+                element.placeholder = fallback;
             }
         });
     }
+
 
     // Get translation for a specific key
     getTranslation(key) {
