@@ -1,9 +1,9 @@
-<img width="10000" height="3065" alt="eu2k_hub_logo_hor_dark" src="https://github.com/user-attachments/assets/7c79dbe1-dd24-4c41-b89a-c7be35669810" />
+<img width="1280" height="840" alt="eu2khubPromoBackground" src="https://github.com/user-attachments/assets/da4ee593-a4af-416b-8b77-7241349e9951" />
 
 # EU2K Hub
 
 **Status:** ⚠️ Closed Beta  
-**Version:** 0.5abc (Closed beta)  
+**Version:** 0.6abc (Closed beta)  
 **Known issues:** Event Hub not fully working, QR-Code site is going to be under renovation
 
 ---
@@ -41,7 +41,7 @@ It combines multiple features to support school life, communication, and learnin
   - *Information* - Other important information
     - See your class's headcount, and absent students reported for today
     - See your class's classroom layout
-    - Make and post a publicly (only to the school) available profile for your class, include a banner picture, a name, a short description, and you're done, the Hub wil take care of the rest.
+    - Make and post a publicly (only to the school) available profile for your class, include a banner picture, a name, a short description, and you're done, the Hub will take care of the rest.
 
 - **Calendar:**
   - Daily schedule with class times and locations.
