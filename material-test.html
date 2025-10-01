@@ -65,7 +65,7 @@
 
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: var(--md-sys-color-background);
+            background-color: #101510;
             color: var(--md-sys-color-on-background);
             height: 100vh;
             display: flex;
@@ -100,7 +100,7 @@
             width: 100%;
             height: 100%;
             border: none;
-            background-color: var(--md-sys-color-surface);
+            background-color: transparent;
         }
 
         .loading-overlay {
@@ -134,7 +134,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--md-sys-color-surface);
+            background-color: #101510;
+        }
+
+        .under-gradient-strip {
+            position: absolute;
+            left: 0;
+            right: 0;
+            /* Below the indicator centerline: 50% + ~88px */
+            top: calc(50% + 88px);
+            height: 24px;
+            background: linear-gradient(to bottom, #101510 0%, rgba(16, 21, 16, 0) 100%);
+            pointer-events: none;
+            z-index: 50; /* Above iframe if needed */
         }
 
         .controls {
@@ -186,6 +198,7 @@
         <div class="indicator-container" id="indicatorContainer">
             <!-- Flutter iframes will be dynamically inserted here -->
         </div>
+        <div class="under-gradient-strip"></div>
         
         <div class="controls">
             <button id="showContained" class="control-btn">Contained Loading</button>
@@ -231,8 +244,8 @@
             
             // Check if iframes are preloaded
             const checkPreloadStatus = () => {
-                const containedReady = window.flutterHandler.isReady('contained');
-                const uncontainedReady = window.flutterHandler.isReady('uncontained');
+            const containedReady = window.flutterHandler.isReady('contained');
+            const uncontainedReady = window.flutterHandler.isReady('uncontained');
                 
                 if (containedReady && uncontainedReady) {
                     console.log('All Flutter iframes are ready');
