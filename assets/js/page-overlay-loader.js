@@ -1,5 +1,11 @@
 (function () {
-  const READY_LOG = 'Events loading completed successfully';
+  // Detect if we're on index.html or another page
+  const isIndexPage = window.location.pathname.endsWith('/index.html') || 
+                      window.location.pathname === '/' || 
+                      window.location.pathname === '/EU2K-Hub/' ||
+                      window.location.pathname.endsWith('/EU2K-Hub');
+  
+  const READY_LOG = isIndexPage ? 'Events loading completed successfully' : 'Translation system initialized successfully';
   let overlayEl = null;
   let mountEl = null;
   let mainContentEl = null;

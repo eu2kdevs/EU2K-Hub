@@ -5,6 +5,24 @@
   <meta charset="UTF-8">
   <meta name="description" content="Örülünk hogy ennyire érdeklődsz a YouHub iránt, de egyelőre még fejlesztés alatt van, és nem alkalmas a mostani állapotában a használatra. Nézz vissza később 👋">
   <title data-translate="pages.youhub.title">YouHub</title>
+  <script>
+    (function(){
+      if (!document.getElementById('eu2k-page-overlay')) {
+        var o = document.createElement('div');
+        o.id = 'eu2k-page-overlay';
+        o.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#0B0F0B;border-radius:32px;opacity:1;transition:opacity 300ms ease-in-out;';
+        var inner = document.createElement('div');
+        inner.style.cssText = 'position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0B0F0B;border-radius:32px;';
+        var m = document.createElement('div');
+        m.id = 'eu2k-overlay-mount';
+        m.style.cssText = 'position:relative;width:100%;height:100%';
+        inner.appendChild(m);
+        o.appendChild(inner);
+        document.documentElement.appendChild(o);
+      }
+    })();
+  </script>
+  <script src="/EU2K-Hub/assets/js/page-overlay-loader.js"></script>
   <link rel="stylesheet" href="youhub.css">
   <link rel="icon" href="/EU2K-Hub/favicon.ico">
   <script type="importmap">

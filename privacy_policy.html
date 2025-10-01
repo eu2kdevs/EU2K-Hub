@@ -4,6 +4,24 @@
 <head>
   <meta charset="UTF-8">
   <title data-translate="pages.privacy.title">Privacy Policy</title>
+  <script>
+    (function(){
+      if (!document.getElementById('eu2k-page-overlay')) {
+        var o = document.createElement('div');
+        o.id = 'eu2k-page-overlay';
+        o.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#0B0F0B;border-radius:32px;opacity:1;transition:opacity 300ms ease-in-out;';
+        var inner = document.createElement('div');
+        inner.style.cssText = 'position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0B0F0B;border-radius:32px;';
+        var m = document.createElement('div');
+        m.id = 'eu2k-overlay-mount';
+        m.style.cssText = 'position:relative;width:100%;height:100%';
+        inner.appendChild(m);
+        o.appendChild(inner);
+        document.documentElement.appendChild(o);
+      }
+    })();
+  </script>
+  <script src="/EU2K-Hub/assets/js/page-overlay-loader.js"></script>
   <link rel="stylesheet" href="privacy_policy.css">
   <link rel="icon" href="/EU2K-Hub/favicon.ico">
   <script type="importmap">
@@ -127,7 +145,7 @@
             </style>
           </head>
           <body>
-              <p class="last-modified-notice"><strong data-translate-html="pages.privacy_policy.effective_date">Hatálybalépés dátuma:</strong> <span data-translate="pages.privacy_policy.effective_date_value">2025. szeptember 13.</span></p>
+              <p class="last-modified-notice"><strong data-translate-html="pages.privacy_policy.effective_date">Hatálybalépés dátuma:</strong> </p>
 
             <div class="category-items">
               <div class="category-item first">
