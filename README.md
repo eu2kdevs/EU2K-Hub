@@ -6,48 +6,6 @@
 **Version:** 0.5abc (Closed beta)  
 **Known issues:** Event Hub not fully working, QR-Code site is going to be under renovation
 
---- 
-
-## Upcoming Featured Event!
-
-Welcome, students of **EU2K**!  
-We're excited to remind you that **CSE-HO Day** is coming this October, and we’re thrilled to announce that **EU2K Hub will make its first public appearance** during this event.
-
----
-
-## What You Need to Do
-1. **Sign in** to the Hub.  
-2. In the **Event Hub** section, join the **CSE-HO Day event**.  
-3. Enter your **class name**, **class teacher’s name**, and a **short description** so the juries can get to know your class better.
-
----
-
-## Finish Page
-- Enter the **name of your course**.  
-- List the **dishes** included in it.  
-  *(You can save your food details for later, allowing other classes to reuse the information without retyping.)*
-
----
-
-## QR Code & Entry
-- The Hub will automatically generate an **image** for your course.  
-- A **QR code** will be created for your class.  
-- You’ll need this QR code to enter the **place where CSE-HO Day will be held**.
-
----
-
-## On the Event Day
-- Cook your meal and present it to the juries.  
-- After about an hour, visit the Hub’s **Event Hub** page.  
-- Click **Check Status** in the CSE-HO Day section to see:  
-  - Your ranking  
-  - Jury feedback  
-  - Details on when and how your class can collect its rewards
-
----
-
-Get ready, show your creativity, and make this year’s **CSE-HO Day** unforgettable! ✨
-
 ---
 
 ## About
