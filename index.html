@@ -63,6 +63,22 @@
       display: none;
       /* WebKit */
     }
+
+    /* Ensure events don't slide under header */
+    .events-section { margin-top: 8px; }
+
+    /* Horizontal news carousel behavior */
+    .news-carousel { overflow: hidden; }
+    #newsRow {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      gap: 12px;
+    }
+
+    /* Footer links spacing */
+    .footer-center { display: flex; gap: 8px; align-items: center; justify-content: center; }
   </style>
   <script src="/EU2K-Hub/assets/js/page-overlay-loader.js"></script>
   <script src="/EU2K-Hub/assets/js/permissions.js"></script>
@@ -385,8 +401,17 @@
       const leftBtn = document.querySelector(".carousel-btn.left");
       const rightBtn = document.querySelector(".carousel-btn.right");
 
-      leftBtn.addEventListener("click", () => row.scrollBy({ left: -300, behavior: "smooth" }));
-      rightBtn.addEventListener("click", () => row.scrollBy({ left: 300, behavior: "smooth" }));
+      const lb = document.getElementById('newsLeftBtn') || leftBtn;
+      const rb = document.getElementById('newsRightBtn') || rightBtn;
+      lb.addEventListener("click", () => row.scrollBy({ left: -300, behavior: "smooth" }));
+      rb.addEventListener("click", () => row.scrollBy({ left: 300, behavior: "smooth" }));
+      // Wheel: shift vertical wheel to horizontal scroll
+      row.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          e.preventDefault();
+          row.scrollLeft += e.deltaY;
+        }
+      }, { passive: false });
 
       // infinite scroll trigger
       row.addEventListener("scroll", () => {
@@ -581,8 +606,15 @@
             descSpan.textContent = desc;
           }
 
-          if (placeSpan && item.data.place) {
-            placeSpan.textContent = "Helyszín: " + item.data.place;
+          if (placeSpan) {
+            const placeText = (item.data.place || '').toString().trim();
+            if (placeText) {
+              placeSpan.textContent = "Helyszín: " + placeText;
+              placeSpan.style.display = '';
+            } else {
+              placeSpan.textContent = '';
+              placeSpan.style.display = 'none';
+            }
           }
 
           if (arrowContainer) {
@@ -785,7 +817,7 @@
 
           <!-- carousel wrapper -->
           <div class="news-carousel">
-            <button class="carousel-btn left">‹</button>
+            <button class="carousel-btn left" id="newsLeftBtn">‹</button>
 
             <div class="bottom-cards-row" id="newsRow">
               <div class="news-card">
@@ -842,26 +874,9 @@
               </div>
             </div>
 
-            <button class="carousel-btn right">›</button>
+            <button class="carousel-btn right" id="newsRightBtn">›</button>
           </div>
-          <div class="iframe-container">
-            <div class="loading-overlay" id="loadingOverlay">
-                <div>
-                    <div class="loading-text">Flutter alkalmazás betöltése...</div>
-                </div>
-            </div>
-            
-            <div class="indicator-container" id="indicatorContainer">
-                <!-- Flutter iframes will be dynamically inserted here -->
-            </div>
-            <div class="under-gradient-strip"></div>
-            
-            <div class="controls">
-                <button id="showContained" class="control-btn">Contained Loading</button>
-                <button id="showUncontained" class="control-btn">Uncontained Loading</button>
-                <button id="hideIndicator" class="control-btn">Hide Indicator</button>
-            </div>
-        </div>
+          
         </section>
       </div>
       <div id="site-footer" class="footer" aria-label="Site footer">
