@@ -11,14 +11,22 @@ class ContainedApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark(),
+      theme: ThemeData(),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: const Color(0xFF272B26), // #272B26 background
+        backgroundColor: Colors.transparent,
         body: Center(
-          child: SizedBox.square(
-            dimension: 160,
-            child: LoadingIndicator.contained(),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final double shortest = constraints.biggest.shortestSide;
+              final double rawSize = shortest.isFinite ? shortest * 0.4 : 160.0;
+              final double size = rawSize.clamp(64.0, 240.0).toDouble();
+              return SizedBox(
+                width: size,
+                height: size,
+                child: LoadingIndicator.contained(),
+              );
+            },
           ),
         ),
       ),
