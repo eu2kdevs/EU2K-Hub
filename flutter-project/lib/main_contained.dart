@@ -15,19 +15,22 @@ class ContainedApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Center(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final double shortest = constraints.biggest.shortestSide;
-              final double rawSize = shortest.isFinite ? shortest * 0.4 : 160.0;
-              final double size = rawSize.clamp(64.0, 240.0).toDouble();
-              return SizedBox(
-                width: size,
-                height: size,
-                child: LoadingIndicator.contained(),
-              );
-            },
-          ),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            final double shortest = constraints.biggest.shortestSide;
+            final double rawSize = shortest.isFinite ? shortest * 0.4 : 160.0;
+            final double size = rawSize.clamp(64.0, 240.0).toDouble();
+            return Center(
+              child: Transform.translate(
+                offset: const Offset(0, -12),
+                child: SizedBox(
+                  width: size,
+                  height: size,
+                  child: LoadingIndicator.contained(),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
