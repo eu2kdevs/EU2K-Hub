@@ -30,21 +30,34 @@
     body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(to bottom, #101510 0%, rgba(16, 21, 16, 0) 100%);
+      background-color: #101510;
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
       font-family: 'Roboto', sans-serif;
+      position: relative;
+    }
+
+    .under-gradient {
+      position: absolute;
+      left: 0;
+      right: 0;
+      /* Approximate indicator bottom: center + half default size (80px) + 8px */
+      top: calc(50% + 88px);
+      height: 24px;
+      background: linear-gradient(to bottom, #101510 0%, rgba(16, 21, 16, 0) 100%);
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <script src="/EU2K-Hub/flutter-project/build/web/flutter_bootstrap.js" async></script>
   <script>
     window.flutterConfiguration = {
       entrypoint: "main_contained.dart"
     };
   </script>
+  <script src="/EU2K-Hub/flutter-project/build/web/flutter_bootstrap.js" async></script>
+  <div class="under-gradient"></div>
 </body>
 </html>
