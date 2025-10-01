@@ -277,12 +277,12 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
     final activeIndicatorColor =
         widget.activeIndicatorColor ??
         indicatorTheme?.activeIndicatorColor ??
-        Theme.of(context).colorScheme.primary;
+        const Color(0xFF9BD4A0); // Hardcoded #9BD4A0 color
 
     final containerColor =
         widget.containerColor ??
         indicatorTheme?.containerColor ??
-        Theme.of(context).colorScheme.primaryContainer;
+        const Color(0xFF272B26); // Hardcoded #272B26 color for contained version
 
     return Semantics(
       label: widget.semanticsLabel,

@@ -127,6 +127,47 @@
             font-size: 16px;
             margin-top: 16px;
         }
+
+        .indicator-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--md-sys-color-surface);
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .control-btn {
+            padding: 8px 16px;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .control-btn:hover {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            transform: translateY(-1px);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -142,55 +183,132 @@
             </div>
         </div>
         
-        <iframe 
-            id="flutterIframe"
-            class="flutter-iframe"
-            src="/EU2K-Hub/flutter-project/build/web/index.html"
-            title="Flutter Application">
-        </iframe>
+        <div class="indicator-container" id="indicatorContainer">
+            <!-- Flutter iframes will be dynamically inserted here -->
+        </div>
+        
+        <div class="controls">
+            <button id="showContained" class="control-btn">Contained Loading</button>
+            <button id="showUncontained" class="control-btn">Uncontained Loading</button>
+            <button id="hideIndicator" class="control-btn">Hide Indicator</button>
+        </div>
     </div>
 
+    <!-- Include Flutter Handler -->
+    <script src="/EU2K-Hub/assets/js/flutter-handler.js"></script>
+    
     <script>
-        // Flutter iframe betöltés kezelése
-        const iframe = document.getElementById('flutterIframe');
+        // Flutter Handler integration
         const loadingOverlay = document.getElementById('loadingOverlay');
+        const indicatorContainer = document.getElementById('indicatorContainer');
+        const showContainedBtn = document.getElementById('showContained');
+        const showUncontainedBtn = document.getElementById('showUncontained');
+        const hideIndicatorBtn = document.getElementById('hideIndicator');
 
-        iframe.addEventListener('load', function() {
-            console.log('Flutter iframe betöltve');
+        let currentIndicator = null;
+
+        // Wait for Flutter Handler to be ready
+        function waitForFlutterHandler() {
+            return new Promise((resolve) => {
+                if (window.flutterHandler) {
+                    resolve();
+                } else {
+                    const checkInterval = setInterval(() => {
+                        if (window.flutterHandler) {
+                            clearInterval(checkInterval);
+                            resolve();
+                        }
+                    }, 100);
+                }
+            });
+        }
+
+        // Initialize the application
+        async function init() {
+            await waitForFlutterHandler();
             
-            // Kis késleltetés után elrejtjük a loading overlay-t
-            setTimeout(() => {
-                loadingOverlay.classList.add('hidden');
-            }, 500);
-        });
+            console.log('Flutter Handler ready, checking preload status...');
+            
+            // Check if iframes are preloaded
+            const checkPreloadStatus = () => {
+                const containedReady = window.flutterHandler.isReady('contained');
+                const uncontainedReady = window.flutterHandler.isReady('uncontained');
+                
+                if (containedReady && uncontainedReady) {
+                    console.log('All Flutter iframes are ready');
+                    loadingOverlay.classList.add('hidden');
+                } else {
+                    console.log('Waiting for Flutter iframes to load...');
+                    setTimeout(checkPreloadStatus, 500);
+                }
+            };
+            
+            checkPreloadStatus();
+        }
 
-        iframe.addEventListener('error', function() {
-            console.error('Hiba a Flutter iframe betöltésekor');
-            loadingOverlay.innerHTML = `
-                <div>
-                    <div class="loading-text" style="color: var(--md-sys-color-error);">
-                        Hiba történt a Flutter alkalmazás betöltésekor
-                    </div>
-                </div>
-            `;
-        });
+        // Show contained loading indicator
+        function showContained() {
+            if (currentIndicator) {
+                window.flutterHandler.hideLoadingIndicator(currentIndicator);
+            }
+            
+            const success = window.flutterHandler.showLoadingIndicator('contained', indicatorContainer, {
+                fadeIn: true,
+                fadeInDuration: 300
+            });
+            
+            if (success) {
+                currentIndicator = 'contained';
+                console.log('Showing contained loading indicator');
+            } else {
+                console.error('Failed to show contained loading indicator');
+            }
+        }
 
-        // Debug funkciók
-        window.reloadFlutter = function() {
-            console.log('Flutter iframe újratöltése...');
-            loadingOverlay.classList.remove('hidden');
-            iframe.src = iframe.src;
-        };
+        // Show uncontained loading indicator
+        function showUncontained() {
+            if (currentIndicator) {
+                window.flutterHandler.hideLoadingIndicator(currentIndicator);
+            }
+            
+            const success = window.flutterHandler.showLoadingIndicator('uncontained', indicatorContainer, {
+                fadeIn: true,
+                fadeInDuration: 300
+            });
+            
+            if (success) {
+                currentIndicator = 'uncontained';
+                console.log('Showing uncontained loading indicator');
+            } else {
+                console.error('Failed to show uncontained loading indicator');
+            }
+        }
 
-        window.hideLoading = function() {
-            console.log('Loading overlay elrejtése...');
-            loadingOverlay.classList.add('hidden');
-        };
+        // Hide current loading indicator
+        function hideIndicator() {
+            if (currentIndicator) {
+                window.flutterHandler.hideLoadingIndicator(currentIndicator, {
+                    fadeOut: true,
+                    fadeOutDuration: 300
+                });
+                currentIndicator = null;
+                console.log('Hiding loading indicator');
+            }
+        }
 
-        window.showLoading = function() {
-            console.log('Loading overlay megjelenítése...');
-            loadingOverlay.classList.remove('hidden');
-        };
+        // Event listeners
+        showContainedBtn.addEventListener('click', showContained);
+        showUncontainedBtn.addEventListener('click', showUncontained);
+        hideIndicatorBtn.addEventListener('click', hideIndicator);
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Debug functions
+        window.showContainedIndicator = showContained;
+        window.showUncontainedIndicator = showUncontained;
+        window.hideLoadingIndicator = hideIndicator;
+        window.getFlutterHandler = () => window.flutterHandler;
     </script>
 </body>
 </html>
