@@ -213,16 +213,26 @@
 
   // Boot
   interceptLogs();
-  whenDomReady(() => {
-    ensureMainContent(async (mc) => {
-      createOverlay(mc);
-      try {
-        await showFlutterIndicator();
-      } catch (e) {
-        // ignore
-      }
-    });
-  });
+  // Start immediately: attach to bootstrap overlay mount if present
+  (async function startEarly(){
+    const bootstrapMount = document.getElementById('eu2k-overlay-mount');
+    if (bootstrapMount) {
+      mainContentEl = document.querySelector('.main-content') || document.body;
+      overlayEl = document.getElementById('eu2k-page-overlay');
+      mountEl = bootstrapMount;
+      window.addEventListener('resize', positionOverlay);
+      window.addEventListener('scroll', positionOverlay, { passive: true });
+      positionOverlay();
+      try { await showFlutterIndicator(); } catch(_) {}
+    } else {
+      whenDomReady(() => {
+        ensureMainContent(async (mc) => {
+          createOverlay(mc);
+          try { await showFlutterIndicator(); } catch(_) {}
+        });
+      });
+    }
+  })();
 })();
 
 
