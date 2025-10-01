@@ -43,11 +43,12 @@
   function positionOverlay() {
     if (!overlayEl || !mainContentEl) return;
     const rect = mainContentEl.getBoundingClientRect();
+    const extraBottom = 24; // a little larger downward
     overlayEl.style.position = 'fixed';
     overlayEl.style.left = rect.left + 'px';
     overlayEl.style.top = rect.top + 'px';
     overlayEl.style.width = rect.width + 'px';
-    overlayEl.style.height = rect.height + 'px';
+    overlayEl.style.height = (rect.height + extraBottom) + 'px';
   }
 
   function createOverlay(mainContent) {
@@ -90,6 +91,7 @@
     try {
       // Prefer contained for background circle
       const handle = await window.insertLoadingIndicator('contained', { container: mountEl, fadeIn: true, fadeInDuration: 150 });
+      console.log('EU2K Flutter indicator shown');
       // Style the iframe itself to the requested background and to be large
       if (window.flutterHandler && window.flutterHandler.iframes) {
         const iframe = window.flutterHandler.iframes.get('contained');
@@ -104,6 +106,7 @@
       // Fallback: try uncontained
       try {
         const handle = await window.insertLoadingIndicator('uncontained', { container: mountEl, fadeIn: true, fadeInDuration: 150 });
+          console.log('EU2K Flutter indicator shown');
         if (window.flutterHandler && window.flutterHandler.iframes) {
           const iframe = window.flutterHandler.iframes.get('uncontained');
           if (iframe) {
@@ -136,6 +139,13 @@
     if (!originalLog) return;
     console.log = function (...args) {
       try {
+        // When indicator appears -> release deferred scripts
+        for (const a of args) {
+          if (typeof a === 'string' && a.includes('EU2K Flutter indicator shown')) {
+            releaseDeferredScripts();
+            break;
+          }
+        }
         for (const a of args) {
           if (typeof a === 'string' && a.includes(READY_LOG)) {
             fadeOutAndRemove();
@@ -145,6 +155,22 @@
       } catch (_) {}
       return originalLog(...args);
     };
+  }
+
+  // Defer scripts below overlay until indicator is shown
+  function collectDeferredScripts() {
+    const placeholders = Array.from(document.querySelectorAll('script[data-wait-for-overlay="true"][data-src]'));
+    return placeholders;
+  }
+
+  function releaseDeferredScripts() {
+    const placeholders = collectDeferredScripts();
+    for (const ph of placeholders) {
+      const s = document.createElement('script');
+      s.src = ph.getAttribute('data-src');
+      if (ph.type) s.type = ph.type;
+      ph.replaceWith(s);
+    }
   }
 
   // Boot
