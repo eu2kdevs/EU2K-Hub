@@ -1,4 +1,6 @@
 (function () {
+  if (window.__eu2kOverlayBooted) return; // prevent double init across multiple includes
+  window.__eu2kOverlayBooted = true;
   // Detect if we're on index.html or another page
   const isIndexPage = window.location.pathname.endsWith('/index.html') || 
                       window.location.pathname === '/' || 
@@ -6,6 +8,8 @@
                       window.location.pathname.endsWith('/EU2K-Hub');
   
   const READY_LOG = isIndexPage ? 'Events loading completed successfully' : 'Translation system initialized successfully';
+  // Also tolerate variant phrasing
+  const READY_ALIASES = [READY_LOG, 'Translation system initialized', 'Translations initialized successfully'];
   let overlayEl = null;
   let mountEl = null;
   let mainContentEl = null;
@@ -101,6 +105,8 @@
       // Prefer contained for background circle
       const handle = await window.insertLoadingIndicator('contained', { container: mountEl, fadeIn: true, fadeInDuration: 150 });
       console.log('EU2K Flutter indicator shown');
+      // Protect against early hides from other scripts until READY_LOG
+      installHideGuard();
       // Style the iframe itself to the requested background and to be large
       if (window.flutterHandler && window.flutterHandler.iframes) {
         const iframe = window.flutterHandler.iframes.get('contained');
@@ -108,6 +114,9 @@
           iframe.style.backgroundColor = '#0B0F0B';
           iframe.style.width = '100%';
           iframe.style.height = '100%';
+          iframe.style.opacity = '1';
+          iframe.style.display = 'block';
+          iframe.style.zIndex = '10000';
         }
       }
       cleanupHandler = handle;
@@ -117,12 +126,16 @@
           await ensureDependencies();
         const handle = await window.insertLoadingIndicator('uncontained', { container: mountEl, fadeIn: true, fadeInDuration: 150 });
           console.log('EU2K Flutter indicator shown');
+        installHideGuard();
         if (window.flutterHandler && window.flutterHandler.iframes) {
           const iframe = window.flutterHandler.iframes.get('uncontained');
           if (iframe) {
             iframe.style.backgroundColor = '#0B0F0B';
             iframe.style.width = '100%';
             iframe.style.height = '100%';
+            iframe.style.opacity = '1';
+            iframe.style.display = 'block';
+            iframe.style.zIndex = '10000';
           }
         }
         cleanupHandler = handle;
@@ -157,7 +170,8 @@
           }
         }
         for (const a of args) {
-          if (typeof a === 'string' && a.includes(READY_LOG)) {
+          if (typeof a === 'string' && READY_ALIASES.some(sig => a.includes(sig))) {
+            removeHideGuard();
             fadeOutAndRemove();
             break;
           }
@@ -165,6 +179,38 @@
       } catch (_) {}
       return originalLog(...args);
     };
+  }
+
+  // Guard against premature hides from other parts of the site
+  let originalHideFn = null;
+  function installHideGuard() {
+    if (!window.flutterHandler) return;
+    if (originalHideFn) return; // already installed
+    originalHideFn = window.flutterHandler.hideLoadingIndicator?.bind(window.flutterHandler);
+    if (!originalHideFn) return;
+    window.__eu2kOverlayActive = true;
+    window.__eu2kQueuedHides = [];
+    window.flutterHandler.hideLoadingIndicator = function(type, opts) {
+      if (window.__eu2kOverlayActive) {
+        // queue and ignore until we allow
+        window.__eu2kQueuedHides.push([type, opts]);
+        return true;
+      }
+      return originalHideFn(type, opts);
+    };
+  }
+
+  function removeHideGuard() {
+    if (!originalHideFn || !window.flutterHandler) return;
+    window.__eu2kOverlayActive = false;
+    const queued = Array.isArray(window.__eu2kQueuedHides) ? window.__eu2kQueuedHides : [];
+    window.__eu2kQueuedHides = [];
+    window.flutterHandler.hideLoadingIndicator = originalHideFn;
+    originalHideFn = null;
+    // Now flush any queued hides (optional)
+    queued.forEach(([t, o]) => {
+      try { window.flutterHandler.hideLoadingIndicator(t, o); } catch (_) {}
+    });
   }
 
   // Defer scripts below overlay until indicator is shown
