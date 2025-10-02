@@ -373,7 +373,8 @@ function showVideoIndicator() {
   video.style.height = 'auto';
   video.style.objectFit = 'contain';
   video.style.display = 'block';
-  video.style.borderRadius = '16px';
+  video.style.borderRadius = '32px';
+  video.style.backgroundColor = 'transparent'; //
   if (mountElRef.parentElement) {
     mountElRef.parentElement.style.backgroundColor = '#0F1511';
   }
