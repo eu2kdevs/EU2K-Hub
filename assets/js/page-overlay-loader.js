@@ -52,6 +52,19 @@
 
   function positionOverlay() {
     if (!overlayEl || !mainContentEl) return;
+    
+    // For bootstrap overlay, use full viewport
+    if (overlayEl.id === 'eu2k-page-overlay' && document.getElementById('eu2k-overlay-mount')) {
+      overlayEl.style.position = 'fixed';
+      overlayEl.style.left = '0px';
+      overlayEl.style.top = '0px';
+      overlayEl.style.width = '100vw';
+      overlayEl.style.height = '100vh';
+      overlayEl.style.zIndex = '9999';
+      return;
+    }
+    
+    // For dynamically created overlay, position over main content
     const rect = mainContentEl.getBoundingClientRect();
     const extraBottom = 24; // a little larger downward
     overlayEl.style.position = 'fixed';
@@ -281,9 +294,19 @@
       mainContentEl = document.querySelector('.main-content') || document.body;
       overlayEl = document.getElementById('eu2k-page-overlay');
       mountEl = bootstrapMount;
-      window.addEventListener('resize', positionOverlay);
-      window.addEventListener('scroll', positionOverlay, { passive: true });
-      positionOverlay();
+      
+      // Ensure overlay is properly positioned and visible
+      if (overlayEl && mainContentEl) {
+        window.addEventListener('resize', positionOverlay);
+        window.addEventListener('scroll', positionOverlay, { passive: true });
+        positionOverlay();
+        
+        // Make sure overlay is visible
+        overlayEl.style.display = 'block';
+        overlayEl.style.opacity = '1';
+        console.log('Overlay positioned and made visible');
+      }
+      
       try { 
         console.log('Attempting to show Flutter indicator...');
         await showFlutterIndicator(); 

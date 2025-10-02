@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { getPerformance } from "firebase/performance";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import { getPerformance } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-performance.js";
 
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
