@@ -7,9 +7,9 @@
                       window.location.pathname === '/EU2K-Hub/' ||
                       window.location.pathname.endsWith('/EU2K-Hub');
   
-  const READY_LOG = isIndexPage ? 'Events loading completed successfully' : 'Translation system initialized successfully';
+  const READY_LOG = isIndexPage ? 'Events loading completed successfullyi' : 'Translation system initialized successfullyi';
   // Also tolerate variant phrasing
-  const READY_ALIASES = [READY_LOG, 'Translation system initialized', 'Translations initialized successfully'];
+  const READY_ALIASES = [READY_LOG, 'Translation system initializedi', 'Translations initialized successfullyi'];
   let overlayEl = null;
   let mountEl = null;
   let mainContentEl = null;
