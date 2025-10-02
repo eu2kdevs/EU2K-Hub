@@ -99,9 +99,12 @@
   }
 
   async function showFlutterIndicator() {
+    console.log('showFlutterIndicator called');
     try {
       // Ensure dependencies loaded
+      console.log('Ensuring dependencies...');
       await ensureDependencies();
+      console.log('Dependencies loaded, attempting to show contained indicator...');
       // Prefer contained for background circle
       const handle = await window.insertLoadingIndicator('contained', { container: mountEl, fadeIn: true, fadeInDuration: 150 });
       console.log('EU2K Flutter indicator shown');
@@ -121,6 +124,7 @@
       }
       cleanupHandler = handle;
     } catch (e) {
+      console.log('Contained indicator failed, trying uncontained fallback:', e);
       // Fallback: try uncontained
       try {
           await ensureDependencies();
@@ -139,7 +143,9 @@
           }
         }
         cleanupHandler = handle;
-      } catch (_) {}
+      } catch (fallbackError) {
+        console.error('Both contained and uncontained indicators failed:', fallbackError);
+      }
     }
   }
 
@@ -265,22 +271,36 @@
 
   // Boot
   interceptLogs();
+  console.log('EU2K Page Overlay Loader initialized');
   // Start immediately: attach to bootstrap overlay mount if present
   (async function startEarly(){
+    console.log('Starting early overlay initialization...');
     const bootstrapMount = document.getElementById('eu2k-overlay-mount');
     if (bootstrapMount) {
+      console.log('Bootstrap mount found, setting up overlay...');
       mainContentEl = document.querySelector('.main-content') || document.body;
       overlayEl = document.getElementById('eu2k-page-overlay');
       mountEl = bootstrapMount;
       window.addEventListener('resize', positionOverlay);
       window.addEventListener('scroll', positionOverlay, { passive: true });
       positionOverlay();
-      try { await showFlutterIndicator(); } catch(_) {}
+      try { 
+        console.log('Attempting to show Flutter indicator...');
+        await showFlutterIndicator(); 
+      } catch(e) {
+        console.error('Error showing Flutter indicator:', e);
+      }
     } else {
+      console.log('No bootstrap mount found, waiting for DOM ready...');
       whenDomReady(() => {
         ensureMainContent(async (mc) => {
           createOverlay(mc);
-          try { await showFlutterIndicator(); } catch(_) {}
+          try { 
+            console.log('Attempting to show Flutter indicator after DOM ready...');
+            await showFlutterIndicator(); 
+          } catch(e) {
+            console.error('Error showing Flutter indicator after DOM ready:', e);
+          }
         });
       });
     }
