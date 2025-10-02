@@ -4,6 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-translate="join.page-title">Join Portal</title>
+    <!-- Bootstrap overlay mount (appears at the very beginning of page load) -->
+    <script>
+      (function(){
+        if (!document.getElementById('eu2k-page-overlay')) {
+          var o = document.createElement('div');
+          o.id = 'eu2k-page-overlay';
+          o.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#0B0F0B;border-radius:32px;opacity:1;transition:opacity 300ms ease-in-out;';
+          var inner = document.createElement('div');
+          inner.style.cssText = 'position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0B0F0B;border-radius:32px;';
+          var m = document.createElement('div');
+          m.id = 'eu2k-overlay-mount';
+          m.style.cssText = 'position:relative;width:100%;height:100%';
+          inner.appendChild(m);
+          o.appendChild(inner);
+          document.documentElement.appendChild(o);
+        }
+      })();
+    </script>
+    <!-- Global overlay loader (plays centered MP4 and fades out after window load + 500ms) -->
+     <script src="/EU2K-Hub/assets/js/page-overlay-loader.js"></script>
+     <script src="/assets/js/page-overlay-loader.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;

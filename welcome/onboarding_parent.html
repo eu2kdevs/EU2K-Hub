@@ -48,10 +48,10 @@
     };
 
     // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
+    // Firebase already initialized above; reuse the existing 'app' instance
+    // analytics already declared below; skip re-declaration
+    // db already declared above; reuse existing instance
+    // auth already declared above; reuse existing instance
 
     // Initialize terms redirect handler
     if (window.initializeTermsRedirect) {

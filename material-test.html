@@ -188,18 +188,23 @@
         .control-btn:active {
             transform: translateY(0);
         }
+        /* Flutter controls hidden since MP4 overlay is used */
+        .controls { display: none !important; }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Material Test - Flutter Integration</h1>
         <p>Flutter projekt beágyazása iframe-mel</p>
+        <h1>Material Test - MP4 Overlay</h1>
+        <p>MP4 alapú overlay betöltő</p>
     </div>
     
     <div class="iframe-container">
         <div class="loading-overlay" id="loadingOverlay">
             <div>
                 <div class="loading-text">Flutter alkalmazás betöltése...</div>
+                <div class="loading-text">Oldal betöltése...</div>
             </div>
         </div>
         
@@ -217,6 +222,8 @@
 
     <!-- Include Flutter Handler -->
     <script src="/EU2K-Hub/assets/js/flutter-handler.js"></script>
+    <!-- MP4 overlay betöltő minden oldalra -->
+    <script src="/EU2K-Hub/assets/js/page-overlay-loader.js"></script>
     
     <script>
         // Flutter Handler integration
@@ -247,9 +254,7 @@
         // Initialize the application
         async function init() {
             await waitForFlutterHandler();
-            
             console.log('Flutter Handler ready, checking preload status...');
-            
             // Check if iframes are preloaded
             const checkPreloadStatus = () => {
             const containedReady = window.flutterHandler.isReady('contained');
@@ -338,6 +343,13 @@
         window.showUncontainedIndicator = showUncontained;
         window.hideLoadingIndicator = hideIndicator;
         window.getFlutterHandler = () => window.flutterHandler;
+    </script>
+    <script>
+      // Flutter betöltő eltávolítva ezen az oldalon.
+      // Az MP4 overlay-t a page-overlay-loader.js kezeli minden oldalon.
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('Material Test now uses MP4 overlay via page-overlay-loader.js');
+      });
     </script>
 </body>
 </html>

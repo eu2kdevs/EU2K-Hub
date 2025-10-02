@@ -7,9 +7,9 @@
                       window.location.pathname === '/EU2K-Hub/' ||
                       window.location.pathname.endsWith('/EU2K-Hub');
   
-  const READY_LOG = isIndexPage ? 'Events loading completed successfullyi' : 'Translation system initialized successfullyi';
+  const READY_LOG = isIndexPage ? 'Events loading completed successfully' : 'Translation system initialized successfully';
   // Also tolerate variant phrasing
-  const READY_ALIASES = [READY_LOG, 'Translation system initializedi', 'Translations initialized successfullyi'];
+  const READY_ALIASES = [READY_LOG, 'Translation system initialized', 'Translations initialized successfully'];
   let overlayEl = null;
   let mountEl = null;
   let mainContentEl = null;
@@ -51,27 +51,14 @@
   }
 
   function positionOverlay() {
-    if (!overlayEl || !mainContentEl) return;
-    
-    // For bootstrap overlay, use full viewport
-    if (overlayEl.id === 'eu2k-page-overlay' && document.getElementById('eu2k-overlay-mount')) {
-      overlayEl.style.position = 'fixed';
-      overlayEl.style.left = '0px';
-      overlayEl.style.top = '0px';
-      overlayEl.style.width = '100vw';
-      overlayEl.style.height = '100vh';
-      overlayEl.style.zIndex = '9999';
-      return;
-    }
-    
-    // For dynamically created overlay, position over main content
-    const rect = mainContentEl.getBoundingClientRect();
-    const extraBottom = 24; // a little larger downward
+    if (!overlayEl) return;
+    // Always cover full viewport
     overlayEl.style.position = 'fixed';
-    overlayEl.style.left = rect.left + 'px';
-    overlayEl.style.top = rect.top + 'px';
-    overlayEl.style.width = rect.width + 'px';
-    overlayEl.style.height = (rect.height + extraBottom) + 'px';
+    overlayEl.style.left = '0px';
+    overlayEl.style.top = '0px';
+    overlayEl.style.width = '100vw';
+    overlayEl.style.height = '100vh';
+    overlayEl.style.zIndex = '9999';
   }
 
   function createOverlay(mainContent) {
@@ -92,7 +79,7 @@
     inner.style.display = 'flex';
     inner.style.alignItems = 'center';
     inner.style.justifyContent = 'center';
-    inner.style.backgroundColor = '#0B0F0B';
+    inner.style.backgroundColor = '#0F1511';
 
     // Mount for the flutter iframe
     mountEl = document.createElement('div');
@@ -127,7 +114,7 @@
       if (window.flutterHandler && window.flutterHandler.iframes) {
         const iframe = window.flutterHandler.iframes.get('contained');
         if (iframe) {
-          iframe.style.backgroundColor = '#0B0F0B';
+          iframe.style.backgroundColor = '#0F1511';
           iframe.style.width = '100%';
           iframe.style.height = '100%';
           iframe.style.opacity = '1';
@@ -147,7 +134,7 @@
         if (window.flutterHandler && window.flutterHandler.iframes) {
           const iframe = window.flutterHandler.iframes.get('uncontained');
           if (iframe) {
-            iframe.style.backgroundColor = '#0B0F0B';
+            iframe.style.backgroundColor = '#0F1511';
             iframe.style.width = '100%';
             iframe.style.height = '100%';
             iframe.style.opacity = '1';
@@ -273,61 +260,126 @@
 
   async function ensureDependencies() {
     if (window.insertLoadingIndicator && window.flutterHandler) return;
-    // Load handler first, then injector
+    const base = window.location.pathname.includes('/EU2K-Hub/') ? '/EU2K-Hub/' : '/';
     if (!window.flutterHandler) {
-      await loadScript('/EU2K-Hub/assets/js/flutter-handler.js');
+      await loadScript(base + 'assets/js/flutter-handler.js');
     }
     if (!window.insertLoadingIndicator) {
-      await loadScript('/EU2K-Hub/assets/js/flutter-loading-injector.js');
+      await loadScript(base + 'assets/js/flutter-loading-injector.js');
     }
   }
 
   // Boot
-  interceptLogs();
+  // interceptLogs(); // no longer needed; we rely on window load event
   console.log('EU2K Page Overlay Loader initialized');
   // Start immediately: attach to bootstrap overlay mount if present
-  (async function startEarly(){
-    console.log('Starting early overlay initialization...');
+  (async function startEarly() {
     const bootstrapMount = document.getElementById('eu2k-overlay-mount');
     if (bootstrapMount) {
-      console.log('Bootstrap mount found, setting up overlay...');
       mainContentEl = document.querySelector('.main-content') || document.body;
       overlayEl = document.getElementById('eu2k-page-overlay');
       mountEl = bootstrapMount;
-      
+      window.__eu2kOverlayMount = mountEl;
       // Ensure overlay is properly positioned and visible
       if (overlayEl && mainContentEl) {
         window.addEventListener('resize', positionOverlay);
         window.addEventListener('scroll', positionOverlay, { passive: true });
         positionOverlay();
-        
-        // Make sure overlay is visible
         overlayEl.style.display = 'block';
         overlayEl.style.opacity = '1';
-        console.log('Overlay positioned and made visible');
       }
-      
-      try { 
-        console.log('Attempting to show Flutter indicator...');
-        await showFlutterIndicator(); 
-      } catch(e) {
-        console.error('Error showing Flutter indicator:', e);
-      }
+      // Show MP4 indicator immediately
+      showVideoIndicator();
+      // Release any deferred scripts once the indicator is visible
+      releaseDeferredScripts();
     } else {
-      console.log('No bootstrap mount found, waiting for DOM ready...');
+      // Create overlay immediately, even before DOM is ready
+      mainContentEl = document.body || document.documentElement;
+      overlayEl = document.createElement('div');
+      overlayEl.setAttribute('id', 'eu2k-page-overlay');
+      overlayEl.style.zIndex = '9999';
+      overlayEl.style.opacity = '1';
+      overlayEl.style.transition = 'opacity 300ms ease-in-out';
+      overlayEl.style.borderRadius = '32px';
+      // Default visual style
+      overlayEl.style.background = '#0F1511';
+      overlayEl.style.backgroundColor = '#0F1511';
+
+      const inner = document.createElement('div');
+      inner.style.position = 'relative';
+      inner.style.width = '100%';
+      inner.style.height = '100%';
+      inner.style.display = 'flex';
+      inner.style.alignItems = 'center';
+      inner.style.justifyContent = 'center';
+      inner.style.backgroundColor = '#0F1511';
+
+      mountEl = document.createElement('div');
+      mountEl.setAttribute('id', 'eu2k-overlay-mount');
+      window.__eu2kOverlayMount = mountEl;
+      mountEl.style.position = 'relative';
+      mountEl.style.width = '100%';
+      mountEl.style.height = '100%';
+      inner.appendChild(mountEl);
+
+      overlayEl.appendChild(inner);
+      (document.documentElement || document.body).appendChild(overlayEl);
+
+      positionOverlay();
+      window.addEventListener('resize', positionOverlay);
+      window.addEventListener('scroll', positionOverlay, { passive: true });
+
+      // Show MP4 indicator immediately
+      showVideoIndicator();
+
+      // After DOM is ready, copy main content visual style (if available)
       whenDomReady(() => {
-        ensureMainContent(async (mc) => {
-          createOverlay(mc);
-          try { 
-            console.log('Attempting to show Flutter indicator after DOM ready...');
-            await showFlutterIndicator(); 
-          } catch(e) {
-            console.error('Error showing Flutter indicator after DOM ready:', e);
-          }
+        ensureMainContent((mc) => {
+          mainContentEl = mc;
+          copyVisualStyle(mainContentEl, overlayEl);
         });
       });
     }
+    // Hide overlay when browser finishes loading (load event), wait 500ms, then fade out
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        fadeOutAndRemove();
+      }, 500);
+    });
   })();
 })();
+
+
+
+
+function showVideoIndicator() {
+  const mountElRef = window.__eu2kOverlayMount || document.getElementById('eu2k-overlay-mount');
+  if (!mountElRef) return;
+  mountElRef.style.display = 'flex';
+  mountElRef.style.alignItems = 'center';
+  mountElRef.style.justifyContent = 'center';
+  mountElRef.style.width = '100%';
+  mountElRef.style.height = '100%';
+  const video = document.createElement('video');
+  const base = window.location.pathname.includes('/EU2K-Hub/') ? '/EU2K-Hub/' : '/';
+  video.src = base + 'assets/animation/m3elidga.mp4';
+  video.autoplay = true;
+  video.muted = true;
+  video.loop = true;
+  video.playsInline = true;
+  video.style.maxHeight = '80vh';
+  video.style.maxWidth = '80vw';
+  video.style.width = 'auto';
+  video.style.height = 'auto';
+  video.style.objectFit = 'contain';
+  video.style.display = 'block';
+  video.style.borderRadius = '16px';
+  if (mountElRef.parentElement) {
+    mountElRef.parentElement.style.backgroundColor = '#0F1511';
+  }
+  mountElRef.innerHTML = '';
+  mountElRef.appendChild(video);
+}
+
 
 
