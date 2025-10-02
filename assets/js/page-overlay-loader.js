@@ -349,9 +349,6 @@
   })();
 })();
 
-
-
-
 function showVideoIndicator() {
   const mountElRef = window.__eu2kOverlayMount || document.getElementById('eu2k-overlay-mount');
   if (!mountElRef) return;
@@ -374,7 +371,7 @@ function showVideoIndicator() {
   video.style.objectFit = 'contain';
   video.style.display = 'block';
   video.style.borderRadius = '32px';
-  video.style.backgroundColor = 'transparent'; //
+  video.style.backgroundColor = '#0F1511';
   if (mountElRef.parentElement) {
     mountElRef.parentElement.style.backgroundColor = '#0F1511';
   }
