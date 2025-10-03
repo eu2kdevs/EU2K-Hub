@@ -570,6 +570,9 @@ body {
   border-radius: 16px;
   transition: var(--transition);
   position: relative;
+  border: none;
+  background: none;
+  outline: none;
 }
 
 .nav-item:not(.active):hover .nav-icon-container {
@@ -654,6 +657,9 @@ body {
   border-radius: 16px;
   transition: var(--transition);
   position: relative;
+  border: none;
+  background: none;
+  outline: none;
 }
 
 .nav-item-open:not(.active):hover {
