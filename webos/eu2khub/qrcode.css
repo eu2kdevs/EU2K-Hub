@@ -693,6 +693,29 @@ body {
 .sidebar .list-button span { display: none; }
 .sidebar.open .list-button span { display: inline; }
 
+/* Menü gomb reset */
+.nav-item-list {
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 16px;
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.nav-item-list:hover {
+  background: transparent;
+  border: none;
+}
+
 .nav-item span {
   color: #C1C9BE;
 }

@@ -11,7 +11,30 @@
   <style>
     /* Nav szöveg csak nyitott (open) állapotban jelenjen meg, kizárólag a Menü gombnál */
     .sidebar .list-button span { display: none; }
-    .sidebar.open .list-button span { display: inline; }
+.sidebar.open .list-button span { display: inline; }
+
+/* Menü gomb reset */
+.nav-item-list {
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 16px;
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.nav-item-list:hover {
+  background: transparent;
+  border: none;
+}
   </style>
   <!--
   <script type="importmap">
@@ -318,14 +341,20 @@
     <script>
       (function() {
         const sidebar = document.querySelector('.sidebar');
+        const navMenu = document.querySelector('.nav-menu');
         const toggleButton = document.querySelector('.list-button');
+        const navItems = document.querySelectorAll('.nav-menu .nav-item');
+        const icons = document.querySelectorAll('.nav-menu .nav-icon');
         if (sidebar && toggleButton) {
           toggleButton.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
+            const isOpenNow = sidebar.classList.toggle('open');
+            if (navMenu) navMenu.classList.toggle('nav-menu-open', isOpenNow);
+            navItems.forEach(item => item.classList.toggle('nav-item-open', isOpenNow));
+            toggleButton.classList.toggle('nav-item-open-list', isOpenNow);
+            icons.forEach(iconEl => iconEl.classList.toggle('nav-icon-open', isOpenNow));
             const icon = toggleButton.querySelector('.nav-icon');
             if (icon) {
-              const isOpen = sidebar.classList.contains('open');
-              icon.src = isOpen ? '../../../assets/navbar/menu_open.svg' : '../../../assets/navbar/menu.svg';
+              icon.src = isOpenNow ? '../../../assets/navbar/menu_open.svg' : '../../../assets/navbar/menu.svg';
             }
           });
         }
@@ -334,7 +363,8 @@
           const currentName = currentPath.split('/').pop() || 'index.html';
           document.querySelectorAll('.nav-menu .nav-item[href]').forEach(link => {
             try {
-              const linkPath = new URL(link.getAttribute('href'), window.location.href).pathname.replace(/\/$/, '');
+              const href = link.getAttribute('href');
+              const linkPath = new URL(href, window.location.href).pathname.replace(/\/$/, '');
               const linkName = linkPath.split('/').pop() || 'index.html';
               if (linkName === currentName) {
                 link.classList.add('active');
