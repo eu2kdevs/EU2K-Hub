@@ -673,7 +673,7 @@ body {
 }
 
 .nav-item.active {
-  background-color: var(--green-btn);
+  /* background-color: var(--green-btn); */
   height: 50px;
   border-radius: 32px;
 }
@@ -702,6 +702,17 @@ body {
   border-radius: 16px;
   transition: var(--transition);
 }
+
+/* Alapból elrejtjük a szöveget */
+.nav-item-list span {
+  display: none;
+}
+
+/* Csak ha a gombnak van a "-open" osztálya, mutatjuk */
+.nav-item-list.nav-item-open-list span {
+  display: flex; /* vagy flex, ha flex konténer */
+}
+
 
 .nav-icon-open {
   width: 24px;
