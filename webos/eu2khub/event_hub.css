@@ -473,3 +473,7 @@ md-fab.join-fab {
 .featured-subtitle {
   opacity: 0.9;
 }
+
+/* Csak nyitott (open) állapotban jelenjen meg a nav szöveg */
+.sidebar .list-button span { display: none; }
+.sidebar.open .list-button span { display: inline; }

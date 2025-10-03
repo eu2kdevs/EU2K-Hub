@@ -700,3 +700,6 @@ body {
 .new-things-link b {
   font-weight: 700;
 }
+/* Csak nyitott (open) állapotban jelenjen meg a nav szöveg */
+.sidebar .list-button span { display: none; }
+.sidebar.open .list-button span { display: inline; }

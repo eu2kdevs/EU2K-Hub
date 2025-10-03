@@ -62,6 +62,7 @@
   --card-radius: 32px;
   --news-radius: 20px;
   --sidebar-width: 76px;
+  --sidebar-width-open: 198px;
   --transition: 0.2s cubic-bezier(.4,0,.2,1);
 }
 
@@ -108,6 +109,11 @@ body {
   position: relative;
 }
 
+.sidebar.open {
+  width: var(--sidebar-width-open);
+  min-width: var(--sidebar-width-open);
+}
+
 .main-area {
   flex: 1; /* kitölti a sidebar melletti helyet */
   min-width: 0; /* fontos, hogy a flexbox engedje zsugorodni */
@@ -135,7 +141,7 @@ body {
   display: flex;
   justify-content: space-between;
   margin-top: 8px;
-  margin-bottom: 0;
+  margin-bottom: 22px;
   position: relative;
   min-height: 80px;
 }
@@ -177,14 +183,15 @@ body {
 }
 
 .welcome-icon {
-  width: 40px;
-  height: 40px;
+  width: calc(100% - 220px);
+  height: 60px;
 }
 
 .welcome-text {
   font-size: 1.7rem;
   font-weight: 500;
   color: var(--text-main);
+  margin-top: 4px;
 }
 
 .footer { 
@@ -236,9 +243,20 @@ body {
   gap: 8px;
   font-size: 1.2rem;
   color: var(--text-main);
-  margin: 0 0 12px 0;
+  margin: 0 0 16px 0;
   font-weight: 500;
 }
+
+.section-title-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.2rem;
+  color: var(--text-main);
+  margin: 26px 0 16px 0;
+  font-weight: 500;
+}
+
 .arrow-icon {
   width: 18px;
   height: 18px;
@@ -465,8 +483,8 @@ body {
 .carousel-btn:hover {
   background: var(--card-bg);
 }
-.carousel-btn.left { left: -20px; }
-.carousel-btn.right { right: -20px; }
+.carousel-btn.left { left: -15px; }
+.carousel-btn.right { right: -15px; }
 
 
 .section-header.upcoming-events h2 {
@@ -537,8 +555,29 @@ body {
   transition: var(--transition);
   position: relative;
 }
-.nav-item:hover .nav-icon-container {
+
+.nav-item-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border-radius: 16px;
+  transition: var(--transition);
+  position: relative;
+}
+
+.nav-item:not(.active):hover .nav-icon-container {
   background-color: #232823;
+}
+
+.nav-item-list:hover {
+  background-color: #ffffff2b;
 }
 
 .nav-item.active .nav-icon-container {
@@ -574,6 +613,95 @@ body {
   width: 24px;
   height: 24px;
 }
+
+/* ---------- open navbar  ---------- */
+
+.nav-menu-open {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  gap: 24px;
+}
+.nav-item-open {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  width: calc(100% - 28px);
+  padding: 0;
+  border-radius: 16px;
+  transition: var(--transition);
+  position: relative;
+}
+
+.nav-item-open-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  width: calc(100% - 28px);
+  height: calc(100% - 28px);
+  padding: 0;
+  border-radius: 16px;
+  transition: var(--transition);
+  position: relative;
+}
+
+.nav-item-open:not(.active):hover {
+  background-color: #232823;
+  height: 50px;
+  border-radius: 32px;
+}
+
+.nav-item-list:hover {
+  background-color: #ffffff2b;
+}
+
+.nav-item.active {
+  background-color: var(--green-btn);
+  height: 50px;
+  border-radius: 32px;
+}
+
+.nav-item-open span {
+  color: #C1C9BE;
+}
+
+.nav-item-open.active span {
+  color: #D4E8D1;
+}
+
+.nav-icon-open {
+  filter: brightness(0) saturate(100%) invert(85%) sepia(6%) saturate(466%) hue-rotate(60deg) brightness(95%) contrast(86%); /* #C1C9BE */
+}
+
+.nav-item-open.active .nav-icon-open {
+  filter: brightness(0) saturate(100%) invert(94%) sepia(11%) saturate(309%) hue-rotate(61deg) brightness(94%) contrast(90%); /* #D4E8D1 */
+}
+.nav-icon-open-container {
+  width: 56px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  transition: var(--transition);
+}
+
+.nav-icon-open {
+  width: 24px;
+  height: 24px;
+}
+
 .top-cards-row.shrinked .red-card.large {
   width: 480px;
 }

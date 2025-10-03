@@ -79,32 +79,87 @@
   <div class="app-bg">
     <aside class="sidebar">
       <nav class="nav-menu">
+        <button class="nav-item list-button nav-item-list" type="button" aria-label="Menü">
+          <div class="nav-icon-container">
+            <img src="/EU2K-Hub/assets/navbar/menu.svg" class="nav-icon" alt="Menü">
+          </div>
+          <span data-translate="navigation.menu">Menü</span>
+        </button>
         <a class="nav-item" href="index.html">
           <div class="nav-icon-container">
-            <img src="/EU2K-Hub/assets/home_icon.svg" class="nav-icon" alt="Otthon">
+            <img src="/EU2K-Hub/assets/navbar/home.svg" class="nav-icon" alt="Otthon">
           </div>
           <span data-translate="navigation.home">Otthon</span>
         </a>
         <a class="nav-item" href="qr-code.html">
           <div class="nav-icon-container">
-            <img src="/EU2K-Hub/assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
+            <img src="/EU2K-Hub/assets/navbar/qr_code.svg" class="nav-icon" alt="QR-Kód">
           </div>
           <span data-translate="navigation.qr">QR-Kód</span>
         </a>
         <a class="nav-item" href="youhub.html">
           <div class="nav-icon-container">
-            <img src="/EU2K-Hub/assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
+            <img src="/EU2K-Hub/assets/navbar/youhub.svg" class="nav-icon" alt="YouHub">
           </div>
           <span data-translate="navigation.youhub">YouHub</span>
         </a>
         <a class="nav-item" href="event_hub.html">
           <div class="nav-icon-container">
-            <img src="/EU2K-Hub/assets/event_hub_icon.svg" class="nav-icon" alt="Event Hub">
+            <img src="/EU2K-Hub/assets/navbar/event_hub.svg" class="nav-icon" alt="Event Hub">
           </div>
           <span data-translate="navigation.event_hub">Event Hub</span>
         </a>
       </nav>
     </aside>
+    <script>
+      (function() {
+        const sidebar = document.querySelector('.sidebar');
+        const toggleButton = document.querySelector('.list-button');
+        if (sidebar && toggleButton) {
+          toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            const icon = toggleButton.querySelector('.nav-icon');
+            if (icon) {
+              const isOpen = sidebar.classList.contains('open');
+              icon.src = isOpen ? '/EU2K-Hub/assets/navbar/menu_open.svg' : '/EU2K-Hub/assets/navbar/menu.svg';
+            }
+          });
+        }
+        function markActiveNavItem() {
+          const currentPath = window.location.pathname.replace(/\/$/, '');
+          document.querySelectorAll('.nav-menu .nav-item[href]').forEach(link => {
+            try {
+              const linkPath = new URL(link.getAttribute('href'), window.location.origin).pathname.replace(/\/$/, '');
+              const isHomeAlias = currentPath === '/EU2K-Hub/' && linkPath === '/EU2K-Hub/index.html';
+              if (linkPath === currentPath || isHomeAlias) {
+                link.classList.add('active');
+              } else {
+                link.classList.remove('active');
+              }
+            } catch (e) {}
+          });
+        }
+        function updateNavIcons() {
+          document.querySelectorAll('.nav-item:not(.list-button) .nav-icon').forEach(img => {
+            const item = img.closest('.nav-item');
+            if (!item) return;
+            const isActive = item.classList.contains('active');
+            const src = img.getAttribute('src') || '';
+            if (src.includes('/assets/navbar/')) {
+              if (isActive && !src.includes('/assets/navbar/filled/')) {
+                img.setAttribute('src', src.replace('/assets/navbar/', '/assets/navbar/filled/'));
+              } else if (!isActive && src.includes('/assets/navbar/filled/')) {
+                img.setAttribute('src', src.replace('/assets/navbar/filled/', '/assets/navbar/'));
+              }
+            }
+          });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+          markActiveNavItem();
+          updateNavIcons();
+        });
+      })();
+    </script>
     <main class="main-area">
       <div class="main-content">
         <header class="header">

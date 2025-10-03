@@ -79,6 +79,12 @@
   <div class="app-bg">
     <aside class="sidebar">
       <nav class="nav-menu">
+          <button class="nav-item list-button nav-item-list" type="button" aria-label="Menü">
+            <div class="nav-icon-container">
+              <img src="../../assets/navbar/menu.svg" class="nav-icon" alt="Menü">
+            </div>
+            <span data-translate="navigation.menu">Menü</span>
+          </button>
   <a class="nav-item" href="index.html" tabindex="0">
           <div class="nav-icon-container">
             <img src="./assets/home_icon.svg" class="nav-icon" alt="Otthon">
@@ -105,6 +111,56 @@
         </a>
       </nav>
     </aside>
+    <script>
+      (function() {
+        const sidebar = document.querySelector('.sidebar');
+        const toggleButton = document.querySelector('.list-button');
+        if (sidebar && toggleButton) {
+          toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            const icon = toggleButton.querySelector('.nav-icon');
+            if (icon) {
+              const isOpen = sidebar.classList.contains('open');
+              icon.src = isOpen ? '../../assets/navbar/menu_open.svg' : '../../assets/navbar/menu.svg';
+            }
+          });
+        }
+        function markActiveNavItem() {
+          const currentPath = window.location.pathname.replace(/\/$/, '');
+          const currentName = currentPath.split('/').pop() || 'index.html';
+          document.querySelectorAll('.nav-menu .nav-item[href]').forEach(link => {
+            try {
+              const linkPath = new URL(link.getAttribute('href'), window.location.href).pathname.replace(/\/$/, '');
+              const linkName = linkPath.split('/').pop() || 'index.html';
+              if (linkName === currentName) {
+                link.classList.add('active');
+              } else {
+                link.classList.remove('active');
+              }
+            } catch (e) {}
+          });
+        }
+        function updateNavIcons() {
+          document.querySelectorAll('.nav-item:not(.list-button) .nav-icon').forEach(img => {
+            const item = img.closest('.nav-item');
+            if (!item) return;
+            const isActive = item.classList.contains('active');
+            const src = img.getAttribute('src') || '';
+            if (src.includes('/assets/navbar/')) {
+              if (isActive && !src.includes('/assets/navbar/filled/')) {
+                img.setAttribute('src', src.replace('/assets/navbar/', '/assets/navbar/filled/'));
+              } else if (!isActive && src.includes('/assets/navbar/filled/')) {
+                img.setAttribute('src', src.replace('/assets/navbar/filled/', '/assets/navbar/'));
+              }
+            }
+          });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+          markActiveNavItem();
+          updateNavIcons();
+        });
+      })();
+    </script>
     <main class="main-area">
       <div class="main-content">
         <header class="header">
