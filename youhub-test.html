@@ -360,7 +360,7 @@
 
     // Gemini AI API konfiguráció
     const GEMINI_KEY = window.GEMINI_API_KEY;
-    const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+    const GEMINI_API_URL = window.GEMINI_API_URL || 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
     // Gemini AI segítségével javítja a dátum formátumot
     async function fixDateWithGemini(userInput) {
