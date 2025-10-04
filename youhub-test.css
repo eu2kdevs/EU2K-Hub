@@ -349,17 +349,8 @@ body {
   max-width: calc(100% - 22px);
   min-height: calc(100dvh - 104px); /* mobilbarát */
   height: calc(100dvh - 104px);
-  overflow-y: auto;
-  position: relative;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-  margin-bottom: 0;
-  position: relative;
-  min-height: 80px;
+  overflow-y: scroll;
+  scroll-behavior: smooth
 }
 
 .footer { 
@@ -405,25 +396,42 @@ body {
   }
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  margin-bottom: 22px;
+  min-height: 80px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #0B0F0B;
+  backdrop-filter: blur(12px);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
 .welcome-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
   margin-top: 40px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.header.hide .welcome-container {
+  transform: translateY(-50%);
+  opacity: 0;
 }
 
 .header-icons {
-  position: fixed;
-  top: 30px;
-  right: 32px;
+  position: absolute;
+  top: 8px;
+  right: 0;
   display: flex;
   align-items: center;
   gap: 8px;
-  z-index: 100;
 }
-
-
 
 .header-icon-link {
   display: flex;

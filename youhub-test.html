@@ -699,6 +699,33 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
   <script src="/EU2K-Hub/assets/js/permissions.js"></script>
   <script src="/EU2K-Hub/assets/js/translations.js"></script>
   <script type="module" src="/EU2K-Hub/assets/js/new-things-popup.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const mainContent = document.querySelector('.main-content');
+      const header = document.querySelector('.header');
+
+      let lastScrollTop = 0;
+      let ticking = false;
+
+      mainContent.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            const scrollTop = mainContent.scrollTop;
+
+            if (scrollTop > lastScrollTop + 5) {
+              header.classList.add('hide');
+            } else if (scrollTop < lastScrollTop - 5) {
+              header.classList.remove('hide');
+            }
+
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+    });
+  </script>
 </head>
 
 <body>
