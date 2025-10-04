@@ -38,18 +38,20 @@
 
     document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
   </script>
-  <script data-wait-for-overlay="true" data-src="/EU2K-Hub/assets/js/permissions.js"></script>
-  <script data-wait-for-overlay="true" data-src="/EU2K-Hub/assets/js/translations.js"></script>
-  <script data-wait-for-overlay="true" data-src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
-  <script data-wait-for-overlay="true" data-src="/EU2K-Hub/assets/js/auth-state.js"></script>
-  <script data-wait-for-overlay="true" data-src="/EU2K-Hub/assets/js/test_firebase.js" type="module"></script>
-  <script data-wait-for-overlay="true" data-src="/EU2K-Hub/assets/js/firebase-performance.js" type="module"></script>
-  <script data-wait-for-overlay="true" data-src="/EU2K-Hub/assets/js/first-input-delay.js"></script>
+  <script data-src="/EU2K-Hub/assets/js/permissions.js"></script>
+  <script data-src="/EU2K-Hub/assets/js/translations.js"></script>
+  <script data-src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
+  <script data-src="/EU2K-Hub/assets/js/auth-state.js"></script>
+  <script data-src="/EU2K-Hub/assets/js/test_firebase.js" type="module"></script>
+  <script data-src="/EU2K-Hub/assets/js/firebase-performance.js" type="module"></script>
+  <script data-src="/EU2K-Hub/assets/js/first-input-delay.js"></script>
+  <script data-src="/EU2K-Hub/assets/js/new-things-popup.js"></script>
   <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
     import { getFirestore } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js";
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -66,9 +68,12 @@
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
+    const functions = getFunctions(app, 'europe-west1');
 
-    // Make db globally available
+    // Make db and functions globally available
     window.db = db;
+    window.functions = functions;
+    window.createHttpsCallable = (name) => httpsCallable(functions, name);
 
     // Import Firestore debug module
     import('./assets/js/firestore-debug.js').catch(err => {

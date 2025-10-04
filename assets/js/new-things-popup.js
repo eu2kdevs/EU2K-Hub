@@ -15,6 +15,42 @@ if (!__newThingsInitGuard) {
     let newThingsData = null;
     let geminiApiKeyCache = null;
 
+    // Firebase Functions inicializálása, ha nincs globálisan elérhető
+    async function ensureFunctions() {
+      try {
+        if (window.functions && typeof window.createHttpsCallable === 'function') {
+          return window.functions;
+        }
+        const { getApps, initializeApp, getApp } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js');
+        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
+
+        let app;
+        const apps = getApps();
+        if (apps && apps.length > 0) {
+          app = getApp();
+        } else {
+          const firebaseConfig = {
+            apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
+            authDomain: "eu2k-hub.firebaseapp.com",
+            projectId: "eu2k-hub",
+            storageBucket: "eu2k-hub.firebasestorage.app",
+            messagingSenderId: "560244867055",
+            appId: "1:560244867055:web:3cd51b85baead94989001a",
+            measurementId: "G-2JDPR089WD"
+          };
+          app = initializeApp(firebaseConfig);
+        }
+
+        const functions = getFunctions(app, 'europe-west1');
+        window.functions = functions;
+        window.createHttpsCallable = (name) => httpsCallable(functions, name);
+        return functions;
+      } catch (e) {
+        console.warn('Firebase Functions init failed:', e);
+        return null;
+      }
+    }
+
     // Segédfüggvény: home.css betöltése, ha még nincs
     function ensureStylesInjected() {
       const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
@@ -60,7 +96,7 @@ if (!__newThingsInitGuard) {
       content.className = 'new-things-content';
 
       const topIcon = document.createElement('img');
-      topIcon.src = '/EU2K-Hub/assets/new_things.svg';
+      topIcon.src = '/EU2K-Hub/assets/sparkles.svg';
       topIcon.className = 'new-things-icon-top';
       topIcon.alt = 'Új dolgok';
 
@@ -135,23 +171,24 @@ if (!__newThingsInitGuard) {
     async function getGeminiApiKeyCached() {
       if (geminiApiKeyCache) return geminiApiKeyCache;
       try {
-        // Ha van globális createHttpsCallable, használjuk azt
+        const functions = await ensureFunctions();
+        if (!functions && typeof window.createHttpsCallable !== 'function') {
+          console.warn('Firebase Functions nem elérhető – API kulcs lekérés kihagyva');
+          return null;
+        }
+
         if (typeof window.createHttpsCallable === 'function') {
           const getGeminiApiKey = window.createHttpsCallable('getGeminiApiKey');
           const apiKeyResult = await getGeminiApiKey();
-          geminiApiKeyCache = apiKeyResult.data.apiKey;
+          geminiApiKeyCache = (apiKeyResult && apiKeyResult.data && apiKeyResult.data.apiKey) ? apiKeyResult.data.apiKey : null;
           return geminiApiKeyCache;
         }
-        // Ha van window.functions, dinamikusan importáljuk a httpsCallable-t
-        if (window.functions) {
-          const { httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
-          const getGeminiApiKey = httpsCallable(window.functions, 'getGeminiApiKey');
-          const apiKeyResult = await getGeminiApiKey();
-          geminiApiKeyCache = apiKeyResult.data.apiKey;
-          return geminiApiKeyCache;
-        }
-        console.warn('Firebase Functions nem elérhető – API kulcs lekérés kihagyva');
-        return null;
+
+        const { httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
+        const getGeminiApiKey = httpsCallable(functions, 'getGeminiApiKey');
+        const apiKeyResult = await getGeminiApiKey();
+        geminiApiKeyCache = (apiKeyResult && apiKeyResult.data && apiKeyResult.data.apiKey) ? apiKeyResult.data.apiKey : null;
+        return geminiApiKeyCache;
       } catch (err) {
         console.error('Hiba a Gemini API kulcs lekérésekor:', err);
         return null;

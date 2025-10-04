@@ -82,13 +82,13 @@
   </style>
   <script src="/EU2K-Hub/assets/js/page-overlay-loader.js"></script>
   <script src="/EU2K-Hub/assets/js/permissions.js"></script>
-  <script data-wait-for-overlay="true" data-src="/EU2K-Hub/assets/js/translations.js"></script>
-  <script data-wait-for-overlay="true" data-src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
-  <script data-wait-for-overlay="true" data-src="/EU2K-Hub/assets/js/auth-state.js"></script>
-  <script data-wait-for-overlay="true" data-src="/EU2K-Hub/assets/js/test_firebase.js" type="module"></script>
-  <script data-wait-for-overlay="true" data-src="/EU2K-Hub/assets/js/firebase-performance.js" type="module"></script>
-  <script data-wait-for-overlay="true" data-src="/EU2K-Hub/assets/js/first-input-delay.js"></script>
-  <script data-wait-for-overlay="true" data-src="/EU2K-Hub/assets/js/expressive-loader.js"></script>
+  <script data-src="/EU2K-Hub/assets/js/translations.js"></script>
+  <script data-src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
+  <script data-src="/EU2K-Hub/assets/js/auth-state.js"></script>
+  <script data-src="/EU2K-Hub/assets/js/test_firebase.js" type="module"></script>
+  <script data-src="/EU2K-Hub/assets/js/firebase-performance.js" type="module"></script>
+  <script data-src="/EU2K-Hub/assets/js/first-input-delay.js"></script>
+  <script data-src="/EU2K-Hub/assets/js/new-things-popup.js"></script>
   <script type="importmap">
     {
       "imports": {
@@ -120,6 +120,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
     import { getFirestore, collection, onSnapshot, query, orderBy, limit, startAfter, getDocs } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
@@ -135,9 +136,12 @@
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
+    const functions = getFunctions(app, 'europe-west1');
 
-    // Make db globally available
+    // Make db and functions globally available
     window.db = db;
+    window.functions = functions;
+    window.createHttpsCallable = (name) => httpsCallable(functions, name);
 
     // Import Firestore debug module
     import('./assets/js/firestore-debug.js').catch(err => {
@@ -682,8 +686,33 @@
       handleNewsCardResize();
     });
   </script>
-  <script src="/EU2K-Hub/assets/js/flutter-handler.js"></script>
-  <script src="/EU2K-Hub/assets/js/flutter-loading-injector.js"></script>
+  <script>
+    const mainContent = document.querySelector('.main-content');
+    const header = document.querySelector('.header');
+
+    let lastScrollTop = 0;
+    let ticking = false;
+
+    mainContent.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollTop = mainContent.scrollTop;
+
+          if (scrollTop > lastScrollTop + 5) {
+            // lefelé görgetés
+            header.classList.add('hide');
+          } else if (scrollTop < lastScrollTop - 5) {
+            // felfelé görgetés
+            header.classList.remove('hide');
+          }
+
+          lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  </script>
 </head>
 
 <body>
@@ -954,224 +983,8 @@
   </div>
   <div id="event-mask"></div>
 
-  <!-- Új dolgok Popup -->
-  <div id="newThingsPopup" class="new-things-overlay" style="display: none;">
-    <div class="new-things-container">
-      <div class="new-things-close-btn" onclick="closeNewThingsPopup()">
-        <img src="/EU2K-Hub/assets/close.svg" alt="Bezárás">
-      </div>
-      <div class="new-things-content">
-        <div class="new-things-header">
-          <img src="/EU2K-Hub/assets/sparkles.svg" class="new-things-icon-top" alt="Új dolgok">
-        </div>
-        <h2 class="new-things-title" data-translate="pages.index.new_things_title">New things in the Hub</h2>
-        <p class="new-things-subtitle" id="newThingsSubtitle">EU2K Hub 0.2abc - Zárt Béta</p>
-        <div class="new-things-image-container">
-          <img src="/EU2K-Hub/assets/placeholder_img.svg" class="new-things-image" alt="Új dolgok">
-        </div>
-        <div class="new-things-list">
-          <!-- A lista dinamikusan lesz feltöltve JavaScript által -->
-        </div>
-        <div class="new-things-footer">
-          <a href="https://eu2kdevs.hu" target="_blank" class="new-things-link"
-            data-translate="pages.index.more_info_link">
-            Továbbiak az <b>eu2kdevs.hu</b> oldalon.
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <script>
-    // Új dolgok popup kezelése
-    let newThingsData = null;
 
-    // Popup megnyitása
-    function showNewThingsPopup() {
-      const popup = document.getElementById('newThingsPopup');
-      if (popup) {
-        popup.style.display = 'flex';
-      }
-    }
-
-    // Popup bezárása
-    function closeNewThingsPopup() {
-      const popup = document.getElementById('newThingsPopup');
-      if (popup) {
-        popup.style.display = 'none';
-      }
-    }
-
-    // Popup bezárása overlay-re kattintáskor
-    document.addEventListener('DOMContentLoaded', () => {
-      const popup = document.getElementById('newThingsPopup');
-      if (popup) {
-        popup.addEventListener('click', (e) => {
-          if (e.target === popup) {
-            closeNewThingsPopup();
-          }
-        });
-      }
-    });
-
-    // Firebase adatok lekérése és popup megjelenítése
-    async function checkAndShowNewThings() {
-      try {
-        // Firestore v9 függvények importálása
-        const { collection, getDocs, query, orderBy, limit } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
-
-        // Jelenlegi idő lekérése (egyszerűsített verzió)
-        const now = new Date();
-        const currentTime = now.getTime();
-
-        // Updates kollekció lekérdezése
-        const updatesRef = collection(db, 'homePageData', 'new-things', 'updates');
-        const q = query(updatesRef, orderBy('publish_date', 'desc'), limit(10));
-        const snapshot = await getDocs(q);
-
-        let latestUpdate = null;
-        let latestTimestamp = 0;
-        let latestUpdateId = null;
-
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const publishDate = data.publish_date;
-
-          if (publishDate) {
-            const timestamp = publishDate.toDate ? publishDate.toDate().getTime() : publishDate;
-
-            // Ellenőrizzük, hogy a timestamp nem jövőbeli-e (1 óra tolerancia)
-            const oneHourInMs = 60 * 60 * 1000;
-            if (timestamp <= currentTime + oneHourInMs && timestamp > latestTimestamp) {
-              latestTimestamp = timestamp;
-              latestUpdate = { ...data, document_id: doc.id }; // Add document ID to data
-              latestUpdateId = doc.id;
-            }
-          }
-        });
-
-        if (latestUpdate) {
-          const lastShownUpdateId = localStorage.getItem('lastShownNewThingsUpdateId');
-
-          if (lastShownUpdateId !== latestUpdateId) {
-            // Pre-translate content
-            const translations = {};
-            for (const lang of ['en', 'hu']) {
-              translations[lang] = {
-                state: await translateWithAI(latestUpdate.state, lang),
-                new_thing1: await translateWithAI(latestUpdate.new_thing1, lang),
-                new_thing2: await translateWithAI(latestUpdate.new_thing2, lang),
-              };
-            }
-            latestUpdate.translations = translations;
-            newThingsData = latestUpdate;
-
-            updatePopupContent(newThingsData);
-            showNewThingsPopup();
-
-            localStorage.setItem('lastShownNewThingsUpdateId', latestUpdateId);
-          }
-        }
-
-      } catch (error) {
-        console.error('Hiba az új dolgok lekérdezésekor:', error);
-      }
-    }
-
-    // Popup tartalom frissítése
-    function updatePopupContent(data) {
-      if (!data) return;
-      const targetLanguage = window.translationManager.currentLanguage;
-      const translatedData = data.translations[targetLanguage];
-
-      const subtitle = document.getElementById('newThingsSubtitle');
-      if (subtitle) {
-        const docName = data.document_name || data.document_id || '0.2abc';
-        subtitle.textContent = `EU2K Hub ${docName} - ${translatedData.state}`;
-      }
-
-      const newThingsList = document.querySelector('.new-things-list');
-      if (newThingsList) {
-        newThingsList.innerHTML = '';
-        const ul = document.createElement('ul');
-        ul.style.margin = '0';
-        ul.style.paddingLeft = '20px';
-        ul.style.listStyleType = 'disc';
-
-        if (translatedData.new_thing1) {
-          const li1 = document.createElement('li');
-          li1.textContent = translatedData.new_thing1;
-          li1.style.color = '#C2C3C2';
-          li1.style.marginBottom = '8px';
-          li1.style.lineHeight = '1.5';
-          ul.appendChild(li1);
-        }
-
-        if (translatedData.new_thing2) {
-          const li2 = document.createElement('li');
-          li2.textContent = translatedData.new_thing2;
-          li2.style.color = '#C2C3C2';
-          li2.style.marginBottom = '8px';
-          li2.style.lineHeight = '1.5';
-          ul.appendChild(li2);
-        }
-
-        newThingsList.appendChild(ul);
-      }
-
-      window.translationManager.applyTranslations();
-    }
-
-    // Oldal betöltésekor csekkolás
-    window.addEventListener('DOMContentLoaded', () => {
-      // Késleltetett csekkolás, hogy a Firebase betöltődjön
-      setTimeout(checkAndShowNewThings, 1000);
-    });
-
-    // Debug függvény a localStorage reset-hez és popup újra megjelenítéséhez
-    // Használat a konzolban: resetNewThingsPopup()
-    window.resetNewThingsPopup = function () {
-      console.log('🔄 Resetting new things popup tracking...');
-
-      // Töröljük a localStorage-ból az utoljára megjelenített update ID-t
-      localStorage.removeItem('lastShownNewThingsUpdateId');
-      console.log('✅ Cleared lastShownNewThingsUpdateId from localStorage');
-
-      // Újra futtatjuk a checkAndShowNewThings függvényt
-      console.log('🔍 Checking for new updates...');
-      checkAndShowNewThings().then(() => {
-        console.log('✨ Check complete! If there are updates, the popup should appear.');
-      }).catch(error => {
-        console.error('❌ Error during check:', error);
-      });
-    };
-
-    // Debug függvény az összes new things adat törléséhez
-    // Használat a konzolban: clearAllNewThingsData()
-    window.clearAllNewThingsData = function () {
-      console.log('🗑️ Clearing all new things data...');
-
-      // Töröljük az összes kapcsolódó localStorage elemet
-      const keysToRemove = ['lastShownNewThingsUpdateId', 'lastNewThingsCheck'];
-      keysToRemove.forEach(key => {
-        if (localStorage.getItem(key)) {
-          localStorage.removeItem(key);
-          console.log(`✅ Removed ${key}`);
-        }
-      });
-
-      console.log('✨ All new things data cleared!');
-    };
-
-    // Debug függvény az aktuális állapot megjelenítéséhez
-    // Használat a konzolban: showNewThingsStatus()
-    window.showNewThingsStatus = function () {
-      console.log('📊 Current New Things Status:');
-      console.log('Last shown update ID:', localStorage.getItem('lastShownNewThingsUpdateId') || 'None');
-      console.log('Last check date:', localStorage.getItem('lastNewThingsCheck') || 'None');
-      console.log('Current new things data:', newThingsData || 'No data loaded');
-    };
-  </script>
 
   <script>
     // Check if user has accepted terms of service and redirect to appropriate onboarding
@@ -1226,7 +1039,6 @@
       }
     });
   </script>
-<script type="module" src="/EU2K-Hub/assets/js/new-things-popup.js"></script>
 </body>
 
 </html>
