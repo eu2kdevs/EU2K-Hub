@@ -352,13 +352,26 @@
 function showVideoIndicator() {
   const mountElRef = window.__eu2kOverlayMount || document.getElementById('eu2k-overlay-mount');
   if (!mountElRef) return;
+
   mountElRef.style.display = 'flex';
   mountElRef.style.alignItems = 'center';
   mountElRef.style.justifyContent = 'center';
   mountElRef.style.width = '100%';
   mountElRef.style.height = '100%';
-  const video = document.createElement('video');
+  mountElRef.style.backgroundColor = '#0F1511'; // 🌿 a mount maga is sötétzöldes háttér
+
+  // wrapper a videó köré (ez fogja kitölteni a fekete részeket)
+  const wrapper = document.createElement('div');
+  wrapper.style.display = 'flex';
+  wrapper.style.alignItems = 'center';
+  wrapper.style.justifyContent = 'center';
+  wrapper.style.width = '100%';
+  wrapper.style.height = '100%';
+  wrapper.style.backgroundColor = '#0F1511'; // zöldesfekete háttér
+  wrapper.style.borderRadius = '32px';
+
   const base = window.location.pathname.includes('/EU2K-Hub/') ? '/EU2K-Hub/' : '/';
+  const video = document.createElement('video');
   video.src = base + 'assets/animation/m3elidga.mp4';
   video.autoplay = true;
   video.muted = true;
@@ -371,13 +384,9 @@ function showVideoIndicator() {
   video.style.objectFit = 'contain';
   video.style.display = 'block';
   video.style.borderRadius = '32px';
-  video.style.backgroundColor = '#0F1511';
-  if (mountElRef.parentElement) {
-    mountElRef.parentElement.style.backgroundColor = '#0F1511';
-  }
+  video.style.backgroundColor = '#0F1511'; // extra biztonságképp 💅
+
+  wrapper.appendChild(video);
   mountElRef.innerHTML = '';
-  mountElRef.appendChild(video);
+  mountElRef.appendChild(wrapper);
 }
-
-
-

@@ -708,7 +708,6 @@ body {
   align-items: center;
   gap: 24px;
 }
-
 .nav-item {
   display: flex;
   flex-direction: column;
@@ -720,12 +719,35 @@ body {
   width: 64px;
   padding: 0;
   border-radius: 16px;
-  transition: all 0.2s ease;
+  transition: var(--transition);
   position: relative;
 }
 
-.nav-item:hover .nav-icon-container {
+.nav-item-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border-radius: 16px;
+  transition: var(--transition);
+  position: relative;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+.nav-item:not(.active):hover .nav-icon-container {
   background-color: #232823;
+}
+
+.nav-item-list:hover {
+  background-color: #ffffff2b;
 }
 
 .nav-item.active .nav-icon-container {
@@ -741,15 +763,12 @@ body {
 }
 
 .nav-icon {
-  filter: brightness(0) saturate(100%) invert(85%) sepia(6%) saturate(466%) hue-rotate(60deg) brightness(95%) contrast(86%);
-  /* #C1C9BE */
+  filter: brightness(0) saturate(100%) invert(85%) sepia(6%) saturate(466%) hue-rotate(60deg) brightness(95%) contrast(86%); /* #C1C9BE */
 }
 
 .nav-item.active .nav-icon {
-  filter: brightness(0) saturate(100%) invert(94%) sepia(11%) saturate(309%) hue-rotate(61deg) brightness(94%) contrast(90%);
-  /* #D4E8D1 */
+  filter: brightness(0) saturate(100%) invert(94%) sepia(11%) saturate(309%) hue-rotate(61deg) brightness(94%) contrast(90%); /* #D4E8D1 */
 }
-
 .nav-icon-container {
   width: 56px;
   height: 32px;
@@ -757,7 +776,114 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 16px;
-  transition: all 0.2s ease;
+  transition: var(--transition);
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* ---------- open navbar  ---------- */
+
+.nav-menu-open {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  gap: 24px;
+}
+.nav-item-open {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  width: calc(100% - 28px);
+  padding: 0;
+  border-radius: 16px;
+  transition: var(--transition);
+  position: relative;
+}
+
+.nav-item-open-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  width: calc(100% - 28px);
+  height: calc(100% - 28px);
+  padding: 0;
+  border-radius: 16px;
+  transition: var(--transition);
+  position: relative;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+.nav-item-open:not(.active):hover {
+  background-color: #232823;
+  height: 50px;
+  border-radius: 32px;
+}
+
+.nav-item-list:hover {
+  background-color: #ffffff2b;
+}
+
+.nav-item.active {
+  /* background-color: var(--green-btn); */
+  height: 50px;
+  border-radius: 32px;
+}
+
+.nav-item-open span {
+  color: #C1C9BE;
+}
+
+.nav-item-open.active span {
+  color: #D4E8D1;
+}
+
+.nav-icon-open {
+  filter: brightness(0) saturate(100%) invert(85%) sepia(6%) saturate(466%) hue-rotate(60deg) brightness(95%) contrast(86%); /* #C1C9BE */
+}
+
+.nav-item-open.active .nav-icon-open {
+  filter: brightness(0) saturate(100%) invert(94%) sepia(11%) saturate(309%) hue-rotate(61deg) brightness(94%) contrast(90%); /* #D4E8D1 */
+}
+.nav-icon-open-container {
+  width: 56px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  transition: var(--transition);
+}
+
+/* Alapból elrejtjük a szöveget */
+.nav-item-list span {
+  display: none;
+}
+
+/* Csak ha a gombnak van a "-open" osztálya, mutatjuk */
+.nav-item-list.nav-item-open-list span {
+  display: flex; /* vagy flex, ha flex konténer */
+}
+
+
+.nav-icon-open {
+  width: 24px;
+  height: 24px;
 }
 
 @media (max-width: 1200px) {
