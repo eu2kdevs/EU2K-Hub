@@ -396,14 +396,23 @@
       const leftBtn = document.querySelector(".carousel-btn.left");
       const rightBtn = document.querySelector(".carousel-btn.right");
 
-      rb.addEventListener("click", () => {
-        const cardWidth = cards[0].offsetWidth + 12; // kártya + gap
-        row.scrollBy({ left: cardWidth, behavior: "smooth" });
-      });
+      const lb = document.getElementById('newsLeftBtn') || leftBtn;
+      const rb = document.getElementById('newsRightBtn') || rightBtn;
 
       lb.addEventListener("click", () => {
-        const cardWidth = cards[0].offsetWidth + 12; // kártya + gap
+        const row = document.getElementById("newsRow");
+        const card = row.querySelector(".news-card"); // mindig a látható kártya
+        if (!card) return;
+        const cardWidth = card.offsetWidth + 12; // kártya + gap
         row.scrollBy({ left: -cardWidth, behavior: "smooth" });
+      });
+
+      rb.addEventListener("click", () => {
+        const row = document.getElementById("newsRow");
+        const card = row.querySelector(".news-card"); // mindig a látható kártya
+        if (!card) return;
+        const cardWidth = card.offsetWidth + 12; // kártya + gap
+        row.scrollBy({ left: cardWidth, behavior: "smooth" });
       });
 
       // Wheel: shift vertical wheel to horizontal scroll
