@@ -408,6 +408,8 @@ body {
   background: #0B0F0B;
   backdrop-filter: blur(12px);
   transition: transform 0.3s ease, opacity 0.3s ease;
+  width: 106%;
+  border-radius: 32px;
 }
 
 .welcome-container {
@@ -427,7 +429,7 @@ body {
 .header-icons {
   position: absolute;
   top: 8px;
-  right: 0;
+  right: 35px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -453,9 +455,9 @@ body {
   height: 24px;
 }
 
-.welcome-icon {
-  width: 40px;
-  height: 40px;
+.welcome-icon-yh {
+  width: 50px;
+  height: 50px;
 }
 
 .welcome-text {
