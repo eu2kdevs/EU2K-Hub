@@ -249,6 +249,11 @@ body {
   background-color: #ffffff2b;
 }
 
+.nav-item-list span {
+  pointer-events: none;
+}
+
+
 .nav-item.active .nav-icon-container {
   background-color: var(--green-btn);
 }
@@ -337,6 +342,11 @@ body {
 .nav-item-list:hover {
   background-color: #ffffff2b;
 }
+
+.nav-item-list span {
+  pointer-events: none;
+}
+
 
 .nav-item.active {
   /* background-color: var(--green-btn); */

@@ -46,6 +46,7 @@
   <script src="/EU2K-Hub/assets/js/translations.js"></script>
   <script src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
   <script src="/EU2K-Hub/assets/js/terms-redirect.js"></script>
+  <script src="/EU2K-Hub/assets/js/page-overlay-loader.js"></script>
   <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
@@ -1083,6 +1084,18 @@
     window.showPage = function(pageId) {
       console.log('📄 Showing page:', pageId);
       
+      // Restricted mode guard: if restricted, force restricted page and hide other error pages
+      if (window.onboardingRestricted === true || window.__EU2K_ONBOARDING_BLOCKED__ === true || window.location.hash === '#restricted') {
+        window.__EU2K_ONBOARDING_BLOCKED__ = true;
+        if (pageId !== 'step2') {
+          pageId = 'restricted';
+        }
+        document.querySelectorAll('#login-failed-page').forEach((loginFailedEl) => {
+          loginFailedEl.style.display = 'none';
+          loginFailedEl.classList.remove('active');
+        });
+      }
+      
       // Security check: prevent navigation to inappropriate pages based on auth state
       const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
       const userType = localStorage.getItem('eu2k-user-type') || 'student';
@@ -1363,6 +1376,14 @@
 
       // Hash change listener with security checks
       window.addEventListener('hashchange', () => {
+        // Restricted mode: force restricted page and block other navigation
+        if (window.onboardingRestricted === true || window.__EU2K_ONBOARDING_BLOCKED__ === true) {
+          if (window.location.hash !== '#restricted') {
+            window.location.hash = '#restricted';
+          }
+          window.showPage('restricted');
+          return;
+        }
         const page = location.hash.substring(1) || 'step1';
         const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
         const userType = localStorage.getItem('eu2k-user-type') || 'student';
@@ -2257,6 +2278,39 @@
 
     // Initialize on DOM load
     document.addEventListener('DOMContentLoaded', () => {
+      // Guard: ha restricted módban vagyunk, ne futtassuk a további onboarding inicializálást
+      if (window.onboardingRestricted || window.location.hash === '#restricted') {
+        // Csak a restricted oldalt aktiváljuk
+        document.querySelectorAll('.welcome-page').forEach(p => p.classList.remove('active'));
+        const loginFailedEl = document.getElementById('login-failed-page');
+        if (loginFailedEl) loginFailedEl.classList.remove('active');
+        const restrictedEl = document.getElementById('restricted-page');
+        if (restrictedEl) restrictedEl.classList.add('active');
+        // Állítsunk be egy globális blokkoló flaget
+        window.__EU2K_ONBOARDING_BLOCKED__ = true;
+
+        // Restricted retry gomb bekötése: vissza a step2-re
+        const restrictedRetry = document.getElementById('restricted-retry-button');
+        if (restrictedRetry) {
+          restrictedRetry.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Tisztítsuk a flageket, hogy újraindítható legyen az onboarding
+            window.onboardingRestricted = false;
+            window.__EU2K_ONBOARDING_BLOCKED__ = false;
+            localStorage.removeItem('eu2k-auth-logged-in');
+            // Navigáció step2-re
+            location.hash = 'step2';
+            if (typeof window.showPage === 'function') {
+              window.showPage('step2');
+            } else {
+              document.querySelectorAll('.welcome-page').forEach(p => p.classList.remove('active'));
+              const step2El = document.getElementById('step2-page');
+              if (step2El) step2El.classList.add('active');
+            }
+          });
+        }
+        return;
+      }
       // Wait a bit for translation manager to load
       setTimeout(() => {
         initializeWelcome();
@@ -2322,17 +2376,17 @@
                 <span class="welcome-nav-text" data-translate="onboarding.continue_as_student">Tovább diákként</span>
               </button>
 
-              <button class="welcome-nav-button-primary nav-button" data-action="teacher">
+              <button disabled class="welcome-nav-button-primary nav-button" data-action="teacher">
                 <img src="/EU2K-Hub/assets/welcome_icons/teacher.svg" class="welcome-nav-icon" alt="Teacher">
                 <span class="welcome-nav-text" data-translate="onboarding.continue_as_teacher">Tovább tanárként</span>
               </button>
 
-              <button class="welcome-nav-button-primary nav-button" data-action="parent">
+              <button disabled class="welcome-nav-button-primary nav-button" data-action="parent">
                 <img src="/EU2K-Hub/assets/welcome_icons/without_account.svg" class="welcome-nav-icon" alt="Parent">
                 <span class="welcome-nav-text" data-translate="onboarding.continue_as_parent">Tovább szülőként</span>
               </button>
 
-              <button class="welcome-nav-button-last nav-button" data-action="without-account">
+              <button disabled class="welcome-nav-button-last nav-button" data-action="without-account">
                 <img src="/EU2K-Hub/assets/welcome_icons/without_account.svg" class="welcome-nav-icon"
                   alt="Without Account">
                 <span class="welcome-nav-text" data-translate="onboarding.continue_without_account">Tovább
@@ -2899,13 +2953,94 @@
 
             <!-- Újrapróbálkozás gomb -->
             <div class="welcome-navigation">
-              <button class="welcome-nav-button-primary nav-button" onclick="localStorage.clear(); location.hash = 'step1';">
-                <img src="/EU2K-Hub/assets/welcome_icons/student.svg" class="welcome-nav-icon" alt="Student">
+              <button class="welcome-nav-button-primary nav-button" id="login-failed-retry-button">
+                <img src="/EU2K-Hub/assets/welcome_icons/retry.svg" class="welcome-nav-icon" alt="Retry">
                 <span class="welcome-nav-text" data-translate="onboarding.try_again">Újrapróbálkozás</span>
               </button>
             </div>
           </div>
         </div>
+
+        <!-- Beta is restricted -->
+        <div id="restricted-page" class="welcome-page">
+          <div class="welcome-container">
+            <!-- Hiba ikon -->
+            <img src="/EU2K-Hub/assets/restricted.svg" class="welcome-hand-icon" alt="Error">
+
+            <!-- Hibaüzenet -->
+            <h1 class="welcome-title" data-translate="pages.onboarding_student.restricted_title">Nem érheted el ezt a területet.</h1>
+
+            <!-- Leírás -->
+            <p class="welcome-description-text" data-translate="pages.onboarding_student.restricted_description">
+              A bejelentkezési folyamat meg lett szakítva. Nincs hozzáférésed a rendszerhez. Mi csak ennyit tudunk.
+            </p>
+
+            <!-- Újrapróbálkozás gomb -->
+            <div class="welcome-navigation">
+              <button class="welcome-nav-button-primary nav-button" id="restricted-retry-button">
+                <img src="/EU2K-Hub/assets/welcome_icons/retry.svg" class="welcome-nav-icon" alt="Retry">
+                <span class="welcome-nav-text" data-translate="onboarding.try_again">Újrapróbálkozás</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <script>
+        // Restricted mód globális blokkolás és Retry gomb bekötése
+        (function() {
+          // Ha restricted módban vagyunk, állítsuk be a globális blokkoló flaget
+          if (window.location.hash === '#restricted' || window.onboardingRestricted === true) {
+            window.__EU2K_ONBOARDING_BLOCKED__ = true;
+          }
+
+          // Retry gomb: visszanavigálás a step2-re és flagek törlése
+          const bindRestrictedRetry = () => {
+            const btn = document.getElementById('restricted-retry-button');
+            if (!btn) return;
+            btn.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              // Flagek törlése
+              window.onboardingRestricted = false;
+              window.__EU2K_ONBOARDING_BLOCKED__ = false;
+              try { localStorage.removeItem('eu2k-auth-logged-in'); } catch (_) {}
+              // Login failed oldal(ak) elrejtése
+              document.querySelectorAll('#login-failed-page').forEach((el) => {
+                el.style.display = 'none';
+                el.classList.remove('active');
+              });
+              // Visszanavigálás a step2-re
+              window.location.hash = '#step2';
+              if (typeof window.showPage === 'function') {
+                window.showPage('step2');
+              }
+            });
+          };
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', bindRestrictedRetry);
+          } else {
+            bindRestrictedRetry();
+          }
+
+          // Globális kattintás-őr: restricted módban minden más gombot blokkol
+          document.addEventListener('click', (e) => {
+            if (window.onboardingRestricted === true || window.__EU2K_ONBOARDING_BLOCKED__ === true || window.location.hash === '#restricted') {
+              const targetBtn = e.target.closest('button');
+              if (targetBtn && targetBtn.id !== 'restricted-retry-button') {
+                e.preventDefault();
+                e.stopPropagation();
+                // Maradjunk a restricted oldalon
+                if (window.location.hash !== '#restricted') {
+                  window.location.hash = '#restricted';
+                }
+                if (typeof window.showPage === 'function') {
+                  window.showPage('restricted');
+                }
+              }
+            }
+          }, true);
+        })();
+        </script>
         
         <!-- Auth In Progress Page -->
         <div id="auth-in-progress-page" class="welcome-page">

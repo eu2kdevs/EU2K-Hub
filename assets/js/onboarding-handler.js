@@ -4,6 +4,7 @@
 import { doc, setDoc } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
 import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js';
 import { injectOnboardingPopup, checkBirthDateAndShowPopup } from './onboarding-popup.js';
+import { isEmailAllowed } from '/EU2K-Hub/assets/js/allowed-emails.js';
 
 // Globális változók az adatok tárolásához
 let collectedData = {
@@ -48,6 +49,35 @@ export function initializeOnboarding(auth, db) {
         displayName: user.displayName,
         photoURL: user.photoURL
       };
+      
+      // 0. Email whitelist ellenőrzés (Microsoft vagy Auth email alapján)
+      try {
+        const emailToCheck = user.email || (collectedData.graphData && collectedData.graphData.mail) || '';
+        if (!emailToCheck) {
+          console.warn('⚠️ Nincs elérhető email a whitelist ellenőrzéshez');
+        }
+        const allowed = await isEmailAllowed(emailToCheck);
+        if (!allowed) {
+           console.warn('⛔ Email nincs engedélyezve, restricted oldal megjelenítése:', emailToCheck);
+            // Blokkoljuk a további onboarding scriptet
+            window.location.hash = 'restricted';
+            window.onboardingRestricted = true;
+            if (typeof showPage === 'function') {
+              try { showPage('restricted-page'); } catch(e) {}
+            } else {
+              const el = document.getElementById('restricted-page');
+              if (el) {
+                document.querySelectorAll('.welcome-page').forEach(p => p.classList.remove('active'));
+                el.classList.add('active');
+              }
+            }
+            return;
+         }
+      } catch (wlErr) {
+        console.error('❌ Whitelist ellenőrzés hiba:', wlErr);
+        window.location.hash = 'restricted';
+        return;
+      }
       
       // Ellenőrizzük, hogy a felhasználó már regisztrálva van-e Firebase-ben
       const existingUser = await checkExistingUser(user.uid, db);

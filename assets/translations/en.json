@@ -238,7 +238,9 @@
       "delete_profile_title": "Are you sure you want to delete your profile?",
       "delete_profile_description": "This cannot be undone, all your data stored in the Hub will be lost forever. Are you sure about this?",
       "login_failed_title": "Login Failed",
-      "login_failed_description": "The login was unsuccessful. Please try again!"
+      "login_failed_description": "The login was unsuccessful. Please try again!",
+      "restricted_title": "This area is off limits.",
+      "restricted_description": "The login process has been interrupted. You do not have access to the system. That’s all we know."
     },
     "onboarding_parent": {
       "title": "Welcome to the Hub!",

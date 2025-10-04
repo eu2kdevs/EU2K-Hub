@@ -251,7 +251,9 @@
       "delete_profile_title": "Biztos ki szeretnéd törölni a profilod?",
       "delete_profile_description": "Ezt nem vonhatod vissza, minden adatod amit a Hubban tartottál elveszik örökre. Biztos vagy ebben?",
       "login_failed_title": "Bejelentkezési hiba",
-      "login_failed_description": "A bejelentkezés sikertelen volt. Kérjük, próbáld újra!"
+      "login_failed_description": "A bejelentkezés sikertelen volt. Kérjük, próbáld újra!",
+      "restricted_title": "Nem érheted el ezt a területet.",
+      "restricted_description": "A bejelentkezési folyamat meg lett szakítva. Nincs hozzáférésed a rendszerhez. Mi csak ennyit tudunk."
     },
     "onboarding_parent": {
       "title": "Üdvözlünk a Hub-ban!",
