@@ -687,30 +687,30 @@
     });
   </script>
   <script>
-    const mainContent = document.querySelector('.main-content');
-    const header = document.querySelector('.header');
+    document.addEventListener('DOMContentLoaded', () => {
+      const mainContent = document.querySelector('.main-content');
+      const header = document.querySelector('.header');
 
-    let lastScrollTop = 0;
-    let ticking = false;
+      let lastScrollTop = 0;
+      let ticking = false;
 
-    mainContent.addEventListener('scroll', () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollTop = mainContent.scrollTop;
+      mainContent.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            const scrollTop = mainContent.scrollTop;
 
-          if (scrollTop > lastScrollTop + 5) {
-            // lefelé görgetés
-            header.classList.add('hide');
-          } else if (scrollTop < lastScrollTop - 5) {
-            // felfelé görgetés
-            header.classList.remove('hide');
-          }
+            if (scrollTop > lastScrollTop + 5) {
+              header.classList.add('hide');
+            } else if (scrollTop < lastScrollTop - 5) {
+              header.classList.remove('hide');
+            }
 
-          lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-          ticking = false;
-        });
-        ticking = true;
-      }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
     });
   </script>
 </head>
