@@ -153,11 +153,6 @@ body {
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-.header.hide {
-  transform: translateY(-100%);
-  opacity: 0;
-}
-
 .welcome-container {
   display: flex;
   flex-direction: column;
