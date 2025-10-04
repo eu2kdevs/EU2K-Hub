@@ -381,7 +381,7 @@ function showVideoIndicator() {
   video.style.maxWidth = '80vw';
   video.style.width = 'auto';
   video.style.height = 'auto';
-  video.style.objectFit = 'contain';
+  video.style.objectFit = 'cover';
   video.style.display = 'block';
   video.style.borderRadius = '32px';
   video.style.backgroundColor = '#0F1511'; // extra biztonságképp 💅
