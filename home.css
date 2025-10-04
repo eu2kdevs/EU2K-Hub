@@ -148,7 +148,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(15, 21, 17, 0.8);
+  background: #0B0F0B;
   backdrop-filter: blur(12px);
   transition: transform 0.3s ease, opacity 0.3s ease;
 }

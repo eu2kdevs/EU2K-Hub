@@ -346,7 +346,7 @@
       }
     }
 
-    // Dinamikus méretezés a hírkártyákhoz
+    // Dinamikus méretezés a hírkártyákhoz – minden kártya megmarad, a maradék scrollozható
     function handleNewsCardResize() {
       const newsRow = document.getElementById("newsRow");
       const cards = Array.from(document.querySelectorAll("#newsRow .news-card"));
@@ -354,13 +354,13 @@
       if (!newsRow || cards.length === 0) return;
 
       const containerWidth = newsRow.clientWidth;
-      const defaultCardWidth = 272; // Alapértelmezett kártya szélesség (CSS-ből)
-      const cardGap = 12; // Kártyák közötti távolság (CSS-ből)
-      const minCards = 2; // Minimum 2 kártya mindig látható legyen
+      const defaultCardWidth = 272; // Alapértelmezett kártya szélesség
+      const cardGap = 12;            // Kártyák közötti távolság
+      const minCards = 2;            // Minimum látható kártya
 
-      // Számoljuk ki, hogy hány kártya fér el
-      let maxVisibleCards = 7;
-      for (let cardCount = 7; cardCount >= minCards; cardCount--) {
+      // Számoljuk ki, hány kártya fér el teljesen a látható részben
+      let maxVisibleCards = Math.min(cards.length, 7);
+      for (let cardCount = maxVisibleCards; cardCount >= minCards; cardCount--) {
         const totalWidth = (defaultCardWidth * cardCount) + (cardGap * (cardCount - 1));
         if (totalWidth <= containerWidth) {
           maxVisibleCards = cardCount;
@@ -370,33 +370,24 @@
 
       console.log(`📏 Container width: ${containerWidth}px, showing ${maxVisibleCards} cards`);
 
-      // Mutassuk/rejtsük el a kártyákat
-      cards.forEach((card, index) => {
-        if (index < maxVisibleCards) {
-          card.style.display = 'flex';
-          card.style.minWidth = `${defaultCardWidth}px`;
-          card.style.maxWidth = `${defaultCardWidth}px`;
-          card.style.width = `${defaultCardWidth}px`;
-        } else {
-          card.style.display = 'none';
-        }
-      });
-
-      // Ha van extra hely, osszuk el a kártyák között
+      // Számoljuk ki az extra helyet a látható kártyák között
       const totalUsedWidth = (defaultCardWidth * maxVisibleCards) + (cardGap * (maxVisibleCards - 1));
+      let newCardWidth = defaultCardWidth;
       if (containerWidth > totalUsedWidth && maxVisibleCards > 0) {
         const extraSpace = containerWidth - totalUsedWidth;
-        const extraPerCard = extraSpace / maxVisibleCards;
-        const newCardWidth = defaultCardWidth + extraPerCard;
-
-        cards.slice(0, maxVisibleCards).forEach(card => {
-          card.style.minWidth = `${newCardWidth}px`;
-          card.style.maxWidth = `${newCardWidth}px`;
-          card.style.width = `${newCardWidth}px`;
-        });
-
-        console.log(`📏 Cards resized to: ${newCardWidth.toFixed(1)}px each`);
+        newCardWidth = defaultCardWidth + extraSpace / maxVisibleCards;
       }
+
+      // Állítsuk be az összes kártyát
+      cards.forEach((card, index) => {
+        card.style.display = 'flex';              // Mindig látható a DOM-ban
+        card.style.minWidth = `${newCardWidth}px`;
+        card.style.maxWidth = `${newCardWidth}px`;
+        card.style.width = `${newCardWidth}px`;
+        card.style.marginRight = `${cardGap}px`;  // Távolság a következő kártyához
+      });
+
+      console.log(`📏 Cards resized to: ${newCardWidth.toFixed(1)}px each`);
     }
 
     // Carousel gombok
