@@ -588,7 +588,7 @@ body {
 .qr-controls-row {
   display: flex;
   gap: 4px;
-  height: 92px;
+  height: 184px;
 }
 
 .qr-controls-right {
@@ -603,14 +603,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 8px;
   background: #272B26;
   border: none;
   color: var(--text-main);
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  padding: 8px 12px;
+  padding: 12px 8px;
 }
 
 .qr-control-btn:hover {
@@ -632,12 +633,12 @@ body {
 
 /* Button Size Variants */
 .qr-btn-normal {
-  height: 44px;
+  height: 88px;
   width: 100%;
 }
 
 .qr-btn-tall {
-  height: 92px;
+  height: 184px;
 }
 
 .qr-btn-half {
@@ -646,7 +647,7 @@ body {
 
 /* Specific Button Styles with Custom Border Radius */
 .qr-btn-participation {
-  border-radius: 32px 16px 16px 32px;
+  border-radius: 32px 16px 16px 16px;
 }
 
 .qr-btn-camera-switch {

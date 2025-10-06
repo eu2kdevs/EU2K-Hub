@@ -708,18 +708,44 @@
           }
         };
 
-        // Add timeout wrapper
+        // Increase timeout and add better error handling
         const streamPromise = navigator.mediaDevices.getUserMedia(constraints);
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Camera timeout')), 5000)
+          setTimeout(() => reject(new Error('Camera timeout')), 10000)
         );
 
-        currentStream = await Promise.race([streamPromise, timeoutPromise]);
+        try {
+          currentStream = await Promise.race([streamPromise, timeoutPromise]);
+        } catch (error) {
+          // If specific device fails, try fallback
+          if (deviceId && error.name !== 'TimeoutError') {
+            console.log('Specific device failed, trying fallback...');
+            const fallbackConstraints = {
+              video: {
+                width: { ideal: 1280 },
+                height: { ideal: 720 },
+                facingMode: 'environment'
+              }
+            };
+            const fallbackPromise = navigator.mediaDevices.getUserMedia(fallbackConstraints);
+            const fallbackTimeout = new Promise((_, reject) =>
+              setTimeout(() => reject(new Error('Camera timeout')), 10000)
+            );
+            currentStream = await Promise.race([fallbackPromise, fallbackTimeout]);
+          } else {
+            throw error;
+          }
+        }
+
         video.srcObject = currentStream;
 
-        // Wait for video to be ready
-        await new Promise((resolve) => {
-          video.onloadedmetadata = resolve;
+        // Wait for video to be ready with timeout
+        await new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => reject(new Error('Video load timeout')), 5000);
+          video.onloadedmetadata = () => {
+            clearTimeout(timeout);
+            resolve();
+          };
         });
 
         console.log('Camera started successfully');
@@ -789,6 +815,8 @@
     }
 
     async function switchCamera() {
+      let originalIndex = currentCameraIndex; // Move declaration to function scope
+      
       try {
         console.log('Switching camera...');
 
@@ -796,8 +824,6 @@
           console.log('Only one camera available');
           return;
         }
-
-        const originalIndex = currentCameraIndex;
 
         // Stop ZXing controls if running
         if (zxingControls && typeof zxingControls.stop === 'function') {
@@ -977,10 +1003,85 @@
       alert('Részvétel igazolása funkció - fejlesztés alatt');
     }
 
+    let isCameraDisabled = false;
+
     function disableCamera() {
       console.log('Disable camera clicked');
-      stopQRScanner();
-      showBlockedView();
+      
+      if (!isCameraDisabled) {
+        // Disable camera
+        stopQRScanner();
+        
+        // Hide video and show block icon
+        const video = document.getElementById('qrVideo');
+        const scanner = document.querySelector('.qr-scanner');
+        
+        if (video) {
+          video.style.display = 'none';
+        }
+        
+        // Add block icon overlay
+        if (scanner && !scanner.querySelector('.camera-blocked-overlay')) {
+          const overlay = document.createElement('div');
+          overlay.className = 'camera-blocked-overlay';
+          overlay.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0B0F0B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 24px;
+            z-index: 10;
+          `;
+          
+          const blockIcon = document.createElement('img');
+          blockIcon.src = '/EU2K-Hub/assets/block_camera.svg';
+          blockIcon.style.cssText = 'width: 80px; height: 80px; opacity: 0.7;';
+          
+          overlay.appendChild(blockIcon);
+          scanner.appendChild(overlay);
+        }
+        
+        // Change button to enable
+        const button = document.querySelector('.qr-btn-camera-disable');
+        const icon = button.querySelector('.qr-control-icon');
+        const text = button.querySelector('span');
+        
+        if (icon) icon.src = '/EU2K-Hub/assets/qr-code/cam.svg';
+        if (text) text.textContent = 'Kamera Bekapcsolása';
+        
+        isCameraDisabled = true;
+        
+      } else {
+        // Enable camera
+        const video = document.getElementById('qrVideo');
+        const overlay = document.querySelector('.camera-blocked-overlay');
+        
+        if (video) {
+          video.style.display = 'block';
+        }
+        
+        if (overlay) {
+          overlay.remove();
+        }
+        
+        // Change button back to disable
+        const button = document.querySelector('.qr-btn-camera-disable');
+        const icon = button.querySelector('.qr-control-icon');
+        const text = button.querySelector('span');
+        
+        if (icon) icon.src = '/EU2K-Hub/assets/qr-code/disable_cam.svg';
+        if (text) text.textContent = 'Kamera Letiltása';
+        
+        // Restart camera
+        initializeQRScanner();
+        
+        isCameraDisabled = false;
+      }
     }
 
     function restartCamera() {
