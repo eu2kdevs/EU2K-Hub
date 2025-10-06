@@ -555,6 +555,138 @@ body {
   transition: var(--transition);
 }
 
+/* New QR Layout Styles */
+.qr-layout-container {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.qr-scanner-column {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.qr-controls-column {
+  flex: 0 0 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.qr-controls-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.qr-controls-row {
+  display: flex;
+  gap: 4px;
+  height: 92px;
+}
+
+.qr-controls-right {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+/* QR Control Button Base Styles */
+.qr-control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #272B26;
+  border: none;
+  color: var(--text-main);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 8px 12px;
+}
+
+.qr-control-btn:hover {
+  border-radius: 15px !important;
+  transition: var(--transition);
+}
+
+.qr-control-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.qr-control-btn span {
+  font-size: 0.9rem;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Button Size Variants */
+.qr-btn-normal {
+  height: 44px;
+  width: 100%;
+}
+
+.qr-btn-tall {
+  height: 92px;
+}
+
+.qr-btn-half {
+  width: 130px;
+}
+
+/* Specific Button Styles with Custom Border Radius */
+.qr-btn-participation {
+  border-radius: 32px 16px 16px 32px;
+}
+
+.qr-btn-camera-switch {
+  border-radius: 32px 16px 16px 16px;
+}
+
+.qr-btn-camera-disable {
+  border-radius: 16px 32px 16px 16px;
+}
+
+.qr-btn-restart {
+  border-radius: 16px 16px 32px 16px;
+  width: 145px;
+}
+
+.qr-btn-game {
+  border-radius: 16px 16px 16px 32px;
+  width: 131px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .qr-layout-container {
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .qr-controls-column {
+    flex: none;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .qr-controls-grid {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+}
+
 .camera-switch-icon {
   width: 42px;
   height: 42px;

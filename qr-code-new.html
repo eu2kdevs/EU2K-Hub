@@ -190,16 +190,67 @@
         <div class="content-area">
           <!-- QR-Code Scanner -->
           <div class="qr-scanner-container" id="qrScannerContainer" style="display: none;">
-            <div class="qr-scanner">
-              <video id="qrVideo" autoplay muted playsinline></video>
-              <canvas id="qrCanvas" style="display: none;"></canvas>
-              <img src="/EU2K-Hub/assets/top_left_corner.png" class="corner top-left" alt="">
-              <img src="/EU2K-Hub/assets/top_right_corner.png" class="corner top-right" alt="">
-              <img src="/EU2K-Hub/assets/bottom_left_corner.png" class="corner bottom-left" alt="">
-              <img src="/EU2K-Hub/assets/bottom_right_corner.png" class="corner bottom-right" alt="">
+            <!-- Two Column Layout -->
+            <div class="qr-layout-container">
+              <!-- Left Column: QR Scanner -->
+              <div class="qr-scanner-column">
+                <div class="qr-scanner">
+                  <video id="qrVideo" autoplay muted playsinline style="transform: scaleX(-1);"></video>
+                  <canvas id="qrCanvas" style="display: none;"></canvas>
+                  <img src="/EU2K-Hub/assets/top_left_corner.png" class="corner top-left" alt="">
+                  <img src="/EU2K-Hub/assets/top_right_corner.png" class="corner top-right" alt="">
+                  <img src="/EU2K-Hub/assets/bottom_left_corner.png" class="corner bottom-left" alt="">
+                  <img src="/EU2K-Hub/assets/bottom_right_corner.png" class="corner bottom-right" alt="">
+                </div>
+              </div>
+
+              <!-- Right Column: Control Buttons -->
+              <div class="qr-controls-column">
+                <div class="qr-controls-grid">
+                  <!-- Top Row -->
+                  <div class="qr-controls-row">
+                    <!-- Participation Confirmation Button (tall, half width) -->
+                    <button class="qr-control-btn qr-btn-tall qr-btn-half qr-btn-participation" onclick="confirmParticipation()">
+                      <img src="/EU2K-Hub/assets/qr-code/auth.svg" class="qr-control-icon" alt="Részvétel Igazolása">
+                      <span>Részvétel Igazolása</span>
+                    </button>
+                    
+                    <!-- Right side buttons container -->
+                    <div class="qr-controls-right">
+                      <!-- Camera Switch Button -->
+                      <button class="qr-control-btn qr-btn-normal qr-btn-camera-switch" onclick="switchCamera()">
+                        <img src="/EU2K-Hub/assets/camera_switch.svg" class="qr-control-icon" alt="Kamera váltása">
+                        <span>Kamera Váltása</span>
+                      </button>
+                      
+                      <!-- Camera Disable Button -->
+                      <button class="qr-control-btn qr-btn-normal qr-btn-camera-disable" onclick="disableCamera()">
+                        <img src="/EU2K-Hub/assets/qr-code/disable_cam.svg" class="qr-control-icon" alt="Kamera Letiltása">
+                        <span>Kamera Letiltása</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Bottom Row -->
+                  <div class="qr-controls-row">
+                    <!-- Restart Camera Button -->
+                    <button class="qr-control-btn qr-btn-tall qr-btn-restart" onclick="restartCamera()">
+                      <img src="/EU2K-Hub/assets/qr-code/restart.svg" class="qr-control-icon" alt="Kamera Újraindítása">
+                      <span>Kamera Újraindítása</span>
+                    </button>
+                    
+                    <!-- Start Game Button -->
+                    <button class="qr-control-btn qr-btn-tall qr-btn-game" onclick="startGame()">
+                      <img src="/EU2K-Hub/assets/qr-code/game_start.svg" class="qr-control-icon" alt="Játék Kezdése">
+                      <span>Játék Kezdése</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <button class="camera-switch-btn" onclick="switchCamera()">
+            <!-- Hide original camera switch button -->
+            <button class="camera-switch-btn" onclick="switchCamera()" style="display: none;">
               <img src="/EU2K-Hub/assets/camera_switch.svg" class="camera-switch-icon" alt="Kamera váltása">
               <span data-translate="pages.qr.camera_switch">Kamera Váltása</span>
             </button>
@@ -917,6 +968,35 @@
     // Example function to simulate QR code detection (for testing)
     function simulateQRDetection() {
       showQRResult('https://google.com');
+    }
+
+    // New button functions
+    function confirmParticipation() {
+      console.log('Participation confirmation clicked');
+      // Add participation confirmation logic here
+      alert('Részvétel igazolása funkció - fejlesztés alatt');
+    }
+
+    function disableCamera() {
+      console.log('Disable camera clicked');
+      stopQRScanner();
+      showBlockedView();
+    }
+
+    function restartCamera() {
+      console.log('Restart camera clicked');
+      // Stop current scanner
+      stopQRScanner();
+      // Wait a bit then restart
+      setTimeout(() => {
+        initializeQRScanner();
+      }, 500);
+    }
+
+    function startGame() {
+      console.log('Start game clicked');
+      // Add game start logic here
+      alert('Játék kezdése funkció - fejlesztés alatt');
     }
   </script>
   <script type="module" src="/EU2K-Hub/assets/js/new-things-popup.js"></script>

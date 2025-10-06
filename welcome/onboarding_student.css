@@ -1333,8 +1333,8 @@ inal Welcome Page Styles */
   font-weight: 500;
   color: #E0E4DB;
   animation: fadeInUp 0.8s ease-out 0.7s both;
-  width: calc(100% - 900px);
-  height: calc(100% - 840px);
+  width: calc(100% - 920px);
+  height: calc(100% - 820px);
 }
 
 .final-welcome-button:hover {
