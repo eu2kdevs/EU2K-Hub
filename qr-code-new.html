@@ -73,7 +73,7 @@
     }
   </style>
 
-  <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
   <script src="/EU2K-Hub/assets/js/permissions.js"></script>
   <script src="/EU2K-Hub/assets/js/translations.js"></script>
   <script src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
@@ -656,9 +656,6 @@
     let availableCameras = [];
     let currentCameraIndex = 0;
     let isScanning = false;
-    // ZXing globals
-    let codeReader = null;
-    let zxingControls = null;
 
     async function initializeQRScanner() {
       try {
@@ -688,94 +685,41 @@
       }
     }
 
-    function stopQRScanner() {
-      console.log('Stopping QR scanner...');
-      
-      // Stop scanning
-      isScanning = false;
-      
-      // Stop current stream if exists
-      if (currentStream) {
-        currentStream.getTracks().forEach(track => {
-          track.stop();
-          console.log('Stopped track:', track.kind);
-        });
-        currentStream = null;
-      }
-      
-      // Clear video source
-      const video = document.getElementById('qrVideo');
-      if (video) {
-        video.srcObject = null;
-      }
-      
-      // Stop ZXing controls if they exist
-      if (zxingControls && typeof zxingControls.stop === 'function') {
-        try {
-          zxingControls.stop();
-          zxingControls = null;
-        } catch (e) {
-          console.log('ZXing controls already stopped');
-        }
-      }
-      
-      console.log('QR scanner stopped successfully');
-    }
+    async function startCamera(cameraIndex) {
       try {
-        // Stop any existing scanner first
-        stopQRScanner();
-        
-        const video = document.getElementById('qrVideo');
-        
-        // Ensure video is visible
-        video.style.display = 'block';
-        
-        // Try simple approach first
-        try {
-          console.log('Trying basic camera access...');
-          currentStream = await navigator.mediaDevices.getUserMedia({
-            video: {
-              width: { ideal: 1280 },
-              height: { ideal: 720 },
-              facingMode: 'environment'
-            }
-          });
-        } catch (basicError) {
-          console.log('Basic camera failed, trying with device ID...');
-          const deviceId = availableCameras[cameraIndex]?.deviceId;
-          if (deviceId) {
-            currentStream = await navigator.mediaDevices.getUserMedia({
-              video: {
-                deviceId: { exact: deviceId },
-                width: { ideal: 1280 },
-                height: { ideal: 720 }
-              }
-            });
-          } else {
-            throw basicError;
-          }
+        // Stop current stream if exists
+        if (currentStream) {
+          currentStream.getTracks().forEach(track => track.stop());
+          currentStream = null;
         }
 
+        const video = document.getElementById('qrVideo');
+        const deviceId = availableCameras[cameraIndex]?.deviceId;
+
+        const constraints = {
+          video: {
+            deviceId: deviceId ? { exact: deviceId } : undefined,
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            facingMode: deviceId ? undefined : 'environment'
+          }
+        };
+
+        // Add timeout wrapper
+        const streamPromise = navigator.mediaDevices.getUserMedia(constraints);
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Camera timeout')), 5000)
+        );
+
+        currentStream = await Promise.race([streamPromise, timeoutPromise]);
         video.srcObject = currentStream;
 
-        // Ensure video starts playing
-        await video.play();
-
-        // Wait for video metadata to load properly
-        await new Promise(resolve => {
-          video.onloadedmetadata = () => {
-            if (video.videoWidth > 0 && video.videoHeight > 0) {
-              resolve();
-            }
-          };
-          
-          // Fallback if metadata is already loaded
-          if (video.videoWidth > 0 && video.videoHeight > 0) {
-            resolve();
-          }
+        // Wait for video to be ready
+        await new Promise((resolve) => {
+          video.onloadedmetadata = resolve;
         });
 
-        console.log('Camera started successfully with dimensions:', video.videoWidth, 'x', video.videoHeight);
+        console.log('Camera started successfully');
 
       } catch (error) {
         console.error('Error starting camera:', error);
@@ -786,84 +730,33 @@
     function startQRScanning() {
       if (isScanning) return;
 
-      const video = document.getElementById('qrVideo');
-      
-      // Ensure video has valid dimensions before starting scanning
-      if (!video.videoWidth || !video.videoHeight) {
-        console.log('Video not ready for scanning, waiting...');
-        setTimeout(() => startQRScanning(), 100);
-        return;
-      }
-
       isScanning = true;
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      const video = document.getElementById('qrVideo');
+      const canvas = document.getElementById('qrCanvas');
+      const context = canvas.getContext('2d');
 
-      try {
-        if (!codeReader) {
-          // Initialize ZXing MultiFormatReader for QR codes
-          const { MultiFormatReader, BarcodeFormat, DecodeHintType } = ZXing;
-          codeReader = new MultiFormatReader();
-          
-          // Set up hints for QR code detection
-          const hints = new Map();
-          const formats = [BarcodeFormat.QR_CODE];
-          hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
-          codeReader.setHints(hints);
+      function scanFrame() {
+        if (!isScanning) return;
+
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+          const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+          const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+          if (code) {
+            console.log('QR Code detected:', code.data);
+            handleQRCodeDetected(code.data);
+            return; // Stop scanning after detection
+          }
         }
 
-        console.log('Starting QR scanning with video dimensions:', video.videoWidth, 'x', video.videoHeight);
-
-        // Start scanning loop
-        const scanFrame = () => {
-          if (!isScanning || !video.videoWidth || !video.videoHeight) {
-            return;
-          }
-
-          try {
-            // Set canvas size to match video
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            
-            // Draw video frame to canvas
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            // Get image data
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const { data, width, height } = imageData;
-            
-            // Convert to luminance source
-            const { RGBLuminanceSource, BinaryBitmap, HybridBinarizer } = ZXing;
-            const luminanceSource = new RGBLuminanceSource(data, width, height);
-            const binaryBitmap = new BinaryBitmap(new HybridBinarizer(luminanceSource));
-            
-            // Try to decode
-            const result = codeReader.decode(binaryBitmap);
-            
-            if (result) {
-              const text = result.getText();
-              console.log('QR Code detected:', text);
-              isScanning = false;
-              handleQRCodeDetected(text);
-              return;
-            }
-          } catch (error) {
-            // No QR code found in this frame, continue scanning
-          }
-          
-          // Continue scanning if still active
-          if (isScanning) {
-            requestAnimationFrame(scanFrame);
-          }
-        };
-
-        // Start the scanning loop
-        scanFrame();
-        
-      } catch (err) {
-        console.error('Failed to start ZXing scanning:', err);
-        isScanning = false;
+        requestAnimationFrame(scanFrame);
       }
+
+      scanFrame();
     }
 
     function handleQRCodeDetected(qrData) {
@@ -882,8 +775,6 @@
     }
 
     async function switchCamera() {
-      let originalIndex = currentCameraIndex; // Move declaration to function scope
-      
       try {
         console.log('Switching camera...');
 
@@ -892,11 +783,7 @@
           return;
         }
 
-        // Stop ZXing controls if running
-        if (zxingControls && typeof zxingControls.stop === 'function') {
-          try { zxingControls.stop(); } catch (e) { console.warn('Error stopping ZXing controls', e); }
-          zxingControls = null;
-        }
+        const originalIndex = currentCameraIndex;
 
         // Stop current stream completely
         if (currentStream) {
@@ -908,18 +795,36 @@
           currentStream = null;
         }
 
-        // Wait a bit for the camera to be released
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Wait longer for the camera to be released
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         // Move to next camera
         currentCameraIndex = (currentCameraIndex + 1) % availableCameras.length;
         console.log('Switching to camera index:', currentCameraIndex);
 
-        // Restart camera and scanning
-        await startCamera(currentCameraIndex);
-        startQRScanning();
-        
-        console.log('Camera switched successfully to index:', currentCameraIndex);
+        // Try to start new camera with fallback
+        try {
+          await startCamera(currentCameraIndex);
+          startQRScanning();
+          console.log('Camera switched successfully to index:', currentCameraIndex);
+        } catch (startError) {
+          console.log('Failed to start new camera, trying fallback...');
+
+          // Try with less strict constraints
+          const video = document.getElementById('qrVideo');
+          const constraints = {
+            video: {
+              facingMode: currentCameraIndex === 0 ? 'user' : 'environment',
+              width: { ideal: 640 },
+              height: { ideal: 480 }
+            }
+          };
+
+          currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+          video.srcObject = currentStream;
+          startQRScanning();
+          console.log('Fallback camera started');
+        }
 
       } catch (error) {
         console.error('Error switching camera:', error);
@@ -948,12 +853,6 @@
 
     function stopQRScanner() {
       isScanning = false;
-
-      // Stop ZXing controls if active
-      if (zxingControls && typeof zxingControls.stop === 'function') {
-        try { zxingControls.stop(); } catch (e) { console.warn('Error stopping ZXing controls', e); }
-        zxingControls = null;
-      }
 
       if (currentStream) {
         currentStream.getTracks().forEach(track => track.stop());
