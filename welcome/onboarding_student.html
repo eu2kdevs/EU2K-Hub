@@ -52,7 +52,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
     import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-    import { getAuth, OAuthProvider, signInWithRedirect, signInWithPopup, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import { getAuth, OAuthProvider, signInWithRedirect, signInWithPopup, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
     // Import Google provider
       import { GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
@@ -120,14 +120,32 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
+    // Provide compat-style API for console usage: firebase.auth().signOut()
+    window.firebase = window.firebase || {};
+    if (typeof window.firebase.auth !== 'function') {
+      window.firebase.auth = function() {
+        return {
+          signOut: () => {
+            try { window.persistentLog.add('🔒 Signing out via firebase.auth().signOut() polyfill'); } catch (e) {}
+            return signOut(auth)
+              .then(() => {
+                try { window.persistentLog.add('✅ Signed out successfully'); } catch (e) {}
+                return true;
+              })
+              .catch(error => {
+                try { window.persistentLog.add(`❌ Sign-out error: ${error.message}`); } catch (e) {}
+                throw error;
+              });
+          }
+        };
+      };
+    }
+
     // Initialize terms redirect handler
     if (window.initializeTermsRedirect) {
       window.initializeTermsRedirect(auth);
     }
 
-
-
-    // Import és inicializálás az onboarding handler modulból
     import { initializeOnboarding } from '../assets/js/onboarding-handler.js';
     
     // Inicializáljuk az onboarding figyelést
