@@ -688,15 +688,47 @@
       }
     }
 
-    async function startCamera(cameraIndex) {
-      try {
-        // Stop current stream if exists
-        if (currentStream) {
-          currentStream.getTracks().forEach(track => track.stop());
-          currentStream = null;
+    function stopQRScanner() {
+      console.log('Stopping QR scanner...');
+      
+      // Stop scanning
+      isScanning = false;
+      
+      // Stop current stream if exists
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => {
+          track.stop();
+          console.log('Stopped track:', track.kind);
+        });
+        currentStream = null;
+      }
+      
+      // Clear video source
+      const video = document.getElementById('qrVideo');
+      if (video) {
+        video.srcObject = null;
+      }
+      
+      // Stop ZXing controls if they exist
+      if (zxingControls && typeof zxingControls.stop === 'function') {
+        try {
+          zxingControls.stop();
+          zxingControls = null;
+        } catch (e) {
+          console.log('ZXing controls already stopped');
         }
-
+      }
+      
+      console.log('QR scanner stopped successfully');
+    }
+      try {
+        // Stop any existing scanner first
+        stopQRScanner();
+        
         const video = document.getElementById('qrVideo');
+        
+        // Ensure video is visible
+        video.style.display = 'block';
         
         // Try simple approach first
         try {
@@ -726,26 +758,24 @@
 
         video.srcObject = currentStream;
 
-        // Wait for video to be ready
-        await new Promise((resolve, reject) => {
-          const timeout = setTimeout(() => {
-            console.log('Video metadata load timeout, but continuing...');
-            resolve(); // Don't reject, just continue
-          }, 3000);
-          
+        // Ensure video starts playing
+        await video.play();
+
+        // Wait for video metadata to load properly
+        await new Promise(resolve => {
           video.onloadedmetadata = () => {
-            clearTimeout(timeout);
-            resolve();
+            if (video.videoWidth > 0 && video.videoHeight > 0) {
+              resolve();
+            }
           };
           
-          // Also try oncanplay as fallback
-          video.oncanplay = () => {
-            clearTimeout(timeout);
+          // Fallback if metadata is already loaded
+          if (video.videoWidth > 0 && video.videoHeight > 0) {
             resolve();
-          };
+          }
         });
 
-        console.log('Camera started successfully');
+        console.log('Camera started successfully with dimensions:', video.videoWidth, 'x', video.videoHeight);
 
       } catch (error) {
         console.error('Error starting camera:', error);
@@ -756,8 +786,16 @@
     function startQRScanning() {
       if (isScanning) return;
 
-      isScanning = true;
       const video = document.getElementById('qrVideo');
+      
+      // Ensure video has valid dimensions before starting scanning
+      if (!video.videoWidth || !video.videoHeight) {
+        console.log('Video not ready for scanning, waiting...');
+        setTimeout(() => startQRScanning(), 100);
+        return;
+      }
+
+      isScanning = true;
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
 
@@ -773,6 +811,8 @@
           hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
           codeReader.setHints(hints);
         }
+
+        console.log('Starting QR scanning with video dimensions:', video.videoWidth, 'x', video.videoHeight);
 
         // Start scanning loop
         const scanFrame = () => {
