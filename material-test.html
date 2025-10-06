@@ -351,5 +351,66 @@
         console.log('Material Test now uses MP4 overlay via page-overlay-loader.js');
       });
     </script>
+    <!-- Firebase signOut polyfill + persistentLog fallback a konzol kompatibilitáshoz -->
+     <script type="module">
+       import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+       // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
+            authDomain: "eu2k-hub.firebaseapp.com",
+            projectId: "eu2k-hub",
+            storageBucket: "eu2k-hub.firebasestorage.app",
+            messagingSenderId: "560244867055",
+            appId: "1:560244867055:web:3cd51b85baead94989001a",
+            measurementId: "G-2JDPR089WD"
+            };
+            
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+       
+       // Fallback persistentLog, ha nincs definiálva ezen az oldalon
+       if (!window.persistentLog) {
+         window.persistentLog = {
+           add: (message) => {
+             try {
+               const logs = JSON.parse(localStorage.getItem('persistentLogs') || '[]');
+               logs.push({ ts: new Date().toISOString(), message });
+               localStorage.setItem('persistentLogs', JSON.stringify(logs));
+               console.log('[persistentLog]', message);
+             } catch (e) {
+               console.log('[persistentLog]', message);
+             }
+           },
+           show: () => {
+             try {
+               console.log(JSON.parse(localStorage.getItem('persistentLogs') || '[]'));
+             } catch (e) {
+               console.log('No logs');
+             }
+           },
+           clear: () => {
+             localStorage.removeItem('persistentLogs');
+             console.log('Cleared persistent logs');
+           }
+         };
+       }
+ 
+       // Polyfill a konzol kompatibilitáshoz: firebase.auth().signOut()
+       window.firebase = window.firebase || {};
+       window.firebase.auth = function() {
+         return {
+           signOut: () => {
+             window.persistentLog.add('Attempting signOut via polyfill (material-test.html)');
+             return signOut(getAuth())
+               .then(() => { window.persistentLog.add('SignOut success'); return true; })
+               .catch((err) => { window.persistentLog.add('SignOut error: ' + (err && err.message ? err.message : String(err))); throw err; });
+           }
+         };
+       };
+ 
+       // Opció: natív moduláris signOut elérhetővé tétele
+       window.signOutModular = () => signOut(getAuth());
+     </script>
 </body>
 </html>
