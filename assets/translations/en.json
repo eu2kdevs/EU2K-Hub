@@ -138,7 +138,7 @@
     "qr": {
       "title": "QR Code",
       "qr_code": "QR Code",
-      "instruction": "Scan the QR Code to order!",
+      "instruction": "Scan QR-Codes, authenticate yourself, play, and generate other QR-Codes.",
       "qr_scanned": "QR Code Scanned",
       "go_to_page": "Go to page",
       "new_scan": "New scan",

@@ -23,6 +23,40 @@
       }
     })();
   </script>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
+      authDomain: "eu2k-hub.firebaseapp.com",
+      projectId: "eu2k-hub",
+      storageBucket: "eu2k-hub.firebasestorage.app",
+      messagingSenderId: "560244867055",
+      appId: "1:560244867055:web:3cd51b85baead94989001a",
+      measurementId: "G-2JDPR089WD"
+    };
+    
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    enableIndexedDbPersistence(db).catch((err) => {
+      if (err.code == 'failed-precondition') {
+        console.log("Több tab nyitva, nem lehet offline módban persistálni");
+      } else if (err.code == 'unimplemented') {
+        console.log("A böngésző nem támogatja az offline persistenciát");
+      }
+    });
+
+    // Make db globally available
+    window.db = db;
+  </script>
   <script src="/EU2K-Hub/assets/js/page-overlay-loader.js"></script>
   <link rel="stylesheet" href="qrcode.css">
   <link rel="icon" href="/EU2K-Hub/favicon.ico">
@@ -86,65 +120,54 @@
       </nav>
     </aside>
     <script>
-      (function() {
-        const sidebar = document.querySelector('.sidebar');
-        const navMenu = document.querySelector('.nav-menu');
-        const toggleButton = document.querySelector('.list-button');
-        const navItems = document.querySelectorAll('.nav-menu .nav-item');
-        const icons = document.querySelectorAll('.nav-menu .nav-icon');
-        if (sidebar && toggleButton) {
-          toggleButton.addEventListener('click', () => {
-            const isOpenNow = sidebar.classList.toggle('open');
-            // Toggle legacy "-open" classes for production styles
-            if (navMenu) navMenu.classList.toggle('nav-menu-open', isOpenNow);
-            navItems.forEach(item => item.classList.toggle('nav-item-open', isOpenNow));
-            toggleButton.classList.toggle('nav-item-open-list', isOpenNow);
-            icons.forEach(iconEl => iconEl.classList.toggle('nav-icon-open', isOpenNow));
-            // Toggle menu icon src
-            const icon = toggleButton.querySelector('.nav-icon');
-            if (icon) {
-              icon.src = isOpenNow ? '/EU2K-Hub/assets/navbar/menu_open.svg' : '/EU2K-Hub/assets/navbar/menu.svg';
-            }
-          });
-        }
-        function markActiveNavItem() {
-          const currentPath = window.location.pathname.replace(/\/$/, '');
-          let currentName = currentPath.split('/').pop();
-          if (!currentName || currentName === '') currentName = 'index.html';
-          document.querySelectorAll('.nav-menu .nav-item[href]').forEach(link => {
-            try {
-              const href = link.getAttribute('href');
-              const linkPath = new URL(href, window.location.href).pathname.replace(/\/$/, '');
-              let linkName = linkPath.split('/').pop();
-              if (!linkName || linkName === '') linkName = 'index.html';
-              if (linkName === currentName) {
-                link.classList.add('active');
-              } else {
-                link.classList.remove('active');
-              }
-            } catch (e) {}
-          });
-        }
-        function updateNavIcons() {
-          document.querySelectorAll('.nav-item:not(.list-button) .nav-icon').forEach(img => {
-            const item = img.closest('.nav-item');
-            if (!item) return;
-            const isActive = item.classList.contains('active');
-            const src = img.getAttribute('src') || '';
-            if (src.includes('/assets/navbar/')) {
-              if (isActive && !src.includes('/assets/navbar/filled/')) {
-                img.setAttribute('src', src.replace('/assets/navbar/', '/assets/navbar/filled/'));
-              } else if (!isActive && src.includes('/assets/navbar/filled/')) {
-                img.setAttribute('src', src.replace('/assets/navbar/filled/', '/assets/navbar/'));
-              }
-            }
-          });
-        }
-        document.addEventListener('DOMContentLoaded', () => {
-          markActiveNavItem();
-          updateNavIcons();
+    (function() {
+      const sidebar = document.querySelector('.sidebar');
+      const navMenu = document.querySelector('.nav-menu');
+      const toggleButton = document.querySelector('.list-button');
+      const navItems = document.querySelectorAll('.nav-menu .nav-item');
+      const icons = document.querySelectorAll('.nav-menu .nav-icon');
+
+      // Sidebar toggle
+      if (sidebar && toggleButton) {
+        toggleButton.addEventListener('click', () => {
+          const isOpenNow = sidebar.classList.toggle('open');
+          if (navMenu) navMenu.classList.toggle('nav-menu-open', isOpenNow);
+          navItems.forEach(item => item.classList.toggle('nav-item-open', isOpenNow));
+          toggleButton.classList.toggle('nav-item-open-list', isOpenNow);
+          icons.forEach(iconEl => iconEl.classList.toggle('nav-icon-open', isOpenNow));
+
+          // Toggle menu icon src
+          const icon = toggleButton.querySelector('.nav-icon');
+          if (icon) {
+            icon.src = isOpenNow ? '/EU2K-Hub/assets/navbar/menu_open.svg' : '/EU2K-Hub/assets/navbar/menu.svg';
+          }
         });
-      })();
+      }
+
+      // Update icons based on existing "active" class
+      function updateNavIcons() {
+        document.querySelectorAll('.nav-item:not(.list-button) .nav-icon').forEach(img => {
+          const item = img.closest('.nav-item');
+          if (!item) return;
+
+          const isActive = item.classList.contains('active'); // csak olvassuk
+          const src = img.getAttribute('src') || '';
+          if (src.includes('/assets/navbar/')) {
+            if (isActive && !src.includes('/assets/navbar/filled/')) {
+              img.setAttribute('src', src.replace('/assets/navbar/', '/assets/navbar/filled/'));
+            } else if (!isActive && src.includes('/assets/navbar/filled/')) {
+              img.setAttribute('src', src.replace('/assets/navbar/filled/', '/assets/navbar/'));
+            }
+          }
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        // markActiveNavItem() eltávolítva, mert nem akarjuk piszkálni az "active"-ot
+        updateNavIcons(); 
+      });
+
+    })();
     </script>
     <main class="main-area">
       <div class="main-content">

@@ -139,7 +139,7 @@
     "qr": {
       "title": "QR-Kód",
       "qr_code": "QR-Kód",
-      "instruction": "Olvasd be a QR-Kódot a rendeléshez!",
+      "instruction": "Olvass be QR-Kódokat, igazold a részvételed, játssz, és generálj QR-Kódokat.",
       "qr_scanned": "QR-Kód Beolvasva",
       "go_to_page": "Tovább az oldalra",
       "new_scan": "Új szkennelés",

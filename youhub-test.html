@@ -764,53 +764,54 @@ Válaszolj CSAK a javított dátummal, semmi mással!`;
       </nav>
     </aside>
     <script>
-      (function() {
-        const sidebar = document.querySelector('.sidebar');
-        const toggleButton = document.querySelector('.list-button');
-        if (sidebar && toggleButton) {
-          toggleButton.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-            const icon = toggleButton.querySelector('.nav-icon');
-            if (icon) {
-              const isOpen = sidebar.classList.contains('open');
-              icon.src = isOpen ? '/EU2K-Hub/assets/navbar/menu_open.svg' : '/EU2K-Hub/assets/navbar/menu.svg';
-            }
-          });
-        }
-        function markActiveNavItem() {
-          const currentPath = window.location.pathname.replace(/\/$/, '');
-          document.querySelectorAll('.nav-menu .nav-item[href]').forEach(link => {
-            try {
-              const linkPath = new URL(link.getAttribute('href'), window.location.origin).pathname.replace(/\/$/, '');
-              const isHomeAlias = currentPath === '/EU2K-Hub/' && linkPath === '/EU2K-Hub/index.html';
-              if (linkPath === currentPath || isHomeAlias) {
-                link.classList.add('active');
-              } else {
-                link.classList.remove('active');
-              }
-            } catch (e) {}
-          });
-        }
-        function updateNavIcons() {
-          document.querySelectorAll('.nav-item:not(.list-button) .nav-icon').forEach(img => {
-            const item = img.closest('.nav-item');
-            if (!item) return;
-            const isActive = item.classList.contains('active');
-            const src = img.getAttribute('src') || '';
-            if (src.includes('/assets/navbar/')) {
-              if (isActive && !src.includes('/assets/navbar/filled/')) {
-                img.setAttribute('src', src.replace('/assets/navbar/', '/assets/navbar/filled/'));
-              } else if (!isActive && src.includes('/assets/navbar/filled/')) {
-                img.setAttribute('src', src.replace('/assets/navbar/filled/', '/assets/navbar/'));
-              }
-            }
-          });
-        }
-        document.addEventListener('DOMContentLoaded', () => {
-          markActiveNavItem();
-          updateNavIcons();
+    (function() {
+      const sidebar = document.querySelector('.sidebar');
+      const navMenu = document.querySelector('.nav-menu');
+      const toggleButton = document.querySelector('.list-button');
+      const navItems = document.querySelectorAll('.nav-menu .nav-item');
+      const icons = document.querySelectorAll('.nav-menu .nav-icon');
+
+      // Sidebar toggle
+      if (sidebar && toggleButton) {
+        toggleButton.addEventListener('click', () => {
+          const isOpenNow = sidebar.classList.toggle('open');
+          if (navMenu) navMenu.classList.toggle('nav-menu-open', isOpenNow);
+          navItems.forEach(item => item.classList.toggle('nav-item-open', isOpenNow));
+          toggleButton.classList.toggle('nav-item-open-list', isOpenNow);
+          icons.forEach(iconEl => iconEl.classList.toggle('nav-icon-open', isOpenNow));
+
+          // Toggle menu icon src
+          const icon = toggleButton.querySelector('.nav-icon');
+          if (icon) {
+            icon.src = isOpenNow ? '/EU2K-Hub/assets/navbar/menu_open.svg' : '/EU2K-Hub/assets/navbar/menu.svg';
+          }
         });
-      })();
+      }
+
+      // Update icons based on existing "active" class
+      function updateNavIcons() {
+        document.querySelectorAll('.nav-item:not(.list-button) .nav-icon').forEach(img => {
+          const item = img.closest('.nav-item');
+          if (!item) return;
+
+          const isActive = item.classList.contains('active'); // csak olvassuk
+          const src = img.getAttribute('src') || '';
+          if (src.includes('/assets/navbar/')) {
+            if (isActive && !src.includes('/assets/navbar/filled/')) {
+              img.setAttribute('src', src.replace('/assets/navbar/', '/assets/navbar/filled/'));
+            } else if (!isActive && src.includes('/assets/navbar/filled/')) {
+              img.setAttribute('src', src.replace('/assets/navbar/filled/', '/assets/navbar/'));
+            }
+          }
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        // markActiveNavItem() eltávolítva, mert nem akarjuk piszkálni az "active"-ot
+        updateNavIcons(); 
+      });
+
+    })();
     </script>
     <main class="main-area">
       <div class="main-content">

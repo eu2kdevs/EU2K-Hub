@@ -276,6 +276,7 @@
   --card-radius: 32px;
   --news-radius: 20px;
   --sidebar-width: 76px;
+  --sidebar-width-open: 198px;
   --transition: 0.2s cubic-bezier(.4, 0, .2, 1);
 }
 
@@ -325,8 +326,14 @@ body {
   position: relative;
 }
 
+.sidebar.open {
+  width: var(--sidebar-width-open);
+  min-width: var(--sidebar-width-open);
+}
+
 .main-area {
-  flex: 1;
+  flex: 1; /* kitölti a sidebar melletti helyet */
+  min-width: 0; /* fontos, hogy a flexbox engedje zsugorodni */
   display: flex;
   flex-direction: column;
   position: relative;
@@ -344,16 +351,37 @@ body {
   box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
   max-width: calc(100% - 22px);
   min-height: calc(100dvh - 104px); /* mobilbarát */
-  height: calc(100dvh - 104px)
+  height: calc(100dvh - 104px);
+  overflow-y: scroll;
+  scroll-behavior: smooth
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   margin-top: 8px;
-  margin-bottom: 0;
-  position: relative;
+  margin-bottom: 22px;
   min-height: 80px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #0B0F0B;
+  backdrop-filter: blur(12px);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-top: 40px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.header.hide .welcome-container {
+  transform: translateY(-50%);
+  opacity: 0;
 }
 
 .header-icons {
@@ -373,7 +401,16 @@ body {
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  transition: all 0.2s ease;
+  transition: var(--transition);
+}
+
+.header-icon-link:hover {
+  background-color: var(--card-bg);
+}
+
+.header-icon {
+  width: 24px;
+  height: 24px;
 }
 
 .welcome-container {
@@ -521,15 +558,6 @@ body {
 .camera-switch-icon {
   width: 42px;
   height: 42px;
-}
-
-.header-icon-link:hover {
-  background-color: var(--card-bg);
-}
-
-.header-icon {
-  width: 24px;
-  height: 24px;
 }
 
 .welcome-icon {
