@@ -51,7 +51,7 @@
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
     import { getAuth, OAuthProvider, signInWithRedirect, signInWithPopup, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
     // Import Google provider
       import { GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
@@ -66,6 +66,9 @@
       appId: "1:560244867055:web:3cd51b85baead94989001a",
       measurementId: "G-2JDPR089WD"
     };
+
+    // Expose persistentLog globally for non-module handlers and other scripts
+    window.persistentLog = persistentLog;
     
     console.log('🔧 Current domain:', window.location.origin);
     console.log('🔧 Auth domain:', firebaseConfig.authDomain);
@@ -107,6 +110,9 @@
         console.log('🧹 Cleared persistent logs');
       }
     };
+
+    // Expose persistentLog globally for non-module handlers and other scripts
+    window.persistentLog = persistentLog;
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
@@ -1927,9 +1933,9 @@
                   'general_data.termsAcceptedVersion': '1.0'
                 });
                 
-                persistentLog.add(`✅ Terms acceptance saved to Firebase: ${auth.currentUser.uid}`);
+                window.persistentLog.add(`✅ Terms acceptance saved to Firebase: ${auth.currentUser.uid}`);
               } catch (error) {
-                persistentLog.add(`❌ Error saving terms acceptance to Firebase: ${error.message}`);
+                window.persistentLog.add(`❌ Error saving terms acceptance to Firebase: ${error.message}`);
                 console.error('Terms acceptance Firebase save error:', error);
               }
             }
