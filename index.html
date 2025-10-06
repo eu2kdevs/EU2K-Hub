@@ -1042,6 +1042,59 @@
       }
     });
   </script>
+  <script type="module">
+    import { getAuth, signInWithPopup, OAuthProvider } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+    const auth = getAuth();
+
+    // Globális Microsoft bejelentkezés függvény
+    window.startMicrosoftSignIn = async () => {
+      console.log('🔐 Microsoft bejelentkezés indítása...');
+      try {
+        const provider = new OAuthProvider('microsoft.com');
+        try { provider.setCustomParameters?.({ prompt: 'select_account' }); } catch {}
+
+        const result = await signInWithPopup(auth, provider);
+        const user = result?.user;
+        console.log('✅ Microsoft bejelentkezés sikeres:', user);
+
+        localStorage.setItem('eu2k-auth-logged-in', 'true');
+
+        const termsAccepted = localStorage.getItem('termsAccepted') === 'true';
+        const userType = localStorage.getItem('eu2k-user-type') || 'student';
+        if (!termsAccepted) {
+          switch (userType) {
+            case 'student':
+              window.location.href = '/EU2K-Hub/welcome/onboarding_student.html#student-profile';
+              return;
+            case 'parent':
+              window.location.href = '/EU2K-Hub/welcome/onboarding_parent.html#parent-profile';
+              return;
+            case 'teacher':
+              window.location.href = '/EU2K-Hub/welcome/onboarding_teacher.html#teacher-profile';
+              return;
+            default:
+              window.location.href = '/EU2K-Hub/welcome/onboarding_student.html';
+              return;
+          }
+        }
+
+        window.location.href = '/EU2K-Hub/index.html';
+      } catch (error) {
+        console.error('❌ Microsoft bejelentkezés hiba:', error);
+        const msg = (error && (error.message || error.code)) || 'Ismeretlen hiba';
+        alert('Microsoft bejelentkezés nem érhető el: ' + msg);
+      }
+    };
+
+    window.isMicrosoftSignInAvailable = () => {
+      try {
+        return typeof window.startMicrosoftSignIn === 'function';
+      } catch {
+        return false;
+      }
+    };
+  </script>
 </body>
 
 </html>

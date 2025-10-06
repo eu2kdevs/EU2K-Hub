@@ -68,7 +68,7 @@
     };
 
     // Expose persistentLog globally for non-module handlers and other scripts
-    window.persistentLog = persistentLog;
+    // Moved below persistentLog definition to avoid ReferenceError in module init
     
     console.log('🔧 Current domain:', window.location.origin);
     console.log('🔧 Auth domain:', firebaseConfig.authDomain);
