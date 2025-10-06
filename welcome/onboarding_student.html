@@ -251,6 +251,237 @@
       }
     };
 
+    // Microsoft provider and sign-in flow
+    const msProvider = new OAuthProvider('microsoft.com');
+    
+    // Log provider setup
+    persistentLog.add('🔧 Setting up Microsoft OAuth provider...');
+    
+    // Enforce single-tenant (org-only) login using specific Tenant ID
+    msProvider.setCustomParameters({ 
+      tenant: 'ecc426dd-3c83-44af-aad4-85099364fb9e',
+      prompt: 'select_account'
+    });
+    
+    persistentLog.add('🔧 Custom parameters set: prompt=select_account');
+    
+    // Request Graph profile access
+    try { 
+      msProvider.addScope('User.Read');
+      msProvider.addScope('profile');
+      msProvider.addScope('email');
+      msProvider.addScope('openid');
+      persistentLog.add('🔧 Scopes added: User.Read, profile, email, openid');
+    } catch (error) {
+      persistentLog.add(`⚠️ Could not add scopes: ${error.message}`);
+    }
+    
+    // Log the final provider config
+    persistentLog.add(`🔧 Final provider config: ${JSON.stringify({
+      providerId: msProvider.providerId,
+      scopes: msProvider.scopes,
+      customParameters: msProvider.customParameters
+    })}`);
+
+    // Expose start function for the inline navigation script
+    window.startMicrosoftSignIn = () => {
+      persistentLog.add('🔐 Starting Microsoft Sign-In process...');
+      persistentLog.add(`Auth provider configured: ${JSON.stringify(msProvider)}`);
+      persistentLog.add(`🌐 Current URL: ${window.location.href}`);
+      
+      // Mark that we're starting auth
+      localStorage.setItem('eu2k-auth-in-progress', 'true');
+      localStorage.setItem('eu2k-auth-start-time', Date.now().toString());
+      
+      // Show the auth-in-progress page without changing the hash
+      showPage('auth-in-progress');
+      
+      // Always use popup for authentication
+      persistentLog.add('🪟 Attempting signInWithPopup');
+      signInWithPopup(auth, msProvider)
+          .then((result) => {
+            persistentLog.add('✅ Popup auth successful');
+            
+            // IMMEDIATELY write essential localStorage keys to prevent race conditions
+            localStorage.setItem('eu2k-auth-logged-in', 'true');
+            localStorage.setItem('eu2k-user-type', 'student');
+            if (result.user.displayName) {
+              localStorage.setItem('eu2k-auth-display-name', result.user.displayName);
+            }
+            if (result.user.email) {
+              localStorage.setItem('eu2k-auth-email', result.user.email);
+            }
+            if (result.user.photoURL) {
+              localStorage.setItem('eu2k-auth-photo-url', result.user.photoURL);
+            }
+            
+            // Reset login failed counter on successful login
+            window.loginFailedCounter = 0;
+            
+            localStorage.removeItem('eu2k-auth-in-progress');
+            
+            // Fetch Microsoft Graph API data immediately after successful popup auth
+            try {
+              const credential = OAuthProvider.credentialFromResult(result);
+              const accessToken = credential && credential.accessToken;
+              persistentLog.add(`🔑 Access token available: ${!!accessToken}`);
+              
+              if (accessToken) {
+                persistentLog.add('📡 Fetching user data from Microsoft Graph...');
+                
+                // Fetch user profile data including photo
+                Promise.all([
+                  fetch('https://graph.microsoft.com/v1.0/me', {
+                    headers: { Authorization: `Bearer ${accessToken}` }
+                  }).then(r => r.json()),
+                  fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+                    headers: { Authorization: `Bearer ${accessToken}` }
+                  }).then(r => {
+                    if (r.ok) {
+                      return r.blob().then(blob => URL.createObjectURL(blob));
+                    }
+                    return null;
+                  }).catch(() => null)
+                ]).then(([userData, photoURL]) => {
+                  persistentLog.add(`📊 Graph API user data: ${JSON.stringify(userData)}`);
+                  persistentLog.add(`🖼️ Graph API photo URL: ${photoURL ? 'obtained' : 'not available'}`);
+                  
+                  // Prepare user data for Firebase
+                  const graphUserData = {
+                    email: userData.mail || userData.userPrincipalName || result.user.email,
+                    displayName: userData.displayName || result.user.displayName,
+                    photoURL: photoURL || result.user.photoURL,
+                    jobTitle: userData.jobTitle || null,
+                    uid: result.user.uid,
+                    provider: 'microsoft.com',
+                    lastLogin: new Date().toISOString()
+                  };
+                  
+                  persistentLog.add(`💾 Prepared user data for Firebase: ${JSON.stringify(graphUserData)}`);
+                  
+                  // Save to localStorage for immediate use
+                  if (graphUserData.displayName) {
+                    localStorage.setItem('eu2k-auth-display-name', graphUserData.displayName);
+                    persistentLog.add(`💾 Saved display name: ${graphUserData.displayName}`);
+                  }
+                  if (graphUserData.email) {
+                    localStorage.setItem('eu2k-auth-email', graphUserData.email);
+                    persistentLog.add(`💾 Saved email: ${graphUserData.email}`);
+                  }
+                  if (graphUserData.photoURL) {
+                    localStorage.setItem('eu2k-auth-photo-url', graphUserData.photoURL);
+                    persistentLog.add(`💾 Saved photo URL: ${graphUserData.photoURL}`);
+                  }
+                  if (graphUserData.jobTitle) {
+                    localStorage.setItem('eu2k-auth-job-title', graphUserData.jobTitle);
+                    persistentLog.add(`💾 Saved job title: ${graphUserData.jobTitle}`);
+                  }
+                  
+                  // Save to Firebase (assuming Firebase functions are available)
+                  if (typeof saveUserToFirebase === 'function') {
+                    saveUserToFirebase(graphUserData).then(() => {
+                      persistentLog.add('✅ User data saved to Firebase successfully');
+                    }).catch((error) => {
+                      persistentLog.add(`❌ Firebase save error: ${error.message}`);
+                    });
+                  } else {
+                    persistentLog.add('⚠️ saveUserToFirebase function not available, data saved to localStorage only');
+                  }
+                  
+                  // Update result.user with Graph data before proceeding
+                  if (graphUserData.photoURL) {
+                    result.user.photoURL = graphUserData.photoURL;
+                  }
+                  if (graphUserData.displayName) {
+                    result.user.displayName = graphUserData.displayName;
+                  }
+                  
+                  // Now proceed to profile chooser with updated user data
+                  proceedToProfileChooser(result.user);
+                  
+                }).catch((error) => {
+                  persistentLog.add(`❌ Graph API error: ${error.message}`);
+                  // Show onboarding failed for Graph API errors
+                  showOnboardingFailed();
+                  return;
+                });
+                
+                // Store the access token for later use
+                localStorage.setItem('eu2k-ms-access-token', accessToken);
+                persistentLog.add('💾 Saved Microsoft access token for later use');
+              } else {
+                persistentLog.add('⚠️ No access token available for Microsoft Graph API calls');
+                proceedToProfileChooser(result.user);
+              }
+            } catch (error) {
+              persistentLog.add(`❌ Credential extraction error: ${error.message}`);
+              showOnboardingFailed();
+            }
+          })
+          .catch((error) => {
+            persistentLog.add(`❌ Popup auth failed: ${error?.code || ''} ${error?.message || error}`);
+            // Show login failed page
+            showPage('login-failed');
+            localStorage.removeItem('eu2k-auth-in-progress');
+          });
+    };
+
+    // Teacher Microsoft sign-in function
+    window.startMicrosoftSignInTeacher = () => {
+      persistentLog.add('👨‍🏫 Starting Microsoft Sign-In process for teacher...');
+      
+      // Mark that we're starting auth
+      localStorage.setItem('eu2k-auth-in-progress', 'true');
+      localStorage.setItem('eu2k-auth-start-time', Date.now().toString());
+      
+      // Show the auth-in-progress page
+      showPage('auth-in-progress');
+      
+      // Use popup for authentication
+      persistentLog.add('Attempting signInWithPopup for teacher');
+      signInWithPopup(auth, msProvider)
+          .then((result) => {
+            persistentLog.add('✅ Teacher popup auth successful');
+            localStorage.removeItem('eu2k-auth-in-progress');
+            proceedToTeacherProfileChooser(result.user);
+          })
+          .catch((error) => {
+            persistentLog.add(`❌ Teacher popup auth failed: ${error?.code || ''} ${error?.message || error}`);
+            showPage('login-failed');
+            localStorage.removeItem('eu2k-auth-in-progress');
+          });
+    };
+
+    // Google sign-in for parents
+    window.startGoogleSignInParent = () => {
+      persistentLog.add('👨‍👩‍👧‍👦 Starting Google Sign-In process for parent...');
+      
+      const googleProvider = new GoogleAuthProvider();
+      googleProvider.addScope('profile');
+      googleProvider.addScope('email');
+      
+      // Mark that we're starting auth
+      localStorage.setItem('eu2k-auth-in-progress', 'true');
+      localStorage.setItem('eu2k-auth-start-time', Date.now().toString());
+      
+      // Show the auth-in-progress page
+      showPage('auth-in-progress');
+      
+      // Use popup for authentication
+      persistentLog.add('Attempting signInWithPopup with Google for parent');
+      signInWithPopup(auth, googleProvider)
+          .then((result) => {
+            persistentLog.add('✅ Parent Google auth successful');
+            localStorage.removeItem('eu2k-auth-in-progress');
+            proceedToParentProfileChooser(result.user);
+          })
+          .catch((error) => {
+            persistentLog.add(`❌ Parent Google auth failed: ${error?.code || ''} ${error?.message || error}`);
+            showPage('login-failed');
+            localStorage.removeItem('eu2k-auth-in-progress');
+          });
+    };
+
     // Global onboarding debug functions
     window.onboardingDebug = {
       skip: () => window.debugAuth.skipOnboarding(),
@@ -493,236 +724,8 @@
       }
     };
 
-    // Microsoft provider and sign-in flow
-    const msProvider = new OAuthProvider('microsoft.com');
-    
-    // Log provider setup
-    persistentLog.add('🔧 Setting up Microsoft OAuth provider...');
-    
-    // Enforce single-tenant (org-only) login using specific Tenant ID
-    msProvider.setCustomParameters({ 
-      tenant: 'ecc426dd-3c83-44af-aad4-85099364fb9e',
-      prompt: 'select_account'
-    });
-    
-    persistentLog.add('🔧 Custom parameters set: prompt=select_account');
-    
-    // Request Graph profile access
-    try { 
-      msProvider.addScope('User.Read');
-      msProvider.addScope('profile');
-      msProvider.addScope('email');
-      msProvider.addScope('openid');
-      persistentLog.add('🔧 Scopes added: User.Read, profile, email, openid');
-    } catch (error) {
-      persistentLog.add(`⚠️ Could not add scopes: ${error.message}`);
-    }
-    
-    // Log the final provider config
-    persistentLog.add(`🔧 Final provider config: ${JSON.stringify({
-      providerId: msProvider.providerId,
-      scopes: msProvider.scopes,
-      customParameters: msProvider.customParameters
-    })}`);
 
-    // Expose start function for the inline navigation script
-    window.startMicrosoftSignIn = () => {
-      persistentLog.add('🔐 Starting Microsoft Sign-In process...');
-      persistentLog.add(`Auth provider configured: ${JSON.stringify(msProvider)}`);
-      persistentLog.add(`🌐 Current URL: ${window.location.href}`);
-      
-      // Mark that we're starting auth
-      localStorage.setItem('eu2k-auth-in-progress', 'true');
-      localStorage.setItem('eu2k-auth-start-time', Date.now().toString());
-      
-      // Show the auth-in-progress page without changing the hash
-      showPage('auth-in-progress');
-      
-      // Always use popup for authentication
-      persistentLog.add('🪟 Attempting signInWithPopup');
-      signInWithPopup(auth, msProvider)
-          .then((result) => {
-            persistentLog.add('✅ Popup auth successful');
-            
-            // IMMEDIATELY write essential localStorage keys to prevent race conditions
-            localStorage.setItem('eu2k-auth-logged-in', 'true');
-            localStorage.setItem('eu2k-user-type', 'student');
-            if (result.user.displayName) {
-              localStorage.setItem('eu2k-auth-display-name', result.user.displayName);
-            }
-            if (result.user.email) {
-              localStorage.setItem('eu2k-auth-email', result.user.email);
-            }
-            if (result.user.photoURL) {
-              localStorage.setItem('eu2k-auth-photo-url', result.user.photoURL);
-            }
-            
-            // Reset login failed counter on successful login
-            window.loginFailedCounter = 0;
-            
-            localStorage.removeItem('eu2k-auth-in-progress');
-            
-            // Fetch Microsoft Graph API data immediately after successful popup auth
-            try {
-              const credential = OAuthProvider.credentialFromResult(result);
-              const accessToken = credential && credential.accessToken;
-              persistentLog.add(`🔑 Access token available: ${!!accessToken}`);
-              
-              if (accessToken) {
-                persistentLog.add('📡 Fetching user data from Microsoft Graph...');
-                
-                // Fetch user profile data including photo
-                Promise.all([
-                  fetch('https://graph.microsoft.com/v1.0/me', {
-                    headers: { Authorization: `Bearer ${accessToken}` }
-                  }).then(r => r.json()),
-                  fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
-                    headers: { Authorization: `Bearer ${accessToken}` }
-                  }).then(r => {
-                    if (r.ok) {
-                      return r.blob().then(blob => URL.createObjectURL(blob));
-                    }
-                    return null;
-                  }).catch(() => null)
-                ]).then(([userData, photoURL]) => {
-                  persistentLog.add(`📊 Graph API user data: ${JSON.stringify(userData)}`);
-                  persistentLog.add(`🖼️ Graph API photo URL: ${photoURL ? 'obtained' : 'not available'}`);
-                  
-                  // Prepare user data for Firebase
-                  const graphUserData = {
-                    email: userData.mail || userData.userPrincipalName || result.user.email,
-                    displayName: userData.displayName || result.user.displayName,
-                    photoURL: photoURL || result.user.photoURL,
-                    jobTitle: userData.jobTitle || null,
-                    uid: result.user.uid,
-                    provider: 'microsoft.com',
-                    lastLogin: new Date().toISOString()
-                  };
-                  
-                  persistentLog.add(`💾 Prepared user data for Firebase: ${JSON.stringify(graphUserData)}`);
-                  
-                  // Save to localStorage for immediate use
-                  if (graphUserData.displayName) {
-                    localStorage.setItem('eu2k-auth-display-name', graphUserData.displayName);
-                    persistentLog.add(`💾 Saved display name: ${graphUserData.displayName}`);
-                  }
-                  if (graphUserData.email) {
-                    localStorage.setItem('eu2k-auth-email', graphUserData.email);
-                    persistentLog.add(`💾 Saved email: ${graphUserData.email}`);
-                  }
-                  if (graphUserData.photoURL) {
-                    localStorage.setItem('eu2k-auth-photo-url', graphUserData.photoURL);
-                    persistentLog.add(`💾 Saved photo URL: ${graphUserData.photoURL}`);
-                  }
-                  if (graphUserData.jobTitle) {
-                    localStorage.setItem('eu2k-auth-job-title', graphUserData.jobTitle);
-                    persistentLog.add(`💾 Saved job title: ${graphUserData.jobTitle}`);
-                  }
-                  
-                  // Save to Firebase (assuming Firebase functions are available)
-                  if (typeof saveUserToFirebase === 'function') {
-                    saveUserToFirebase(graphUserData).then(() => {
-                      persistentLog.add('✅ User data saved to Firebase successfully');
-                    }).catch((error) => {
-                      persistentLog.add(`❌ Firebase save error: ${error.message}`);
-                    });
-                  } else {
-                    persistentLog.add('⚠️ saveUserToFirebase function not available, data saved to localStorage only');
-                  }
-                  
-                  // Update result.user with Graph data before proceeding
-                  if (graphUserData.photoURL) {
-                    result.user.photoURL = graphUserData.photoURL;
-                  }
-                  if (graphUserData.displayName) {
-                    result.user.displayName = graphUserData.displayName;
-                  }
-                  
-                  // Now proceed to profile chooser with updated user data
-                  proceedToProfileChooser(result.user);
-                  
-                }).catch((error) => {
-                  persistentLog.add(`❌ Graph API error: ${error.message}`);
-                  // Show onboarding failed for Graph API errors
-                  showOnboardingFailed();
-                  return;
-                });
-                
-                // Store the access token for later use
-                localStorage.setItem('eu2k-ms-access-token', accessToken);
-                persistentLog.add('💾 Saved Microsoft access token for later use');
-              } else {
-                persistentLog.add('⚠️ No access token available for Microsoft Graph API calls');
-                proceedToProfileChooser(result.user);
-              }
-            } catch (error) {
-              persistentLog.add(`❌ Credential extraction error: ${error.message}`);
-              showOnboardingFailed();
-            }
-          })
-          .catch((error) => {
-            persistentLog.add(`❌ Popup auth failed: ${error?.code || ''} ${error?.message || error}`);
-            // Show login failed page
-            showPage('login-failed');
-            localStorage.removeItem('eu2k-auth-in-progress');
-          });
-    };
 
-    // Teacher Microsoft sign-in function
-    window.startMicrosoftSignInTeacher = () => {
-      persistentLog.add('👨‍🏫 Starting Microsoft Sign-In process for teacher...');
-      
-      // Mark that we're starting auth
-      localStorage.setItem('eu2k-auth-in-progress', 'true');
-      localStorage.setItem('eu2k-auth-start-time', Date.now().toString());
-      
-      // Show the auth-in-progress page
-      showPage('auth-in-progress');
-      
-      // Use popup for authentication
-      persistentLog.add('Attempting signInWithPopup for teacher');
-      signInWithPopup(auth, msProvider)
-          .then((result) => {
-            persistentLog.add('✅ Teacher popup auth successful');
-            localStorage.removeItem('eu2k-auth-in-progress');
-            proceedToTeacherProfileChooser(result.user);
-          })
-          .catch((error) => {
-            persistentLog.add(`❌ Teacher popup auth failed: ${error?.code || ''} ${error?.message || error}`);
-            showPage('login-failed');
-            localStorage.removeItem('eu2k-auth-in-progress');
-          });
-    };
-
-    // Google sign-in for parents
-    window.startGoogleSignInParent = () => {
-      persistentLog.add('👨‍👩‍👧‍👦 Starting Google Sign-In process for parent...');
-      
-      const googleProvider = new GoogleAuthProvider();
-      googleProvider.addScope('profile');
-      googleProvider.addScope('email');
-      
-      // Mark that we're starting auth
-      localStorage.setItem('eu2k-auth-in-progress', 'true');
-      localStorage.setItem('eu2k-auth-start-time', Date.now().toString());
-      
-      // Show the auth-in-progress page
-      showPage('auth-in-progress');
-      
-      // Use popup for authentication
-      persistentLog.add('Attempting signInWithPopup with Google for parent');
-      signInWithPopup(auth, googleProvider)
-          .then((result) => {
-            persistentLog.add('✅ Parent Google auth successful');
-            localStorage.removeItem('eu2k-auth-in-progress');
-            proceedToParentProfileChooser(result.user);
-          })
-          .catch((error) => {
-            persistentLog.add(`❌ Parent Google auth failed: ${error?.code || ''} ${error?.message || error}`);
-            showPage('login-failed');
-            localStorage.removeItem('eu2k-auth-in-progress');
-          });
-    };
 
     // After redirect, continue to profile chooser and prefill
     const proceedToProfileChooser = async (user) => {
