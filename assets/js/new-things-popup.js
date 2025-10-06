@@ -54,11 +54,11 @@ if (!__newThingsInitGuard) {
     // Segédfüggvény: home.css betöltése, ha még nincs
     function ensureStylesInjected() {
       const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
-      const hasHomeCss = links.some(l => (l.href || '').includes('/EU2K-Hub/home.css'));
+      const hasHomeCss = links.some(l => (l.href || '').includes('/EU2K-Hub/new_things.css'));
       if (!hasHomeCss) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = '/EU2K-Hub/home.css';
+        link.href = '/EU2K-Hub/new_things.css';
         document.head.appendChild(link);
       }
     }
