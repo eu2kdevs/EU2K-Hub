@@ -697,52 +697,49 @@
         }
 
         const video = document.getElementById('qrVideo');
-        const deviceId = availableCameras[cameraIndex]?.deviceId;
-
-        const constraints = {
-          video: {
-            deviceId: deviceId ? { exact: deviceId } : undefined,
-            width: { ideal: 1280 },
-            height: { ideal: 720 },
-            facingMode: deviceId ? undefined : 'environment'
-          }
-        };
-
-        // Increase timeout and add better error handling
-        const streamPromise = navigator.mediaDevices.getUserMedia(constraints);
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Camera timeout')), 10000)
-        );
-
+        
+        // Try simple approach first
         try {
-          currentStream = await Promise.race([streamPromise, timeoutPromise]);
-        } catch (error) {
-          // If specific device fails, try fallback
-          if (deviceId && error.name !== 'TimeoutError') {
-            console.log('Specific device failed, trying fallback...');
-            const fallbackConstraints = {
+          console.log('Trying basic camera access...');
+          currentStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              width: { ideal: 1280 },
+              height: { ideal: 720 },
+              facingMode: 'environment'
+            }
+          });
+        } catch (basicError) {
+          console.log('Basic camera failed, trying with device ID...');
+          const deviceId = availableCameras[cameraIndex]?.deviceId;
+          if (deviceId) {
+            currentStream = await navigator.mediaDevices.getUserMedia({
               video: {
+                deviceId: { exact: deviceId },
                 width: { ideal: 1280 },
-                height: { ideal: 720 },
-                facingMode: 'environment'
+                height: { ideal: 720 }
               }
-            };
-            const fallbackPromise = navigator.mediaDevices.getUserMedia(fallbackConstraints);
-            const fallbackTimeout = new Promise((_, reject) =>
-              setTimeout(() => reject(new Error('Camera timeout')), 10000)
-            );
-            currentStream = await Promise.race([fallbackPromise, fallbackTimeout]);
+            });
           } else {
-            throw error;
+            throw basicError;
           }
         }
 
         video.srcObject = currentStream;
 
-        // Wait for video to be ready with timeout
+        // Wait for video to be ready
         await new Promise((resolve, reject) => {
-          const timeout = setTimeout(() => reject(new Error('Video load timeout')), 5000);
+          const timeout = setTimeout(() => {
+            console.log('Video metadata load timeout, but continuing...');
+            resolve(); // Don't reject, just continue
+          }, 3000);
+          
           video.onloadedmetadata = () => {
+            clearTimeout(timeout);
+            resolve();
+          };
+          
+          // Also try oncanplay as fallback
+          video.oncanplay = () => {
             clearTimeout(timeout);
             resolve();
           };
