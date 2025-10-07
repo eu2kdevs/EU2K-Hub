@@ -278,6 +278,7 @@
   --sidebar-width: 76px;
   --sidebar-width-open: 198px;
   --transition: 0.2s cubic-bezier(.4, 0, .2, 1);
+  --transition-slow: 0.7s cubic-bezier(.4, 0, .2, 1);
 }
 
 
@@ -620,6 +621,7 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   padding: 12px 8px;
+  transition: var(--transition-slow);
 }
 
 .qr-control-btn-smol {
@@ -635,11 +637,17 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   padding: 12px 8px;
+  transition: var(--transition-slow);
 }
 
 .qr-control-btn:hover {
   border-radius: 9999px !important;
-  transition: var(--transition);
+  transition: var(--transition-slow);
+}
+
+.qr-control-btn-smol:hover {
+  border-radius: 9999px !important;
+  transition: var(--transition-slow);
 }
 
 .qr-control-icon {
