@@ -521,23 +521,23 @@ body {
 }
 
 .corner.top-left {
-  top: -20px;
-  left: -20px;
+  top: -30px;
+  left: -30px;
 }
 
 .corner.top-right {
-  top: -20px;
-  right: -20px;
+  top: -30px;
+  right: -30px;
 }
 
 .corner.bottom-left {
-  bottom: -20px;
-  left: -20px;
+  bottom: -30px;
+  left: -30px;
 }
 
 .corner.bottom-right {
-  bottom: -20px;
-  right: -20px;
+  bottom: -30px;
+  right: -30px;
 }
 
 .camera-switch-btn {
@@ -559,7 +559,7 @@ body {
 }
 
 .camera-switch-btn:hover {
-  border-radius: 15px;
+  border-radius: 9999px;
   transition: var(--transition);
 }
 
@@ -622,8 +622,23 @@ body {
   padding: 12px 8px;
 }
 
+.qr-control-btn-smol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 12px;
+  background: #272B26;
+  border: none;
+  color: var(--text-main);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 12px 8px;
+}
+
 .qr-control-btn:hover {
-  border-radius: 15px !important;
+  border-radius: 9999px !important;
   transition: var(--transition);
 }
 

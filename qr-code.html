@@ -218,13 +218,13 @@
                     <!-- Right side buttons container -->
                     <div class="qr-controls-right">
                       <!-- Camera Switch Button -->
-                      <button class="qr-control-btn-switch qr-btn-normal qr-btn-camera-switch" onclick="switchCamera()">
-                        <img src="/EU2K-Hub/assets/qr-code/camera_switch.svg" class="qr-control-icon" alt="Kamera váltása">
+                      <button class="qr-control-btn-smol qr-btn-normal qr-btn-camera-switch" onclick="switchCamera()">
+                        <img src="/EU2K-Hub/assets/qr-code/camera_switch.svg" class="qr-control-icon-switch" alt="Kamera váltása">
                         <span data-translate="pages.qr.switch_camera">Kamera Váltása</span>
                       </button>
                       
                       <!-- Camera Disable Button -->
-                      <button class="qr-control-btn qr-btn-normal qr-btn-camera-disable" onclick="disableCamera()">
+                      <button class="qr-control-btn-smol qr-btn-normal qr-btn-camera-disable" onclick="disableCamera()">
                         <img src="/EU2K-Hub/assets/qr-code/disable_cam.svg" class="qr-control-icon" alt="Kamera Letiltása">
                         <span data-translate="pages.qr.off_camera">Kamera Letiltása</span>
                       </button>
@@ -290,9 +290,30 @@
               <button class="camera-blocked-btn" onclick="requestCameraPermission()" data-translate="pages.qr.enable_button">Engedélyezés</button>
             </div>
           </div>
+
+          <!-- Permission Popup -->
+          <div id="permissionPopup" class="permission-overlay" style="display: none;">
+            <div class="permission-container">
+              <div class="permission-close-btn" onclick="closePermissionPopup()">
+                <img src="/EU2K-Hub/assets/close.svg" alt="Bezárás">
+              </div>
+              <div class="permission-content">
+                <img src="/EU2K-Hub/assets/backhand.svg" class="permission-hand-icon" alt="Kéz">
+                <h2 class="permission-title" data-translate="pages.qr.permission_title">Álljunk meg egy percre!</h2>
+                <ul class="permission-list">
+                  <li data-translate="pages.qr.permission_list_1">A QR-kód beolvasásához engedélyezned kell a kamera használatát.</li>
+                  <li data-translate="pages.qr.permission_list_2">A Hub soha nem használja a kamerádat automatikusan.</li>
+                  <li data-translate="pages.qr.permission_list_3">Minden alkalommal egyértelmű jelzést kapsz a jobb felső sarokban, amikor a kamera aktív.</li>
+                  <li data-translate="pages.qr.permission_list_4">Ha most megadod az engedélyt, ez a funkció elérhetővé válik.</li>
+                  <li data-translate="pages.qr.permission_list_5">További kamerát használó lehetőségek is aktiválódnak.</li>
+                </ul>
+                <button class="permission-ok-btn" onclick="acceptPermissionPopup()" data-translate="common.ok">Rendben</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-       <div id="site-footer" class="footer" aria-label="Site footer">
+      <div id="site-footer" class="footer" aria-label="Site footer">
         <div class="footer-container">
           <div class="footer-left">
             <img src="/EU2K-Hub/eu2k_hub_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Hub Logó">
@@ -308,27 +329,6 @@
         </div>
       </div>
     </main>
-  </div>
-
-  <!-- Permission Popup -->
-  <div id="permissionPopup" class="permission-overlay" style="display: none;">
-    <div class="permission-container">
-      <div class="permission-close-btn" onclick="closePermissionPopup()">
-        <img src="/EU2K-Hub/assets/close.svg" alt="Bezárás">
-      </div>
-      <div class="permission-content">
-        <img src="/EU2K-Hub/assets/backhand.svg" class="permission-hand-icon" alt="Kéz">
-        <h2 class="permission-title" data-translate="pages.qr.permission_title">Álljunk meg egy percre!</h2>
-        <ul class="permission-list">
-          <li data-translate="pages.qr.permission_list_1">A QR-kód beolvasásához engedélyezned kell a kamera használatát.</li>
-          <li data-translate="pages.qr.permission_list_2">A Hub soha nem használja a kamerádat automatikusan.</li>
-          <li data-translate="pages.qr.permission_list_3">Minden alkalommal egyértelmű jelzést kapsz a jobb felső sarokban, amikor a kamera aktív.</li>
-          <li data-translate="pages.qr.permission_list_4">Ha most megadod az engedélyt, ez a funkció elérhetővé válik.</li>
-          <li data-translate="pages.qr.permission_list_5">További kamerát használó lehetőségek is aktiválódnak.</li>
-        </ul>
-        <button class="permission-ok-btn" onclick="acceptPermissionPopup()" data-translate="common.ok">Rendben</button>
-      </div>
-    </div>
   </div>
 
   <script>
