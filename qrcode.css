@@ -500,8 +500,8 @@ body {
 
 .qr-scanner {
   position: relative;
-  width: 280px;
-  height: 280px;
+  width: 240px;
+  height: 240px;
   background: var(--red);
   border-radius: 20px;
 }
@@ -521,23 +521,23 @@ body {
 }
 
 .corner.top-left {
-  top: -40px;
-  left: -40px;
+  top: -20px;
+  left: -20px;
 }
 
 .corner.top-right {
-  top: -40px;
-  right: -40px;
+  top: -20px;
+  right: -20px;
 }
 
 .corner.bottom-left {
-  bottom: -40px;
-  left: -40px;
+  bottom: -20px;
+  left: -20px;
 }
 
 .corner.bottom-right {
-  bottom: -40px;
-  right: -40px;
+  bottom: -20px;
+  right: -20px;
 }
 
 .camera-switch-btn {
@@ -575,7 +575,7 @@ body {
 }
 
 .qr-scanner-column {
-  flex: 1;
+  flex: 0.7;
   display: flex;
   justify-content: center;
 }
@@ -590,7 +590,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  width: 100%;
+  width: 120%;
 }
 
 .qr-controls-row {
@@ -628,8 +628,8 @@ body {
 }
 
 .qr-control-icon {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   flex-shrink: 0;
 }
 
@@ -641,8 +641,8 @@ body {
 
 /* Button Size Variants */
 .qr-btn-normal {
-  height: 88px;
-  width: 100%;
+  height: 90px;
+  width: 76%;
 }
 
 .qr-btn-tall {
@@ -659,21 +659,21 @@ body {
 }
 
 .qr-btn-camera-switch {
-  border-radius: 32px 16px 16px 16px;
-}
-
-.qr-btn-camera-disable {
   border-radius: 16px 32px 16px 16px;
 }
 
+.qr-btn-camera-disable {
+  border-radius: 16px;
+}
+
 .qr-btn-restart {
-  border-radius: 16px 16px 32px 16px;
-  width: 145px;
+  border-radius: 16px 16px 16px 32px;
+  width: 191px;
 }
 
 .qr-btn-game {
-  border-radius: 16px 16px 16px 32px;
-  width: 131px;
+  border-radius: 16px 16px 32px 16px;
+  width: 191px;
 }
 
 /* Responsive adjustments */
