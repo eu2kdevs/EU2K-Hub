@@ -448,12 +448,9 @@
           console.log('Permission status:', permissionStatus.state);
 
           if (permissionStatus.state === 'granted') {
-            // Double check by trying to access camera
-            try {
-              const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-              stream.getTracks().forEach(track => track.stop());
-              console.log('Camera access confirmed - showing QR scanner');
-              localStorage.setItem('cameraPermissionGranted', 'true');
+            // Double check by trying to access camera - but don't stop the stream immediately
+            console.log('Camera access confirmed - showing QR scanner');
+            localStorage.setItem('cameraPermissionGranted', 'true');
 
               // Show permissions toast only if state changed to granted
               if (currentPermissionState !== 'granted' && typeof showPermissionToast === 'function') {
@@ -465,12 +462,6 @@
               showQRScanner();
               isCheckingPermissions = false;
               return;
-            } catch (cameraError) {
-              console.log('Camera access failed despite granted permission:', cameraError);
-              showBlockedViewWithPopup();
-              isCheckingPermissions = false;
-              return;
-            }
           } else if (permissionStatus.state === 'denied') {
             console.log('Permission explicitly denied');
             showBlockedViewWithPopup();
@@ -606,11 +597,6 @@
         });
         console.log('Camera permission granted from button');
 
-        // Stop the stream immediately
-        if (stream) {
-          stream.getTracks().forEach(track => track.stop());
-        }
-
         // Store permission in localStorage
         localStorage.setItem('cameraPermissionGranted', 'true');
 
@@ -642,6 +628,43 @@
 
         // Keep popup visible if permission was denied
         console.log('Keeping popup visible due to permission denial');
+      }
+    }
+
+    // Show QR Scanner function - properly starts camera
+    async function showQRScanner() {
+      console.log('Showing QR Scanner');
+      hideAllSections();
+      document.getElementById('qrScannerContainer').style.display = 'flex';
+
+      // Start camera here
+      try {
+        const video = document.querySelector('#qrScannerContainer video');
+        if (!video) {
+          console.error('Video element not found in QR scanner container');
+          return;
+        }
+
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+          video: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
+        });
+        
+        video.srcObject = stream;
+        currentStream = stream; // Store the stream globally
+        await video.play();
+
+        console.log('Kamera elindult 🎥');
+        console.log('Video dimensions:', video.videoWidth, 'x', video.videoHeight);
+        
+        // Initialize QR scanner with the video element
+        initializeQRScanner();
+      } catch (err) {
+        console.error('Nem sikerült elindítani a kamerát 😢', err);
+        // Show blocked view if camera fails
+        showBlockedViewWithPopup();
       }
     }
 
@@ -714,12 +737,18 @@
         currentStream = await Promise.race([streamPromise, timeoutPromise]);
         video.srcObject = currentStream;
 
+        // Start video playback
+        await video.play();
+
         // Wait for video to be ready
         await new Promise((resolve) => {
           video.onloadedmetadata = resolve;
         });
 
+        // Log video dimensions for debugging
         console.log('Camera started successfully');
+        console.log('Video dimensions:', video.videoWidth, 'x', video.videoHeight);
+        console.log('Video element size:', video.offsetWidth, 'x', video.offsetHeight);
 
       } catch (error) {
         console.error('Error starting camera:', error);
@@ -869,6 +898,25 @@
       document.getElementById('qrScannerContainer').style.display = 'none';
       document.getElementById('cameraBlockedContainer').style.display = 'none';
       document.getElementById('permissionPopup').style.display = 'none';
+    }
+
+    // Hide QR Scanner function with proper stream cleanup
+    function hideQRScanner() {
+      const video = document.querySelector('#qrScannerContainer video');
+      if (video && video.srcObject) {
+        const stream = video.srcObject;
+        stream.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+      }
+      
+      // Also stop the global currentStream if it exists
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+        currentStream = null;
+      }
+      
+      document.getElementById('qrScannerContainer').style.display = 'none';
+      isScanning = false;
     }
 
     // Debug function to clear localStorage and refresh
