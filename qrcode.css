@@ -612,7 +612,7 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   background: #272B26;
   border: none;
   color: var(--text-main);
@@ -633,6 +633,12 @@ body {
   flex-shrink: 0;
 }
 
+.qr-control-icon-switch {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
 .qr-control-btn span {
   font-size: 0.9rem;
   text-align: center;
@@ -647,6 +653,7 @@ body {
 
 .qr-btn-tall {
   height: 184px;
+  gap: 12;
 }
 
 .qr-btn-half {
