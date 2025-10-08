@@ -444,7 +444,7 @@
 
               <!-- Settings Pages -->
               <div class="settings-pages">
-                <div id="general-page" class="settings-page active">
+                <div id="general-page" class="settings-page active general-page">
                   <!-- Weboldal bétaverziójának használata -->
                   <div class="general-beta-card">
                     <span class="general-beta-text" data-translate="settings.beta_usage">Weboldal bétaverziójának
@@ -528,9 +528,6 @@
 
                     <!-- Jobb oszlop -->
                     <div class="general-info-column">
-                      <div class="general-info-item">
-                        <img src="/EU2K-Hub/assets/eu2kdok_logo.png" class="general-info-logo" alt="EU2K DÖK">
-                      </div>
                       <div class="general-info-item">
                         <img src="/EU2K-Hub/assets/eu2kdevs_logo.png" class="general-info-logo-devs" alt="EU2K Devs">
                       </div>
@@ -682,10 +679,14 @@
                 </div>
 
                 <div id="events-page" class="settings-page">
-                  <h2 data-translate="settings.events_calendar">Események és Naptár</h2>
-                  <p data-translate="settings.events_not_available">Ez a részleg bétában nem elérhető, nagyon erősen
-                    dolgozunk rajta, hogy minél hamarabb elérhető
-                    legyen.</p>
+                  <img src="/EU2K-Hub/assets/settings_icons/qm.svg" class="community-block-icon"
+                        alt="Question Mark">
+                  <div class="events-and-calendar-uc">
+                    <div data-translate="settings.events_calendar">Események és Naptár
+                    </div>
+                    <div data-translate="settings.events_not_available">Ez a részleg bétában nem elérhető, de nagyon erősen dolgozunk rajta, hogy minél hamarabb elérhető legyen.
+                    </div>
+                  </div>
                 </div>
 
                 <div id="experiments-page" class="settings-page">
@@ -697,15 +698,22 @@
 
                   <!-- Tesztelési gomb az első látogatás visszaállításához -->
                   <div class="general-beta-card-last" style="margin-top: 16px;">
-                    <span class="general-beta-text">Első Látogatás változó visszaállítása (teszteléshez)</span>
-                    <md-filled-button disabled id="reset-first-visit-btn" style="margin-left: auto;">
-                      Visszaállítás
+                    <span class="general-beta-text" data-translate="settings.experiments-reset-onboarding">Bevezető helyreállítása</span>
+                    <md-filled-button disabled id="reset-first-visit-btn" data-translate="settings.experiments-reset" style="margin-left: auto;">
+                      Helyreállítás
                     </md-filled-button>
                   </div>
 
                   <div class="general-beta-card">
                     <span class="general-beta-text" data-translate="settings.experiments-youhub">YouHub</span>
-                    <md-switch id="welcome-screen-switch" icons selected></md-switch>
+                    <md-switch id="welcome-screen-switch" icons disabled></md-switch>
+                  </div>
+
+                  <div class="general-beta-card">
+                    <span class="general-beta-text" data-translate="settings.experiments-test-mode">Teszt Mód</span>
+                    <md-filled-button id="enterTestMode" data-translate="settings.experiments-enter-test-mode" style="margin-left: auto;">
+                      Belépés
+                    </md-filled-button>
                   </div>
 
                 </div>
@@ -795,17 +803,63 @@
       page.style.borderRadius = '32px';
       page.style.overflowY = 'auto';
       page.style.scrollBehavior = 'smooth';
-      page.style.scrollbarWidth = 'thin'; // Firefox
-      page.style.scrollbarColor = '#5EA56E transparent'; // zöldes árnyalat
 
-      // Chrome / Edge stílushoz shadow DOM scrollbar CSS
-      page.style.setProperty('--scrollbar-thumb', '#5EA56E');
-      page.style.setProperty('--scrollbar-track', 'transparent');
+      // 💚 Hover/scroll esemény figyelés
+      let scrollTimeout;
+      page.addEventListener('mouseenter', () => {
+        page.classList.add('show-scrollbar');
+      });
+      page.addEventListener('mouseleave', () => {
+        page.classList.remove('show-scrollbar');
+      });
+      page.addEventListener('scroll', () => {
+        page.classList.add('show-scrollbar');
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          page.classList.remove('show-scrollbar');
+        }, 1000);
+      });
     });
+
+    // Scrollbar stílus
+    const styleEl = document.createElement('style');
+    styleEl.innerHTML = `
+      .settings-pages .settings-page::-webkit-scrollbar {
+        width: 8px;
+        background: transparent;
+      }
+
+      .settings-pages .settings-page::-webkit-scrollbar-thumb {
+        background-color: transparent;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+      }
+
+      /* amikor hoverel vagy scrolloL */
+      .settings-pages .settings-page.show-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #1E2A1E;
+      }
+
+      .settings-pages .settings-page.show-scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: #243424;
+      }
+    `;
+    document.head.appendChild(styleEl);
   }
 
   // Lefut oldalbetöltés után
   document.addEventListener('DOMContentLoaded', styleAllSettingsPages);
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('enterTestMode');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        // Új lapon nyitja meg
+        window.open('/EU2K-Hub/test-channel/', '_blank');
+      });
+    }
+  });
 </script>
 </body>
 </html>

@@ -395,8 +395,11 @@
     "experiments_desc": "Show Welcome Screen",
     "experiments_notice": "These are experimental features, they may be unstable, or they have not yet reached their full functionality.",
     "experiments-welcome-screen": "Welcome Screen",
-    "experiments-welcome-scr-reset": "Reset First Visit Variable (for testing)",
-    "experiments-youhub": "YouHub"
+    "experiments-youhub": "YouHub",
+    "experiments-reset-onboarding": "Reset Onboarding",
+    "experiments-reset": "Reset",
+    "experiments-test-mode": "Test Mode",
+    "experiments-enter-test-mode": "Enter"
   },
   "common": {
     "forward": "Forward",

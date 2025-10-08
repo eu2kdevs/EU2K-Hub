@@ -411,8 +411,11 @@
     "experiments_desc": "Üdvözlő Képernyő mutatása",
     "experiments_notice": "Ezek kísérleti funkciók, instabilak lehetek, vagy még nem nyerték el a teljes funkcionalitásukat.",
     "experiments-welcome-screen": "Üdvözlő Képernyő",
-    "experiments-welcome-scr-reset": "Első Látogatás változó visszaállítása (teszteléshez)",
-    "experiments-youhub": "YouHub"
+    "experiments-youhub": "YouHub",
+    "experiments-reset-onboarding": "Bevezető Helyreállítása",
+    "experiments-reset": "Helyreállítás",
+    "experiments-test-mode": "Teszt Mód",
+    "experiments-enter-test-mode": "Belépés"
   },
   "common": {
     "welcome_hub": "Üdvözöllek a Hub-ban!",
