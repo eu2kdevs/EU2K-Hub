@@ -732,6 +732,54 @@
     </div>
   </div>
 <script type="module" src="/EU2K-Hub/assets/js/new-things-popup.js"></script>
+<script>
+  function applySettingsSmall() {
+    const nav = document.getElementById('settings-navigation');
+    if (!nav) return;
+
+    const cardsContainer = nav.querySelector('.settings-cards');
+    const cards = nav.querySelectorAll('.settings-card');
+
+    if (document.body.clientWidth <= 1100) {
+      // Navigation és container
+      nav.classList.add('settings-navigation-small');
+      cardsContainer.classList.add('settings-cards-small');
+
+      // Minden kártya
+      cards.forEach(card => card.classList.add('settings-card-small'));
+
+      // Card content, title, desc, divider, md-switch
+      cards.forEach(card => {
+        card.querySelector('.settings-card-content')?.classList.add('settings-card-content-small');
+        card.querySelector('.settings-card-title')?.classList.add('settings-card-title-small');
+        card.querySelector('.settings-card-desc')?.classList.add('settings-card-desc-small');
+        card.querySelector('.settings-card-divider')?.classList.add('settings-card-divider-small');
+        const mdSwitch = card.querySelector('md-switch');
+        if (mdSwitch) mdSwitch.classList.add('settings-card-small');
+      });
+
+    } else {
+      // visszaállítás
+      nav.classList.remove('settings-navigation-small');
+      cardsContainer.classList.remove('settings-cards-small');
+
+      cards.forEach(card => card.classList.remove('settings-card-small'));
+      cards.forEach(card => {
+        card.querySelector('.settings-card-content')?.classList.remove('settings-card-content-small');
+        card.querySelector('.settings-card-title')?.classList.remove('settings-card-title-small');
+        card.querySelector('.settings-card-desc')?.classList.remove('settings-card-desc-small');
+        card.querySelector('.settings-card-divider')?.classList.remove('settings-card-divider-small');
+        const mdSwitch = card.querySelector('md-switch');
+        if (mdSwitch) mdSwitch.classList.remove('settings-card-small');
+      });
+    }
+  }
+
+  // Figyelés: resize + 1 másodpercenként
+  window.addEventListener('resize', applySettingsSmall);
+  setInterval(applySettingsSmall, 1000);
+  applySettingsSmall(); // első alkalmazás betöltéskor
+</script>
 </body>
 
 </html>

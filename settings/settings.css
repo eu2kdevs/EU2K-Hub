@@ -349,14 +349,7 @@ body {
   box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
   max-width: calc(100% - 22px);
   min-height: calc(100dvh - 104px); /* mobilbarát */
-  height: calc(100dvh - 104px)
-  max-width: calc(100% - 22px);
-  min-width: 800px;
-  /* Minimum szélesség a dinamikus méretezéshez */
-  width: auto;
-  /* Automatikus szélesség */
-  flex: 1;
-  /* Rugalmas méretezés */
+  height: calc(100dvh - 104px);
   overflow: hidden;
   position: relative;
 }
@@ -1057,6 +1050,95 @@ body {
 .settings-card md-switch {
   --md-switch-selected-track-color: #B7F1B9;
   --md-switch-selected-handle-color: #003913;
+}
+
+/* Settings Navigation SMALL */
+.settings-navigation-small {
+  flex: 0 0 auto;
+  width: 1%;
+}
+
+.settings-cards-small {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  max-width: 64px;
+  width: 700%;
+  margin-left: -42px;
+}
+
+/* Settings Card Base */
+.settings-card-small {
+  background: #101510;
+  padding: 17px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  max-height: 64px;
+  min-height: 32px;
+  justify-content: center;
+}
+
+/* Card Types */
+.settings-card-small.single-card {
+  border-radius: 32px;
+  margin-bottom: 8px;
+}
+
+.settings-card-small.group-top {
+  border-radius: 32px 32px 8px 8px;
+}
+
+.settings-card-small.group-middle {
+  border-radius: 8px;
+  margin-top: 4px;
+}
+
+.settings-card-small.group-bottom {
+  border-radius: 8px 8px 32px 32px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+/* Active State */
+.settings-card-small.active {
+  background: #1E2A1E;
+  border-radius: 32px !important;
+  /* Eltávolítottuk a fix szélességet a dinamikus méretezés érdekében */
+}
+
+/* Hover State */
+.settings-card-small:hover {
+  border-radius: 22px !important;
+}
+
+/* Card Content */
+.settings-card-content-small {
+  display: none;
+}
+
+.settings-card-title-small {
+  display: none;
+}
+
+.settings-card-desc-small {
+  display: none;
+}
+
+/* Divider in Notifications Card */
+.settings-card-divider-small {
+  display: none;
+}
+
+/* Material Switch */
+.settings-card-small md-switch {
+  --md-switch-selected-track-color: #B7F1B9;
+  --md-switch-selected-handle-color: #003913;
+  display: none;
 }
 
 /* Vertical Divider */

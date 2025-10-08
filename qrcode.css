@@ -642,12 +642,12 @@ body {
 }
 
 .qr-control-btn:hover {
-  border-radius: 64px;
+  border-radius: 64px !important;
   transition: var(--transition);
 }
 
 .qr-control-btn-smol:hover {
-  border-radius: 64px;
+  border-radius: 64px !important;
   transition: var(--transition);
 }
 
@@ -678,11 +678,6 @@ body {
 .qr-btn-tall {
   height: 184px;
   gap: 12;
-}
-
-.qr-btn-tall:hover {
-  border-radius: 32px !important;
-  transition: var(--transition);
 }
 
 .qr-btn-half {
