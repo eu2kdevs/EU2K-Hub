@@ -345,6 +345,26 @@
   </div>
 
   <script>
+    function fixFooterPosition() {
+      const main = document.querySelector('main.main-area');
+      const mainContent = main.querySelector('.main-content');
+      const footer = document.getElementById('site-footer');
+
+      if (!main || !mainContent || !footer) return; // ha nincs meg a main, mainContent vagy footer, kilép
+
+      // Ha a footer NEM a mainContent után közvetlenül
+      if (footer.previousElementSibling !== mainContent) {
+        main.insertBefore(footer, mainContent.nextSibling); // beteszi közvetlenül a mainContent után
+        console.log('Footer a main-content után helyre rakva 👌');
+      }
+    }
+
+    // Ellenőrzés 1 másodpercenként
+    setInterval(fixFooterPosition, 1000);
+  </script>
+
+
+  <script>
     let isCheckingPermissions = false;
     let currentPermissionState = null; // 'granted', 'denied', 'prompt', null
     let permissionToastShown = false;
