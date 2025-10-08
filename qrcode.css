@@ -561,7 +561,7 @@ body {
 }
 
 .camera-switch-btn:hover {
-  border-radius: 9999px;
+  border-radius: 64px;
   transition: var(--transition);
 }
 
@@ -622,7 +622,7 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   padding: 12px 8px;
-  transition: var(--transition-slow);
+  transition: var(--transition);
 }
 
 .qr-control-btn-smol {
@@ -638,17 +638,17 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   padding: 12px 8px;
-  transition: var(--transition-slow);
+  transition: var(--transition);
 }
 
 .qr-control-btn:hover {
-  border-radius: 9999px !important;
-  transition: var(--transition-slow);
+  border-radius: 64px;
+  transition: var(--transition);
 }
 
 .qr-control-btn-smol:hover {
-  border-radius: 9999px !important;
-  transition: var(--transition-slow);
+  border-radius: 64px;
+  transition: var(--transition);
 }
 
 .qr-control-icon {
@@ -678,6 +678,11 @@ body {
 .qr-btn-tall {
   height: 184px;
   gap: 12;
+}
+
+.qr-btn-tall:hover {
+  border-radius: 32px !important;
+  transition: var(--transition);
 }
 
 .qr-btn-half {
