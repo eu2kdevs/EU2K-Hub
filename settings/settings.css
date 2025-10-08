@@ -927,6 +927,7 @@ body {
 /* Settings Navigation */
 .settings-navigation {
   flex: 0 0 auto;
+  transition: var(--transition);
 }
 
 .settings-cards {
@@ -937,6 +938,7 @@ body {
   max-width: 600px;
   width: 100%;
   margin-left: -42px;
+  transition: var(--transition);
 }
 
 /* Settings Card Base */
@@ -950,39 +952,45 @@ body {
   transition: all 0.2s ease;
   position: relative;
   min-height: 48px;
+  transition: var(--transition);
 }
 
 /* Card Types */
 .settings-card.single-card {
   border-radius: 32px;
   margin-bottom: 8px;
+  transition: var(--transition);
 }
 
 .settings-card.group-top {
   border-radius: 32px 32px 8px 8px;
+  transition: var(--transition);
 }
 
 .settings-card.group-middle {
   border-radius: 8px;
   margin-top: 4px;
+  transition: var(--transition);
 }
 
 .settings-card.group-bottom {
   border-radius: 8px 8px 32px 32px;
   margin-top: 4px;
   margin-bottom: 8px;
+  transition: var(--transition);
 }
 
 /* Active State */
 .settings-card.active {
   background: #1E2A1E;
   border-radius: 32px !important;
-  /* Eltávolítottuk a fix szélességet a dinamikus méretezés érdekében */
+  transition: var(--transition);
 }
 
 /* Hover State */
 .settings-card:hover {
   border-radius: 22px !important;
+  transition: var(--transition);
 }
 
 /* Card Icon */
@@ -990,11 +998,13 @@ body {
   width: 34px;
   height: 34px;
   flex-shrink: 0;
+  transition: var(--transition);
 }
 
 /* Card Content */
 .settings-card-content {
   flex: 1;
+  transition: var(--transition);
 }
 
 .settings-card-title {
@@ -1002,12 +1012,14 @@ body {
   font-size: 1rem;
   font-weight: 400;
   margin-bottom: 2px;
+  transition: var(--transition);
 }
 
 .settings-card-desc {
   color: rgba(212, 232, 209, 0.7);
   font-size: 0.85rem;
   font-weight: 400;
+  transition: var(--transition);
 }
 
 /* Divider in Notifications Card */
@@ -1016,6 +1028,7 @@ body {
   height: 40px;
   background: #D4E8D1;
   margin-right: 4px;
+  transition: var(--transition);
 }
 
 /* Material Switch */
@@ -1028,6 +1041,7 @@ body {
 .settings-navigation-small {
   flex: 0 0 auto;
   width: 1%;
+  transition: var(--transition);
 }
 
 .settings-cards-small {
@@ -1038,6 +1052,7 @@ body {
   max-width: 64px;
   width: 700%;
   margin-left: -42px;
+  transition: var(--transition);
 }
 
 /* Settings Card Base */
@@ -1053,45 +1068,52 @@ body {
   max-height: 64px;
   min-height: 32px;
   justify-content: center;
+  transition: var(--transition);
 }
 
 .settings-card-icon-small {
   width: 26px;
   height: 26px;
   flex-shrink: 0;
+  transition: var(--transition);
 }
 
 /* Card Types */
 .settings-card-small.single-card {
   border-radius: 32px;
   margin-bottom: 8px;
+  transition: var(--transition);
 }
 
 .settings-card-small.group-top {
   border-radius: 32px 32px 8px 8px;
+  transition: var(--transition);
 }
 
 .settings-card-small.group-middle {
   border-radius: 8px;
   margin-top: 4px;
+  transition: var(--transition);
 }
 
 .settings-card-small.group-bottom {
   border-radius: 8px 8px 32px 32px;
   margin-top: 4px;
   margin-bottom: 8px;
+  transition: var(--transition);
 }
 
 /* Active State */
 .settings-card-small.active {
   background: #1E2A1E;
   border-radius: 32px !important;
-  /* Eltávolítottuk a fix szélességet a dinamikus méretezés érdekében */
+  transition: var(--transition);
 }
 
 /* Hover State */
 .settings-card-small:hover {
   border-radius: 22px !important;
+  transition: var(--transition);
 }
 
 /* Card Content */
