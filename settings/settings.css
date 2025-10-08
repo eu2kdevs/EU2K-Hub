@@ -953,7 +953,7 @@ body {
 /* Active State */
 .settings-card.active {
   background: #1E2A1E;
-  border-radius: 32px !important;
+  border-radius: 300px !important;
   transition: var(--transition);
 }
 
@@ -1076,7 +1076,7 @@ body {
 /* Active State */
 .settings-card-small.active {
   background: #1E2A1E;
-  border-radius: 32px !important;
+  border-radius: 300px !important;
   transition: var(--transition);
 }
 
@@ -1606,6 +1606,33 @@ body {
   display: none !important;
 }
 
+#stats-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stats-page-off {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stats-uc{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.stats-uc .title-text {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
 #community-page:not(.active) {
   display: none !important;
 }
@@ -1665,6 +1692,11 @@ body {
   margin-left: 40px;
   margin-right: 20px;
   position: relative;
+}
+
+.community-courses-card-ins {
+  display: flex;
+  flex-direction: row;
 }
 
 .community-card-title {

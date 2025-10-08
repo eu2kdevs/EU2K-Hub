@@ -625,15 +625,22 @@
                 </div>
 
                 <div id="stats-page" class="settings-page">
-                  <h2 data-translate="settings.stats">Statisztikák és Teljesítmény</h2>
-                  <p data-translate="settings.stats_not_available">Ez a részleg bétában nem elérhető, nagyon erősen
-                    dolgozunk rajta, hogy minél hamarabb elérhető
-                    legyen.</p>
+                  <div class="stats-page-off">
+                    <img src="/EU2K-Hub/assets/settings_icons/qm.svg" class="community-block-icon"
+                        alt="Question Mark">
+                    <div class="stats-uc">
+                      <div class="title-text" data-translate="settings.stats">Statisztikák és Teljesítmény
+                      </div>
+                      <div data-translate="settings.events_not_available">Ez a részleg bétában nem elérhető, de nagyon erősen dolgozunk rajta, hogy minél hamarabb elérhető legyen.
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div id="community-page" class="settings-page">
                   <!-- Kurzusaim kártya -->
-                  <div class="community-courses-card">
+                  <div class="community-courses-card-ins">
+                    <div class="community-courses-card">
                     <div class="community-card-title" data-translate="settings.my_courses">Kurzusaim:</div>
                     <div class="community-no-courses">
                       <img src="/EU2K-Hub/assets/settings_icons/community_page/block.svg" class="community-block-icon"
@@ -645,6 +652,7 @@
                       </div>
                     </div>
                   </div>
+                </div>
 
                   <!-- Javaslataim kártya -->
                   <div class="community-suggestions-card">
@@ -862,6 +870,23 @@
       });
     }
   });
+</script>
+<script>
+  const cardContainer = document.querySelector('.community-courses-card-ins');
+
+  function updateFlexDirection() {
+    if (cardContainer.offsetWidth < 300) {
+      cardContainer.style.flexDirection = 'column';
+    } else {
+      cardContainer.style.flexDirection = 'row';
+    }
+  }
+
+  // Ellenőrizzük betöltéskor
+  updateFlexDirection();
+
+  // Figyeljük az ablak méretét
+  window.addEventListener('resize', updateFlexDirection);
 </script>
 </body>
 </html>
