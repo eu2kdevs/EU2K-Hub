@@ -891,34 +891,6 @@ body {
     padding-left: 0;
   }
 
-  /* General page responsive adjustments */
-  #general-page {
-    margin-left: 0;
-    margin-top: 0;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
-  /* General info card responsive */
-  .general-info-card {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    text-align: center;
-  }
-
-  .general-info-column:nth-child(3) {
-    padding: 20px;
-  }
-
-  .general-info-column:last-child {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .general-info-divider {
-    display: none;
-  }
 }
 
 ::-webkit-scrollbar {
@@ -1081,6 +1053,12 @@ body {
   max-height: 64px;
   min-height: 32px;
   justify-content: center;
+}
+
+.settings-card-icon-small {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
 }
 
 /* Card Types */

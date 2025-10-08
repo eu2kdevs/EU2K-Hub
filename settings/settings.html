@@ -746,14 +746,19 @@
       cardsContainer.classList.add('settings-cards-small');
 
       // Minden kártya
-      cards.forEach(card => card.classList.add('settings-card-small'));
-
-      // Card content, title, desc, divider, md-switch
       cards.forEach(card => {
+        card.classList.add('settings-card-small');
+
+        // Tartalom elemek
         card.querySelector('.settings-card-content')?.classList.add('settings-card-content-small');
         card.querySelector('.settings-card-title')?.classList.add('settings-card-title-small');
         card.querySelector('.settings-card-desc')?.classList.add('settings-card-desc-small');
         card.querySelector('.settings-card-divider')?.classList.add('settings-card-divider-small');
+
+        // ÚJ: ikonok
+        card.querySelector('.settings-card-icon')?.classList.add('settings-card-icon-small');
+
+        // md-switch
         const mdSwitch = card.querySelector('md-switch');
         if (mdSwitch) mdSwitch.classList.add('settings-card-small');
       });
@@ -763,12 +768,13 @@
       nav.classList.remove('settings-navigation-small');
       cardsContainer.classList.remove('settings-cards-small');
 
-      cards.forEach(card => card.classList.remove('settings-card-small'));
       cards.forEach(card => {
+        card.classList.remove('settings-card-small');
         card.querySelector('.settings-card-content')?.classList.remove('settings-card-content-small');
         card.querySelector('.settings-card-title')?.classList.remove('settings-card-title-small');
         card.querySelector('.settings-card-desc')?.classList.remove('settings-card-desc-small');
         card.querySelector('.settings-card-divider')?.classList.remove('settings-card-divider-small');
+        card.querySelector('.settings-card-icon')?.classList.remove('settings-card-icon-small');
         const mdSwitch = card.querySelector('md-switch');
         if (mdSwitch) mdSwitch.classList.remove('settings-card-small');
       });
@@ -781,5 +787,4 @@
   applySettingsSmall(); // első alkalmazás betöltéskor
 </script>
 </body>
-
 </html>
