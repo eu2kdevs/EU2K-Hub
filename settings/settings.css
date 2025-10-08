@@ -808,20 +808,6 @@ body {
   .settings-content-layout {
     gap: 40px;
   }
-
-  /* General page responsive adjustments */
-  #general-page {
-    margin-left: -30px;
-    width: calc(100% + 15px);
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
-  /* General info card responsive */
-  .general-info-card {
-    grid-template-columns: 1fr 1px 1fr 1fr;
-    gap: 22px;
-  }
 }
 
 @media (max-width: 900px) {
@@ -836,25 +822,6 @@ body {
 
   .settings-pages {
     padding-left: 20px;
-  }
-
-  /* General page responsive adjustments */
-  #general-page {
-    margin-left: -20px;
-    width: calc(100% + 10px);
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
-  /* General info card responsive */
-  .general-info-card {
-    grid-template-columns: 1fr 1px 1fr;
-    gap: 20px;
-  }
-
-  .general-info-column:last-child {
-    flex-direction: column;
-    gap: 12px;
   }
 }
 
@@ -922,6 +889,7 @@ body {
   gap: 55px;
   margin-top: 20px;
   align-items: flex-start;
+  transition: var(--transition);
 }
 
 /* Settings Navigation */
@@ -1155,6 +1123,7 @@ body {
   padding-left: 40px;
   padding-right: 0;
   padding-top: 20px;
+  transition: var(--transition);
 }
 
 .settings-pages-experiments {
@@ -1162,7 +1131,7 @@ body {
   padding-right: 0;
   padding-top: 20px;
   padding-left: 80px;
-  /* 40px alapértelmezett + 40px extra = 80px */
+  transition: var(--transition);
 }
 
 /* Experiments page specific styling - 40px extra indentation */
@@ -1172,6 +1141,7 @@ body {
 
 .settings-page {
   display: none !important;
+  transition: var(--transition);
 }
 
 .notifications-categories {
@@ -1229,6 +1199,7 @@ body {
   margin-bottom: 16px;
   box-sizing: border-box;
   max-width: 100%;
+  transition: var(--transition);
 }
 
 .general-beta-card-first {
@@ -1425,14 +1396,12 @@ body {
 #notifications-page.settings-page {
   padding: 0 !important;
   margin-left: -40px !important;
-  /* Balra tolás, hogy ugyanonnan kezdődjön mint a general page */
   margin-top: -20px !important;
-  /* Feljebb tolás */
   display: flex !important;
   flex-direction: column !important;
   gap: 8px !important;
   width: calc(100% + 40px) !important;
-  /* Szélesség kompenzálása a balra tolás miatt */
+  transition: var(--transition);
 }
 
 /* Notice kártya */
