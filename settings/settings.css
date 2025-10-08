@@ -1620,6 +1620,12 @@ body {
   align-items: center;
 }
 
+.events-page-off {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .events-and-calendar-uc{
   display: flex;
   align-items: center;
