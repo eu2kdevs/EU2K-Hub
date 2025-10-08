@@ -210,7 +210,7 @@
                   <!-- Top Row -->
                   <div class="qr-controls-row">
                     <!-- Participation Confirmation Button (tall, half width) -->
-                    <button class="qr-control-btn qr-btn-tall qr-btn-half qr-btn-participation" onclick="confirmParticipation()">
+                    <button class="qr-control-btn qr-btn-tall qr-btn-half qr-btn-participation" onclick="startAuth()">
                       <img src="/EU2K-Hub/assets/qr-code/auth.svg" class="qr-control-icon" alt="Részvétel Igazolása">
                       <span data-translate="pages.qr.auth">Részvétel Igazolása</span>
                     </button>
@@ -280,6 +280,19 @@
               </div>
             </div>
 
+            <div id="authPopup" class="permission-overlay" style="display: none;">
+              <div class="permission-container">
+                <div class="permission-close-btn" onclick="closeAuthPopup()">
+                  <img src="/EU2K-Hub/assets/close.svg" alt="Bezárás">
+                </div>
+                <div class="permission-content">
+                  <img src="/EU2K-Hub/assets/qr-code/auth.svg" class="permission-hand-icon" alt="Auth">
+                  <h2 data-translate="pages.qr.auth">Részvétel Igazolása</h2>
+                  <p data-translate="pages.qr.auth_notice">A Részvétel Igazolása funkció nemsokára elérhető lesz.</p>
+                </div>
+              </div>
+            </div>
+
           <!-- Blocked Camera View -->
           <div class="camera-blocked-container" id="cameraBlockedContainer" style="display: none;">
             <div class="camera-blocked-content">
@@ -310,21 +323,6 @@
                 <button class="permission-ok-btn" onclick="acceptPermissionPopup()" data-translate="common.ok">Rendben</button>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div id="site-footer" class="footer" aria-label="Site footer">
-        <div class="footer-container">
-          <div class="footer-left">
-            <img src="/EU2K-Hub/eu2k_hub_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Hub Logó">
-          </div>
-          <div class="footer-center">
-            <a class="footer-privacy" data-translate="pages.index.privacy_policy" href="/EU2K-Hub/privacy_policy.html">Adatkezelési Tájékoztató</a>
-            <a class="footer-privacy" data-translate="pages.index.terms_of_service" href="/EU2K-Hub/terms_of_service.html">Használati Feltételek</a>
-          </div>
-          <div class="footer-right">
-            <img src="/EU2K-Hub/eu2k_devs_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Devs Logó">
-            <img src="/EU2K-Hub/eu2k_dok_logo_hor_dark_smoller_by_width.png" class="footer-logo-wide" alt="EU2K DÖK Logó">
           </div>
         </div>
       </div>
@@ -1096,6 +1094,17 @@
 
     function closeGamePopup() {
       const popup = document.getElementById('gamePopup');
+      if (popup) popup.style.display = 'none';
+    }
+
+    function startAuth() {
+      console.log('Auth clicked');
+      const popup = document.getElementById('authPopup');
+      if (popup) popup.style.display = 'flex'; // vagy 'block' ha nem flex
+    }
+
+    function closeAuthPopup() {
+      const popup = document.getElementById('authPopup');
       if (popup) popup.style.display = 'none';
     }
 

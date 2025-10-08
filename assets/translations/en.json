@@ -144,6 +144,7 @@
       "new_scan": "New scan",
       "switch_camera": "Switch Camera",
       "auth": "Authenticate Yourself",
+      "auth_notice": "The Authentication function is not yet available in the Hub.",
       "off_camera": "Turn off Camera",
       "on_camera": "Turn on Camera",
       "restart_camera": "Restart Camera",
