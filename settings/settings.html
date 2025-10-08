@@ -786,5 +786,26 @@
   setInterval(applySettingsSmall, 1000);
   applySettingsSmall(); // első alkalmazás betöltéskor
 </script>
+<script>
+  function styleAllSettingsPages() {
+    // Kiválaszt minden settings-page elemet
+    const pages = document.querySelectorAll('.settings-pages .settings-page');
+
+    pages.forEach(page => {
+      page.style.borderRadius = '32px';
+      page.style.overflowY = 'auto';
+      page.style.scrollBehavior = 'smooth';
+      page.style.scrollbarWidth = 'thin'; // Firefox
+      page.style.scrollbarColor = '#5EA56E transparent'; // zöldes árnyalat
+
+      // Chrome / Edge stílushoz shadow DOM scrollbar CSS
+      page.style.setProperty('--scrollbar-thumb', '#5EA56E');
+      page.style.setProperty('--scrollbar-track', 'transparent');
+    });
+  }
+
+  // Lefut oldalbetöltés után
+  document.addEventListener('DOMContentLoaded', styleAllSettingsPages);
+</script>
 </body>
 </html>
