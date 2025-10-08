@@ -408,7 +408,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
   margin-top: 40px;
   margin-left: 22px;
 }
@@ -444,8 +443,8 @@ body {
 }
 
 .welcome-icon {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
 }
 
 .welcome-text {
@@ -1124,6 +1123,9 @@ body {
   padding-right: 0;
   padding-top: 20px;
   transition: var(--transition);
+  border-radius: 32px;
+  overflow-y: scroll;
+  scroll: smooth;
 }
 
 .settings-pages-experiments {
@@ -1131,17 +1133,26 @@ body {
   padding-right: 0;
   padding-top: 20px;
   padding-left: 80px;
+  border-radius: 32px;
+  overflow-y: scroll;
+  scroll: smooth;
   transition: var(--transition);
 }
 
 /* Experiments page specific styling - 40px extra indentation */
 #experiments-page {
   margin-left: -40px;
+  border-radius: 32px;
+  overflow-y: scroll;
+  scroll: smooth;
 }
 
 .settings-page {
   display: none !important;
   transition: var(--transition);
+  border-radius: 32px;
+  overflow-y: scroll;
+  scroll: smooth;
 }
 
 .notifications-categories {
@@ -1569,6 +1580,8 @@ body {
   margin-left: -60px;
   margin-top: -20px;
   width: calc(100% + 30px);
+  overflow-y: scroll;
+  scroll: smooth;
 }
 
 /* Specific page overrides to ensure proper hiding */
@@ -1947,6 +1960,8 @@ body {
     margin-left: -60px;
     margin-top: -20px;
     width: calc(100% + 30px);
+    overflow-y: scroll;
+    scroll: smooth;
   }
 }
 
@@ -1981,5 +1996,3 @@ body {
 #community-page .community-arrow-icon {
   filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(500%) hue-rotate(80deg) brightness(110%) contrast(90%) !important;
 }
-
-/*na ezt foigyeljd, képzeld, amikor a general settings page aktív, akkor a main contentre oylan mintha kerülne egy limit hogy mennyire lehet keskeny (kb semmi, alig lehet méretezni). Na itt a twist, viszont a többi settigns pagenél, pl a notificationsnél, ott tök normélisan viselkedik a main content*/
