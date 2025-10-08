@@ -1628,10 +1628,17 @@ body {
 
 .events-and-calendar-uc{
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 16px;
   padding: 40px 20px;
+  text-align: center;
+}
+
+.events-and-calendar-uc .title-text {
+    font-size: 1.5rem;
+    font-weight: 500;
 }
 
 #messages-page:not(.active) {
