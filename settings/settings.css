@@ -387,7 +387,7 @@ body {
   --md-filled-button-container-color: #1E2A1E;
   --md-filled-button-label-text-color: #E0E4DB;
   width: 48px;
-  height: 100px;
+  height: 113px;
   min-width: 48px;
   padding: 0;
   display: flex;
@@ -744,6 +744,12 @@ body {
 /* Csak ha a gombnak van a "-open" osztálya, mutatjuk */
 .nav-item-list.nav-item-open-list span {
   display: flex; /* vagy flex, ha flex konténer */
+}
+
+
+.nav-icon-open {
+  width: 24px;
+  height: 24px;
 }
 
 .top-cards-row.shrinked .red-card.large {
@@ -1203,6 +1209,8 @@ body {
 
 /* General Settings Page */
 .general-page {
+  margin-left: -60px;
+  margin-top: -20px;
   height: 468px;
   width: 100%;
   margin-left: -33px;
@@ -1582,6 +1590,8 @@ body {
   margin-left: -40px;
   margin-top: -20px;
   width: calc(100% + 40px);
+  overflow-y: scroll;
+  scroll: smooth;
 }
 
 /* General page custom styling */
@@ -2021,17 +2031,6 @@ body {
 .community-arrow-icon {
   width: 20px;
   height: 20px;
-}
-
-/* General Page - Desktop only */
-@media (min-width: 1201px) {
-  #general-page {
-    margin-left: -60px;
-    margin-top: -20px;
-    width: calc(100% + 30px);
-    overflow-y: scroll;
-    scroll: smooth;
-  }
 }
 
 #community-page .community-no-courses {
