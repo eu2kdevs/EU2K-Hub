@@ -1432,20 +1432,6 @@ body {
   transition: var(--transition);
 }
 
-/* Notice kártya */
-.notifications-notice {
-  background: #2C332C;
-  border-radius: 32px;
-  padding: 16px 20px;
-  margin-left: 40px;
-  /* Padding helyett margin a bal oldalon */
-  margin-right: 20px;
-  /* Kis margin a jobb oldalon */
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .notice-icon {
   width: 24px;
   height: 24px;
@@ -1532,14 +1518,13 @@ body {
 
 /* Notice kártya */
 .notifications-notice {
-  background: #2A2A2A;
+  background: #2C332C;
   border-radius: 32px;
   padding: 16px 20px;
   display: flex;
   align-items: center;
   gap: 12px;
   margin: 0 0 8px 0;
-  /* 12px luk a széleken, 8px alul */
 }
 
 .notice-icon {
@@ -1776,6 +1761,10 @@ body {
   border-radius: 8px 8px 32px 32px;
 }
 
+.community-suggestion-item.only {
+  border-radius: 32px;
+}
+
 .community-suggestion-text {
   color: #C1C9BE;
   font-size: 1rem;
@@ -1791,6 +1780,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+  filter: grayscale(100%);
   transition: var(--transition);
 }
 

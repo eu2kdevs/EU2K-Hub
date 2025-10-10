@@ -75,20 +75,153 @@
   </script>
 
   <script>
-    // SPA routing és tartalomváltás - Hash alapú navigáció
-    function initializeSettings() {
-      const settingsCards = document.querySelectorAll('.settings-card');
-      const settingsPages = document.querySelectorAll('.settings-page');
+      // SPA routing és tartalomváltás - Hash alapú navigáció
+      function initializeSettings() {
+        const settingsCards = document.querySelectorAll('.settings-card');
+        const settingsPages = document.querySelectorAll('.settings-page');
 
-      function showPage(pageId) {
-        console.log('Showing page:', pageId); // Debug
+        function showPage(pageId) {
+          console.log('Showing page:', pageId); // Debug
 
-        // Minden oldal ERŐS elrejtése
+          // Minden oldal ERŐS elrejtése
+          settingsPages.forEach(page => {
+            page.classList.remove('active');
+            page.style.display = 'none';
+            page.style.visibility = 'hidden';
+            page.style.opacity = '0';
+          });
+
+          // Minden kártya inaktívvá tétele
+          settingsCards.forEach(card => {
+            card.classList.remove('active');
+          });
+
+          // Megfelelő oldal megjelenítése
+          const targetPage = document.getElementById(pageId + '-page');
+          const targetCard = document.querySelector(`[data-page="${pageId}"]`);
+
+          console.log('Target page:', targetPage); // Debug
+          console.log('Target card:', targetCard); // Debug
+
+          if (targetPage) {
+            targetPage.classList.add('active');
+            targetPage.style.display = 'block';
+            targetPage.style.visibility = 'visible';
+            targetPage.style.opacity = '1';
+          }
+
+          if (targetCard) {
+            targetCard.classList.add('active');
+          }
+        }
+
+        function navigate(event, pageId) {
+          event.preventDefault();
+          location.hash = pageId;
+        }
+
+        // Kártyák eseménykezelői
+        settingsCards.forEach(card => {
+          card.addEventListener('click', e => {
+            const pageId = card.getAttribute('data-page');
+            navigate(e, pageId);
+          });
+        });
+
+        // Switch eseménykezelő - megakadályozza a kártya aktiválását
+        const notificationSwitch = document.querySelector('.settings-card[data-page="notifications"] md-switch');
+        if (notificationSwitch) {
+          notificationSwitch.addEventListener('click', e => {
+            e.stopPropagation(); // Megakadályozza a kártya kattintás eseményét
+          });
+        }
+
+        // Kategória switch-ek eseménykezelői
+        const categorySwitches = document.querySelectorAll('.category-item md-switch');
+        categorySwitches.forEach(switchElement => {
+          switchElement.addEventListener('click', e => {
+            e.stopPropagation(); // Megakadályozza a kártya kattintás eseményét
+          });
+        });
+
+        // Üdvözlő képernyő switch kezelése
+        const welcomeScreenSwitch = document.getElementById('welcome-screen-switch');
+        if (welcomeScreenSwitch && window.welcomeScreenManager) {
+          // Beállítjuk a switch állapotát a mentett beállítás alapján
+          welcomeScreenSwitch.selected = window.welcomeScreenManager.isWelcomeScreenEnabled();
+
+          welcomeScreenSwitch.addEventListener('click', e => {
+            e.stopPropagation(); // Megakadályozza a kártya kattintás eseményét
+          });
+
+          welcomeScreenSwitch.addEventListener('change', e => {
+            const isEnabled = e.target.selected;
+            window.welcomeScreenManager.setWelcomeScreenEnabled(isEnabled);
+            console.log('Welcome screen setting changed to:', isEnabled);
+          });
+        }
+
+        // Első látogatás visszaállítása gomb kezelése
+        const resetFirstVisitBtn = document.getElementById('reset-first-visit-btn');
+        if (resetFirstVisitBtn && window.welcomeScreenManager) {
+          resetFirstVisitBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            if (confirm('Biztosan visszaállítod az első látogatás állapotát? A következő oldal betöltésekor megjelenik az üdvözlő képernyő.')) {
+              window.welcomeScreenManager.resetFirstVisit();
+              alert('Első látogatás állapota visszaállítva! A következő oldal betöltésekor megjelenik az üdvözlő képernyő.');
+            }
+          });
+        }
+
+        // Nyelv radio button-ok kezelése
+        const languageRadios = document.querySelectorAll('.general-language-card md-radio');
+        languageRadios.forEach(radio => {
+          radio.addEventListener('change', e => {
+            // Ha ez a radio lett kiválasztva, a másikat kikapcsoljuk
+            languageRadios.forEach(otherRadio => {
+              if (otherRadio !== radio) {
+                otherRadio.checked = false;
+              }
+            });
+
+            // Fordítási rendszer integrálása
+            if (window.translationManager && radio.checked) {
+              const language = radio.value;
+              console.log('Language radio changed to:', language);
+              window.translationManager.switchLanguage(language);
+            }
+          });
+        });
+
+        // Nyelv kártyák kattinthatósága
+        const languageCards = document.querySelectorAll('.general-language-card');
+        languageCards.forEach(card => {
+          card.addEventListener('click', e => {
+            const radio = card.querySelector('md-radio');
+            if (radio && !radio.checked) {
+              radio.checked = true;
+              // Trigger change event
+              radio.dispatchEvent(new Event('change'));
+            }
+          });
+        });
+
+        // Hash változás figyelése
+        window.addEventListener('hashchange', () => {
+          const page = location.hash.substring(1) || 'general';
+          console.log('Hash changed to:', page); // Debug
+          showPage(page);
+        });
+
+        // Initial page load
+        const initialPage = location.hash.substring(1) || 'general';
+        console.log('Initial page:', initialPage); // Debug
+
         settingsPages.forEach(page => {
-          page.classList.remove('active');
           page.style.display = 'none';
           page.style.visibility = 'hidden';
           page.style.opacity = '0';
+          page.classList.remove('active');
         });
 
         // Minden kártya inaktívvá tétele
@@ -96,167 +229,118 @@
           card.classList.remove('active');
         });
 
-        // Megfelelő oldal megjelenítése
-        const targetPage = document.getElementById(pageId + '-page');
-        const targetCard = document.querySelector(`[data-page="${pageId}"]`);
+        showPage(initialPage);
 
-        console.log('Target page:', targetPage); // Debug
-        console.log('Target card:', targetCard); // Debug
-
-        if (targetPage) {
-          targetPage.classList.add('active');
-          targetPage.style.display = 'block';
-          targetPage.style.visibility = 'visible';
-          targetPage.style.opacity = '1';
-        }
-
-        if (targetCard) {
-          targetCard.classList.add('active');
-        }
-      }
-
-      function navigate(event, pageId) {
-        event.preventDefault();
-        location.hash = pageId;
-      }
-
-      // Kártyák eseménykezelői
-      settingsCards.forEach(card => {
-        card.addEventListener('click', e => {
-          const pageId = card.getAttribute('data-page');
-          navigate(e, pageId);
-        });
-      });
-
-      // Switch eseménykezelő - megakadályozza a kártya aktiválását
-      const notificationSwitch = document.querySelector('.settings-card[data-page="notifications"] md-switch');
-      if (notificationSwitch) {
-        notificationSwitch.addEventListener('click', e => {
-          e.stopPropagation(); // Megakadályozza a kártya kattintás eseményét
-        });
-      }
-
-      // Kategória switch-ek eseménykezelői
-      const categorySwitches = document.querySelectorAll('.category-item md-switch');
-      categorySwitches.forEach(switchElement => {
-        switchElement.addEventListener('click', e => {
-          e.stopPropagation(); // Megakadályozza a kártya kattintás eseményét
-        });
-      });
-
-      // Üdvözlő képernyő switch kezelése
-      const welcomeScreenSwitch = document.getElementById('welcome-screen-switch');
-      if (welcomeScreenSwitch && window.welcomeScreenManager) {
-        // Beállítjuk a switch állapotát a mentett beállítás alapján
-        welcomeScreenSwitch.selected = window.welcomeScreenManager.isWelcomeScreenEnabled();
-
-        welcomeScreenSwitch.addEventListener('click', e => {
-          e.stopPropagation(); // Megakadályozza a kártya kattintás eseményét
-        });
-
-        welcomeScreenSwitch.addEventListener('change', e => {
-          const isEnabled = e.target.selected;
-          window.welcomeScreenManager.setWelcomeScreenEnabled(isEnabled);
-          console.log('Welcome screen setting changed to:', isEnabled);
-        });
-      }
-
-      // Első látogatás visszaállítása gomb kezelése
-      const resetFirstVisitBtn = document.getElementById('reset-first-visit-btn');
-      if (resetFirstVisitBtn && window.welcomeScreenManager) {
-        resetFirstVisitBtn.addEventListener('click', e => {
-          e.stopPropagation();
-          if (confirm('Biztosan visszaállítod az első látogatás állapotát? A következő oldal betöltésekor megjelenik az üdvözlő képernyő.')) {
-            window.welcomeScreenManager.resetFirstVisit();
-            alert('Első látogatás állapota visszaállítva! A következő oldal betöltésekor megjelenik az üdvözlő képernyő.');
-          }
-        });
-      }
-
-      // Nyelv radio button-ok kezelése
-      const languageRadios = document.querySelectorAll('.general-language-card md-radio');
-      languageRadios.forEach(radio => {
-        radio.addEventListener('change', e => {
-          // Ha ez a radio lett kiválasztva, a másikat kikapcsoljuk
-          languageRadios.forEach(otherRadio => {
-            if (otherRadio !== radio) {
-              otherRadio.checked = false;
+        // Vissza gomb funkcionalitás
+        const backBtn = document.getElementById('backToHome');
+        if (backBtn) {
+          backBtn.addEventListener('click', () => {
+            // Ellenőrizzük, hogy van-e előző oldal a history-ban
+            if (document.referrer && document.referrer !== window.location.href) {
+              // Ha van referrer és nem ugyanaz az oldal, akkor visszamegyünk
+              window.history.back();
+            } else {
+              // Ha nincs referrer, akkor alapértelmezett oldalra
+              window.location.href = '/EU2K-Hub/index.html';
             }
           });
+        }
+      }
 
-          // Fordítási rendszer integrálása
-          if (window.translationManager && radio.checked) {
-            const language = radio.value;
-            console.log('Language radio changed to:', language);
-            window.translationManager.switchLanguage(language);
-          }
-        });
-      });
+      // DOM betöltés után inicializálás
+      document.addEventListener('DOMContentLoaded', initializeSettings);
+    </script>
+    <script type="module">
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 
-      // Nyelv kártyák kattinthatósága
-      const languageCards = document.querySelectorAll('.general-language-card');
-      languageCards.forEach(card => {
-        card.addEventListener('click', e => {
-          const radio = card.querySelector('md-radio');
-          if (radio && !radio.checked) {
-            radio.checked = true;
-            // Trigger change event
-            radio.dispatchEvent(new Event('change'));
-          }
-        });
-      });
+    const db = getFirestore();
+    const auth = getAuth();
 
-      // Hash változás figyelése
-      window.addEventListener('hashchange', () => {
-        const page = location.hash.substring(1) || 'general';
-        console.log('Hash changed to:', page); // Debug
-        showPage(page);
-      });
+    async function fetchLatestSuggestions(userId) {
+      const suggestionsRef = collection(db, `users/${userId}/general_data/youhub/suggestions`);
+      const snapshot = await getDocs(suggestionsRef);
 
-      // Initial page load
-      const initialPage = location.hash.substring(1) || 'general';
-      console.log('Initial page:', initialPage); // Debug
+      const card = document.querySelector(".community-suggestions-card");
+      const itemsContainer = card?.querySelector(".community-suggestion-items");
 
-      settingsPages.forEach(page => {
-        page.style.display = 'none';
-        page.style.visibility = 'hidden';
-        page.style.opacity = '0';
-        page.classList.remove('active');
-      });
+      if (!card || !itemsContainer) return;
 
-      // Minden kártya inaktívvá tétele
-      settingsCards.forEach(card => {
-        card.classList.remove('active');
-      });
+      // előző tartalom törlése, ha nincs találat
+      if (snapshot.empty) {
+        itemsContainer.innerHTML = `
+          <div class="events-page-off">
+            <img src="/EU2K-Hub/assets/settings_icons/qm.svg" class="community-block-icon" alt="Question Mark">
+            <div class="events-and-calendar-uc">
+              <div class="title-text" data-translate="settings.oops">Oh, nemár.</div>
+              <div data-translate="settings.not_found_suggestions">
+                Nem javasoltál még semmit a közösségnek! Menj a YouHubba és oszd meg az ötleteid másokkal!
+              </div>
+            </div>
+          </div>`;
+        return;
+      }
 
-      showPage(initialPage);
+      // 🔥 doksik rendezése
+      const docs = snapshot.docs.map(doc => ({
+        name: doc.id,
+        lastUpdated: doc.data().lastUpdated?.toDate?.() ?? new Date(0)
+      }));
+      docs.sort((a, b) => b.lastUpdated - a.lastUpdated);
 
-      // Vissza gomb funkcionalitás
-      const backBtn = document.getElementById('backToHome');
-      if (backBtn) {
-        backBtn.addEventListener('click', () => {
-          // Ellenőrizzük, hogy van-e előző oldal a history-ban
-          if (document.referrer && document.referrer !== window.location.href) {
-            // Ha van referrer és nem ugyanaz az oldal, akkor visszamegyünk
-            window.history.back();
+      const latest = docs.slice(0, 3).map(d => d.name);
+
+      // kiírás
+      const first = itemsContainer.querySelector(".community-suggestion-item.first span");
+      const middle = itemsContainer.querySelector(".community-suggestion-item.middle span");
+      const last = itemsContainer.querySelector(".community-suggestion-item.last span");
+
+      if (latest.length === 1) {
+        // csak 1 javaslat
+        card.className = "community-suggestions-card community-suggestion-card-only";
+        first.textContent = latest[0];
+        if (middle) middle.textContent = "";
+        if (last) last.textContent = "";
+      } else if (latest.length === 2) {
+        // ha 2 javaslat van
+        first.textContent = latest[0];
+        if (last) {
+          last.textContent = latest[1];
+        } else if (middle) {
+          middle.textContent = latest[1];
+        }
+      } else {
+        // 3 vagy több javaslat
+        if (first) first.textContent = latest[0];
+        if (middle) middle.textContent = latest[1];
+        if (last) last.textContent = latest[2];
+      }
+    }
+
+    // csak akkor fusson, ha community page aktív
+    function checkCommunityPage() {
+      if (location.hash === "#community") {
+        onAuthStateChanged(auth, user => {
+          if (user) {
+            fetchLatestSuggestions(user.uid).catch(err => console.error("Firestore error:", err));
           } else {
-            // Ha nincs referrer, akkor alapértelmezett oldalra
-            window.location.href = '/EU2K-Hub/index.html';
+            console.warn("No user signed in 👀");
           }
         });
       }
     }
 
-    // DOM betöltés után inicializálás
-    document.addEventListener('DOMContentLoaded', initializeSettings);
+    window.addEventListener("hashchange", checkCommunityPage);
+    window.addEventListener("load", checkCommunityPage);
   </script>
   <script src="/EU2K-Hub/assets/js/permissions.js"></script>
   <script src="/EU2K-Hub/assets/js/translations.js"></script>
   <script src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
   <script src="/EU2K-Hub/assets/js/auth-state.js"></script>
   <script src="/EU2K-Hub/assets/js/test_firebase.js" type="module"></script>
-<script src="/EU2K-Hub/assets/js/firebase-performance.js" type="module"></script>
+  <script src="/EU2K-Hub/assets/js/firebase-performance.js" type="module"></script>
   <script src="/EU2K-Hub/assets/js/first-input-delay.js"></script>
+  <script type="module" src="/EU2K-Hub/assets/js/notifications.js"></script>
 </head>
 
 <script>

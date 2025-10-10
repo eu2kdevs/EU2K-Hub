@@ -415,7 +415,9 @@
     "experiments-reset-onboarding": "Bevezető Helyreállítása",
     "experiments-reset": "Helyreállítás",
     "experiments-test-mode": "Teszt Mód",
-    "experiments-enter-test-mode": "Belépés"
+    "experiments-enter-test-mode": "Belépés",
+    "oops": "Oh nemár.",
+    "not_found_suggestions": "Nem javasoltál még semmit a közösségnek! Menj a YouHubba és oszd meg az ötleteid másokkal!"
   },
   "common": {
     "welcome_hub": "Üdvözöllek a Hub-ban!",

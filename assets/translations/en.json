@@ -399,7 +399,9 @@
     "experiments-reset-onboarding": "Reset Onboarding",
     "experiments-reset": "Reset",
     "experiments-test-mode": "Test Mode",
-    "experiments-enter-test-mode": "Enter"
+    "experiments-enter-test-mode": "Enter",
+    "oops": "Oh no.",
+    "not_found_suggestions": "You didn't reccommend anything to the community! Try sharing your ideas through YouHub!"
   },
   "common": {
     "forward": "Forward",
