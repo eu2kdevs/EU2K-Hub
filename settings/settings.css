@@ -1545,7 +1545,7 @@ body {
   background: #101510;
   border-radius: 32px;
   padding: 20px;
-  margin: 0 12px 8px 0;
+  margin: 0;
   /* 12px luk a széleken */
 }
 
