@@ -379,6 +379,8 @@
     "beta_version": "Beta Version",
     "new_things": "New Things",
     "bell": "Bell",
+    "offline_notifs": "Offline Notifications",
+    "notifications_notice_offline": "This means you'll still get notifications even if the Hub is not open. This function is not yet supported.",
     "messages_notice": "This setting only applies to known contacts!",
     "message_categories": "Who can send you messages?",
     "everyone": "Everyone",

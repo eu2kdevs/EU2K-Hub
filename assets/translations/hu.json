@@ -392,6 +392,8 @@
     "beta_version": "Bétaverzió",
     "new_things": "Újdonságok",
     "bell": "Csengő",
+    "offline_notifs": "Offline Értesítések",
+    "notifications_notice_offline": "Akkor is meg fogod kapni az értesítéseket, amikor az oldal nincs megnyitva. Ez a funkció még nem támogatott.",
     "messages_notice": "Ez a beállítás csak az ismert névjegyekre vonatkozik!",
     "message_categories": "Kit küldhetsz üzenetet?",
     "everyone": "Mindenki",
