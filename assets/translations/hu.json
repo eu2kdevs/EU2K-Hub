@@ -13,7 +13,13 @@
       "new_thing2": "Ha ezt látod, a hiba a mi oldalunkon van.",
       "more_info_link": "Kérlek jelezd ezt a hibát felénk a YouHubon keresztül!",
       "terms_of_service": "Használati feltételek",
-      "privacy_policy": "Adatvédelmi irányelvek"
+      "privacy_policy": "Adatvédelmi irányelvek",
+      "warning_title": "Csak egy pillanat...",
+      "warning_list_1": "Ahogy előbb láthattad, ez a Hub első félig publikus kiadása, emiatt sok vizuális, és \"funkcionális\" bug megjelenhet.",
+      "warning_list_2": "Bármelyik észrevételekor menjetek a YouHubba, és írjatok egy visszajelzést, hogy minél hamarabb kijavítsuk.",
+      "warning_list_3": "Ismert vizuális hiba, hogy egyes kijelzőkön az elrendezés levágódhat, vagy túl nagyok lehetnek.",
+      "warning_list_4": "Ezek a hibák jelentkezhetnek nem Chrominum alapú böngészőkben is (Chrome, Edge, Brave, Opera Chrominum alapúak), kivéve a Firefox alapúakat (Firefox, Tor, Arc, Zen).",
+      "warning_list_5": "A hiba javítására nyomd le a Ctrl + - gombot a kicsinyítéshez. A visszanagyításhoz a Ctrl + + vagy Ctrl + ó"
     },
     "join": {
       "join-title": "Csatlakozás az eseményhez folyamatban...",
