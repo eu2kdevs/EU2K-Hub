@@ -83,19 +83,12 @@
   <script src="/EU2K-Hub/assets/js/page-overlay-loader.js"></script>
   <script src="/EU2K-Hub/assets/js/permissions.js"></script>
   <script data-src="/EU2K-Hub/assets/js/translations.js"></script>
-  <!-- <script data-src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
-  <script data-src="/EU2K-Hub/assets/js/auth-state.js"></script> -->
+  <script data-src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
+  <script data-src="/EU2K-Hub/assets/js/auth-state.js"></script>
   <script data-src="/EU2K-Hub/assets/js/test_firebase.js" type="module"></script>
   <script data-src="/EU2K-Hub/assets/js/firebase-performance.js" type="module"></script>
   <script data-src="/EU2K-Hub/assets/js/first-input-delay.js"></script>
   <script data-src="/EU2K-Hub/assets/js/new-things-popup.js"></script>
-  <script type="importmap">
-    {
-      "imports": {
-        "@material/web/": "https://esm.run/@material/web/"
-      }
-    }
-  </script>
   <script type="text/javascript">
     (function (c, l, a, r, i, t, y) {
       c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
@@ -111,8 +104,8 @@
     }
   </script>
   <script type="module">
-    import 'https://unpkg.com/@material/web@2.0.0/all.js';
-    import { styles as typescaleStyles } from 'https://unpkg.com/@material/web@2.0.0/typography/md-typescale-styles.js';
+    import '@material/web/all.js';
+    import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
 
     document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
   </script>
@@ -997,7 +990,7 @@
                 </div>
               </div>
               <div class="popup-footer"
-                <md-checkbox id="dontShowAgain"></md-checkbox>
+                <md-checkbox name="dontShowAgain"></md-checkbox>
                 <span data-translate="pages.index.warning_checkbox">Többet ne mutassa</span>
               </div>
             </div>
