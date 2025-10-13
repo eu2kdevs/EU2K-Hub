@@ -3,8 +3,8 @@
 # EU2K Hub
 
 **Status:** ⚠️ Closed Beta  
-**Version:** 0.6abc (Closed beta)  
-**Known issues:** Event Hub not fully working, QR-Code site is going to be under renovation
+**Version:** 0.6bbc (Closed beta)  
+**Known issues:** Event Hub not fully working, working on updating the onboarding proccess
 
 ---
 
