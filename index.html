@@ -978,14 +978,27 @@
               <img src="/EU2K-Hub/assets/welcome_icons/warning.svg" class="warning-hand-icon" alt="Game">
               <h2 data-translate="pages.index.warning_title">Csak egy pillanat...</h2>
               <div class="warning-list-wrapper"></div>
-                <ul class="warning-list">
-                  <li data-translate="pages.index.warning_list_1">Ahogy előbb láthattad, ez a Hub első félig publikus kiadása, emiatt sok vizuális, és "funkcionális" bug megjelenhet.</li>
-                  <li data-translate="pages.index.warning_list_2">Bármelyik észrevételekor menjetek a YouHubba, és írjatok egy visszajelzést, hogy minél hamarabb kijavítsuk.</li>
-                  <li data-translate="pages.index.warning_list_3">Ismert vizuális hiba, hogy egyes kijelzőkön az elrendezés levágódhat, vagy túl nagyok lehetnek.</li>
-                  <li data-translate="pages.index.warning_list_4">Ezek a hibák jelentkezhetnek nem Chrominum alapú böngészőkben is (Chrome, Edge, Brave, Opera Chrominum alapúak), kivéve a Firefox alapúakat (Firefox, Tor, Arc, Zen).</li>
-                  <li data-translate="pages.index.warning_list_5">A hiba javítására nyomd le a Ctrl + - gombot a kicsinyítéshez. A visszanagyításhoz a Ctrl + + vagy Ctrl + ó</li>
-                </ul>
+                <div class="warning-list">
+                  <div class="warning-item first">
+                    <li data-translate="pages.index.warning_list_1">Ahogy előbb láthattad, ez a Hub első félig publikus kiadása, emiatt sok vizuális, és "funkcionális" bug megjelenhet.</li>
+                  </div>
+                  <div class="warning-item middle" >
+                    <li data-translate="pages.index.warning_list_2">Bármelyik észrevételekor menjetek a YouHubba, és írjatok egy visszajelzést, hogy minél hamarabb kijavítsuk.</li>
+                  </div>
+                  <div class="warning-item middle">
+                    <li data-translate="pages.index.warning_list_3">Ismert vizuális hiba, hogy egyes kijelzőkön az elrendezés levágódhat, vagy túl nagyok lehetnek.</li>
+                  </div>
+                  <div class="warning-item middle">
+                    <li data-translate="pages.index.warning_list_4">Ezek a hibák jelentkezhetnek nem Chrominum alapú böngészőkben is (Chrome, Edge, Brave, Opera Chrominum alapúak), kivéve a Firefox alapúakat (Firefox, Tor, Arc, Zen).</li>
+                  </div>
+                  <div class="warning-item last">
+                    <li data-translate="pages.index.warning_list_5">A hiba javítására nyomd le a Ctrl + - gombot a kicsinyítéshez. A visszanagyításhoz a Ctrl + + vagy Ctrl + ó</li>
+                  </div>
+                </div>
               </div>
+              <md-checkbox>
+                <span data-translate="pages.index.warning_checkbox">Többet ne mutassa</span>
+              </md-checkbox>
             </div>
           </div>
         </div>
@@ -1116,20 +1129,35 @@
     };
   </script>
   <script>
-    window.addEventListener("load", () => {
-      const popup = document.getElementById("warningPopup");
-      if (popup) {
-        popup.style.display = "flex";
-      }
-    });
+  window.addEventListener("load", () => {
+    const popup = document.getElementById("warningPopup");
+    const checkbox = popup.querySelector("md-checkbox input[type='checkbox']");
 
-    function closeWarningPopup() {
-      const popup = document.getElementById("warningPopup");
-      if (popup) {
-        popup.style.display = "none";
-      }
+    // Ha már pipálták, ne mutassa
+    if (localStorage.getItem("hideWarningPopup") === "true") return;
+
+    if (popup) {
+      popup.style.display = "flex";
     }
-  </script>
+
+    if (checkbox) {
+      checkbox.addEventListener("change", () => {
+        if (checkbox.checked) {
+          localStorage.setItem("hideWarningPopup", "true");
+        } else {
+          localStorage.removeItem("hideWarningPopup");
+        }
+      });
+    }
+  });
+
+  function closeWarningPopup() {
+    const popup = document.getElementById("warningPopup");
+    if (popup) {
+      popup.style.display = "none";
+    }
+  }
+</script>
 </body>
 
 </html>

@@ -19,7 +19,8 @@
       "warning_list_2": "Bármelyik észrevételekor menjetek a YouHubba, és írjatok egy visszajelzést, hogy minél hamarabb kijavítsuk.",
       "warning_list_3": "Ismert vizuális hiba, hogy egyes kijelzőkön az elrendezés levágódhat, vagy túl nagyok lehetnek.",
       "warning_list_4": "Ezek a hibák jelentkezhetnek nem Chrominum alapú böngészőkben is (Chrome, Edge, Brave, Opera Chrominum alapúak), kivéve a Firefox alapúakat (Firefox, Tor, Arc, Zen).",
-      "warning_list_5": "A hiba javítására nyomd le a Ctrl + - gombot a kicsinyítéshez. A visszanagyításhoz a Ctrl + + vagy Ctrl + ó"
+      "warning_list_5": "A hiba javítására nyomd le a Ctrl + - gombot a kicsinyítéshez. A visszanagyításhoz a Ctrl + + vagy Ctrl + ó",
+      "warning_checkbox": "Többet ne mutassa"
     },
     "join": {
       "join-title": "Csatlakozás az eseményhez folyamatban...",

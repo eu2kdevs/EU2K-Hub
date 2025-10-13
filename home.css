@@ -980,6 +980,7 @@ body {
   border-radius: 32px;
   overflow-y: scroll;
   height: 100%;
+  gap: 8px;
 }
 
 .warning-list-wrapper {
@@ -989,4 +990,21 @@ body {
 
 .warning-list li {
   margin-bottom: 12px;
+}
+
+.warning-item {
+  height: 50px;
+  background-color: #3D433C;
+}
+
+.warning-item.first {
+  border-radius: 32px 32px 16px 16px;
+}
+
+.warning-item.middle {
+  border-radius: 32px;
+}
+
+.warning-item.last {
+  border-radius: 16px 16px 32px 32px;
 }

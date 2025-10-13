@@ -27,7 +27,8 @@
       "warning_list_2": "If you notice any issues, please go to YouHub and send us feedback so we can fix them as soon as possible.",
       "warning_list_3": "A known visual issue is that on some displays, the layout might be cut off or appear too large.",
       "warning_list_4": "These bugs may also occur on non-Chromium browsers (Chromium-based ones include Chrome, Edge, Brave, and Opera), except Firefox-based ones (Firefox, Tor, Arc, Zen).",
-      "warning_list_5": "To fix the display issue, press Ctrl + - to zoom out. To zoom back in, press Ctrl + + or Ctrl + 0."
+      "warning_list_5": "To fix the display issue, press Ctrl + - to zoom out. To zoom back in, press Ctrl + + or Ctrl + 0.",
+      "warning_checkbox": "Don't show this warning again"
     },
     "terms_of_service": {
       "title": "Terms of Service",
