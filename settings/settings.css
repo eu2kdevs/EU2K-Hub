@@ -2057,3 +2057,354 @@ body {
 #community-page .community-arrow-icon {
   filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(500%) hue-rotate(80deg) brightness(110%) contrast(90%) !important;
 }
+
+.card {
+  background-color: #101510;
+  padding: 24px;
+  margin-bottom: 4px;
+}
+
+.card-supervision {
+  background-color: #101510;
+  padding: 24px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-top {
+  border-radius: 32px 32px 8px 8px;
+  color: #D4E8D1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-top-supervision {
+  border-radius: 32px 32px 8px 8px;
+  color: #D4E8D1;
+}
+
+.card-top-full {
+  border-radius: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #D4E8D1;
+}
+
+.card-single {
+  border-radius: 32px;
+  color: #D4E8D1;
+}
+
+.card-bottom {
+  border-radius: 8px 8px 32px 32px;
+  color: #D4E8D1;
+}
+
+.card-single {
+  border-radius: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #D4E8D1;
+}
+
+.card-inside {
+  background-color: #1E2A1E;
+  padding: 24px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #D4E8D1;
+}
+
+.card-inside-with-description {
+  background-color: #1E2A1E;
+  padding: 24px;
+  margin-bottom: 4px;
+  display: flex;
+  flex-direction: column;
+  color: #D4E8D1;
+}
+
+.card-inside-with-description > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.card-inside-with-description > div:not(:first-child) {
+  align-self: flex-start;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.card-inside-first {
+  border-radius: 32px 32px 8px 8px;
+  color: #D4E8D1;
+}
+
+.card-inside-middle {
+  border-radius: 8px;
+  color: #D4E8D1;
+}
+
+.card-inside-last {
+  border-radius: 8px 8px 32px 32px;
+  color: #D4E8D1;
+}
+
+.card-inside-bottom {
+  border-radius: 8px 8px 32px 32px;
+  color: #D4E8D1;
+}
+
+.card-inside-2 {
+  background-color: #1E2A1E;
+  padding: 24px;
+  margin-bottom: 4px;
+}
+
+.card-inside-2-bottom {
+  border-radius: 8px 8px 32px 32px;
+  color: #D4E8D1;
+}
+
+.card-inside-inside {
+  background-color: #3A4B3A;
+  padding: 24px;
+  margin-bottom: 4px;
+  align-items: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-inside-inside-first {
+  border-radius: 32px 32px 8px 8px;
+  color: #D4E8D1;
+}
+
+.card-inside-inside-middle {
+  border-radius: 8px;
+  color: #D4E8D1;
+}
+
+.card-inside-inside-last {
+  border-radius: 8px 8px 32px 32px;
+  color: #D4E8D1;
+}
+
+.notice {
+  background-color: #2C332C;
+  border-radius: 32px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #C1C9BE;
+  margin: 16px 0;
+}
+
+.notice-top {
+  background-color: #2C332C;
+  border-radius: 32px 32px 8px 8px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #C1C9BE;
+  margin: 16px 0 4px 0;
+}
+
+.notice-middle {
+  background-color: #2C332C;
+  border-radius: 8px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #C1C9BE;
+  margin: 0 0 4px 0;
+}
+
+.notice-bottom {
+  background-color: #2C332C;
+  border-radius: 8px 8px 32px 32px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #C1C9BE;
+  margin: 0 0 16px 0;
+}
+
+.radio-group {
+  margin-top: 16px;
+}
+
+.radio-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  color: #C1C9BE;
+}
+
+.radio-item-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  color: #C1C9BE;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.textbox-container textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #2C332C;
+  border-radius: 32px 32px 8px 8px;
+  border: none;
+  padding: 16px;
+  color: #F7FFF7;
+  resize: none;
+  min-height: 80px;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.textbox-container {
+  margin-top: 10px;
+}
+
+/* Delete Confirmation Popup */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-container {
+  background-color: var(--surface-bg);
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.popup-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 24px;
+  filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(1000%) hue-rotate(315deg) brightness(105%) contrast(95%);
+}
+
+.popup-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0 0 16px 0;
+  line-height: 1.3;
+}
+
+.popup-description {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0 0 32px 0;
+  line-height: 1.5;
+}
+
+.popup-buttons {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.popup-button-primary,
+.popup-button-secondary {
+  flex: 1;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-button-primary {
+  background-color: #4A2827;
+  color: #F5C2C1;
+}
+
+.popup-button-primary:hover {
+  background-color: #5A3332;
+}
+
+.popup-button-secondary {
+  background-color: var(--card-bg);
+  color: var(--text-main);
+  border: 2px solid #3B4C39;
+}
+
+.popup-button-secondary:hover {
+  background-color: #2A3827;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .account-view {
+    flex-direction: column;
+  }
+  
+  .left-column {
+    width: 100%;
+    min-height: auto;
+  }
+  
+  .right-column {
+    width: 100%;
+  }
+  
+  .popup-container {
+    padding: 24px;
+    max-width: 320px;
+  }
+  
+  .popup-buttons {
+    flex-direction: column;
+  }
+}

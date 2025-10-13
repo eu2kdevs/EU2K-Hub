@@ -506,6 +506,16 @@
                     <md-switch icons selected></md-switch>
                   </div>
 
+                  <!-- Funkciók -->
+                  <div class="settings-card group-middle" data-page="functions">
+                    <img src="/EU2K-Hub/assets/settings_icons/functions.svg" class="settings-card-icon"
+                      alt="Funkciók">
+                    <div class="settings-card-content">
+                      <div class="settings-card-title" data-translate="settings.functions">Funkciók</div>
+                      <div class="settings-card-desc" data-translate="settings.functions_desc">Kezelés - Kiegészítők</div>
+                    </div>
+                  </div>
+
                   <!-- Statisztikák és Teljesítmény -->
                   <div class="settings-card group-bottom" data-page="stats">
                     <img src="/EU2K-Hub/assets/settings_icons/statistics_and_performance_icon.svg"
@@ -746,6 +756,40 @@
                         alt="Info">
                       <span class="notice-text" data-translate="settings.notifications_notice_offline">Akkor is meg fogod kapni az értesítéseket, amikor az oldal nincs megnyitva. Ez a funkció még nem támogatott.</span>
                     </div>
+                </div>
+
+                <div id="functions-page" class="settings-page">
+                  <!-- Notice kártya -->
+                  <div class="notifications-notice">
+                    <img src="/EU2K-Hub/assets/settings_icons/notifications_page/info.svg" class="notice-icon"
+                      alt="Info">
+                    <span class="notice-text" data-translate="settings.functions_notice">Disabling some of these functions could result in the system breaking, or you missing out on things.</span>
+                  </div>
+
+                  <!-- Kategóriák kártya -->
+                  <div class="notifications-categories-card">
+                    <div class="card-header">
+                      <span data-translate="pages.settings.functions_on_off">Funkciók ki és be kapcsolása</span>
+                    </div>
+                    <div class="card card-single">
+                      <div class="card-header">
+                        <span data-translate="pages.settings.popups">Popupok</span>
+                        <md-switch icons selected></md-switch>
+                      </div>
+                      <div class="card-inside-inside card-inside-inside-first">
+                        <span data-translate="pages.settings.show_warning_popup">Figyelmeztető Popup megjelenítése</span>
+                        <md-switch icons selected></md-switch>
+                      </div>
+                      <div class="card-inside-inside card-inside-inside-middle">
+                        <span data-translate="pages.settings.show_critical_popup">Kritikus Popup megjelenítése</span>
+                        <md-switch icons selected disabled></md-switch>
+                      </div>
+                      <div class="card-inside-inside card-inside-inside-last">
+                        <span data-translate="pages.settings.show_info_popup">Információs Popup megjelenítése</span>
+                        <md-switch icons selected disabled></md-switch>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div id="stats-page" class="settings-page">
@@ -1011,6 +1055,62 @@
 
   // Figyeljük az ablak méretét
   window.addEventListener('resize', updateFlexDirection);
+</script>
+<script>
+  // Helper: lekérdezi, hogy a checkbox vagy md-switch checked-e
+  function isChecked(el) {
+    if (!el) return false;
+    const tag = (el.tagName || "").toLowerCase();
+
+    if (tag === "input" && el.type === "checkbox") return !!el.checked;
+    if (typeof el.checked !== "undefined") return !!el.checked;
+    const aria = el.getAttribute && el.getAttribute("aria-checked");
+    if (aria === "true") return true;
+    if (aria === "false") return false;
+    return el.hasAttribute && el.hasAttribute("checked");
+  }
+
+  // Mentés/törlés localStorage-ben a switch állapota szerint
+  function persistSwitchState(el, key) {
+    if (!el) return;
+    if (isChecked(el)) {
+      localStorage.setItem(key, "true");
+    } else {
+      localStorage.removeItem(key);
+    }
+  }
+
+  window.addEventListener("load", () => {
+    const warningSwitch = document.querySelector(
+      ".card-inside-inside-first md-switch"
+    );
+
+    // Ha nincs localStorage kulcs, alapból írjuk be (default: true)
+    if (!localStorage.getItem("hideWarningPopup")) {
+      localStorage.setItem("hideWarningPopup", isChecked(warningSwitch) ? "true" : "false");
+    }
+
+    // Szinkronizáljuk a switch állapotát a localStorage alapján
+    if (warningSwitch) {
+      const stored = localStorage.getItem("hideWarningPopup") === "true";
+      try {
+        if (warningSwitch.tagName.toLowerCase() === "input") warningSwitch.checked = stored;
+        else if (typeof warningSwitch.checked !== "undefined") warningSwitch.checked = stored;
+        else warningSwitch.setAttribute("aria-checked", stored ? "true" : "false");
+      } catch(e) { /* ignore */ }
+
+      // Switch változása: csak menti/törli localStorage-t
+      const onChange = () => persistSwitchState(warningSwitch, "hideWarningPopup");
+      warningSwitch.addEventListener("change", onChange);
+      warningSwitch.addEventListener("input", onChange);
+
+      // fallback: ha webcomponent belső inputja van
+      try {
+        const inner = warningSwitch.querySelector("input[type='checkbox']");
+        if (inner) inner.addEventListener("change", onChange);
+      } catch(e) {}
+    }
+  });
 </script>
 <script type="module" src="/EU2K-Hub/assets/js/notifications.js"></script>
 </body>

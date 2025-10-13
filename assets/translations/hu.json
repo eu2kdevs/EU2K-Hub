@@ -426,7 +426,15 @@
     "experiments-test-mode": "Teszt Mód",
     "experiments-enter-test-mode": "Belépés",
     "oops": "Oh nemár.",
-    "not_found_suggestions": "Nem javasoltál még semmit a közösségnek! Menj a YouHubba és oszd meg az ötleteid másokkal!"
+    "not_found_suggestions": "Nem javasoltál még semmit a közösségnek! Menj a YouHubba és oszd meg az ötleteid másokkal!",
+    "functions": "Funkciók",
+    "functions_desc": "Kezelés - Kiegészítők",
+    "functions_notice": "Egyes funckiók kikapcsolása a rendszer meghibásodásához vezethet, vagy menő dolgok lemaradtáról.",
+    "functions_on_off": "Funkciók ki és be kapcsolása",
+    "popups": "Popupok",
+    "show_warning_popup": "Figyelmeztető Popup",
+    "show_critical_popup": "Kritikus Popup",
+    "show_info_popup": "Információs Popup"
   },
   "common": {
     "welcome_hub": "Üdvözöllek a Hub-ban!",
