@@ -906,3 +906,74 @@ body {
 .new-things-link b {
   font-weight: 700;
 }
+/* Permission Popup Overlay */
+.warning-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(11, 15, 11, 0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.warning-container {
+  position: relative;
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  padding: 32px;
+  max-width: 320px;
+  width: 320px !important;
+  margin: 20px;
+}
+
+.warning-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: #3D433C;
+  border-radius: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.warning-close-btn:hover {
+  border-radius: 15px;
+}
+
+.warning-content {
+  text-align: center;
+}
+
+.warning-hand-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+}
+
+.warning-title {
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+}
+
+.warning-list {
+  color: #C2C3C2;
+  text-align: left;
+  margin: 0 0 32px 0;
+  padding-left: 20px;
+  line-height: 1.6;
+}
+
+.warning-list li {
+  margin-bottom: 12px;
+}
