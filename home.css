@@ -952,12 +952,16 @@ body {
 
 .warning-content {
   text-align: center;
+  max-height: calc(70vh - 64px); /* container padding + biztonsági margó */
+  display: flex;
+  flex-direction: column;
+  align-items: center
 }
 
 .warning-hand-icon {
   width: 48px;
   height: 48px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 
 .warning-title {
