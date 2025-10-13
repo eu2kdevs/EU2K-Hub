@@ -993,8 +993,9 @@ body {
 }
 
 .warning-item {
-  height: 50px;
-  background-color: #3D433C;
+  background: #3D433C;
+  padding: 12px 16px;
+  display: flex;
 }
 
 .warning-item.first {
