@@ -1601,6 +1601,11 @@ body {
   display: none !important;
 }
 
+/* Specific page overrides to ensure proper hiding */
+#functions-page:not(.active) {
+  display: none !important;
+}
+
 #stats-page {
   display: flex;
   flex-direction: column;
@@ -2058,6 +2063,34 @@ body {
   filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(500%) hue-rotate(80deg) brightness(110%) contrast(90%) !important;
 }
 
+/* Notifications Page Styles */
+#functions-page.settings-page {
+  padding: 0 !important;
+  margin-left: -40px !important;
+  margin-top: -20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: calc(100% + 40px) !important;
+  transition: var(--transition);
+}
+
+#functions-page {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Notifications page custom styling */
+.functions-page-custom {
+  margin-left: -40px;
+  margin-top: -20px;
+  width: calc(100% + 40px);
+  overflow-y: scroll;
+  scroll: smooth;
+}
+
 .card {
   background-color: #101510;
   padding: 24px;
@@ -2157,6 +2190,11 @@ body {
 
 .card-inside-last {
   border-radius: 8px 8px 32px 32px;
+  color: #D4E8D1;
+}
+
+.card-inside-single {
+  border-radius: 32px;
   color: #D4E8D1;
 }
 
