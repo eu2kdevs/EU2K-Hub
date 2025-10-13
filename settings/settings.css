@@ -2071,24 +2071,7 @@ body {
   display: flex !important;
   flex-direction: column !important;
   gap: 8px !important;
-  width: calc(100% + 40px) !important;
   transition: var(--transition);
-}
-
-#functions-page {
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  overflow: hidden;
-}
-
-/* Notifications page custom styling */
-.functions-page-custom {
-  margin-left: -40px;
-  margin-top: -20px;
-  width: calc(100% + 40px);
-  overflow-y: scroll;
-  scroll: smooth;
 }
 
 .card {
@@ -2151,7 +2134,7 @@ body {
   margin-bottom: 4px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   color: #D4E8D1;
 }
 

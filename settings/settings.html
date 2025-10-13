@@ -775,7 +775,7 @@
                       </div>
                       <div class="card-inside-inside card-inside-inside-first">
                         <span data-translate="pages.settings.show_warning_popup">Figyelmeztető Popup megjelenítése</span>
-                        <md-switch icons selected></md-switch>
+                        <md-switch id="warningSwitch" icons selected></md-switch>
                       </div>
                       <div class="card-inside-inside card-inside-inside-middle">
                         <span data-translate="pages.settings.show_critical_popup">Kritikus Popup megjelenítése</span>
@@ -1054,59 +1054,62 @@
   window.addEventListener('resize', updateFlexDirection);
 </script>
 <script>
-  // Helper: lekérdezi, hogy a checkbox vagy md-switch checked-e
-  function isChecked(el) {
-    if (!el) return false;
-    const tag = (el.tagName || "").toLowerCase();
+  // Segédfüggvény: lekéri, hogy a switch "checked"-e
+  function isChecked(switchEl) {
+    if (!switchEl) return false;
 
-    if (tag === "input" && el.type === "checkbox") return !!el.checked;
-    if (typeof el.checked !== "undefined") return !!el.checked;
-    const aria = el.getAttribute && el.getAttribute("aria-checked");
+    // Material Web Component switch esetén az 'checked' attribútum vagy aria-checked
+    if (typeof switchEl.checked !== "undefined") return !!switchEl.checked;
+    const aria = switchEl.getAttribute && switchEl.getAttribute("aria-checked");
     if (aria === "true") return true;
-    if (aria === "false") return false;
-    return el.hasAttribute && el.hasAttribute("checked");
+    return false;
   }
 
-  // Mentés/törlés localStorage-ben a switch állapota szerint
-  function persistSwitchState(el, key) {
-    if (!el) return;
-    if (isChecked(el)) {
+  // Mentés a localStorage-ba
+  function persistSwitchState(switchEl, key) {
+    if (!switchEl) return;
+    if (isChecked(switchEl)) {
       localStorage.setItem(key, "true");
     } else {
       localStorage.removeItem(key);
     }
   }
 
+  // Inicializálás
   window.addEventListener("load", () => {
-    const warningSwitch = document.querySelector(
-      ".card-inside-inside-first md-switch"
-    );
+    const switches = [
+      { id: "warningSwitch", storageKey: "hideWarningPopup" },
+      { id: "criticalSwitch", storageKey: "showCriticalPopup" },
+      { id: "infoSwitch", storageKey: "showInfoPopup" }
+    ];
 
-    // Ha nincs localStorage kulcs, alapból írjuk be (default: true)
-    if (!localStorage.getItem("hideWarningPopup")) {
-      localStorage.setItem("hideWarningPopup", isChecked(warningSwitch) ? "true" : "false");
-    }
+    switches.forEach(item => {
+      const sw = document.getElementById(item.id);
+      if (!sw) return;
 
-    // Szinkronizáljuk a switch állapotát a localStorage alapján
-    if (warningSwitch) {
-      const stored = localStorage.getItem("hideWarningPopup") === "true";
+      // Ha nincs még localStorage kulcs, alapból írjuk be az aktuális állapotot
+      if (!localStorage.getItem(item.storageKey)) {
+        localStorage.setItem(item.storageKey, isChecked(sw) ? "true" : "false");
+      }
+
+      // Szinkronizáljuk a switch állapotát a localStorage alapján
+      const stored = localStorage.getItem(item.storageKey) === "true";
       try {
-        if (warningSwitch.tagName.toLowerCase() === "input") warningSwitch.checked = stored;
-        else if (typeof warningSwitch.checked !== "undefined") warningSwitch.checked = stored;
-        else warningSwitch.setAttribute("aria-checked", stored ? "true" : "false");
-      } catch(e) { /* ignore */ }
+        if (typeof sw.checked !== "undefined") sw.checked = stored;
+        else sw.setAttribute("aria-checked", stored ? "true" : "false");
+      } catch(e){}
 
-      // Switch változása: csak menti/törli localStorage-t
-      const onChange = () => persistSwitchState(warningSwitch, "hideWarningPopup");
-      warningSwitch.addEventListener("change", onChange);
-      warningSwitch.addEventListener("input", onChange);
+      // Esemény figyelés: változás → mentés a localStorage-ba
+      const onChange = () => persistSwitchState(sw, item.storageKey);
+      sw.addEventListener("change", onChange);
+      sw.addEventListener("input", onChange);
 
-      // fallback: ha webcomponent belső inputja van
+      // fallback: ha belső <input> van a webcomponentben
       try {
-        const inner = warningSwitch.querySelector("input[type='checkbox']");
+        const inner = sw.querySelector("input[type='checkbox']");
         if (inner) inner.addEventListener("change", onChange);
       } catch(e) {}
-    }
+    });
   });
 </script>
 <script type="module" src="/EU2K-Hub/assets/js/notifications.js"></script>
