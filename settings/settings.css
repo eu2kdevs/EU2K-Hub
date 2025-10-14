@@ -1134,7 +1134,7 @@ body {
   transition: var(--transition);
   border-radius: 32px;
   overflow-y: scroll;
-  scroll: smooth;
+  scroll-behavior: smooth;;
 }
 
 .settings-pages-experiments {
@@ -1144,7 +1144,7 @@ body {
   padding-left: 80px;
   border-radius: 32px;
   overflow-y: scroll;
-  scroll: smooth;
+  scroll-behavior: smooth;;
   transition: var(--transition);
 }
 
@@ -1153,7 +1153,7 @@ body {
   margin-left: -40px;
   border-radius: 32px;
   overflow-y: scroll;
-  scroll: smooth;
+  scroll-behavior: smooth;;
 }
 
 .settings-page {
@@ -1161,7 +1161,7 @@ body {
   transition: var(--transition);
   border-radius: 32px;
   overflow-y: scroll;
-  scroll: smooth;
+  scroll-behavior: smooth;;
 }
 
 .notifications-categories {
@@ -1576,7 +1576,7 @@ body {
   margin-top: -20px;
   width: calc(100% + 40px);
   overflow-y: scroll;
-  scroll: smooth;
+  scroll-behavior: smooth;;
 }
 
 /* General page custom styling */
@@ -1585,7 +1585,7 @@ body {
   margin-top: -20px;
   width: calc(100% + 30px);
   overflow-y: scroll;
-  scroll: smooth;
+  scroll-behavior: smooth;;
 }
 
 /* Specific page overrides to ensure proper hiding */
@@ -2074,6 +2074,15 @@ body {
   transition: var(--transition);
 }
 
+.functions-popup-wrapper{
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scroll-behavior: smooth;;
+  border-radius: 32px;
+}
+
 .card {
   background-color: #101510;
   padding: 24px;
@@ -2113,6 +2122,8 @@ body {
 .card-single {
   border-radius: 32px;
   color: #D4E8D1;
+  flex-direction: column;
+  display: flex;
 }
 
 .card-bottom {
