@@ -1154,7 +1154,7 @@ body {
   border-radius: 32px;
   overflow-y: scroll;
   scroll-behavior: smooth;
-  margin-top: -450px !important;
+  margin-top: 520px !important;
 }
 
 .settings-page {
@@ -1618,7 +1618,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: -450px !important;
+  margin-top: -520px !important;
 }
 
 .stats-page-off {
@@ -1654,7 +1654,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: -450px !important;
+  margin-top: -520px !important;
 }
 
 .events-page-off {
@@ -1686,12 +1686,12 @@ body {
 #community-page {
   padding: 0;
   margin-left: -40px;
-  margin-top: -450px !important;
+  margin-top: -520px !important;
   display: flex;
   flex-direction: column;
   gap: 16px;
   width: calc(100% + 40px);
-  height: 468px;
+  height: 520px;
 }
 
 /* Kurzusaim kártya */
