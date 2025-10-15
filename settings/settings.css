@@ -1463,6 +1463,13 @@ body {
   margin-bottom: 16px;
 }
 
+.categories-title-popups {
+  color: #C1C9BE;
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 0px;
+}
+
 /* Kategória elemek */
 .category-items {
   display: flex;
@@ -2074,9 +2081,13 @@ body {
   transition: var(--transition);
 }
 
+.functions-page{
+  overflow: hidden;
+}
+
 .functions-popup-wrapper{
   height: 100%;
-  overflow-y: auto;
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   scroll-behavior: smooth;;
@@ -2124,6 +2135,8 @@ body {
   color: #D4E8D1;
   flex-direction: column;
   display: flex;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .card-bottom {
@@ -2175,16 +2188,25 @@ body {
 .card-inside-first {
   border-radius: 32px 32px 8px 8px;
   color: #D4E8D1;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
 }
 
 .card-inside-middle {
   border-radius: 8px;
   color: #D4E8D1;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
 }
 
 .card-inside-last {
   border-radius: 8px 8px 32px 32px;
   color: #D4E8D1;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
 }
 
 .card-inside-single {
