@@ -1153,7 +1153,8 @@ body {
   margin-left: -40px;
   border-radius: 32px;
   overflow-y: scroll;
-  scroll-behavior: smooth;;
+  scroll-behavior: smooth;
+  margin-top: -450px !important;
 }
 
 .settings-page {
@@ -1617,6 +1618,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: -450px !important;
 }
 
 .stats-page-off {
@@ -1652,6 +1654,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: -450px !important;
 }
 
 .events-page-off {
@@ -1683,7 +1686,7 @@ body {
 #community-page {
   padding: 0;
   margin-left: -40px;
-  margin-top: -20px;
+  margin-top: -450px !important;
   display: flex;
   flex-direction: column;
   gap: 16px;
