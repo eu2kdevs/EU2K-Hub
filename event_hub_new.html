@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="description" content="Örülünk hogy ennyire érdeklődsz az Event Hub iránt, de egyelőre még fejlesztés alatt van, és nem alkalmas a mostani állapotában a használatra. Nézz vissza később 👋">
+  <meta name="description" content="Örülünk hogy ennyire érdeklődsz a Kurzusok iránt, de egyelőre még fejlesztés alatt van, és nem alkalmas a mostani állapotában a használatra. Nézz vissza később 👋">
+
   <title data-translate="pages.event_hub.title">Event Hub</title>
   <script>
     (function(){
@@ -23,7 +24,7 @@
     })();
   </script>
   <script src="/EU2K-Hub/assets/js/page-overlay-loader.js"></script>
-  <link rel="stylesheet" href="youhub.css">
+  <link rel="stylesheet" href="event_hub.css">
   <link rel="icon" href="/EU2K-Hub/favicon.ico">
   <script type="importmap">
     {
@@ -38,20 +39,19 @@
 
     document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
   </script>
-  <script data-src="/EU2K-Hub/assets/js/permissions.js"></script>
-  <script data-src="/EU2K-Hub/assets/js/translations.js"></script>
-  <script data-src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
-  <script data-src="/EU2K-Hub/assets/js/auth-state.js"></script>
-  <script data-src="/EU2K-Hub/assets/js/test_firebase.js" type="module"></script>
-  <script data-src="/EU2K-Hub/assets/js/firebase-performance.js" type="module"></script>
-  <script data-src="/EU2K-Hub/assets/js/first-input-delay.js"></script>
-  <script data-src="/EU2K-Hub/assets/js/new-things-popup.js"></script>
+  <script src="/EU2K-Hub/assets/js/permissions.js"></script>
+  <script src="/EU2K-Hub/assets/js/translations.js"></script>
+  <script src="/EU2K-Hub/assets/js/welcome-screen.js"></script>
+  <script src="/EU2K-Hub/assets/js/auth-state.js"></script>
+  <script src="/EU2K-Hub/assets/js/test_firebase.js" type="module"></script>
+  <script src="/EU2K-Hub/assets/js/firebase-performance.js" type="module"></script>
+  <script src="/EU2K-Hub/assets/js/first-input-delay.js"></script>
   <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
     import { getFirestore } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js";
+    import { enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -63,17 +63,121 @@
       appId: "1:560244867055:web:3cd51b85baead94989001a",
       measurementId: "G-2JDPR089WD"
     };
-
+    
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
-    const functions = getFunctions(app, 'europe-west1');
 
-    // Make db and functions globally available
+    enableIndexedDbPersistence(db).catch((err) => {
+      if (err.code == 'failed-precondition') {
+        console.log("Több tab nyitva, nem lehet offline módban persistálni");
+      } else if (err.code == 'unimplemented') {
+        console.log("A böngésző nem támogatja az offline persistenciát");
+      }
+    });
+
+    // Make db globally available
     window.db = db;
-    window.functions = functions;
-    window.createHttpsCallable = (name) => httpsCallable(functions, name);
+
+    // Load featured event data
+    import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    
+    async function loadFeaturedEvent() {
+       try {
+         const docRef = doc(db, 'event_hub', 'featured');
+         const docSnap = await getDoc(docRef);
+         
+         if (docSnap.exists()) {
+           const data = docSnap.data();
+           
+           // Update title
+           if (data.title) {
+             document.getElementById('featured-title').textContent = data.title;
+           }
+           
+           // Update subtitle with desc
+           if (data.desc) {
+             let descText = data.desc;
+             if (descText.length > 50) {
+               // Find the best break point around 50 characters
+               let firstLine = descText.substring(0, 50);
+               let lastSpaceIndex = firstLine.lastIndexOf(' ');
+               
+               if (lastSpaceIndex > 30) {
+                 firstLine = descText.substring(0, lastSpaceIndex);
+                 let secondLine = descText.substring(lastSpaceIndex + 1);
+                 
+                 if (secondLine.length > 50) {
+                   secondLine = secondLine.substring(0, 47) + '...';
+                 }
+                 
+                 descText = firstLine + '\n' + secondLine;
+               } else {
+                 // If no good break point, just cut at 47 and add ...
+                 descText = descText.substring(0, 47) + '...';
+               }
+             }
+             
+             document.getElementById('featured-subtitle').innerHTML = descText.replace(/\n/g, '<br>');
+           }
+           
+           // Update image if imageURL is not empty
+           if (data.imageURL && data.imageURL.trim() !== '') {
+             document.getElementById('featured-image').src = data.imageURL;
+           }
+           
+           // Store joinCode for later use
+           if (data.joinCode) {
+             window.featuredEventJoinCode = data.joinCode;
+           }
+         } else {
+           console.log('No featured event data found, creating sample data...');
+           // Create sample data for testing
+           const sampleData = {
+             title: 'Kiemelt Esemény',
+             desc: 'Ez egy hosszabb teszt esemény leírása, amely meghaladja az ötven karaktert és demonstrálja a sortörés funkcionalitást',
+             joinCode: 'TEST123',
+             imageURL: 'https://picsum.photos/800/400'
+           };
+           
+           await setDoc(docRef, sampleData);
+           console.log('Sample data created, reloading...');
+           
+           // Update UI with sample data
+           document.getElementById('featured-title').textContent = sampleData.title;
+           
+           // Apply same desc formatting for sample data
+           let descText = sampleData.desc;
+           if (descText.length > 50) {
+             let firstLine = descText.substring(0, 50);
+             let lastSpaceIndex = firstLine.lastIndexOf(' ');
+             
+             if (lastSpaceIndex > 30) {
+               firstLine = descText.substring(0, lastSpaceIndex);
+               let secondLine = descText.substring(lastSpaceIndex + 1);
+               
+               if (secondLine.length > 50) {
+                 secondLine = secondLine.substring(0, 47) + '...';
+               }
+               
+               descText = firstLine + '\n' + secondLine;
+             } else {
+               descText = descText.substring(0, 47) + '...';
+             }
+           }
+           
+           document.getElementById('featured-subtitle').innerHTML = descText.replace(/\n/g, '<br>');
+           document.getElementById('featured-image').src = sampleData.imageURL;
+           window.featuredEventJoinCode = sampleData.joinCode;
+         }
+       } catch (error) {
+         console.error('Error loading featured event:', error);
+       }
+     }
+    
+    // Load data when page loads
+    document.addEventListener('DOMContentLoaded', loadFeaturedEvent);
 
     // Import Firestore debug module
     import('./assets/js/firestore-debug.js').catch(err => {
@@ -171,6 +275,11 @@
     <main class="main-area">
       <div class="main-content">
         <header class="header">
+          <div class="welcome-container">
+            <img src="/EU2K-Hub/assets/navbar/event_hub.svg" class="event-hub-icon" alt="Event Hub" style="margin-bottom: 4px;">
+            <h1 class="event-hub-text" data-translate="pages.event-hub.title" style="margin-top: 0; margin-bottom: 4px;">Event Hub</h1>
+            <p class="event-hub-desc" data-translate="pages.event-hub.description">Kiemelt Esemény:</p>
+          </div>
           <div class="header-icons">
             <a href="/EU2K-Hub/system/account.html" class="header-icon-link">
               <img src="/EU2K-Hub/assets/account_icon.svg" class="header-icon" alt="Account">
@@ -180,28 +289,67 @@
             </a>
           </div>
         </header>
-        <div class="courses-container">
-          <!-- Block ikon -->
-          <img src="/EU2K-Hub/assets/settings_icons/community_page/block.svg" class="courses-block-icon" alt="Block">
-          
-          <!-- Kurzusok cím -->
-          <h1 class="courses-title" data-translate="pages.event_hub.title">YouHub</h1>
-          
-          <!-- Leíró szöveg -->
-          <p class="courses-description">
-            <span data-translate="pages.event_hub.description2">Örülünk hogy ennyire érdeklődsz az Event Hub iránt, de egyelőre még fejlesztés alatt van, és nem alkalmas a mostani állapotában a használatra.</span>
-            <br><br>
-            <span data-translate="pages.courses.description2">Viszont, addig tudsz visszajelzést adni, és elmondani</span> <strong data-translate="pages.courses.description3">szerinted</strong> <span data-translate="pages.courses.description4">mi lenne ide a legjobb ;)</span>
-          </p>
-          
-          <!-- Visszajelzés gomb -->
-          <button class="feedback-button">
-            <img src="/EU2K-Hub/assets/courses_icons/feedback_icon.svg" class="feedback-icon" alt="Visszajelzés">
-            <span class="feedback-text" data-translate="pages.courses.feedback_button">Visszajelzés</span>
-          </button>
-        </div>
-      </div>
-       <div id="site-footer" class="footer" aria-label="Site footer">
+        <!-- Event Hub layout: Left column highlighted event card -->
+         <section class="event-hub-container">
+           <div class="event-columns">
+             <div class="left-column">
+               <article class="featured-event-card" aria-label="Kiemelt esemény">
+                <div class="featured-actions">
+                  <md-fab id="join-fab" class="join-fab" label="Csatlakozás" aria-label="Csatlakozás">
+                    <img src="/EU2K-Hub/assets/event_hub/add_light.svg" alt="Add" class="chip-icon" slot="icon" />
+                  </md-fab>
+               </div>
+                 <div class="featured-background">
+                   <img id="featured-image" src="assets/placeholder_img.svg" alt="Esemény kép" class="featured-bg-image" />
+                   <div class="featured-overlay"></div>
+                 </div>
+                 <div class="featured-content">
+                   <div class="featured-text">
+                     <h2 id="featured-title" class="featured-title">Title</h2>
+                     <div id="featured-subtitle" class="featured-subtitle">Subtitle</div>
+                     <div class="chips-row">
+                       <button class="chip" type="button" aria-label="Add to my itinerary">
+                         <img src="/EU2K-Hub/assets/event_hub/calendar.svg" alt="naptár ikon" class="chip-icon" />
+                         <span>Add to my itinerary</span>
+                       </button>
+                       <div class="chip" aria-label="12 mins from hotel">
+                         <img src="/EU2K-Hub/assets/event_hub/walk.svg" alt="séta ikon" class="chip-icon" />
+                         <span>12 mins from hotel</span>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </article>
+             </div>
+             <div class="right-column">
+               <!-- Egyelőre üres: csak a bal oldali kiemelt kártyát készítjük el -->
+             </div>
+           </div>
+         </section>
+         
+         <!-- Animált FAB gomb -->
+         <div class="floating-fab" id="floating-fab">
+            <span class="fab-text">Új esemény</span>
+            <span class="fab-icon">+</span>
+          </div>
+         
+         <!-- FAB opciók -->
+         <div id="fab-options" class="fab-options">
+           <div class="fab-option" data-action="event">
+             <img src="/EU2K-Hub/assets/event_hub/event.svg" alt="Esemény" class="fab-option-icon" />
+             <span>Esemény</span>
+           </div>
+           <div class="fab-option" data-action="meeting">
+             <img src="/EU2K-Hub/assets/event_hub/meeting.svg" alt="Találkozó" class="fab-option-icon" />
+             <span>Találkozó</span>
+           </div>
+           <div class="fab-option" data-action="course">
+             <img src="/EU2K-Hub/assets/event_hub/courses.svg" alt="Kurzus" class="fab-option-icon" />
+             <span>Kurzus</span>
+           </div>
+         </div>
+       </div>
+        <div id="site-footer" class="footer" aria-label="Site footer">
         <div class="footer-container">
           <div class="footer-left">
             <img src="/EU2K-Hub/eu2k_hub_logo_hor_dark.png" class="footer-logo-wide" alt="EU2K Hub Logó">
@@ -217,73 +365,138 @@
         </div>
       </div>
     </main>
- </div>
-
-  <!-- Feedback Popup -->
-  <div class="feedback-popup-overlay" id="feedbackPopup" style="display: none;">
-    <div class="feedback-popup">
-      <!-- Header -->
-      <div class="feedback-popup-header">
-        <img src="/EU2K-Hub/assets/courses_icons/feedback_icon.svg" class="feedback-popup-icon" alt="Visszajelzés">
-        <span class="feedback-popup-title">Visszajelzés</span>
-        <button class="feedback-close-btn" onclick="closeFeedbackPopup()">
-          <img src="/EU2K-Hub/assets/close.svg" class="feedback-close-icon" alt="Bezárás">
-        </button>
-      </div>
-
-      <!-- Input textbox -->
-      <div class="feedback-input-container">
-        <textarea class="feedback-input" placeholder="Ide írj..."></textarea>
-        <div class="feedback-input-limit">Maximum 1000 karakter</div>
-      </div>
-
-      <!-- Kategória kártyák -->
-      <div class="feedback-category-section">
-        <div class="feedback-category-container">
-          <div class="feedback-category-header">
-            <span class="feedback-category-title">Kategória</span>
-          </div>
-
-          <div class="feedback-category-buttons">
-            <button class="feedback-category-btn active" data-category="function">
-              <span>Funkció amit javítani kéne</span>
-              <div class="feedback-category-check">
-                <img src="/EU2K-Hub/assets/check.svg" class="feedback-check-icon" alt="Check">
-              </div>
-            </button>
-
-            <button class="feedback-category-btn" data-category="feature">
-              <span>Funkció amit látni szeretnék</span>
-              <div class="feedback-category-check">
-                <img src="/EU2K-Hub/assets/check.svg" class="feedback-check-icon" alt="Check">
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <!-- Info chip -->
-        <div class="feedback-category-info">
-          <img src="/EU2K-Hub/assets/info.svg" class="feedback-info-icon" alt="Info">
-          <span>Nagyon köszönjük, hogy segítesz nekünk fejleszteni a Hubot! Ezek a
-            visszajelzések névtelenek, nem fogjuk tudni ki küldte be.</span>
-        </div>
-      </div>
-
-      <!-- Cím input és küldés gomb egy sorban -->
-      <div class="feedback-bottom-section">
-        <div class="feedback-title-container">
-          <input type="text" class="feedback-title-input" placeholder="Cím...">
-        </div>
-        <button class="feedback-send-btn" onclick="submitFeedback()">
-          <img src="/EU2K-Hub/assets/send.svg" class="feedback-send-icon" alt="Küldés">
-        </button>
-      </div>
-    </div>
   </div>
+  <div id="event-mask"></div>
 
   <script>
+    // Featured event betöltése Firestore-ból
+    async function loadFeaturedEvent() {
+      try {
+        // Ellenőrizzük, hogy a Firebase inicializálva van-e
+        if (typeof db === 'undefined') {
+          console.warn('Firebase nincs inicializálva, placeholder adatok használata');
+          return;
+        }
+        
+        const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+        
+        const featuredDocRef = doc(db, 'event_hub', 'featured');
+        const featuredDoc = await getDoc(featuredDocRef);
+        
+        if (featuredDoc.exists()) {
+          const data = featuredDoc.data();
+          
+          // Adatok frissítése
+          document.getElementById('featured-title').textContent = data.title || 'Title';
+          
+          // Apply desc formatting with line breaks
+          let descText = data.desc || 'Subtitle';
+          if (descText.length > 50) {
+            // Find the best break point around 50 characters
+            let firstLine = descText.substring(0, 50);
+            let lastSpaceIndex = firstLine.lastIndexOf(' ');
+            
+            if (lastSpaceIndex > 30) {
+              firstLine = descText.substring(0, lastSpaceIndex);
+              let secondLine = descText.substring(lastSpaceIndex + 1);
+              
+              if (secondLine.length > 50) {
+                secondLine = secondLine.substring(0, 47) + '...';
+              }
+              
+              descText = firstLine + '\n' + secondLine;
+            } else {
+              // If no good break point, just cut at 47 and add ...
+              descText = descText.substring(0, 47) + '...';
+            }
+          }
+          
+          document.getElementById('featured-subtitle').innerHTML = descText.replace(/\n/g, '<br>');
+          
+          if (data.photoURL) {
+            document.getElementById('featured-image').src = data.photoURL;
+          }
+          
+          // JoinCode tárolása a FAB gombban
+          if (data.joinCode) {
+            document.getElementById('join-fab').setAttribute('data-join-code', data.joinCode);
+          }
+        } else {
+          console.log('Nincs featured event dokumentum, placeholder adatok használata');
+        }
+      } catch (error) {
+        console.error('Hiba a featured event betöltésekor:', error);
+        console.log('Placeholder adatok használata');
+      }
+    }
+    
+    // FAB gomb animációk
+    let fabExpanded = false;
+    
+    function initializeFAB() {
+      const floatingFab = document.getElementById('floating-fab');
+      const fabOptions = document.getElementById('fab-options');
+      const fabIcon = floatingFab.querySelector('.fab-icon');
+      const fabText = floatingFab.querySelector('.fab-text');
+      
+      floatingFab.addEventListener('click', () => {
+        if (!fabExpanded) {
+          // Kinyitás
+          fabExpanded = true;
+          floatingFab.classList.add('expanded');
+          fabOptions.classList.add('visible');
+          fabIcon.textContent = '×';
+        } else {
+          // Bezárás
+          closeFAB();
+        }
+      });
+      
+      // Opciók kezelése
+      const options = document.querySelectorAll('.fab-option');
+      options.forEach(option => {
+        option.addEventListener('click', (e) => {
+          const action = e.currentTarget.getAttribute('data-action');
+          console.log('FAB opció kiválasztva:', action);
+          // Itt később hozzáadhatók a specifikus műveletek
+        });
+      });
+    }
+    
+    function closeFAB() {
+      const floatingFab = document.getElementById('floating-fab');
+      const fabOptions = document.getElementById('fab-options');
+      const fabIcon = floatingFab.querySelector('.fab-icon');
+      
+      fabExpanded = false;
+      floatingFab.classList.remove('expanded');
+      fabOptions.classList.remove('visible');
+      fabIcon.textContent = '+';
+    }
+    
+    // Join FAB kezelése
+    function initializeJoinFAB() {
+      const joinFab = document.getElementById('join-fab');
+      joinFab.addEventListener('click', () => {
+        const joinCode = joinFab.getAttribute('data-join-code');
+        if (joinCode) {
+          // Átirányítás a join URL-re - GitHub Pages kompatibilis formátum
+          window.location.href = `https://eu2kdevs.github.io/EU2K-Hub/joinURL/?id=${joinCode}`;
+        } else {
+          console.warn('Nincs join kód beállítva');
+        }
+      });
+    }
+    
+    // Inicializálás oldal betöltésekor
+    document.addEventListener('DOMContentLoaded', () => {
+      loadFeaturedEvent();
+      initializeFAB();
+      initializeJoinFAB();
+    });
+    
     // Feedback gomb és popup kezelése
-    const feedbackButton = document.querySelector('.feedback-button');
+    const feedbackButton = document.querySelector('.feedback-button'); // Changed to querySelector
     const feedbackPopup = document.getElementById('feedbackPopup');
 
     if (feedbackButton && feedbackPopup) {
@@ -420,7 +633,6 @@
       }, 3000);
     }
   </script>
-  
   <div id="site-footer" class="footer" aria-label="Site footer">
     <div class="footer-container">
       <div class="footer-left">

@@ -450,7 +450,7 @@ body {
   height: 100%;
   padding: 40px;
   text-align: center;
-  /* Lejjebb tolás */
+  padding-top: 0px;
 }
 
 .courses-block-icon {
@@ -485,7 +485,6 @@ body {
   gap: 12px;
   cursor: pointer;
   transition: var(--transition);
-  margin-top: 80px;
   margin-bottom: 20px;
 }
 

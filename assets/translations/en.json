@@ -171,7 +171,8 @@
     "event_hub": {
       "title": "Event Hub",
       "courses": "Event Hub",
-      "description": "Featured Event:"
+      "description": "Featured Event:",
+      "description2": "Örülünk hogy ennyire érdeklődsz az Event Hub iránt, de egyelőre még fejlesztés alatt van, és nem alkalmas a mostani állapotában a használatra."
     },
     "onboarding": {
       "confirm": "Confirm",
