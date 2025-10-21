@@ -18,9 +18,9 @@ class App extends StatelessWidget {
         body: Center(
           child: LayoutBuilder(
             builder: (context, constraints) {
-              final double shortest = constraints.biggest.shortestSide;
-              final double rawSize = shortest.isFinite ? shortest * 0.4 : 160.0;
-              final double size = rawSize.clamp(64.0, 240.0).toDouble();
+              final shortest = constraints.biggest.shortestSide;
+              final rawSize = shortest.isFinite ? shortest * 0.4 : 160.0;
+              final size = rawSize.clamp(64.0, 240.0);
               return SizedBox(
                 width: size,
                 height: size,

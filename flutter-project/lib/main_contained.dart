@@ -10,11 +10,11 @@ class ContainedApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = const ColorScheme.dark(
+    const colorScheme = ColorScheme.dark(
       primary: Color(0xFF9BD4A0),
       primaryContainer: Color(0xFF1B5129),
       onPrimaryContainer: Color(0xFFB6F1BB),
-      background: Color(0xFF101510),
+      surface: Color(0xFF101510),
     );
 
     return MaterialApp(
@@ -24,9 +24,9 @@ class ContainedApp extends StatelessWidget {
         backgroundColor: Colors.transparent,
         body: LayoutBuilder(
           builder: (context, constraints) {
-            final double shortest = constraints.biggest.shortestSide;
-            final double rawSize = shortest.isFinite ? shortest * 0.4 : 160.0;
-            final double size = rawSize.clamp(64.0, 240.0).toDouble();
+            final shortest = constraints.biggest.shortestSide;
+            final rawSize = shortest.isFinite ? shortest * 0.4 : 160.0;
+            final size = rawSize.clamp(64.0, 240.0);
             return Center(
               child: Transform.translate(
                 offset: const Offset(0, -12),
