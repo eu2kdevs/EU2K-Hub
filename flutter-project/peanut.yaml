@@ -1,2 +1,0 @@
-# Configuration for https://pub.dev/packages/peanut
-extra-args: "--wasm --pwa-strategy none --base-href /material_loading_indicator/"
