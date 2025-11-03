@@ -114,14 +114,14 @@ body {
   min-width: var(--sidebar-width-open);
 }
 
-.main-area {
-  flex: 1; /* kitölti a sidebar melletti helyet */
-  min-width: 0; /* fontos, hogy a flexbox engedje zsugorodni */
+/*.main-area {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   position: relative;
   min-height: 0;
-  overflow: hidden; /* hogy a scroll ne itt legyen */
+  overflow: hidden;
 }
 
 .main-scroll-area {
@@ -147,10 +147,74 @@ body {
   gap: 18px;
   box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
   max-width: calc(100% - 22px);
-  min-height: calc(100dvh - 104px); /* mobilbarát */
+  min-height: calc(100dvh - 104px);
   height: calc(100dvh - 104px);
   overflow-y: scroll;
   scroll-behavior: smooth
+}*/
+
+.main-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden; /* a scroll a main-scroll-area-n lesz */
+}
+
+.main-scroll-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--main-bg);
+  border-radius: 32px;
+  margin: 22px 22px 0 0;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding: 22px;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 100%; /* kitölti a scroll-area-t */
+}
+
+.footer {
+  margin-top: auto; /* mindig a main-content alján marad */
+  position: relative;
+}
+
+#site-footer .footer-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-radius: 12px;
+  background: #0E1512;
+  padding: 12px 24px;
+}
+
+#site-footer .footer-left img,
+#site-footer .footer-right img {
+  height: 65px;
+  object-fit: contain;
+}
+
+#site-footer .footer-center {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+#site-footer .footer-privacy {
+  color: #C4C8C3;
+  text-decoration: underline;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 .header {
@@ -220,49 +284,6 @@ body {
   font-weight: 500;
   color: var(--text-main);
   margin-top: 4px;
-}
-
-.footer { 
-  margin-top: auto; /* a footer mindig a content aljára csúszik */
-  position: relative; 
-}
-
-#site-footer .footer-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  border-radius: 12px;
-  background: #0E1512;
-}
-#site-footer .footer-left img,
-#site-footer .footer-right img {
-  height: 65px;
-  object-fit: contain;
-}
-
-#site-footer .footer-right {
-  padding-right: 48px;
-}
-
-#site-footer .footer-center {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#site-footer .footer-privacy {
-  color: #C4C8C3;
-  text-decoration: underline;
-  cursor: pointer;
-  font-size: 14px;
-}
-@media (max-width: 900px) {
-  #site-footer .footer-container {
-    flex-direction: column;
-    gap: 8px;
-    padding: 10px 12px;
-  }
 }
 
 .section-title {
