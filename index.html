@@ -721,6 +721,25 @@
     <br/>
     <input type="submit" value="Submit">
   </form>
+  <script src="https://www.google.com/recaptcha/enterprise.js?render=6LdBnhYsAAAAADFF2XIfGjvAkoomeeoF_z7lp8Jf"></script>
+  <script>
+  const form = document.getElementById('loginForm');
+  
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+  
+    const token = await grecaptcha.enterprise.execute(
+      '6LdBnhYsAAAAADFF2XIfGjvAkoomeeoF_z7lp8Jf', 
+      {action: 'LOGIN'}
+    );
+  
+    // Token elküldése a Firebase Function-nek
+    const loginFunction = firebase.functions().httpsCallable('verifyRecaptcha');
+    const result = await loginFunction({ token });
+  
+    console.log(result.data); // pl. { success: true, score: 0.9 }
+  });
+  </script>
   <div class="app-bg">
     <aside class="sidebar">
       <nav class="nav-menu">
