@@ -1050,6 +1050,42 @@
         if (targetPage) {
           targetPage.style.display = 'block';
           targetPage.classList.add('active');
+          
+          // Újra alkalmazzuk a fordításokat az új oldal elemeire
+          if (window.translationManager && window.translationManager.applyTranslations) {
+            // Kicsit késleltetjük, hogy biztosan látható legyen az oldal
+            setTimeout(() => {
+              try {
+                // Csak az aktuális oldal elemeire alkalmazzuk
+                targetPage.querySelectorAll('[data-translate]').forEach(element => {
+                  const key = element.getAttribute('data-translate');
+                  const fallback = element.getAttribute('data-translate-fallback') || element.textContent;
+                  const translation = window.translationManager.getTranslation(key);
+                  
+                  if (translation) {
+                    element.textContent = translation;
+                  } else if (fallback) {
+                    element.textContent = fallback;
+                  }
+                });
+                
+                // HTML-t tartalmazó elemek
+                targetPage.querySelectorAll('[data-translate-html]').forEach(element => {
+                  const key = element.getAttribute('data-translate-html');
+                  const fallback = element.getAttribute('data-translate-fallback') || element.innerHTML;
+                  const translation = window.translationManager.getTranslation(key);
+                  
+                  if (translation) {
+                    element.innerHTML = translation;
+                  } else if (fallback) {
+                    element.innerHTML = fallback;
+                  }
+                });
+              } catch (e) {
+                console.error('[Settings] Error applying translations to page:', e);
+              }
+            }, 50);
+          }
         }
         
         // Frissítjük a header ikont és szövegét a lap alapján
