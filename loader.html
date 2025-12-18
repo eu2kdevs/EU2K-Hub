@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-translate="pages.loading.title" data-translate-fallback="Betöltés...">Betöltés...</title>
+  <script src="/EU2K-Hub/assets/js/translations.js"></script>
+  <script>
+    // Inicializáljuk a fordítási rendszert
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.translationManager) {
+        try {
+          // Betöltjük a mentett nyelvet
+          const savedLanguage = localStorage.getItem('eu2k_language') || 'hu';
+          if (!window.translationManager.isInitialized) {
+            await window.translationManager.init();
+          } else if (window.translationManager.currentLanguage !== savedLanguage) {
+            await window.translationManager.switchLanguage(savedLanguage);
+          }
+          // Alkalmazzuk a fordításokat
+          if (window.translationManager.applyTranslations) {
+            window.translationManager.applyTranslations();
+          }
+          // Frissítjük a title-t is
+          const titleEl = document.querySelector('title');
+          if (titleEl && window.translationManager) {
+            const titleText = window.translationManager.getTranslation('pages.loading.title');
+            if (titleText) titleEl.textContent = titleText;
+          }
+        } catch (e) {
+          console.error('[Loader] Translation error:', e);
+        }
+      }
+    });
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    .loader {
+      width: 80px;
+      aspect-ratio: 1;
+      border: 10px solid #0000;
+      padding: 5px;
+      box-sizing: border-box;
+      background: 
+        radial-gradient(farthest-side,#fff 98%,#0000 ) 0 0/20px 20px no-repeat,
+        conic-gradient(from 90deg at 10px 10px,#0000 90deg,#fff 0) content-box,
+        conic-gradient(from -90deg at 40px 40px,#0000 90deg,#fff 0) content-box,
+        #000;
+      filter: blur(4px) contrast(10);
+      animation: l11 2s infinite;
+    }
+
+    @keyframes l11 {
+      0%   {background-position:0 0}
+      25%  {background-position:100% 0}
+      50%  {background-position:100% 100%}
+      75%  {background-position:0% 100%}
+      100% {background-position:0% 0}
+    }
+  </style>
+</head>
+<body>
+  <div class="loader"></div>
+</body>
+</html>
+

@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
 :root {
   color-scheme: dark;
   --md-sys-color-primary: rgb(155 212 160);
@@ -51,220 +49,9 @@
   --md-sys-color-surface-container: rgb(28 33 28);
   --md-sys-color-surface-container-high: rgb(38 43 38);
   --md-sys-color-surface-container-highest: rgb(49 54 49);
-  --md-extended-color-sharp-light-color: rgb(156 212 159);
-  --md-extended-color-sharp-light-on-color: rgb(0 57 20);
-  --md-extended-color-sharp-light-color-container: rgb(29 81 40);
-  --md-extended-color-sharp-light-on-color-container: rgb(183 241 185);
-  --md-extended-color-sharp-dark-color: rgb(156 212 159);
-  --md-extended-color-sharp-dark-on-color: rgb(1 57 19);
-  --md-extended-color-sharp-dark-color-container: rgb(29 81 40);
-  --md-extended-color-sharp-dark-on-color-container: rgb(184 241 185);
-  --md-extended-color-sharp-white-color: rgb(156 212 159);
-  --md-extended-color-sharp-white-on-color: rgb(0 57 20);
-  --md-extended-color-sharp-white-color-container: rgb(29 81 40);
-  --md-extended-color-sharp-white-on-color-container: rgb(183 241 186);
-  --md-extended-color-teritary-dark-color: rgb(157 212 157);
-  --md-extended-color-teritary-dark-on-color: rgb(3 57 18);
-  --md-extended-color-teritary-dark-color-container: rgb(31 80 39);
-  --md-extended-color-teritary-dark-on-color-container: rgb(185 240 184);
-  --md-extended-color-yellow-dark-color: rgb(226 196 109);
-  --md-extended-color-yellow-dark-on-color: rgb(61 47 0);
-  --md-extended-color-yellow-dark-color-container: rgb(87 69 0);
-  --md-extended-color-yellow-dark-on-color-container: rgb(255 224 137);
-  --md-extended-color-yellow-dark2-color: rgb(230 195 108);
-  --md-extended-color-yellow-dark2-on-color: rgb(62 46 0);
-  --md-extended-color-yellow-dark2-color-container: rgb(89 68 0);
-  --md-extended-color-yellow-dark2-on-color-container: rgb(255 223 149);
-  --md-extended-color-yellow-mid-color: rgb(236 192 108);
-  --md-extended-color-yellow-mid-on-color: rgb(65 45 0);
-  --md-extended-color-yellow-mid-color-container: rgb(93 66 0);
-  --md-extended-color-yellow-mid-on-color-container: rgb(255 222 165);
-  --md-extended-color-yellow-light-color: rgb(233 193 108);
-  --md-extended-color-yellow-light-on-color: rgb(64 45 0);
-  --md-extended-color-yellow-light-color-container: rgb(91 67 0);
-  --md-extended-color-yellow-light-on-color-container: rgb(255 223 158);
-  --md-extended-color-yellow-dark3-color: rgb(237 192 108);
-  --md-extended-color-yellow-dark3-on-color: rgb(65 45 0);
-  --md-extended-color-yellow-dark3-color-container: rgb(93 66 0);
-  --md-extended-color-yellow-dark3-on-color-container: rgb(255 222 166);
-  --md-extended-color-yellow-mid2-color: rgb(236 192 108);
-  --md-extended-color-yellow-mid2-on-color: rgb(65 45 0);
-  --md-extended-color-yellow-mid2-color-container: rgb(93 66 0);
-  --md-extended-color-yellow-mid2-on-color-container: rgb(255 222 165);
-  --md-extended-color-yellow-mid3-color: rgb(232 194 108);
-  --md-extended-color-yellow-mid3-on-color: rgb(63 46 0);
-  --md-extended-color-yellow-mid3-color-container: rgb(91 67 0);
-  --md-extended-color-yellow-mid3-on-color-container: rgb(255 223 156);
-  --md-extended-color-purple-dark-color: rgb(205 189 255);
-  --md-extended-color-purple-dark-on-color: rgb(52 39 94);
-  --md-extended-color-purple-dark-color-container: rgb(75 62 118);
-  --md-extended-color-purple-dark-on-color-container: rgb(231 222 255);
-  --md-extended-color-purple-dark2-color: rgb(208 188 254);
-  --md-extended-color-purple-dark2-on-color: rgb(54 38 93);
-  --md-extended-color-purple-dark2-color-container: rgb(77 61 117);
-  --md-extended-color-purple-dark2-on-color-container: rgb(233 221 255);
-  --md-extended-color-purple-dark3-color: rgb(215 186 251);
-  --md-extended-color-purple-dark3-on-color: rgb(59 37 90);
-  --md-extended-color-purple-dark3-color-container: rgb(83 60 115);
-  --md-extended-color-purple-dark3-on-color-container: rgb(237 220 255);
-  --md-extended-color-purple-light-color: rgb(208 188 254);
-  --md-extended-color-purple-light-on-color: rgb(55 38 93);
-  --md-extended-color-purple-light-color-container: rgb(77 61 117);
-  --md-extended-color-purple-light-on-color-container: rgb(233 221 255);
-  --md-extended-color-blue-dark-color: rgb(208 189 254);
-  --md-extended-color-blue-dark-on-color: rgb(54 38 93);
-  --md-extended-color-blue-dark-color-container: rgb(77 61 117);
-  --md-extended-color-blue-dark-on-color-container: rgb(233 221 255);
-  --md-extended-color-blue-dark2-color: rgb(207 189 254);
-  --md-extended-color-blue-dark2-on-color: rgb(54 38 93);
-  --md-extended-color-blue-dark2-color-container: rgb(77 61 117);
-  --md-extended-color-blue-dark2-on-color-container: rgb(233 221 255);
-  --md-extended-color-green-dark-color: rgb(162 211 152);
-  --md-extended-color-green-dark-on-color: rgb(13 56 14);
-  --md-extended-color-green-dark-color-container: rgb(37 80 34);
-  --md-extended-color-green-dark-on-color-container: rgb(190 240 178);
-  --md-extended-color-green-light-color: rgb(161 211 154);
-  --md-extended-color-green-light-on-color: rgb(9 57 15);
-  --md-extended-color-green-light-color-container: rgb(35 80 36);
-  --md-extended-color-green-light-on-color-container: rgb(188 240 180);
-  --md-extended-color-green-mid-color: rgb(164 211 150);
-  --md-extended-color-green-mid-on-color: rgb(16 56 12);
-  --md-extended-color-green-mid-color-container: rgb(40 80 33);
-  --md-extended-color-green-mid-on-color-container: rgb(192 239 176);
-  --md-extended-color-green-light2-color: rgb(163 211 151);
-  --md-extended-color-green-light2-on-color: rgb(15 56 13);
-  --md-extended-color-green-light2-color-container: rgb(39 80 34);
-  --md-extended-color-green-light2-on-color-container: rgb(191 240 177);
-  --md-extended-color-green-dark2-color: rgb(164 211 150);
-  --md-extended-color-green-dark2-on-color: rgb(16 56 12);
-  --md-extended-color-green-dark2-color-container: rgb(39 80 33);
-  --md-extended-color-green-dark2-on-color-container: rgb(191 239 176);
-  --md-extended-color-green-dark3-color: rgb(163 211 151);
-  --md-extended-color-green-dark3-on-color: rgb(15 56 13);
-  --md-extended-color-green-dark3-color-container: rgb(39 80 34);
-  --md-extended-color-green-dark3-on-color-container: rgb(191 240 177);
-  --md-extended-color-green-light3-color: rgb(162 211 153);
-  --md-extended-color-green-light3-on-color: rgb(12 57 14);
-  --md-extended-color-green-light3-color-container: rgb(37 80 35);
-  --md-extended-color-green-light3-on-color-container: rgb(189 240 179);
-  --md-extended-color-green-light2-hovered-color: rgb(162 211 152);
-  --md-extended-color-green-light2-hovered-on-color: rgb(12 57 14);
-  --md-extended-color-green-light2-hovered-color-container: rgb(37 80 35);
-  --md-extended-color-green-light2-hovered-on-color-container: rgb(189 240 179);
-  --md-extended-color-green-dark2-hovered-color: rgb(161 211 153);
-  --md-extended-color-green-dark2-hovered-on-color: rgb(11 57 15);
-  --md-extended-color-green-dark2-hovered-color-container: rgb(36 80 35);
-  --md-extended-color-green-dark2-hovered-on-color-container: rgb(189 240 179);
-  --md-extended-color-system-regular-color: rgb(156 212 159);
-  --md-extended-color-system-regular-on-color: rgb(1 57 19);
-  --md-extended-color-system-regular-color-container: rgb(29 81 40);
-  --md-extended-color-system-regular-on-color-container: rgb(184 241 185);
-  --md-extended-color-system-hovered-color: rgb(154 212 161);
-  --md-extended-color-system-hovered-on-color: rgb(0 57 22);
-  --md-extended-color-system-hovered-color-container: rgb(26 81 42);
-  --md-extended-color-system-hovered-on-color-container: rgb(182 241 188);
-  --md-extended-color-purple-light-hovered-color: rgb(208 188 254);
-  --md-extended-color-purple-light-hovered-on-color: rgb(54 38 93);
-  --md-extended-color-purple-light-hovered-color-container: rgb(77 61 117);
-  --md-extended-color-purple-light-hovered-on-color-container: rgb(233 221 255);
-  --md-extended-color-yellow-dark2-hovered-color: rgb(228 195 108);
-  --md-extended-color-yellow-dark2-hovered-on-color: rgb(61 46 0);
-  --md-extended-color-yellow-dark2-hovered-color-container: rgb(88 68 0);
-  --md-extended-color-yellow-dark2-hovered-on-color-container: rgb(255 223 145);
-  --md-extended-color-yellow-dark3-hovered-color: rgb(232 194 108);
-  --md-extended-color-yellow-dark3-hovered-on-color: rgb(63 46 0);
-  --md-extended-color-yellow-dark3-hovered-color-container: rgb(91 67 0);
-  --md-extended-color-yellow-dark3-hovered-on-color-container: rgb(255 223 155);
-  --md-extended-color-teal-dark-color: rgb(128 212 214);
-  --md-extended-color-teal-dark-on-color: rgb(0 55 56);
-  --md-extended-color-teal-dark-color-container: rgb(0 79 81);
-  --md-extended-color-teal-dark-on-color-container: rgb(156 241 243);
-  --md-extended-color-teal-dark-hovered-color: rgb(128 212 217);
-  --md-extended-color-teal-dark-hovered-on-color: rgb(0 55 57);
-  --md-extended-color-teal-dark-hovered-color-container: rgb(0 79 83);
-  --md-extended-color-teal-dark-hovered-on-color-container: rgb(156 240 245);
-  --md-extended-color-teal-mid-color: rgb(128 212 215);
-  --md-extended-color-teal-mid-on-color: rgb(0 55 56);
-  --md-extended-color-teal-mid-color-container: rgb(0 79 82);
-  --md-extended-color-teal-mid-on-color-container: rgb(156 241 244);
-  --md-extended-color-teal-light-color: rgb(129 212 221);
-  --md-extended-color-teal-light-on-color: rgb(0 54 59);
-  --md-extended-color-teal-light-color-container: rgb(0 79 85);
-  --md-extended-color-teal-light-on-color-container: rgb(157 240 249);
-  --md-extended-color-teal-light-variant-color: rgb(129 211 221);
-  --md-extended-color-teal-light-variant-on-color: rgb(0 54 59);
-  --md-extended-color-teal-light-variant-color-container: rgb(0 79 86);
-  --md-extended-color-teal-light-variant-on-color-container: rgb(157 240 250);
-  --md-extended-color-teal-light2-color: rgb(128 213 212);
-  --md-extended-color-teal-light2-on-color: rgb(0 55 55);
-  --md-extended-color-teal-light2-color-container: rgb(0 79 80);
-  --md-extended-color-teal-light2-on-color-container: rgb(156 241 241);
-  --md-extended-color-teal-light-strong-color: rgb(129 211 221);
-  --md-extended-color-teal-light-strong-on-color: rgb(0 54 59);
-  --md-extended-color-teal-light-strong-color-container: rgb(0 79 85);
-  --md-extended-color-teal-light-strong-on-color-container: rgb(157 240 249);
-  --md-extended-color-teal-dark2-color: rgb(128 213 212);
-  --md-extended-color-teal-dark2-on-color: rgb(0 55 55);
-  --md-extended-color-teal-dark2-color-container: rgb(0 79 80);
-  --md-extended-color-teal-dark2-on-color-container: rgb(156 241 240);
-  --md-extended-color-system-dark-grey-color: rgb(153 212 162);
-  --md-extended-color-system-dark-grey-on-color: rgb(0 57 23);
-  --md-extended-color-system-dark-grey-color-container: rgb(25 81 42);
-  --md-extended-color-system-dark-grey-on-color-container: rgb(181 241 189);
-  --md-extended-color-system-light-gray-color: rgb(155 212 161);
-  --md-extended-color-system-light-gray-on-color: rgb(0 57 22);
-  --md-extended-color-system-light-gray-color-container: rgb(27 81 41);
-  --md-extended-color-system-light-gray-on-color-container: rgb(182 241 187);
-  --md-extended-color-system-green-mid-color: rgb(158 212 157);
-  --md-extended-color-system-green-mid-on-color: rgb(4 57 18);
-  --md-extended-color-system-green-mid-color-container: rgb(32 80 38);
-  --md-extended-color-system-green-mid-on-color-container: rgb(185 240 183);
-  --md-extended-color-system-green-dark-color: rgb(164 211 150);
-  --md-extended-color-system-green-dark-on-color: rgb(16 56 12);
-  --md-extended-color-system-green-dark-color-container: rgb(39 80 33);
-  --md-extended-color-system-green-dark-on-color-container: rgb(191 239 176);
-  --md-extended-color-system-green-mid2-color: rgb(160 212 155);
-  --md-extended-color-system-green-mid2-on-color: rgb(7 57 16);
-  --md-extended-color-system-green-mid2-color-container: rgb(34 80 37);
-  --md-extended-color-system-green-mid2-on-color-container: rgb(187 240 181);
-  --md-extended-color-system-green-mid-gray-color: rgb(158 212 157);
-  --md-extended-color-system-green-mid-gray-on-color: rgb(3 57 18);
-  --md-extended-color-system-green-mid-gray-color-container: rgb(31 80 39);
-  --md-extended-color-system-green-mid-gray-on-color-container: rgb(185 240 184);
-  --md-extended-color-system-green-light-strong-color: rgb(163 211 151);
-  --md-extended-color-system-green-light-strong-on-color: rgb(15 56 13);
-  --md-extended-color-system-green-light-strong-color-container: rgb(39 80 34);
-  --md-extended-color-system-green-light-strong-on-color-container: rgb(191 240 177);
-  --md-extended-color-system-green-light-gray-color: rgb(165 211 149);
-  --md-extended-color-system-green-light-gray-on-color: rgb(17 56 11);
-  --md-extended-color-system-green-light-gray-color-container: rgb(40 80 32);
-  --md-extended-color-system-green-light-gray-on-color-container: rgb(192 239 176);
-  --md-extended-color-system-green-dark2-color: rgb(158 212 156);
-  --md-extended-color-system-green-dark2-on-color: rgb(5 57 17);
-  --md-extended-color-system-green-dark2-color-container: rgb(32 80 38);
-  --md-extended-color-system-green-dark2-on-color-container: rgb(186 240 183);
-  --md-extended-color-system-green-light-gray2-color: rgb(159 212 156);
-  --md-extended-color-system-green-light-gray2-on-color: rgb(6 57 17);
-  --md-extended-color-system-green-light-gray2-color-container: rgb(33 80 37);
-  --md-extended-color-system-green-light-gray2-on-color-container: rgb(186 240 182);
-  --md-extended-color-onboarding-green-color: rgb(160 212 155);
-  --md-extended-color-onboarding-green-on-color: rgb(7 57 16);
-  --md-extended-color-onboarding-green-color-container: rgb(34 80 37);
-  --md-extended-color-onboarding-green-on-color-container: rgb(187 240 182);
-  --md-extended-color-onboarding-green-dark-color: rgb(162 211 152);
-  --md-extended-color-onboarding-green-dark-on-color: rgb(12 56 14);
-  --md-extended-color-onboarding-green-dark-color-container: rgb(37 80 35);
-  --md-extended-color-onboarding-green-dark-on-color-container: rgb(189 240 179);
-  --md-extended-color-onboarding-green-hovered-color: rgb(161 211 154);
-  --md-extended-color-onboarding-green-hovered-on-color: rgb(10 57 15);
-  --md-extended-color-onboarding-green-hovered-color-container: rgb(36 80 36);
-  --md-extended-color-onboarding-green-hovered-on-color-container: rgb(188 240 180);
-  --md-extended-color-onboarding-green-dark-hovered-color: rgb(162 211 152);
-  --md-extended-color-onboarding-green-dark-hovered-on-color: rgb(12 57 14);
-  --md-extended-color-onboarding-green-dark-hovered-color-container: rgb(37 80 35);
-  --md-extended-color-onboarding-green-dark-hovered-on-color-container: rgb(189 240 179);
   --sidebar-bg: #101510;
   --main-bg: #0b0f0b;
+  --main-content-bg: #111B07;
   --surface-bg: #101510;
   --card-bg: #232823;
   --red: #272B26;
@@ -277,23 +64,24 @@
   --news-radius: 20px;
   --sidebar-width: 76px;
   --sidebar-width-open: 198px;
-  --transition: 0.2s cubic-bezier(.4, 0, .2, 1);
-  --transition-slow: 0.7s cubic-bezier(.4, 0, .2, 1);
+  --transition: 0.2s cubic-bezier(.4,0,.2,1);
+  --font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 }
 
-
-
-html,
-body {
+html, body {
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
 body {
-  background: var(--surface-bg);
+  background: #0D0F0A;
   color: var(--text-main);
-  font-family: 'Roboto', Arial, sans-serif;
+  font-family: var(--font-family);
   min-height: 100vh;
   width: 100vw;
   overflow-x: hidden;
@@ -304,128 +92,154 @@ body {
   position: relative;
   min-height: 100vh;
   min-width: 100vw;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
-  background: var(--surface-bg);
+  background: #0D0F0A;
   display: flex;
   flex-direction: row;
+  box-sizing: border-box;
+  padding: 32px 32px 32px 12px;
 }
 
 .sidebar {
-  background: #101510;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 32px 0;
-  border-radius: 32px 0 0 32px;
-  min-width: var(--sidebar-width);
-  width: var(--sidebar-width);
-  height: calc(100vh - 44px);
-  margin-top: 22px;
-  margin-bottom: 22px;
-  z-index: 2;
-  position: relative;
-}
-
-.sidebar.open {
-  width: var(--sidebar-width-open);
-  min-width: var(--sidebar-width-open);
-}
-
-.main-area {
-  flex: 1; /* kitölti a sidebar melletti helyet */
-  min-width: 0; /* fontos, hogy a flexbox engedje zsugorodni */
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  min-height: 0;
-}
-
-.main-content {
-  background: var(--main-bg);
-  border-radius: 32px;
-  margin: 22px 22px 0px 0;
-  padding: 0 22px 0px 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
-  max-width: calc(100% - 22px);
-  min-height: calc(100dvh - 104px); /* mobilbarát */
-  height: calc(100dvh - 104px);
-  overflow-y: scroll;
-  scroll-behavior: smooth
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-  margin-bottom: 22px;
-  min-height: 80px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: #0B0F0B;
-  backdrop-filter: blur(12px);
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.welcome-container {
+  background: transparent;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
-  margin-top: 40px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  padding: 0 24px 24px 0;
+  border-radius: 32px;
+  min-width: auto;
+  width: auto;
+  height: auto;
 }
 
-.header.hide .welcome-container {
-  transform: translateY(-50%);
-  opacity: 0;
-}
-
-.header-icons {
-  position: absolute;
-  top: 8px;
-  right: 0;
+/* Nav keret a 24px-es frame-ben */
+.nav-frame {
+  width: fit-content;
+  height: auto;
   display: flex;
-  align-items: center;
-  gap: 8px;
+  box-sizing: border-box;
+  padding: 12px;
 }
 
-.header-icon-link {
+.nav-shell {
+  background: #16210B;
+  border-radius: 32px;
+  padding: 0;
+  box-sizing: border-box;
+  width: fit-content;
+  height: auto;
+  display: flex;
+  align-items: stretch;
+}
+
+/* New Navigation Rail */
+.nav-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 140px;
+  padding: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  height: auto;
+  margin: 0;
+}
+
+.rail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+  width: 90%;
+  min-height: 64px;
+  height: 64px;
+  border-radius: 32px;
+  text-decoration: none;
+  color: #E5FDCB;
+  transition: background .12s ease, filter .12s ease, height .12s ease-out;
+  padding: 6px;
+  margin: 4px 0; 
+  background: #273319;
+}
+.rail-item:hover { filter: brightness(0.95); }
+.rail-item:active { transform: none; }
+.rail-item.is-active {
+  background: #AFE86E;
+  color: #32451D;
+  height: 80px;
+}
+.rail-item.nav-btn { transition: background .12s ease, filter .12s ease, height .12s ease-out; }
+.rail-item.nav-btn:active { height: 72px; filter: brightness(0.98); }
+.rail-item.nav-btn.is-active:active { height: 88px; }
+.rail-item.rail-toggle { background: #182018; }
+
+.rail-icon {
+  width: 40px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--green-btn);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  transition: var(--transition);
+  border-radius: 16px;
+  background: transparent;
 }
+.rail-icon img { width: 22px; height: 22px; display: block; }
+.rail-item.is-active .rail-icon img { width: 26px; height: 26px; }
+.rail-label { display: block; text-align: center; line-height: 1.2; margin: 0; padding: 0; }
+.rail-item.is-active .rail-icon img { filter: brightness(0) saturate(100%) invert(12%) sepia(41%) saturate(776%) hue-rotate(57deg) brightness(95%) contrast(94%); } /* #142204 közelítés */
+.rail-item:not(.is-active) .rail-icon img { filter: brightness(0) saturate(100%) invert(92%) sepia(17%) saturate(535%) hue-rotate(27deg) brightness(105%) contrast(101%); } /* #CEFF97 közelítés */
+.rail-label { font-size: 12px; line-height: 1; font-weight: var(--font-weight-semibold); }
 
-.header-icon-link:hover {
-  background-color: var(--card-bg);
-}
-
-.header-icon {
-  width: 24px;
-  height: 24px;
-}
-
-.welcome-container {
+.main-area {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  margin-top: 40px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
-.footer { 
-  margin-top: 8px; 
+.main-scroll-area {
+  flex: 1;
+  display: block; /* változtatva flex-ről block-ra, hogy természetesen görgessen */
+  background: var(--main-bg);
+  border-radius: 32px;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
+  overflow-y: auto;
+  overflow-x: hidden; /* disable horizontal scroll in main area */
+  scroll-behavior: smooth;
+  padding: 22px;
+  background: var(--main-content-bg);
   position: relative;
-  z-index: 10;
+}
+
+/* Disable scrolling when permission popup is visible */
+.main-scroll-area.no-scroll {
+  overflow: hidden;
+}
+
+.main-scroll-area.popup-active {
+  pointer-events: none;
+}
+
+.main-scroll-area.popup-active .permission-overlay-scroll-area {
+  pointer-events: auto;
+}
+
+.main-content {
+  position: relative; /* for absolute positioned overlays */
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  /* min-height eltávolítva, hogy görgethető legyen */
+  overflow-x: hidden; /* disable horizontal scroll */
+  overflow-y: visible; /* ne legyen külön görgetés */
+}
+
+.footer {
+  margin-top: auto;
+  position: relative;
 }
 
 #site-footer .footer-container {
@@ -435,15 +249,13 @@ body {
   gap: 12px;
   border-radius: 12px;
   background: #0E1512;
+  padding: 12px 24px;
 }
+
 #site-footer .footer-left img,
 #site-footer .footer-right img {
   height: 65px;
   object-fit: contain;
-}
-
-#site-footer .footer-right {
-  padding-right: 48px;
 }
 
 #site-footer .footer-center {
@@ -451,37 +263,600 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 12px;
 }
+
 #site-footer .footer-privacy {
   color: #C4C8C3;
   text-decoration: underline;
-  cursor: pointer;
   font-size: 14px;
-}
-@media (max-width: 900px) {
-  #site-footer .footer-container {
-    flex-direction: column;
-    gap: 8px;
-    padding: 10px 12px;
-  }
+  cursor: pointer;
 }
 
-.qr-content {
+.header {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  gap: 24px;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  min-height: 80px;
+  position: relative;
+  top: auto;
+  z-index: 10;
+  background: var(--main-content-bg); /* same as main content */
+  backdrop-filter: none;
+  flex-direction: column;
+  flex: 0 0 auto; /* do not let flexbox shrink the header */
+  flex-shrink: 0;
+  overflow: visible; /* avoid clipping which looks like squashing */
+  overflow-x: visible; /* ne legyen külön görgetés */
 }
 
-.qrcode-header {
+.welcome-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-top: 8px;
+  gap: 4px;
+}
+
+.welcome-icon {
+  width: 45%;
+  height: 45%;
+  margin-bottom: 10px;
+}
+
+.welcome-text {
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: var(--font-weight-semibold);
+  color: #E5FDCB;
+  margin-top: 4px;
+}
+
+/* Header icon container */
+.header-icon-container {
+  padding: 0 0 32px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Header icon gradient container - hug content, fills height */
+.header-icon-gradient {
+  width: fit-content;
+  min-height: 68px; /* minimum magasság a gomboknak */
+  height: auto;
+  border-radius: 32px;
+  background: #62754E; /* Alapértelmezett: csak zöld */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* Gradient csak ha van login gomb (nincs bejelentkezve) */
+.header-icon-gradient.has-login {
+  background: linear-gradient(90deg,
+    #62754E 0%,
+    #62754E 30%,
+    #4F6148 40%,
+    #3D4A52 55%,
+    #2F3842 70%,
+    #242B38 85%,
+    #242B38 100%
+  );
+}
+
+/* Ha csak kamera van (nincs login), marad csak zöld (nincs gradient) */
+/* A .has-camera class önmagában nem ad gradientet */
+
+/* Gradient ha van login ÉS kamera indikátor */
+.header-icon-gradient.has-login.has-camera {
+  background: linear-gradient(90deg,
+    #62754E 0%,
+    #62754E 8%,
+    #4F6148 16%,
+    #3D4A52 24%,
+    #2F3842 32%,
+    #242B38 40%,
+    #2F3842 48%,
+    #3D4A52 56%,
+    #4F6148 64%,
+    #62754E 72%,
+    #62754E 100%
+  );
+}
+
+/* Header icon wrapper - fills height */
+.header-icon-wrapper {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Header icon button - centered, 52x52 */
+.header-icon-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: #D3FFA1;
+  border: 1px solid #57703B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width .12s cubic-bezier(.2,.0,.2,1), border-radius .12s cubic-bezier(.2,.0,.2,1), background .12s ease;
+  text-decoration: none;
+  padding: 0;
+}
+
+.header-icon-btn img {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.header-icon-btn:hover {
+  width: 68px;
+  border-radius: 16px;
+  background: #DEFFBA;
+}
+
+/* Header login button - Bejelentkezés */
+.header-login-btn {
+  flex: 0 0 auto;
+  min-width: 140px; /* minimum szélesség a szövegnek */
+  height: 52px; /* fix magasság az ikon gombokkal egyező */
+  background: #84B3FF;
+  border: 1px solid #282F3A;
+  border-radius: 16px; /* adjusted rounding */
+  border-left: none;
+  color: #08152C;
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+  padding: 0 20px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-login-btn:hover {
+  background: #42587B;
+  color: #DBE8FF;
+  transform: scaleY(1.12); /* stronger vertical grow on hover */
+}
+
+/* Click pop animation same as banner buttons */
+.header-login-btn:active { animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards; }
+
+.header-camera-indicator {
+  flex: 0 0 auto;
+  height: 68px; /* Full gradient height */
+  background: #182709;
+  border: 1px solid #182709;
+  border-radius: 16px;
+  border-left: none;
+  cursor: default;
+  padding: 0 20px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: -16px 0; /* Negative margin to completely fill gradient height */
+}
+
+.header-camera-indicator-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.header-camera-indicator-text {
+  color: #D0E7B8;
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+/* Horizontal scroll row for header + banner */
+.header-scroll-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+}
+.header-scroll-row::-webkit-scrollbar { display: none; }
+.header-scroll-row { scrollbar-width: none; }
+
+.info-banner {
+    background: #1D3823;
+    display: flex;
+    flex-direction: row;
+    padding: 18px 18px 18px 24px; 
+    border-radius: 32px;
+    border: 1px solid #CFF7D3;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.info-banner-icon-container {
+  height: 100%;
+}
+
+.info-banner-icon{
+  width: 32px;
+  height: 32px;
+}
+
+.banner-content {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start; /* szövegek a tetejére igazítva */
   gap: 8px;
-  margin-left: 12px;
-  margin-top: 12px;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+}
+
+.banner-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-right: 24px; /* az info-banner jobb oldali paddingját ide tesszük, actions-t nem érinti */
+}
+
+.info-banner-title{
+  color: #97FFAD;
+  font-weight: var(--font-weight-semibold);
+  text-align: left;
+  font-size: 20px;
+}
+
+.info-banner-desc{
+  color: #B9EBA2;
+  font-weight: var(--font-weight-regular);
+  font-size: 12px;
+}
+
+.banner-actions-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  align-self: stretch;
+}
+
+.banner-actions{
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  background: linear-gradient(90deg, #236932, #0C471F);
+  align-items: center;
+  padding: 8px;
+  border-radius: 16px;
+  flex: 0 0 auto;
+  height: 83%;
+}
+
+/* Közös banner gomb alapstílus és hover fix */
+.banner-btn,
+.banner-button {
+  padding: 10px 16px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer; /* mutató kéz */
+  pointer-events: auto;
+  position: relative;
+  z-index: 0;
+  transition: background .15s ease, color .15s ease;
+  transform-origin: center;
+  transform: scaleY(1);
+  overflow: hidden; /* pop animációnál háttér ne lógjon ki */
+}
+
+.banner-btn.primary { 
+  background: #226932; 
+  color: #DBFCD6; 
+}
+
+.banner-btn.secondary { 
+  background: #0C471F; 
+  color: #CFF7D3; 
+}
+
+.banner-btn.primary:hover { 
+  background: #83FF8F; 
+  color: #082907;
+  border: 1px solid #3A4F29;
+}
+
+.banner-btn.secondary:hover { 
+  background: #93D98D; 
+  color: #082907;
+  border: 1px solid #3A4F29;
+}
+
+.banner-btn {
+  height: 100%;
+  padding: 4px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  transition: background 0.2s ease;
+}
+
+.banner-btn:hover,
+.banner-button:hover {
+  transform: scaleY(1.08); /* hover: subtle vertical grow only */
+}
+
+/* click: real pop animation */
+.banner-btn:active,
+.banner-button:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+}
+
+@keyframes banner-btn-pop {
+  0%   { transform: scaleY(1.00); }
+  70%  { transform: scaleY(1.32); } /* overshoot */
+  100% { transform: scaleY(1.25); } /* settle */
+}
+
+.banner-btn.primary {
+  background: #97FFAD;
+  color: #082907;
+  border: 1px solid #CFF7D3;
+  width: 70px;
+}
+
+.banner-btn.secondary {
+  background: #B8EDA2;
+  color: #082907;
+  border: 1px solid #CFF7D3;
+  width: 170px;
+}
+
+.top-cards-row.shrinked .red-card.large {
+  width: 480px;
+}
+
+.top-cards-row.shrinked .red-card.medium {
+  width: 96px;
+}
+
+.top-cards-row.shrinked .red-card.small {
+  width: 44px;
+}
+
+.top-cards-row.shrinked .event-label,
+.top-cards-row.shrinked .event-label-text,
+.top-cards-row.shrinked .arrow-container {
+  transform: scale(0.9);
+  transform-origin: left center;
+}
+@media (max-width: 1200px) {
+  .red-card.large { min-width: 220px; }
+}
+@media (max-width: 900px) {
+  .main-content { padding: 0 8px 32px 32px; }
+  .red-card.large { min-width: 140px; }
+  .sidebar { margin-left: 8px; }
+  .main-content { margin-left: 0; }
+}
+@media (max-width: 700px) {
+  .sidebar { display: none; }
+  .main-content { border-radius: 32px; margin: 8px; box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container); }
+  .main-area { margin-left: 0; }
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: #232823; border-radius: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+
+/* ===================== FOOTER ===================== */
+.site-footer {
+  width: 100%;
+  border-top: 2px solid #445A2D;
+  margin-top: 32px;
+  padding: 32px 0 64px 0;
+  display: flex;
+  gap: 32px;
+}
+
+/* Footer columns */
+.footer-left,
+.footer-right {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-left {
+  align-items: flex-start;
+  gap: 12px;
+}
+
+/* Footer logo and participated section */
+.footer-logo-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer-logo-container img {
+  max-width: 200px;
+  height: auto;
+}
+
+.footer-participated-text {
+  color: #BBE789;
+  font-size: 14px;
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.footer-participated-logos {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-left: 4px;
+}
+
+.footer-participated-logos img {
+  height: 40px;
+  width: auto;
+}
+
+/* Copyright */
+.footer-copyright {
+  color: #BBE789;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  margin-left: 4px;
+}
+
+/* Social icons */
+.footer-social {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: 4px;
+}
+
+.footer-social img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.footer-social img:first-child {
+  width: 26px;
+  height: 26px;
+}
+
+.footer-social img:hover {
+  opacity: 0.7;
+}
+
+/* Footer right column */
+.footer-right {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: flex-start;
+}
+
+/* Footer sections */
+.footer-section {
+  background: #212F13;
+  border-radius: 24px;
+  padding: 16px 16px 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 0 1 auto;
+  min-width: 90px;
+  height: fit-content;
+}
+
+.footer-section-first {
+  background: #212F13;
+  border-radius: 24px;
+  padding: 16px 16px 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 0 1 auto;
+  min-width: 160px;
+  height: fit-content;
+}
+
+.footer-section-last {
+  background: #212F13;
+  border-radius: 24px;
+  padding: 16px 16px 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 0 1 auto;
+  min-width: 145px;
+  height: fit-content;
+}
+
+.footer-section-title {
+  color: #BBE789;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.footer-section-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  padding-top: 8px; /* tér az első gomb beta tagjének felül */
+}
+
+.footer-item {
+  background: #465A2F;
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: #BBE789;
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  position: relative;
+  box-sizing: border-box;
+  display: inline-block;
+  white-space: normal;
+  line-height: 1.4;
+  margin-bottom: 8px; /* gap a gombok között */
+}
+
+/* Ha van beta badge a gombban, extra tér kell */
+.footer-section:nth-child(2) .footer-item:last-child,
+.footer-section:nth-child(3) .footer-item {
+  margin-right: 10px; /* tér a beta tagnek jobbra */
+}
+
+.footer-item:hover {
+  background: #516841;
+}
+
+/* Beta badge */
+.beta-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #BDEA8A;
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: #465A2F;
+  font-size: 10px;
+  font-weight: 600;
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .qr-instruction {
@@ -512,8 +887,9 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 20px;
+  border-radius: 42px;
   background: #000;
+  display: block;
 }
 
 .corner {
@@ -523,23 +899,23 @@ body {
 }
 
 .corner.top-left {
-  top: -30px;
-  left: -30px;
+  top: -40px;
+  left: -40px;
 }
 
 .corner.top-right {
-  top: -30px;
-  right: -30px;
+  top: -40px;
+  right: -40px;
 }
 
 .corner.bottom-left {
-  bottom: -30px;
-  left: -30px;
+  bottom: -40px;
+  left: -40px;
 }
 
 .corner.bottom-right {
-  bottom: -30px;
-  right: -30px;
+  bottom: -40px;
+  right: -40px;
 }
 
 .camera-switch-btn {
@@ -641,20 +1017,18 @@ body {
   transition: var(--transition);
 }
 
-.qr-control-btn:hover {
-  border-radius: 64px !important;
-  transition: var(--transition);
-}
-
-.qr-control-btn-smol:hover {
-  border-radius: 64px !important;
-  transition: var(--transition);
-}
 
 .qr-control-icon {
-  width: 28px;
-  height: 28px;
+  width: 32px !important;
+  height: 32px !important;
   flex-shrink: 0;
+}
+
+.qr-control-icon-small {
+  width: 24px !important;
+  height: 32px !important;
+  flex-shrink: 0;
+  padding-bottom: -3px;
 }
 
 .qr-control-icon-switch {
@@ -667,6 +1041,7 @@ body {
   font-size: 0.9rem;
   text-align: center;
   line-height: 1.2;
+  font-weight: 500;
 }
 
 /* Button Size Variants */
@@ -699,12 +1074,10 @@ body {
 
 .qr-btn-restart {
   border-radius: 16px 16px 16px 32px;
-  width: 191px;
 }
 
 .qr-btn-game {
   border-radius: 16px 16px 32px 16px;
-  width: 191px;
 }
 
 /* Responsive adjustments */
@@ -732,456 +1105,139 @@ body {
   height: 42px;
 }
 
-.welcome-icon {
-  width: 50px;
-  height: 50px;
-}
-
-.welcome-text {
-  font-size: 1.7rem;
-  font-weight: 500;
-  color: var(--text-main);
-}
-
-.welcome-subtext {
-  font-size: 1.7rem;
-  font-weight: 500;
-  color: var(--text-main);
-}
-
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 1.2rem;
-  color: var(--text-main);
-  margin: 18px 0 0 0;
-  font-weight: 500;
-}
-
-.arrow-icon {
-  width: 18px;
-  height: 18px;
-  vertical-align: middle;
-  filter: brightness(0.8);
-}
-
-.top-cards-row {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  margin-top: 8px;
-  margin-bottom: 0;
-  align-items: flex-start;
-}
-
-.event-container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.red-card {
-  background: var(--red);
-  border-radius: var(--card-radius);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  position: relative;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-}
-
-.red-card.large {
-  width: 714px;
-  height: 205px;
-}
-
-.red-card.medium {
-  width: 120px;
-  height: 205px;
-}
-
-.red-card.small {
-  width: 56px;
-  height: 205px;
-}
-
-.event-labels-row {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  margin-top: 8px;
-  margin-bottom: 0;
-}
-
-.event-label {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  color: var(--text-main);
-  font-size: 1.05rem;
-  font-weight: 500;
-}
-
-.event-label-text {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.event-label .desc {
-  font-size: 0.95rem;
-  color: var(--text-main);
-  font-weight: 400;
-}
-
-.arrow-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--green-btn);
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-}
-
-.arrow-container .arrow-icon {
-  filter: brightness(1);
-  width: 12px;
-  height: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bottom-cards-row {
-  display: flex;
-  flex-direction: row;
-  gap: 18px;
-  margin-top: 0;
-}
-
-.news-card {
-  background: var(--card-bg);
-  border-radius: var(--news-radius);
-  width: 17vw;
-  min-width: 170px;
-  height: 110px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  position: relative;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.13);
-  overflow: hidden;
-}
-
-.red-rect {
-  background: var(--red);
-  width: 100%;
-  height: 60%;
-  border-radius: 0 0 18px 18px;
-}
-
-.news-label {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin: 8px 0 0 14px;
-  color: var(--text-main);
-  font-size: 1.05rem;
-  font-weight: 500;
-}
-
-.news-label .desc {
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  font-weight: 400;
-}
-
-.nav-menu {
-  display: flex;
-  flex-direction: column;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  align-items: center;
-  gap: 24px;
-}
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  text-decoration: none;
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-  width: 64px;
-  padding: 0;
-  border-radius: 16px;
-  transition: var(--transition);
-  position: relative;
-}
-
-.nav-item-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  text-decoration: none;
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-  width: 64px;
-  height: 64px;
-  padding: 0;
-  border-radius: 16px;
-  transition: var(--transition);
-  position: relative;
-  border: none;
-  background: none;
-  outline: none;
-}
-
-.nav-item:not(.active):hover .nav-icon-container {
-  background-color: #232823;
-}
-
-.nav-item-list:hover {
-  background-color: #ffffff2b;
-}
-
-.nav-item-list span {
-  pointer-events: none;
-}
-
-
-.nav-item.active .nav-icon-container {
-  background-color: var(--green-btn);
-}
-
-.nav-item span {
-  color: #C1C9BE;
-}
-
-.nav-item.active span {
-  color: #D4E8D1;
-}
-
-.nav-icon {
-  filter: brightness(0) saturate(100%) invert(85%) sepia(6%) saturate(466%) hue-rotate(60deg) brightness(95%) contrast(86%); /* #C1C9BE */
-}
-
-.nav-item.active .nav-icon {
-  filter: brightness(0) saturate(100%) invert(94%) sepia(11%) saturate(309%) hue-rotate(61deg) brightness(94%) contrast(90%); /* #D4E8D1 */
-}
-.nav-icon-container {
-  width: 56px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 16px;
-  transition: var(--transition);
-}
-
-.nav-icon {
-  width: 24px;
-  height: 24px;
-}
-
-/* ---------- open navbar  ---------- */
-
-.nav-menu-open {
-  display: flex;
-  flex-direction: column;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  align-items: center;
-  gap: 24px;
-}
-.nav-item-open {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 4px;
-  text-decoration: none;
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-  width: calc(100% - 28px);
-  padding: 0;
-  border-radius: 16px;
-  transition: var(--transition);
-  position: relative;
-}
-
-.nav-item-open-list {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 4px;
-  text-decoration: none;
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-  width: calc(100% - 28px);
-  height: calc(100% - 28px);
-  padding: 0;
-  border-radius: 16px;
-  transition: var(--transition);
-  position: relative;
-  border: none;
-  background: none;
-  outline: none;
-}
-
-.nav-item-open:not(.active):hover {
-  background-color: #232823;
-  height: 50px;
-  border-radius: 32px;
-}
-
-.nav-item-list:hover {
-  background-color: #ffffff2b;
-}
-
-.nav-item-list span {
-  pointer-events: none;
-}
-
-
-.nav-item.active {
-  /* background-color: var(--green-btn); */
-  height: 50px;
-  border-radius: 32px;
-}
-
-.nav-item-open span {
-  color: #C1C9BE;
-}
-
-.nav-item-open.active span {
-  color: #D4E8D1;
-}
-
-.nav-icon-open {
-  filter: brightness(0) saturate(100%) invert(85%) sepia(6%) saturate(466%) hue-rotate(60deg) brightness(95%) contrast(86%); /* #C1C9BE */
-}
-
-.nav-item-open.active .nav-icon-open {
-  filter: brightness(0) saturate(100%) invert(94%) sepia(11%) saturate(309%) hue-rotate(61deg) brightness(94%) contrast(90%); /* #D4E8D1 */
-}
-.nav-icon-open-container {
-  width: 56px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 16px;
-  transition: var(--transition);
-}
-
-/* Alapból elrejtjük a szöveget */
-.nav-item-list span {
-  display: none;
-}
-
-/* Csak ha a gombnak van a "-open" osztálya, mutatjuk */
-.nav-item-list.nav-item-open-list span {
-  display: flex; /* vagy flex, ha flex konténer */
-}
-
-
-.nav-icon-open {
-  width: 24px;
-  height: 24px;
-}
-
-@media (max-width: 1200px) {
-  .red-card.large {
-    min-width: 220px;
-  }
-
-  .news-card {
-    min-width: 120px;
-  }
-}
-
-@media (max-width: 900px) {
-  .main-content {
-    padding: 0 8px 32px 32px;
-  }
-
-  .red-card.large {
-    min-width: 140px;
-  }
-
-  .news-card {
-    min-width: 90px;
-  }
-
-  .sidebar {
-    margin-left: 8px;
-  }
-
-  .main-content {
-    margin-left: 0;
-  }
-}
-
-@media (max-width: 700px) {
-  .sidebar {
-    display: none;
-  }
-
-  .main-content {
-    border-radius: 32px;
-    margin: 8px;
-    box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container);
-  }
-
-  .main-area {
-    margin-left: 0;
-  }
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #232823;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-
-
 /* QR Scanner and Camera Permission Sections */
-.qr-scanner-container,
 .camera-blocked-container {
-  position: relative;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.camera-blocked-container {
+  /* Fill entire main-content area */
+  min-height: 400px;
+  flex: 1;
+  position: relative;
   z-index: 1;
-  margin-top: 20px;
-  height: 400px;
+  border-top: 2px solid #445A2D;
+  padding-top: 32px;
 }
 
 .qr-scanner-container {
+  position: relative;
   z-index: 2;
+  display: flex;
+  flex-direction: row;
+  gap: 112px;
+  align-items: center;
+  justify-content: flex-start;
+  width: 95%;
+  padding: 32px;
+  border-top: 2px solid #445A2D;
 }
 
-/* Permission Popup Overlay */
+.qr-scanner {
+  position: relative;
+  background: #223013;
+  border-radius: 42px;
+  flex-shrink: 0;
+  margin-left: 42px;
+}
+
+.qr-controls-container {
+  background: #223013;
+  border-radius: 32px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 18px;
+  flex: 1;
+}
+
+.qr-small-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Base button style */
+.qr-control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.12s ease;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Green buttons */
+.qr-btn-green {
+  background: #C1EA93;
+  border: 2px solid #57703B;
+  color: #334521;
+}
+
+.qr-btn-green:hover {
+  background: #DEFFBA;
+}
+
+/* Blue buttons */
+.qr-btn-blue {
+  background: #84B3FF;
+  border: 2px solid #282F3A;
+  color: #08152C;
+}
+
+.qr-btn-blue:hover {
+  background: #42587B;
+  color: #DBE8FF;
+}
+
+/* Big buttons hover - vertical grow */
+.qr-btn-participation:hover,
+.qr-btn-restart:hover,
+.qr-btn-game:hover {
+  transform: scaleY(1.08);
+}
+
+/* Small buttons hover - horizontal grow */
+.qr-btn-small:hover {
+  transform: scaleX(1.08);
+}
+
+/* Click pop animation */
+.qr-control-btn:active {
+  animation: qr-btn-pop 0.16s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+}
+
+.qr-btn-small:active {
+  animation: qr-btn-pop-horizontal 0.16s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+}
+
+@keyframes qr-btn-pop {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.92); }
+}
+
+@keyframes qr-btn-pop-horizontal {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(0.88); }
+}
+
+/* Small buttons */
+.qr-btn-small {
+  flex: 1;
+}
+
+.qr-control-icon {
+  width: 32px;
+  height: 32px;
+}
+
+/* Permission Popup Overlay - for full screen overlays (game, auth popups) */
 .permission-overlay {
   position: fixed;
   top: 0;
@@ -1195,37 +1251,95 @@ body {
   z-index: 1000;
 }
 
-.permission-container {
-  position: relative;
-  background: var(--card-bg);
-  border-radius: var(--card-radius);
-  padding: 32px;
-  max-width: 320px;
-  width: 320px !important;
-  margin: 20px;
+/* Permission Popup Overlay - for main-scroll-area */
+.permission-overlay-scroll-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(11, 15, 11, 0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* High z-index to overlay everything in main-scroll-area */
+  pointer-events: none; /* Allow clicks to pass through the overlay background */
 }
 
+.permission-overlay-scroll-area .permission-container {
+  pointer-events: auto; /* Re-enable clicks on the popup itself */
+}
+
+.permission-container {
+  position: relative;
+  background: #16210B;
+  border-radius: var(--card-radius);
+  padding: 32px 32px 32px 32px;
+  max-width: 420px;
+  width: 100%;
+  max-height: 100%;
+  height: fit-content;
+  overflow: hidden; /* Border-radius clips the scrollbar */
+  box-sizing: border-box;
+}
+
+.permission-content {
+  text-align: left;
+  max-height: calc(100vh - 96px); /* Account for padding and margins */
+  height: fit-content;
+  overflow-y: auto;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #445A2D #16210B; /* Firefox */
+  margin-right: -32px; /* Compensate for container padding */
+  padding-right: 32px; /* Re-add padding for content */
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Webkit browsers scrollbar */
+.permission-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.permission-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.permission-content::-webkit-scrollbar-thumb {
+  background: #445A2D;
+  border-radius: 4px;
+}
+
+/* Permission close button - using header icon button style */
 .permission-close-btn {
   position: absolute;
   top: 20px;
   right: 20px;
-  width: 40px;
-  height: 40px;
-  background-color: #3D433C;
-  border-radius: 32px;
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: #D3FFA1;
+  border: 1px solid #57703B;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  transition: width .12s cubic-bezier(.2,.0,.2,1), border-radius .12s cubic-bezier(.2,.0,.2,1), background .12s ease;
   cursor: pointer;
-  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.permission-close-btn img {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
 .permission-close-btn:hover {
-  border-radius: 15px;
-}
-
-.permission-content {
-  text-align: center;
+  width: 68px;
+  border-radius: 16px;
+  background: #DEFFBA;
 }
 
 .permission-hand-icon {
@@ -1235,88 +1349,219 @@ body {
 }
 
 .permission-title {
-  color: #FFFFFF;
+  color: #C1EE8D;
   font-size: 1.5rem;
   font-weight: 600;
-  margin: 0 0 24px 0;
+  margin: 0 0 12px 0;
+}
+
+.permission-icon-large {
+  margin: 0 0 8px 0;
+}
+
+.permission-text {
+  color: #E5FDA9;
+  text-align: left;
+  margin: 0 0 18px 0;
+  line-height: 1.6;
 }
 
 .permission-list {
-  color: #C2C3C2;
+  color: #E5FDA9;
   text-align: left;
   margin: 0 0 32px 0;
   padding-left: 20px;
+  margin-left: 0;
+  list-style-position: outside;
   line-height: 1.6;
 }
 
 .permission-list li {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
+/* Permission OK button - using login button style */
 .permission-ok-btn {
-  background: #B7F1B9;
-  border: none;
-  border-radius: 20px;
-  padding: 12px 24px;
-  color: #2D4E30;
-  font-size: 1rem;
-  font-weight: 500;
+  min-width: 140px;
+  height: 52px;
+  background: #84B3FF;
+  border: 1px solid #282F3A;
+  border-radius: 16px;
+  color: #08152C;
+  font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+  padding: 0 20px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
+  margin-bottom: 24px;
+  align-self: flex-start;
+  flex-shrink: 0;
 }
 
 .permission-ok-btn:hover {
-  border-radius: 15px;
+  background: #42587B;
+  color: #DBE8FF;
+  transform: scaleY(1.12);
+}
+
+.permission-ok-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+}
+
+/* QR Result Buttons */
+.qr-result-buttons {
+  display: flex;
+  flex-direction: row; /* Egymás mellett, bal és jobb */
+  gap: 12px;
+  width: 100%;
+  margin-top: 16px;
+  margin-bottom: 4px;
+}
+
+.qr-result-btn-open,
+.qr-result-btn-retry {
+  flex: 1; /* Egyenlő szélesség */
+  min-width: 140px;
+  height: 52px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease, transform .12s ease, border-color .12s ease;
+  padding: 0 20px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Left button (Megnyitás) - Blue style */
+.qr-result-btn-open {
+  background: #84B3FF;
+  border: 1px solid #282F3A;
+  color: #08152C;
+}
+
+.qr-result-btn-open:hover {
+  background: #42587B;
+  color: #DBE8FF;
+  transform: scaleY(1.12);
+}
+
+.qr-result-btn-open:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+}
+
+/* Right button (Újra) - Light green style */
+.qr-result-btn-retry {
+  background: #C5EC98;
+  border: 1px solid #0D0F0A;
+  color: #0D0F0A;
+}
+
+.qr-result-btn-retry:hover {
+  background: #E1FEC1;
+  border-color: #42532F;
+  color: #42532F;
+  transform: scaleY(1.12);
+}
+
+.qr-result-btn-retry:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+}
+
+/* QR Result URL container */
+.qr-result-url {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.permission-text-code {
+  color: #E5FDA9;
+  width: 100%;
+  word-break: break-all;
+  padding: 4px;
+  font-family: monospace;
+  font-size: 12px;
+  margin: 0 !important;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 /* Camera Blocked Content */
 .camera-blocked-content {
   text-align: center;
-  max-width: 300px;
-  padding: 20px 20px;
+  max-width: 400px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 6px;
 }
 
 .camera-blocked-icon {
-  width: 120px;
-  height: 120px;
-  margin-bottom: 20px;
-  opacity: 0.8;
+  width: 150px;
+  height: 150px;
+  margin-bottom: 24px;
+  opacity: 1;
 }
 
 .camera-blocked-title {
-  color: #FFFFFF;
-  font-size: 1.5rem;
+  color: #C1EE8D;
+  font-size: 2rem;
   font-weight: 600;
   margin: 0 0 16px 0;
   text-align: center;
 }
 
 .camera-blocked-text {
-  color: #C2C3C2;
+  color: #D5ECBC;
   font-size: 1rem;
   line-height: 1.5;
   margin: 0 0 24px 0;
   text-align: center;
 }
 
+/* Camera blocked button - using login button style from home.css */
 .camera-blocked-btn {
-  background: var(--green-btn);
-  border: none;
-  border-radius: 32px;
-  padding: 12px 24px;
-  color: var(--text-main);
-  margin-top: 20px;
-  font-size: 16px;
-  line-height: 1.5;
-  margin-bottom: 32px;
-  min-width: 200px;
+  min-width: 140px;
+  height: 52px;
+  background: #84B3FF;
+  border: 1px solid #282F3A;
+  border-radius: 16px;
+  color: #08152C;
+  font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+  padding: 0 20px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .camera-blocked-btn:hover {
-  border-radius: 15px;
+  background: #42587B;
+  color: #DBE8FF;
+  transform: scaleY(1.12);
+}
+
+.camera-blocked-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+}
+
+@keyframes banner-btn-pop {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.92); }
 }
 
 /* Content Area */
@@ -1606,7 +1851,7 @@ body {
 
 .qr-result-buttons {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 12px;
 }
 

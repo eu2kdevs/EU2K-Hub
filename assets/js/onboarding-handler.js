@@ -311,7 +311,11 @@ function attachStartButtonListener(auth, db) {
           window.location.href = '/EU2K-Hub/index.html';
         }
       } else {
-        alert('Hiba történt az onboarding befejezése során. Kérlek próbáld újra!');
+        if (window.showNotification) {
+          await window.showNotification('Hiba történt az onboarding befejezése során. Kérlek próbáld újra!', 'Hiba', 'danger');
+        } else {
+          alert('Hiba történt az onboarding befejezése során. Kérlek próbáld újra!');
+        }
       }
     });
   } else {

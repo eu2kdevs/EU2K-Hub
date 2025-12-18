@@ -16,6 +16,8 @@
   }
 
   function checkTermsAcceptance() {
+    // COMMENTED OUT: Automatic redirect to onboarding disabled
+    /*
     // Only check if user is logged in and not already on onboarding page
     if (isLoggedIn() && !hasAcceptedTerms()) {
       const currentPath = window.location.pathname || '';
@@ -29,6 +31,7 @@
         return false;
       }
     }
+    */
     return true;
   }
 
@@ -98,8 +101,8 @@
   }
 
   function init() {
-    // Check terms acceptance on page load
-    checkTermsAcceptance();
+    // COMMENTED OUT: Check terms acceptance on page load - automatic redirect disabled
+    // checkTermsAcceptance();
     
     // Prefer account icon in header
     const accountLink = document.querySelector('.header .header-icons a[href*="account"], .header .header-icons a');

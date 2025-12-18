@@ -8,14 +8,12 @@ All versions are experimental and may change frequently.
 
 | Version               | Supported          |
 | --------------------- | ----------------- |
-| 0.6abc (bbc) (beta, closed) | ⚠️                 |
+| 0.7abc+ (beta, closed) | ✅                 |
+| 0.6abc (bbc, cbc) (beta, closed) | ⚠️                 |
 | 0.5abc (beta, closed) | ⚠️                 |
-| 0.4abc (bbc, cbc) (beta, closed) | ⚠️                 |
-| 0.3abc (bbc) (beta, closed) | ⚠️                 |
-| 0.2abc (bbc, cbc) (beta, closed) | ⚠️                 |
 | Older versions        | :x:               |
 
-> Note: Security updates are only applied to the latest beta release. Older or private builds will not receive any fixes.  
+> Note: Security updates are only applied to the latest beta release. Older and/or private builds will not receive any fixes.  
 
 ## Reporting a Vulnerability
 

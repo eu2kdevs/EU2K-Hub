@@ -3,10 +3,36 @@
 
 import { getFirestore, collection, getDocs, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import { getApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
 
-// Használjuk a már inicializált Firebase példányokat
-const db = window.db;
-const auth = window.auth || getAuth();
+// Lazy initialization - csak akkor hívjuk meg, amikor szükséges
+function getDbInstance() {
+  if (window.db) {
+    return window.db;
+  }
+  try {
+    // Try to get the default app first
+    const app = getApp();
+    return getFirestore(app);
+  } catch (e) {
+    console.warn('[test_firebase] Firebase Firestore not initialized yet:', e.message);
+    return null;
+  }
+}
+
+function getAuthInstance() {
+  if (window.auth) {
+    return window.auth;
+  }
+  try {
+    // Try to get the default app first
+    const app = getApp();
+    return getAuth(app);
+  } catch (e) {
+    console.warn('[test_firebase] Firebase Auth not initialized yet:', e.message);
+    return null;
+  }
+}
 
 // Globális tesztelő objektum
 window.testFirebase = {};
@@ -16,6 +42,11 @@ window.testFirebase = {};
 // Kijelentkezés
 window.testFirebase.signOutUser = async function() {
   try {
+    const auth = getAuthInstance();
+    if (!auth) {
+      console.error("❌ Firebase Auth nincs inicializálva!");
+      return;
+    }
     await signOut(auth);
     console.log("👉 Kijelentkeztél (vendég mód)");
   } catch (e) {
@@ -26,6 +57,11 @@ window.testFirebase.signOutUser = async function() {
 // Fiók törlése (Firestore adatok + Auth fiók)
 window.testFirebase.deleteMyAccount = async function() {
   try {
+    const auth = getAuthInstance();
+    if (!auth) {
+      console.error("❌ Firebase Auth nincs inicializálva!");
+      return false;
+    }
     const user = auth.currentUser;
     if (!user) {
       console.log("❌ Nincs bejelentkezett felhasználó!");
@@ -38,6 +74,12 @@ window.testFirebase.deleteMyAccount = async function() {
 
     // 1. Firestore dokumentumok törlése
     console.log("\n📄 Firestore dokumentumok törlése:");
+    
+    const db = getDbInstance();
+    if (!db) {
+      console.error("❌ Firebase Firestore nincs inicializálva!");
+      return false;
+    }
     
     try {
       // User general_data törlése
@@ -80,6 +122,11 @@ window.testFirebase.deleteMyAccount = async function() {
 // Bejelentkezés email+jelszóval
 window.testFirebase.signInUser = async function(email, password) {
   try {
+    const auth = getAuthInstance();
+    if (!auth) {
+      console.error("❌ Firebase Auth nincs inicializálva!");
+      return null;
+    }
     await signInWithEmailAndPassword(auth, email, password);
     console.log("👉 Beléptél userként:", auth.currentUser.uid);
     return auth.currentUser;
@@ -91,6 +138,11 @@ window.testFirebase.signInUser = async function(email, password) {
 // Jelenlegi felhasználó információk
 window.testFirebase.whoAmI = async function() {
   try {
+    const auth = getAuthInstance();
+    if (!auth) {
+      console.error("❌ Firebase Auth nincs inicializálva!");
+      return null;
+    }
     const user = auth.currentUser;
     if (!user) {
       console.log("👤 Nincs bejelentkezett felhasználó (vendég mód)");
@@ -134,6 +186,11 @@ window.testFirebase.whoAmI = async function() {
 // Hírek tesztelése
 window.testFirebase.testNews = async function() {
   try {
+    const db = getDbInstance();
+    if (!db) {
+      console.error("❌ Firebase Firestore nincs inicializálva!");
+      return null;
+    }
     const ref = collection(db, "homePageData", "news", "hirek");
     const snap = await getDocs(ref);
     console.log("✅ Lekérve news/hirek:", snap.docs.length, "dokumentum");
@@ -149,6 +206,11 @@ window.testFirebase.testNews = async function() {
 // Events tesztelése
 window.testFirebase.testEvents = async function() {
   try {
+    const db = getDbInstance();
+    if (!db) {
+      console.error("❌ Firebase Firestore nincs inicializálva!");
+      return null;
+    }
     const ref = doc(db, "homePageData", "events");
     const snap = await getDoc(ref);
     console.log("✅ Events doksi:", snap.exists() ? snap.data() : "nincs adat");
@@ -158,24 +220,14 @@ window.testFirebase.testEvents = async function() {
   }
 };
 
-// New-things tesztelése (az updates kollekciót is lekéri)
-window.testFirebase.testNewThings = async function() {
-  try {
-    const updatesRef = collection(db, "homePageData", "new-things", "updates");
-    const snap = await getDocs(updatesRef);
-    console.log("✅ Lekérve new-things/updates:", snap.docs.length, "dokumentum");
-    snap.docs.forEach(doc => {
-      console.log(`📄 ${doc.id}:`, doc.data());
-    });
-    return snap.docs.map(d => ({id: d.id, data: d.data()}));
-  } catch (e) {
-    console.error("❌ New-things lekérési hiba:", e.message);
-  }
-};
-
 // Feedback tesztelése
 window.testFirebase.testFeedback = async function() {
   try {
+    const db = getDbInstance();
+    if (!db) {
+      console.error("❌ Firebase Firestore nincs inicializálva!");
+      return null;
+    }
     const ref = collection(db, "homePageData", "feedback", "msgs");
     const snap = await getDocs(ref);
     console.log("✅ Feedback üzenetek:", snap.docs.length, "dokumentum");
@@ -191,6 +243,11 @@ window.testFirebase.testFeedback = async function() {
 // User dokumentum tesztelése
 window.testFirebase.testUser = async function(uid) {
   try {
+    const db = getDbInstance();
+    if (!db) {
+      console.error("❌ Firebase Firestore nincs inicializálva!");
+      return null;
+    }
     const ref = doc(db, "users", uid);
     const snap = await getDoc(ref);
     
@@ -210,6 +267,11 @@ window.testFirebase.testUser = async function(uid) {
 // User general_data tesztelése
 window.testFirebase.testUserGeneral = async function(uid) {
   try {
+    const db = getDbInstance();
+    if (!db) {
+      console.error("❌ Firebase Firestore nincs inicializálva!");
+      return null;
+    }
     const ref = doc(db, "users", uid, "general_data", "general");
     const snap = await getDoc(ref);
     console.log("✅ general_data/general:", snap.exists() ? snap.data() : "nincs adat");
@@ -222,6 +284,11 @@ window.testFirebase.testUserGeneral = async function(uid) {
 // Saját adatok tesztelése (ha be vagy jelentkezve)
 window.testFirebase.testMyData = async function() {
   try {
+    const auth = getAuthInstance();
+    if (!auth) {
+      console.error("❌ Firebase Auth nincs inicializálva!");
+      return null;
+    }
     const user = auth.currentUser;
     if (!user) {
       console.log("❌ Nincs bejelentkezett felhasználó! Először jelentkezz be.");
@@ -233,6 +300,11 @@ window.testFirebase.testMyData = async function() {
     
     // User fő dokumentum
     console.log("\n📄 User fő dokumentum:");
+    const db = getDbInstance();
+    if (!db) {
+      console.error("❌ Firebase Firestore nincs inicializálva!");
+      return null;
+    }
     const userResult = await window.testFirebase.testUser(user.uid);
     
     // User general_data
@@ -260,7 +332,6 @@ window.testFirebase.help = function() {
   console.log("\n📊 Adatok tesztelése:");
   console.log("  testFirebase.testNews() - Hírek lekérése");
   console.log("  testFirebase.testEvents() - Események lekérése");
-  console.log("  testFirebase.testNewThings() - Újdonságok lekérése");
   console.log("  testFirebase.testFeedback() - Visszajelzések lekérése");
   console.log("  testFirebase.testUser('uid') - User dokumentum lekérése");
   console.log("  testFirebase.testUserGeneral('uid') - User general_data lekérése");

@@ -4,6 +4,8 @@
   },
   "dependencies": {
     "@google/genai": "^1.20.0",
-    "@zxing/library": "^0.21.3"
+    "@zxing/library": "^0.21.3",
+    "axios": "^1.13.2",
+    "firebase-functions": "^7.0.0"
   }
 }

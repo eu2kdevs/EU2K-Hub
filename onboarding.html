@@ -1,0 +1,3350 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Üdvözöllek az EU2K Hub-ban! Fedezd fel a legújabb eseményeket, híreket és tanulási lehetőségeket egy helyen.">
+  <title>EU2K Hub - Onboarding</title>
+  <link rel="stylesheet" href="onboarding.css">
+  <link rel="stylesheet" href="assets/components/language-dropdown.css">
+  <link rel="stylesheet" href="assets/components/button-group.css">
+  <link rel="icon" href="favicon.ico">
+  <script type="importmap">
+    {
+      "imports": {
+        "@material/web/": "https://esm.run/@material/web/"
+      }
+    }
+  </script>
+  <script type="module">
+    import '@material/web/all.js';
+    import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
+
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+  <script>
+    (function(){
+      if (!document.getElementById('eu2k-page-overlay')) {
+        var o = document.createElement('div');
+        o.id = 'eu2k-page-overlay';
+        o.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#000000;border-radius:32px;opacity:1;transition:opacity 300ms ease-in-out;';
+        var inner = document.createElement('div');
+        inner.style.cssText = 'position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000000;border-radius:32px;';
+        var m = document.createElement('div');
+        m.id = 'eu2k-overlay-mount';
+        m.style.cssText = 'position:relative;width:100%;height:100%';
+        inner.appendChild(m);
+        o.appendChild(inner);
+        document.documentElement.appendChild(o);
+      }
+    })();
+  </script>
+  <script src="assets/js/page-overlay-loader.js"></script>
+  <script src="assets/js/translations.js"></script>
+  <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Typography imports to match Figma */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+    body,
+    * {
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 400;
+      font-style: normal;
+      font-variation-settings: "wdth" 100;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-bg">
+    <main class="main-area">
+      <div class="main-scroll-area">
+        <div class="main-content">
+          <!-- Header -->
+          <header class="header" id="mainHeader">
+            <div class="header-content">
+              <div class="welcome-container" id="welcomeContainer" style="display: none;">
+                <img src="assets/home/welcome_hand_icon.svg" class="welcome-icon" id="welcomeIcon" alt="Welcome">
+                <span class="welcome-text" id="welcomeText" data-translate="onboarding.who_are_you">Ki vagy?</span>
+                <span class="preferences-step-indicator" id="preferencesStepIndicator" style="display: none;">1/2</span>
+              </div>
+              <div class="header-icon-container">
+                <div class="header-icon-gradient">
+                  <button class="onboarding-header-btn onboarding-back-btn" id="backBtn" style="display: none;">
+                    <img src="assets/onboarding/back_arrow.svg" alt="Vissza" class="onboarding-header-icon onboarding-back-icon">
+                    <span class="onboarding-header-text" data-translate="onboarding.back">Vissza</span>
+                  </button>
+                  <button class="onboarding-header-btn" id="restartBtn">
+                    <img src="assets/onboarding/restart.svg" alt="Újrakezdés" class="onboarding-header-icon">
+                    <span class="onboarding-header-text" data-translate="onboarding.restart">Újrakezdés</span>
+                  </button>
+                  <button class="onboarding-header-btn" id="languageBtn">
+                    <img src="assets/onboarding/language.svg" alt="Nyelv" class="onboarding-header-icon">
+                    <span class="onboarding-header-text" data-translate="onboarding.language">Nyelv</span>
+                  </button>
+                  <button class="onboarding-header-btn onboarding-back-btn" id="backToSetupBtn" style="display: none;">
+                    <img src="assets/onboarding/back_arrow.svg" alt="Vissza" class="onboarding-header-icon onboarding-back-icon">
+                    <span class="onboarding-header-text" data-translate="onboarding.back_to_setup">Vissza a beállításhoz</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <!-- Main content -->
+          <div class="onboarding-main" id="onboardingMain">
+            <div class="onboarding-hand-container">
+              <img src="assets/home/welcome_hand_icon.svg" alt="Helló" class="onboarding-hand-icon">
+            </div>
+            <h1 class="onboarding-greeting" data-translate="onboarding.greeting">Helló</h1>
+            <button class="onboarding-start-btn" id="startBtn">
+              <img src="assets/onboarding/arrow_forward.svg" alt="Kezdés" class="onboarding-start-icon">
+              <span class="onboarding-start-text" data-translate="onboarding.start">Kezdjük</span>
+            </button>
+          </div>
+
+          <!-- Language Selection Screen Header (duplicate for language screen) -->
+          <header class="header language-screen-header" id="languageScreenHeader" style="display: none;">
+            <div class="header-content">
+              <div class="welcome-container">
+                <img src="assets/onboarding/language_header.svg" class="language-icon" alt="Language">
+                <span class="welcome-text" data-translate="onboarding.choose_language">Válassz egy nyelvet</span>
+              </div>
+              <div class="header-icon-container">
+                <div class="header-icon-gradient">
+                  <button class="onboarding-header-btn onboarding-back-btn" id="backBtnLanguage" style="display: none;">
+                    <img src="assets/onboarding/back_arrow.svg" alt="Vissza" class="onboarding-header-icon onboarding-back-icon">
+                    <span class="onboarding-header-text" data-translate="onboarding.back">Vissza</span>
+                  </button>
+                  <button class="onboarding-header-btn" id="restartBtnLanguage">
+                    <img src="assets/onboarding/restart.svg" alt="Újrakezdés" class="onboarding-header-icon">
+                    <span class="onboarding-header-text" data-translate="onboarding.restart">Újrakezdés</span>
+                  </button>
+                  <button class="onboarding-header-btn onboarding-back-btn" id="backToSetupBtnLanguage" style="display: none;">
+                    <img src="assets/onboarding/back_arrow.svg" alt="Vissza" class="onboarding-header-icon onboarding-back-icon">
+                    <span class="onboarding-header-text" data-translate="onboarding.back_to_setup">Vissza a beállításhoz</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </header>
+          
+          <!-- Language Selection Screen -->
+          <div class="language-select-screen" id="languageSelectScreen" style="display: none;" data-screen="choose-language">
+            <div class="language-select-container">
+              <div class="language-select-header">
+                <span class="language-select-title" data-translate="onboarding.language">Nyelv</span>
+                <div class="language-dropdown" id="languageDropdown"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Login Screen -->
+          <div class="login-screen" id="loginScreen" style="display: none;" data-screen="login">
+            <div class="login-container">
+              <div class="login-left-column">
+                <div class="login-recommended-text" id="loginRecommendedText" style="display: none;">
+                  <span data-translate="onboarding.recommended_login">Ajánlott bejelentkezési módszer:</span>
+                </div>
+                <div class="login-logo-container">
+                  <img src="assets/onboarding/accountTypes/microsoft.png" alt="Microsoft" class="login-logo" id="loginLogo">
+                </div>
+                <div class="login-info-text" id="loginInfoText">
+                  <span data-translate="onboarding.school_account_required">Iskolai fiókoddal kell bejelentkezned</span>
+                </div>
+              </div>
+              <div class="login-right-column">
+                <div class="login-prompt-text" id="loginPromptText" data-translate="onboarding.choose_login_method">Válassz egy bejelentkezési módszert</div>
+                <div class="button-group-container" id="buttonGroupContainer"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Login Progress Screen -->
+          <div class="login-progress-screen" id="loginProgressScreen" style="display: none;" data-screen="login-progress">
+            <div class="login-progress-container">
+              <div class="login-progress-left-column">
+                <div class="login-progress-logo-container">
+                  <img src="assets/onboarding/accountTypes/microsoft.png" alt="Microsoft" class="login-progress-logo" id="loginProgressLogo">
+                </div>
+                <div class="login-progress-text" id="loginProgressText" data-translate="onboarding.login_in_progress">Bejelentkezés folyamatban</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Login Failed Screen -->
+          <div class="login-failed-screen" id="loginFailedScreen" style="display: none;" data-screen="login-failed">
+            <div class="login-failed-container">
+              <img src="assets/onboarding/general/warning.svg" alt="Warning" class="login-failed-icon">
+              <h1 class="login-failed-title" data-translate="onboarding.login_interrupted">Megszakadt a bejelentkezés</h1>
+              <p class="login-failed-subtitle" data-translate="onboarding.try_again">Próbálkozz újra</p>
+              <button class="onboarding-start-btn login-retry-btn" id="loginRetryBtn">
+                <span class="onboarding-start-text" data-translate="onboarding.retry">Próbáld újra</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Login Success Screen (Temporary) -->
+          <div class="login-success-screen" id="loginSuccessScreen" style="display: none;" data-screen="login-success">
+            <div class="login-success-container">
+              <h1 class="login-success-title">Bejelentkezés sikeres!</h1>
+              <button class="onboarding-start-btn login-logout-btn" id="loginLogoutBtn">
+                <span class="onboarding-start-text" data-translate="onboarding.logout">Kijelentkezés</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Restart Screen -->
+          <div class="login-failed-screen" id="restartScreen" style="display: none;" data-screen="restart">
+            <div class="login-failed-container">
+              <img src="assets/onboarding/general/qm.svg" alt="Question" class="login-failed-icon">
+              <h1 class="login-failed-title" data-translate="onboarding.restart_confirm">Biztos újra szeretnéd kezdeni?</h1>
+              <p class="login-failed-subtitle" data-translate="onboarding.restart_warning">Minden eddig előrehaladásod el fog veszni!</p>
+              <button class="onboarding-start-btn login-retry-btn" id="restartConfirmBtn">
+                <span class="onboarding-start-text" data-translate="onboarding.restart">Újrakezdés</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Looks Screen -->
+          <div class="login-screen" id="looksScreen" style="display: none;" data-screen="looks">
+            <div class="login-container">
+              <div class="login-left-column">
+                <div class="looks-preview-container">
+                  <div class="looks-preview-circle" id="looksPreviewCircle">
+                    <img id="looksPreviewImage" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" alt="Profile Preview">
+                  </div>
+                </div>
+              </div>
+              <div class="login-right-column">
+                <div class="looks-navbar-container">
+                  <div class="looks-navbar">
+                    <button class="looks-nav-item looks-nav-item--school" id="useSchoolProfileBtn">
+                      <span class="onboarding-header-text" data-translate="onboarding.use_school_profile">Iskolai profilkép használata</span>
+                    </button>
+                    <button class="looks-nav-item looks-nav-item--avatar active" id="blobbyBtn" data-avatar-type="blobby">
+                      <span>Blobby</span>
+                    </button>
+                    <button class="looks-nav-item looks-nav-item--random" id="randomBtn" data-translate="onboarding.random">Random</button>
+                  </div>
+                </div>
+                <div class="looks-color-grid" id="looksColorGrid"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Name Screen -->
+          <div class="name-screen" id="nameScreen" style="display: none;" data-screen="name">
+            <div class="login-container name-container">
+              <div class="login-left-column">
+                <div class="looks-preview-container">
+                  <div class="looks-preview-circle">
+                    <img id="namePreviewImage" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" alt="Name Preview">
+                  </div>
+                </div>
+              </div>
+              <div class="name-right-column">
+                <label class="name-label" for="nameInput" data-translate="onboarding.name_label">Neved:</label>
+                <input type="text" id="nameInput" class="name-input" placeholder="Ide írd..." data-translate-placeholder="onboarding.name_placeholder">
+                <p class="name-hint" data-translate="onboarding.name_hint">Ezen a néven fogunk szólítani, ha Tanár vagy, erre különösen figyelj!</p>
+                <button class="looks-continue-btn name-continue-btn" id="nameContinueBtn" data-translate="onboarding.continue">Tovább</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preferences Screen 1 -->
+          <div class="preferences-screen" id="preferences1Screen" style="display: none;" data-screen="preferences1">
+            <div class="preferences-container">
+              <div class="preferences-section-header">
+                <h2 class="preferences-section-title" data-translate="onboarding.preferences_notifications_title" data-translate-fallback="Értesítések">Értesítések</h2>
+                <p class="preferences-section-desc" data-translate="onboarding.preferences_notifications_desc" data-translate-fallback="Ezt később a Beállításokban is módosíthatod.">Ezt később a Beállításokban is módosíthatod.</p>
+              </div>
+
+              <div class="preferences-cards-stack">
+                <!-- Hangok kártya (másolva a settingsből) -->
+                <div class="settings-item notifications-card">
+                  <div class="settings-card-content">
+                    <div class="settings-card-text">
+                      <h2 data-translate="sounds_title" data-translate-fallback="Hangok">Hangok</h2>
+                    </div>
+                    <div class="settings-card-control">
+                      <md-switch class="settings-switch" icons selected id="onboardingSoundsSwitch" aria-label="Hangok"></md-switch>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Nagy kártyák egy sorban -->
+                <div class="preferences-row">
+                  <!-- Push értesítések kártya -->
+                  <div class="preferences-col">
+                    <div class="settings-item notifications-card-big">
+                      <div class="settings-card-content notifications-sort-card">
+                        <div class="settings-card-text">
+                          <h2 data-translate="push_notifications_title"
+                              data-translate-fallback="Push Értesítések">
+                            Push Értesítések
+                          </h2>
+                        </div>
+                        <div class="settings-card-control notifications-sort-control"></div>
+                      </div>
+                      <div class="notifications-channels-card">
+                        <div class="notifications-channels-list" id="onboardingPushNotificationsChannels">
+                          <div class="notifications-toggle-row" data-channel-key="news">
+                            <span class="notifications-toggle-label"
+                                  data-translate="news_label"
+                                  data-translate-fallback="Hírek">
+                              Hírek
+                            </span>
+                            <md-switch class="settings-switch" icons selected id="onbNotifNewsSwitch" aria-label="Hírek"></md-switch>
+                          </div>
+                          <div class="notifications-toggle-row" data-channel-key="events">
+                            <span class="notifications-toggle-label"
+                                  data-translate="events_label"
+                                  data-translate-fallback="Események &amp; Event Hub">
+                              Események &amp; Event Hub
+                            </span>
+                            <md-switch class="settings-switch" icons selected id="onbNotifEventsSwitch" aria-label="Események &amp; Event Hub"></md-switch>
+                          </div>
+                          <div class="notifications-toggle-row" data-channel-key="messages">
+                            <span class="notifications-toggle-label"
+                                  data-translate="messages_label"
+                                  data-translate-fallback="Üzenetek">
+                              Üzenetek
+                            </span>
+                            <md-switch class="settings-switch" icons id="onbNotifMessagesSwitch" aria-label="Üzenetek" disabled></md-switch>
+                          </div>
+                          <div class="notifications-toggle-row" data-channel-key="posts">
+                            <span class="notifications-toggle-label"
+                                  data-translate="posts_label"
+                                  data-translate-fallback="Posztok">
+                              Posztok
+                            </span>
+                            <md-switch class="settings-switch" icons id="onbNotifPostsSwitch" aria-label="Posztok" disabled></md-switch>
+                          </div>
+                          <div class="notifications-toggle-row" data-channel-key="invites">
+                            <span class="notifications-toggle-label"
+                                  data-translate="invites_label"
+                                  data-translate-fallback="Meghívók">
+                              Meghívók
+                            </span>
+                            <md-switch class="settings-switch" icons id="onbNotifInvitesSwitch" aria-label="Meghívók" disabled></md-switch>
+                          </div>
+                          <div class="notifications-toggle-row" data-channel-key="new-things">
+                            <span class="notifications-toggle-label"
+                                  data-translate="new_things_label"
+                                  data-translate-fallback="Újdonságok">
+                              Újdonságok
+                            </span>
+                            <md-switch class="settings-switch" icons selected id="onbNotifNewThingsSwitch" aria-label="Újdonságok"></md-switch>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Felugró értesítések kártya -->
+                  <div class="preferences-col">
+                    <div class="settings-item notifications-card-big">
+                      <div class="settings-card-content notifications-sort-card">
+                        <div class="settings-card-text">
+                          <h2 data-translate="popup_notifications_title"
+                              data-translate-fallback="Felugró értesítések">
+                            Felugró értesítések
+                          </h2>
+                        </div>
+                        <div class="settings-card-control notifications-sort-control"></div>
+                      </div>
+                      <div class="notifications-channels-card">
+                        <div class="notifications-channels-list" id="onboardingPopupNotificationsChannels">
+                          <div class="notifications-toggle-row" data-channel-key="event-hub-popup">
+                            <span class="notifications-toggle-label"
+                                  data-translate="event_hub_popup_label"
+                                  data-translate-fallback="Event Hub">
+                              Event Hub
+                            </span>
+                            <md-switch class="settings-switch" icons id="onbNotifEventHubPopupSwitch" aria-label="Event Hub" disabled></md-switch>
+                          </div>
+                          <div class="notifications-toggle-row" data-channel-key="new-things-popup">
+                            <span class="notifications-toggle-label"
+                                  data-translate="new_things_popup_label"
+                                  data-translate-fallback="Újdonságok">
+                              Újdonságok
+                            </span>
+                            <md-switch class="settings-switch" icons selected id="onbNotifNewThingsPopupSwitch" aria-label="Újdonságok"></md-switch>
+                          </div>
+                          <div class="notifications-toggle-row" data-channel-key="beta-popup">
+                            <span class="notifications-toggle-label"
+                                  data-translate="beta_popup_label"
+                                  data-translate-fallback="Bétaverzió">
+                              Bétaverzió
+                            </span>
+                            <md-switch class="settings-switch" icons selected id="onbNotifBetaPopupSwitch" aria-label="Bétaverzió"></md-switch>
+                          </div>
+                          <div class="notifications-toggle-row" data-channel-key="popups-popup">
+                            <span class="notifications-toggle-label"
+                                  data-translate="popups_popup_label"
+                                  data-translate-fallback="Felugró Ablakok">
+                              Felugró Ablakok
+                            </span>
+                            <md-switch class="settings-switch" icons selected id="onbNotifPopupsPopupSwitch" aria-label="Felugró Ablakok"></md-switch>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="preferences-footer">
+                  <button class="looks-continue-btn preferences-next-btn" id="preferences1NextBtn" data-translate="onboarding.continue" data-translate-fallback="Tovább">Tovább</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Preferences Screen 2 (Általános) -->
+          <div class="preferences-screen" id="preferences2Screen" style="display: none;" data-screen="preferences2">
+            <div class="preferences-container">
+              <div class="preferences-section-header">
+                <h2 class="preferences-section-title"
+                    data-translate="onboarding.preferences_general_title"
+                    data-translate-fallback="Általános">
+                  Általános
+                </h2>
+                <p class="preferences-section-desc"
+                   data-translate="onboarding.preferences_notifications_desc"
+                   data-translate-fallback="Ezt később a Beállításokban is módosíthatod.">
+                  Ezt később a Beállításokban is módosíthatod.
+                </p>
+              </div>
+
+              <div class="preferences-cards-stack">
+                <!-- Kiadás kártya (másolva a settings általános lapjáról) -->
+                <div class="settings-item">
+                  <div class="settings-card-content">
+                    <div class="settings-card-text">
+                      <h2 data-translate="pages.settings.edition_title">Kiadás</h2>
+                      <p data-translate="pages.settings.edition_desc">Válaszd ki melyik kiadását szeretnéd a Hubnak használni!</p>
+                    </div>
+                    <div class="settings-card-control">
+                      <div class="language-dropdown" id="onbEditionDropdown"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Színséma kártya (másolva a settings általános lapjáról) -->
+                <div class="settings-item">
+                  <div class="settings-card-content">
+                    <div class="settings-card-text">
+                      <h2 data-translate="pages.settings.theme_title">Színséma</h2>
+                      <p data-translate="pages.settings.theme_desc">8 alap színből tudsz választani plusz világos és sötét módból.</p>
+                    </div>
+                    <div class="settings-card-control">
+                      <div class="settings-control-row">
+                        <div class="settings-control-item">
+                          <span class="settings-control-label" data-translate="pages.settings.theme_color_scheme_label">Színséma</span>
+                          <div class="language-dropdown" id="onbColorSchemeDropdown"></div>
+                        </div>
+                        <div class="settings-control-item">
+                          <span class="settings-control-label" data-translate="pages.settings.theme_theme_label">Téma</span>
+                          <div class="language-dropdown" id="onbThemeDropdown"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="preferences-footer">
+                <button class="looks-continue-btn preferences-next-btn" id="preferences2NextBtn" data-translate="onboarding.continue" data-translate-fallback="Tovább">Tovább</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Használati feltételek -->
+          <div class="preferences-screen" id="legalTermsScreen" style="display: none;" data-screen="legal-terms">
+            <div class="preferences-container">
+              <div class="preferences-cards-stack legal-terms-stack">
+                <div class="terms-item legal-terms-item">
+                  <div class="legal-terms-scroll">
+                    <div class="privacy-policy-container">
+                      <div class="privacy-policy-item">
+                        <h2 data-translate="pages.terms_of_service.section_1_title">1. Bevezetés</h2>
+                        <p data-translate="pages.terms_of_service.section_1_text">
+                          Üdvözöljük az EU2K Hub-ban! Az EU2K Hub az Európa 2000 Gimnázium digitális központja, amelyet diákok, tanárok és érdeklődők számára hoztunk létre. 
+                          A platform használatával Ön elfogadja ezeket a használati feltételeket. Kérjük, olvassa el figyelmesen ezt a dokumentumot, mielőtt használná a szolgáltatást.
+                        </p>
+                      </div>
+
+                      <div class="privacy-policy-item">
+                        <h2 data-translate="pages.terms_of_service.section_2_title">2. Fiókok és jogosultságok</h2>
+                        <h3 data-translate="pages.terms_of_service.section_2_1_title">2.1. Fiók létrehozása</h3>
+                        <ul>
+                          <li data-translate-html="pages.terms_of_service.section_2_1_1"><strong>Iskolai fiók szükséges:</strong> A platform használatához iskolai fiók (Microsoft, Google vagy Apple) szükséges</li>
+                          <li data-translate-html="pages.terms_of_service.section_2_1_2"><strong>Felhasználói típusok:</strong> A platform három felhasználói típust támogat: diák, tanár és szülő</li>
+                          <li data-translate-html="pages.terms_of_service.section_2_1_3"><strong>Fiók biztonsága:</strong> Ön felelős a fiókja biztonságáért. Ne ossza meg jelszavát vagy bejelentkezési adatait másokkal</li>
+                        </ul>
+                        <h3 data-translate="pages.terms_of_service.section_2_2_title">2.2. Fiók típusok és jogosultságok</h3>
+                        <ul>
+                          <li data-translate-html="pages.terms_of_service.section_2_2_1"><strong>Diákok:</strong> Hozzáférhetnek saját adataikhoz, osztályuk adataihoz, YouHub, Event Hub és más közösségi funkciókhoz</li>
+                          <li data-translate-html="pages.terms_of_service.section_2_2_2"><strong>Tanárok:</strong> Hozzáférhetnek osztályaik adataihoz, tanítványaik alapinformációihoz, események létrehozásához és kezeléséhez</li>
+                          <li data-translate-html="pages.terms_of_service.section_2_2_3"><strong>Szülők:</strong> Hozzáférhetnek gyermekeik iskolai adataihoz (ha jogosultak), értesítéseket kaphatnak fontos információkról</li>
+                        </ul>
+                        <h3 data-translate="pages.terms_of_service.section_2_3_title">2.3. Fiók visszaélések</h3>
+                        <p data-translate="pages.terms_of_service.section_2_3_text">
+                          Ha a rendszer visszaélést észlel (pl. diák szülői fiókkal való bejelentkezés), fenntartjuk a jogot a fiók típusának módosítására, értesítések küldésére, 
+                          vagy akár funkciók korlátozására. Bármilyen rendszer kihasználása tilos és büntetést von maga után.
+                        </p>
+                      </div>
+
+                      <div class="privacy-policy-item">
+                        <h2 data-translate="pages.terms_of_service.section_3_title">3. Elfogadható használat</h2>
+                        <h3 data-translate="pages.terms_of_service.section_3_1_title">3.1. Általános szabályok</h3>
+                        <ul>
+                          <li data-translate="pages.terms_of_service.section_3_1_1">A platformot csak törvényes és iskolai célokra használhatja</li>
+                          <li data-translate="pages.terms_of_service.section_3_1_2">Tilos mások fiókjainak használata vagy megszerzése</li>
+                          <li data-translate="pages.terms_of_service.section_3_1_3">Tilos a rendszer vagy hálózat biztonságának megkerülése</li>
+                          <li data-translate="pages.terms_of_service.section_3_1_4">Tilos vírusok, malware vagy más káros szoftverek terjesztése</li>
+                        </ul>
+                        <h3 data-translate="pages.terms_of_service.section_3_2_title">3.2. Közösségi viselkedés</h3>
+                        <ul>
+                          <li data-translate="pages.terms_of_service.section_3_2_1">Tiszteletteljesen viselkedjen más felhasználókkal szemben</li>
+                          <li data-translate="pages.terms_of_service.section_3_2_2">Tilos a zaklatás, fenyegetés vagy bántalmazás bármilyen formája</li>
+                          <li data-translate="pages.terms_of_service.section_3_2_3">Tilos diszkrimináció, gyűlöletbeszéd vagy mások megsértése</li>
+                          <li data-translate="pages.terms_of_service.section_3_2_4">Tilos spam, reklám vagy nem kért tartalom küldése</li>
+                        </ul>
+                      </div>
+
+                      <div class="privacy-policy-item">
+                        <h2 data-translate="pages.terms_of_service.section_4_title">4. Tartalom szabályok</h2>
+                        <h3 data-translate="pages.terms_of_service.section_4_1_title">4.1. Feltöltött tartalom</h3>
+                        <ul>
+                          <li data-translate-html="pages.terms_of_service.section_4_1_1"><strong>Felelősség:</strong> Ön felelős minden olyan tartalomért, amelyet a platformra tölt fel vagy oszt meg</li>
+                          <li data-translate-html="pages.terms_of_service.section_4_1_2"><strong>Tiltott tartalom:</strong> Tilos olyan tartalom feltöltése, amely sérti mások jogait, törvénytelen, vagy sértő</li>
+                          <li data-translate-html="pages.terms_of_service.section_4_1_3"><strong>Szellemi tulajdon:</strong> Csak olyan tartalmat tölt fel, amelyhez jogosultsága van</li>
+                        </ul>
+                        <h3 data-translate="pages.terms_of_service.section_4_2_title">4.2. Tartalom moderálás</h3>
+                        <p data-translate="pages.terms_of_service.section_4_2_text">
+                          Fenntartjuk a jogot, hogy bármikor töröljük, módosítsuk vagy eltávolítsuk olyan tartalmat, amely sérti ezeket a feltételeket vagy a platform szabályait. 
+                          Ismétlődő jogsértések esetén a fiók felfüggesztése vagy törlése is megtörténhet.
+                        </p>
+                      </div>
+
+                      <div class="privacy-policy-item">
+                        <h2 data-translate="pages.terms_of_service.section_5_title">5. Szellemi tulajdon</h2>
+                        <h3 data-translate="pages.terms_of_service.section_5_1_title">5.1. Platform tartalma</h3>
+                        <p data-translate="pages.terms_of_service.section_5_1_text">
+                          Az EU2K Hub platform, design, logó és minden kapcsolódó tartalom az Európa 2000 Gimnázium és az EU2K Devs szellemi tulajdona. 
+                          A platform használata nem ad jogot a tartalom másolására, terjesztésére vagy módosítására.
+                        </p>
+                        <h3 data-translate="pages.terms_of_service.section_5_2_title">5.2. Felhasználói tartalom</h3>
+                        <p data-translate="pages.terms_of_service.section_5_2_text">
+                          A platformra feltöltött tartalom továbbra is az Ön tulajdona. A platform használatával azonban Ön engedélyt ad a tartalom 
+                          megjelenítésére, tárolására és kezelésére a platform működéséhez szükséges mértékben.
+                        </p>
+                      </div>
+
+                      <div class="privacy-policy-item">
+                        <h2 data-translate="pages.terms_of_service.section_6_title">6. Felelősség</h2>
+                        <h3 data-translate="pages.terms_of_service.section_6_1_title">6.1. Szolgáltatás elérhetőség</h3>
+                        <p data-translate="pages.terms_of_service.section_6_1_text">
+                          A platformot "ahogy van" alapon biztosítjuk. Nem vállalunk felelősséget a szolgáltatás folyamatos elérhetőségéért, 
+                          hibamentességéért vagy adatvesztésért. Rendszeres karbantartás és frissítések miatt a szolgáltatás időnként elérhetetlen lehet.
+                        </p>
+                        <h3 data-translate="pages.terms_of_service.section_6_2_title">6.2. Harmadik fél tartalma</h3>
+                        <p data-translate="pages.terms_of_service.section_6_2_text">
+                          A platform tartalmazhat harmadik fél által létrehozott tartalmat (pl. események, kurzusok). Ezekért a tartalmakért 
+                          csak a létrehozó felelős. A Hub, az iskola és a platform fejlesztői nem vállalnak felelősséget ezekért a tartalmakért.
+                        </p>
+                        <h3 data-translate="pages.terms_of_service.section_6_3_title">6.3. Felhasználói felelősség</h3>
+                        <p data-translate="pages.terms_of_service.section_6_3_text">
+                          Ön felelős a platform használatáért és minden olyan tevékenységért, amelyet a fiókján keresztül végez. 
+                          A jogsértésekért vagy a feltételek megsértéséért Ön személyesen felelős.
+                        </p>
+                      </div>
+
+                      <div class="privacy-policy-item">
+                        <h2 data-translate="pages.terms_of_service.section_7_title">7. Szolgáltatás módosítások</h2>
+                        <p data-translate="pages.terms_of_service.section_7_text">
+                          Fenntartjuk a jogot, hogy bármikor módosítsuk, frissítsük vagy megszüntessük a platformot vagy annak bármely részét. 
+                          Jelentős változások esetén értesítjük a felhasználókat, de nem vállalunk felelősséget a korábbi funkciók elérhetőségéért.
+                        </p>
+                        <p data-translate="pages.terms_of_service.section_7_beta">
+                          <strong>Fontos:</strong> A platform jelenleg béta verzióban van. Ez azt jelenti, hogy funkciók változhatnak, 
+                          hibák előfordulhatnak, és a teljes támogatás még nem érhető el.
+                        </p>
+                      </div>
+
+                      <div class="privacy-policy-item">
+                        <h2 data-translate="pages.terms_of_service.section_8_title">8. Fiók megszüntetés</h2>
+                        <h3 data-translate="pages.terms_of_service.section_8_1_title">8.1. Önkéntes megszüntetés</h3>
+                        <p data-translate="pages.terms_of_service.section_8_1_text">
+                          Bármikor kérheti fiókja törlését a beállításokban vagy kapcsolatfelvétellel. A fiók törlése után az összes személyes adat törlésre kerül, 
+                          kivéve azokat, amelyeket jogszabályi kötelezettség vagy jogos érdek megőrizésére kötelez.
+                        </p>
+                        <h3 data-translate="pages.terms_of_service.section_8_2_title">8.2. Felfüggesztés vagy törlés</h3>
+                        <p data-translate="pages.terms_of_service.section_8_2_text">
+                          Súlyos jogsértések vagy a feltételek megsértése esetén fenntartjuk a jogot a fiók azonnali felfüggesztésére vagy törlésére 
+                          előzetes értesítés nélkül. Ilyen esetekben a felhasználó nem jogosult visszatérítésre vagy kompenzációra.
+                        </p>
+                      </div>
+
+                      <div class="privacy-policy-item">
+                        <h2 data-translate="pages.terms_of_service.section_9_title">9. Változások a feltételekben</h2>
+                        <p data-translate="pages.terms_of_service.section_9_text">
+                          Fenntartjuk a jogot, hogy bármikor módosítsuk ezeket a használati feltételeket. Jelentős változások esetén értesítjük a felhasználókat 
+                          e-mailben vagy a platformon keresztül. A feltételek további használattal történő elfogadása a módosítások elfogadását jelenti.
+                        </p>
+                      </div>
+
+                      <div class="privacy-policy-item">
+                        <h2 data-translate="pages.terms_of_service.section_10_title">10. Kapcsolat</h2>
+                        <p data-translate="pages.terms_of_service.section_10_intro">
+                          Ha kérdése van a használati feltételekkel kapcsolatban, vagy szeretné jelenteni egy jogsértést, írjon nekünk:
+                        </p>
+                        <p data-translate-html="pages.terms_of_service.section_10_email">
+                          <strong>E-mail:</strong> <a href="mailto:turoczi.adam@europa2000.hu">turoczi.adam@europa2000.hu</a>
+                        </p>
+                        <p data-translate="pages.terms_of_service.section_10_response">
+                          Megpróbálunk 48 órán belül válaszolni minden kérdésre vagy bejelentésre.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="preferences-footer">
+                <button class="looks-continue-btn preferences-next-btn" id="legalTermsNextBtn" data-translate="onboarding.continue" data-translate-fallback="Tovább">Tovább</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Utolsó dolgok (Last things) -->
+          <div class="preferences-screen" id="lastThingsScreen" style="display: none;" data-screen="last-things">
+            <div class="preferences-container">
+              <div class="preferences-section-header">
+                <h2 class="preferences-section-title"
+                    data-translate="onboarding.last_things_title"
+                    data-translate-fallback="Utolsó dolgok">
+                  Utolsó dolgok
+                </h2>
+                <p class="preferences-section-desc"
+                   data-translate="onboarding.last_things_desc"
+                   data-translate-fallback="Tényleg mindjárt vége.">
+                  Tényleg mindjárt vége.
+                </p>
+              </div>
+
+              <div class="preferences-cards-stack settings-items-container">
+                <!-- Napszaktól függő köszöntések -->
+                <div class="settings-item">
+                  <div class="settings-card-content">
+                    <div class="settings-card-text">
+                      <h2>Napszaktól függő köszöntések</h2>
+                      <p>Reggel Jó reggelt, Napközben Jó napot, Este Jó estét. Ha gyorsan nyitod meg a Hubot megint, akkor meg Jó viszontlátni.</p>
+                    </div>
+                    <div class="settings-card-control">
+                      <md-switch class="settings-switch" icons selected id="lastThingsDayGreetingSwitch" aria-label="Napszaktól függő köszöntések"></md-switch>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Animációk csökkentése -->
+                <div class="settings-item">
+                  <div class="settings-card-content">
+                    <div class="settings-card-text">
+                      <h2>Animációk csökkentése</h2>
+                      <p>Sokat segít ha hajlamos vagy mozgásbetegségre, vagy nagyon érzékeny epilepsziára.</p>
+                    </div>
+                    <div class="settings-card-control">
+                      <md-switch class="settings-switch" icons id="lastThingsReducedMotionSwitch" aria-label="Animációk csökkentése" disabled></md-switch>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Világos mód -->
+                <div class="settings-item">
+                  <div class="settings-card-content">
+                    <div class="settings-card-text">
+                      <h2>Világos mód</h2>
+                      <p>Ömm, nem tudom miért használnád, de itt az esély.</p>
+                    </div>
+                    <div class="settings-card-control">
+                      <md-switch class="settings-switch" icons id="lastThingsLightModeSwitch" aria-label="Világos mód" disabled></md-switch>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="preferences-footer">
+                <button class="looks-continue-btn preferences-next-btn" id="lastThingsNextBtn" data-translate="onboarding.finish" data-translate-fallback="Befejezés">Befejezés</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Finished Screen -->
+          <div class="preferences-screen" id="finishedScreen" style="display: none;" data-screen="finished">
+            <div class="preferences-container">
+              <div class="finished-content">
+                <img src="assets/onboarding/smile.svg" alt="Megvagyunk!" class="finished-smile-icon">
+                <h1 class="finished-title" data-translate="onboarding.finished_title" data-translate-fallback="Megvagyunk!">Megvagyunk!</h1>
+                <button class="onboarding-start-btn" id="finishedHomeBtn">
+                  <img src="assets/onboarding/arrow_forward.svg" alt="Menj a főoldalra" class="onboarding-start-icon">
+                  <span class="onboarding-start-text" data-translate="onboarding.go_to_home" data-translate-fallback="Menj a főoldalra">Menj a főoldalra</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="assets/components/language-dropdown.js"></script>
+  <script src="assets/components/button-group.js"></script>
+  <script type="module">
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAuth, OAuthProvider, signInWithPopup, signInWithCredential, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import { GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteField, deleteDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
+      authDomain: "eu2k-hub.firebaseapp.com",
+      projectId: "eu2k-hub",
+      storageBucket: "eu2k-hub.firebasestorage.app",
+      messagingSenderId: "560244867055",
+      appId: "1:560244867055:web:8c3c4e5f6a7b8c9d0e1f2a3"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const storage = getStorage(app);
+    const db = getFirestore(app);
+
+    // Microsoft provider base setup for Firebase (used with signInWithCredential)
+    const createMsProviderForFirebase = () => {
+      const provider = new OAuthProvider('microsoft.com');
+      provider.setCustomParameters({ 
+        tenant: 'ecc426dd-3c83-44af-aad4-85099364fb9e',
+        prompt: 'select_account'
+      });
+      try { 
+        provider.addScope('User.Read');
+        provider.addScope('profile');
+        provider.addScope('email');
+        provider.addScope('openid');
+      } catch (error) {
+        console.warn('Could not add scopes:', error.message);
+      }
+      return provider;
+    };
+
+    // MSAL (Microsoft Authentication Library) setup for Microsoft login + Graph API
+    const msalConfig = {
+      auth: {
+        clientId: '8e22ad43-3f4d-4192-b368-b3e6a00777c8',
+        authority: 'https://login.microsoftonline.com/ecc426dd-3c83-44af-aad4-85099364fb9e',
+        redirectUri: window.location.origin + window.location.pathname
+      }
+    };
+    const graphScopes = ['User.Read'];
+    window.graphScopes = graphScopes; // Make it globally accessible
+    let msalInstance = null;
+    if (window.msal?.PublicClientApplication) {
+      msalInstance = new window.msal.PublicClientApplication(msalConfig);
+      window.msalInstance = msalInstance;
+    } else {
+      console.error('❌ MSAL library failed to load.');
+    }
+
+    // Google provider setup
+    const googleProvider = new GoogleAuthProvider();
+    googleProvider.addScope('profile');
+    googleProvider.addScope('email');
+
+    // Make providers and functions available globally
+    window.googleProvider = googleProvider;
+    window.auth = auth;
+    window.signInWithPopup = signInWithPopup;
+    window.signOut = signOut;
+    window.onAuthStateChanged = onAuthStateChanged;
+    window.db = db;
+    window.firestoreDoc = doc;
+    window.firestoreSetDoc = setDoc;
+    window.firestoreGetDoc = getDoc;
+    window.firestoreUpdateDoc = updateDoc;
+    window.firestoreDeleteField = deleteField;
+    window.firestoreDeleteDoc = deleteDoc;
+    
+    // Helper function for console logout
+    window.logout = async () => {
+      try {
+        await signOut(auth);
+        console.log('✅ Signed out successfully');
+        // Clear localStorage
+        localStorage.removeItem('eu2k-auth-logged-in');
+        localStorage.removeItem('eu2k-user-type');
+        localStorage.removeItem('eu2k-auth-display-name');
+        localStorage.removeItem('eu2k-auth-email');
+        localStorage.removeItem('eu2k-auth-photo-url');
+        return true;
+      } catch (error) {
+        console.error('❌ Error signing out:', error);
+        return false;
+      }
+    };
+  </script>
+  <script>
+    // --- Értesítési preferenciák (Preferences 1) - konstansok előre ---
+    const ONB_NOTIFS_LOCAL_STORAGE_KEY = 'eu2k_notifs_settings';
+    const ONB_DEFAULT_NOTIF_SETTINGS = {
+      sounds: true,
+      'sounds-outside-school': true,
+      'location-mute': false,
+      'notif-sound': 'notification1',
+      news: true,
+      events: true,
+      messages: false,
+      posts: false,
+      invites: false,
+      'new-things': true,
+      'event-hub-popup': false,
+      'new-things-popup': true,
+      'beta-popup': true,
+      'popups-popup': true
+    };
+
+      // --- Értesítési preferenciák (Preferences 1) - függvények előre ---
+    let onboardingNotifSettings = { ...ONB_DEFAULT_NOTIF_SETTINGS };
+    let onboardingLastThingsSettings = { dayDependentGreetings: true };
+
+    async function loadOnboardingNotifSettings() {
+      // alap: minden nem disabled ON
+      let merged = { ...ONB_DEFAULT_NOTIF_SETTINGS };
+      try {
+        const user = window.auth?.currentUser;
+        if (user && window.db && window.firestoreDoc && window.firestoreGetDoc) {
+          const ref = window.firestoreDoc(window.db, `users/${user.uid}/settings/notifs`);
+          const snap = await window.firestoreGetDoc(ref);
+          if (snap && snap.exists()) {
+            const data = snap.data() || {};
+            merged = { ...merged, ...data };
+          }
+        } else {
+          // ha nincs user / firestore, próbáljunk localStorage-ből
+          try {
+            const raw = localStorage.getItem(ONB_NOTIFS_LOCAL_STORAGE_KEY);
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              merged = { ...merged, ...parsed };
+            }
+          } catch (e) {
+            console.warn('[Onboarding][Notifs] localStorage read failed:', e);
+          }
+        }
+      } catch (e) {
+        console.warn('[Onboarding][Notifs] load settings failed:', e);
+      }
+      onboardingNotifSettings = merged;
+      applyOnboardingNotifUI();
+    }
+
+    function setOnbSwitch(id, value, forceDisabled = false) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (forceDisabled) {
+        el.selected = false;
+        el.disabled = true;
+      } else {
+        el.selected = !!value;
+      }
+    }
+
+    function applyOnboardingNotifUI() {
+      // Hangok
+      const soundsSwitch = document.getElementById('onboardingSoundsSwitch');
+      if (soundsSwitch) {
+        soundsSwitch.selected = !!onboardingNotifSettings.sounds;
+      }
+
+      // Push csatornák
+      setOnbSwitch('onbNotifNewsSwitch', onboardingNotifSettings.news);
+      setOnbSwitch('onbNotifEventsSwitch', onboardingNotifSettings.events);
+      setOnbSwitch('onbNotifMessagesSwitch', onboardingNotifSettings.messages, true);
+      setOnbSwitch('onbNotifPostsSwitch', onboardingNotifSettings.posts, true);
+      setOnbSwitch('onbNotifInvitesSwitch', onboardingNotifSettings.invites, true);
+      setOnbSwitch('onbNotifNewThingsSwitch', onboardingNotifSettings['new-things']);
+
+      // Popup csatornák
+      setOnbSwitch('onbNotifEventHubPopupSwitch', onboardingNotifSettings['event-hub-popup'], true);
+      setOnbSwitch('onbNotifNewThingsPopupSwitch', onboardingNotifSettings['new-things-popup']);
+      setOnbSwitch('onbNotifBetaPopupSwitch', onboardingNotifSettings['beta-popup']);
+      setOnbSwitch('onbNotifPopupsPopupSwitch', onboardingNotifSettings['popups-popup']);
+    }
+
+    function attachOnboardingNotifHandlers() {
+      const soundsSwitch = document.getElementById('onboardingSoundsSwitch');
+      if (soundsSwitch) {
+        soundsSwitch.addEventListener('click', () => {
+          const newVal = !onboardingNotifSettings.sounds;
+          onboardingNotifSettings.sounds = newVal;
+          onboardingNotifSettings['sounds-outside-school'] = newVal;
+          soundsSwitch.selected = !!newVal;
+        });
+      }
+
+      const toggleHandler = (id, key, forceDisabled = false) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('click', () => {
+          if (forceDisabled) {
+            el.selected = false;
+            return;
+          }
+          onboardingNotifSettings[key] = !onboardingNotifSettings[key];
+          el.selected = !!onboardingNotifSettings[key];
+        });
+      };
+
+      toggleHandler('onbNotifNewsSwitch', 'news');
+      toggleHandler('onbNotifEventsSwitch', 'events');
+      toggleHandler('onbNotifMessagesSwitch', 'messages', true);
+      toggleHandler('onbNotifPostsSwitch', 'posts', true);
+      toggleHandler('onbNotifInvitesSwitch', 'invites', true);
+      toggleHandler('onbNotifNewThingsSwitch', 'new-things');
+
+      toggleHandler('onbNotifEventHubPopupSwitch', 'event-hub-popup', true);
+      toggleHandler('onbNotifNewThingsPopupSwitch', 'new-things-popup');
+      toggleHandler('onbNotifBetaPopupSwitch', 'beta-popup');
+      toggleHandler('onbNotifPopupsPopupSwitch', 'popups-popup');
+
+      const prefNext = document.getElementById('preferences1NextBtn');
+      if (prefNext) {
+        prefNext.addEventListener('click', async () => {
+          try {
+            console.log('[Onboarding] Saving notification settings...');
+            await saveOnboardingNotifSettings();
+            console.log('[Onboarding] Settings saved, navigating to #preferences2');
+            // Mentés után lépjünk a 2. preferencia oldalra
+            window.location.hash = '#preferences2';
+          } catch (e) {
+            console.error('[Onboarding] Error saving settings or navigating:', e);
+            // Mégis navigáljunk, ha a mentés hibázott
+            window.location.hash = '#preferences2';
+          }
+        });
+      } else {
+        console.warn('[Onboarding] preferences1NextBtn not found!');
+      }
+    }
+
+    function applyBetaLimits(settings) {
+      // Ezek mindig false és kikapcsolt állapotban maradnak bétában
+      settings.messages = false;
+      settings.posts = false;
+      settings.invites = false;
+      settings['event-hub-popup'] = false;
+      return settings;
+    }
+
+    async function saveOnboardingNotifSettings() {
+      try {
+        // Alkalmazza a béta limitációkat (mint a settings.html-ben)
+        const settingsToSave = applyBetaLimits({ ...onboardingNotifSettings });
+        
+        // localStorage (hogy settings oldalon is legyen fallback)
+        try {
+          localStorage.setItem(ONB_NOTIFS_LOCAL_STORAGE_KEY, JSON.stringify(settingsToSave));
+        } catch (e) {
+          console.warn('[Onboarding][Notifs] localStorage write failed:', e);
+        }
+
+        const user = window.auth?.currentUser;
+        if (!user || !window.db || !window.firestoreDoc || !window.firestoreGetDoc) {
+          console.warn('[Onboarding][Notifs] Firebase not ready, only localStorage updated');
+          return;
+        }
+
+        const ref = window.firestoreDoc(window.db, `users/${user.uid}/settings/notifs`);
+        const payload = { ...settingsToSave };
+        
+        try {
+          const snap = await window.firestoreGetDoc(ref);
+          if (snap && snap.exists()) {
+            await window.firestoreUpdateDoc(ref, payload);
+          } else {
+            await window.firestoreSetDoc(ref, payload);
+          }
+          console.log('[Onboarding][Notifs] settings saved to Firestore');
+        } catch (e) {
+          console.error('[Onboarding][Notifs] Error writing Firestore doc:', e);
+        }
+      } catch (e) {
+        console.error('[Onboarding][Notifs] save error:', e);
+      }
+    }
+
+    async function saveOnboardingTermsAccepted() {
+      try {
+        const user = window.auth?.currentUser;
+        if (!user || !window.db || !window.firestoreDoc || !window.firestoreGetDoc) {
+          console.warn('[Onboarding][Terms] Firebase not ready, skipping termsAccepted save');
+          return;
+        }
+        const ref = window.firestoreDoc(window.db, `users/${user.uid}`);
+        const payload = { termsAccepted: true };
+        try {
+          const snap = await window.firestoreGetDoc(ref);
+          if (snap && snap.exists()) {
+            await window.firestoreUpdateDoc(ref, payload);
+          } else {
+            await window.firestoreSetDoc(ref, payload);
+          }
+          console.log('[Onboarding][Terms] termsAccepted saved to Firestore');
+        } catch (e) {
+          console.error('[Onboarding][Terms] Error writing termsAccepted:', e);
+        }
+      } catch (e) {
+        console.error('[Onboarding][Terms] save error:', e);
+      }
+    }
+
+    function initLastThingsUI() {
+      const daySwitch = document.getElementById('lastThingsDayGreetingSwitch');
+      const reducedSwitch = document.getElementById('lastThingsReducedMotionSwitch');
+      const lightSwitch = document.getElementById('lastThingsLightModeSwitch');
+
+      if (daySwitch) {
+        daySwitch.selected = !!onboardingLastThingsSettings.dayDependentGreetings;
+        daySwitch.disabled = false;
+        daySwitch.addEventListener('click', () => {
+          onboardingLastThingsSettings.dayDependentGreetings = !onboardingLastThingsSettings.dayDependentGreetings;
+          daySwitch.selected = !!onboardingLastThingsSettings.dayDependentGreetings;
+        });
+      }
+      if (reducedSwitch) {
+        reducedSwitch.selected = false;
+        reducedSwitch.disabled = true;
+      }
+      if (lightSwitch) {
+        lightSwitch.selected = false;
+        lightSwitch.disabled = true;
+      }
+    }
+
+    async function saveLastThingsSettings() {
+      try {
+        const user = window.auth?.currentUser;
+        if (!user || !window.db || !window.firestoreDoc || !window.firestoreGetDoc) {
+          console.warn('[Onboarding][LastThings] Firebase not ready, skipping save');
+          return;
+        }
+        const ref = window.firestoreDoc(window.db, `users/${user.uid}`);
+        const payload = {
+          dayDependentGreetings: !!onboardingLastThingsSettings.dayDependentGreetings
+        };
+        try {
+          const snap = await window.firestoreGetDoc(ref);
+          if (snap && snap.exists()) {
+            await window.firestoreUpdateDoc(ref, payload);
+          } else {
+            await window.firestoreSetDoc(ref, payload);
+          }
+          console.log('[Onboarding][LastThings] settings saved to Firestore');
+        } catch (e) {
+          console.error('[Onboarding][LastThings] Error writing doc:', e);
+        }
+      } catch (e) {
+        console.error('[Onboarding][LastThings] save error:', e);
+      }
+    }
+
+    // Handle URL hash changes
+    function handleHashChange() {
+      const hash = window.location.hash;
+      
+      // Hide all screens first
+      const onboardingMain = document.getElementById('onboardingMain');
+      const loginScreen = document.getElementById('loginScreen');
+      const loginProgressScreen = document.getElementById('loginProgressScreen');
+      const loginFailedScreen = document.getElementById('loginFailedScreen');
+      const loginSuccessScreen = document.getElementById('loginSuccessScreen');
+      const restartScreen = document.getElementById('restartScreen');
+      const looksScreen = document.getElementById('looksScreen');
+      const nameScreen = document.getElementById('nameScreen');
+      const languageSelectScreen = document.getElementById('languageSelectScreen');
+      const languageBtn = document.getElementById('languageBtn');
+      const backToSetupBtn = document.getElementById('backToSetupBtn');
+      const backBtn = document.getElementById('backBtn');
+      const mainScrollArea = document.querySelector('.main-scroll-area');
+      const loginPromptText = document.getElementById('loginPromptText');
+      const welcomeIcon = document.getElementById('welcomeIcon');
+      const preferences1Screen = document.getElementById('preferences1Screen');
+      const preferencesStepIndicator = document.getElementById('preferencesStepIndicator');
+
+      if (preferencesStepIndicator) {
+        preferencesStepIndicator.style.display = 'none';
+      }
+      if (welcomeIcon) {
+        welcomeIcon.classList.remove('welcome-icon-small');
+      }
+      
+      if (hash === '#login-progress') {
+        // Show login progress screen
+        if (onboardingMain) onboardingMain.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (loginProgressScreen) loginProgressScreen.style.display = 'flex';
+        if (loginFailedScreen) loginFailedScreen.style.display = 'none';
+        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
+        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
+        if (backBtn) backBtn.style.display = 'flex';
+        if (languageBtn) languageBtn.style.display = 'flex';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'none';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'flex';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'flex';
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '#111B07';
+          mainScrollArea.classList.add('login-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'none';
+      } else if (hash === '#login-failed') {
+        // Show login failed screen
+        if (onboardingMain) onboardingMain.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
+        if (loginFailedScreen) loginFailedScreen.style.display = 'flex';
+        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
+        if (restartScreen) restartScreen.style.display = 'none';
+        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
+        if (backBtn) backBtn.style.display = 'none';
+        if (languageBtn) languageBtn.style.display = 'flex';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'none';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'flex';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'none';
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '#111B07';
+          mainScrollArea.classList.add('login-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'none';
+      } else if (hash === '#restart') {
+        // Show restart screen
+        if (onboardingMain) onboardingMain.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
+        if (loginFailedScreen) loginFailedScreen.style.display = 'none';
+        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
+        if (restartScreen) restartScreen.style.display = 'flex';
+        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
+        if (backBtn) backBtn.style.display = 'flex';
+        if (languageBtn) languageBtn.style.display = 'flex';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        const restartBtn = document.getElementById('restartBtn');
+        if (restartBtn) restartBtn.style.display = 'none';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'none';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'flex';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'none';
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '#111B07';
+          mainScrollArea.classList.add('login-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'none';
+      } else if (hash === '#login-success') {
+        // Show login success screen
+        if (onboardingMain) onboardingMain.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
+        if (loginFailedScreen) loginFailedScreen.style.display = 'none';
+        if (loginSuccessScreen) loginSuccessScreen.style.display = 'flex';
+        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
+        if (backBtn) backBtn.style.display = 'none';
+        if (languageBtn) languageBtn.style.display = 'flex';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'none';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'flex';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'none';
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '#111B07';
+          mainScrollArea.classList.add('login-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'none';
+      } else if (hash === '#login') {
+        // Show login screen
+        if (onboardingMain) onboardingMain.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'flex';
+        if (backBtn) backBtn.style.display = 'flex';
+        if (languageBtn) languageBtn.style.display = 'flex';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'none';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'flex';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'flex';
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '#111B07';
+          mainScrollArea.classList.add('login-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'block';
+      } else if (hash === '#login#language') {
+        // Show language screen from login
+        if (onboardingMain) onboardingMain.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (languageSelectScreen) languageSelectScreen.style.display = 'flex';
+        if (languageBtn) languageBtn.style.display = 'none';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'flex';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'none';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'none';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        const backBtnLanguage = document.getElementById('backBtnLanguage');
+        if (backBtnLanguage) {
+          backBtnLanguage.style.display = 'flex';
+          const backBtnText = backBtnLanguage.querySelector('.onboarding-header-text');
+          backBtnText.setAttribute('data-translate', 'onboarding.back');
+          backBtnText.textContent = 'Vissza';
+          if (window.translationManager) {
+            window.translationManager.applyTranslations();
+          }
+        }
+        if (backBtn) backBtn.style.display = 'none';
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '#111B07';
+          mainScrollArea.classList.add('language-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'none';
+      } else if (hash === '#language') {
+        // Show language screen from welcome
+        if (onboardingMain) onboardingMain.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (languageSelectScreen) languageSelectScreen.style.display = 'flex';
+        if (languageBtn) languageBtn.style.display = 'none';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'flex';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'none';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'none';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        const backToSetupBtnLanguage = document.getElementById('backToSetupBtnLanguage');
+        if (backToSetupBtnLanguage) {
+          backToSetupBtnLanguage.style.display = 'flex';
+          const backBtnText = backToSetupBtnLanguage.querySelector('.onboarding-header-text');
+          backBtnText.setAttribute('data-translate', 'onboarding.back_to_setup');
+          backBtnText.textContent = 'Vissza a beállításhoz';
+          if (window.translationManager) {
+            window.translationManager.applyTranslations();
+          }
+        }
+        if (backBtn) backBtn.style.display = 'none';
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '#111B07';
+          mainScrollArea.classList.add('language-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'none';
+      } else if (hash === '#looks') {
+        // Show looks screen
+        const looksScreen = document.getElementById('looksScreen');
+        if (onboardingMain) onboardingMain.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
+        if (loginFailedScreen) loginFailedScreen.style.display = 'none';
+        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
+        if (restartScreen) restartScreen.style.display = 'none';
+        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
+        if (looksScreen) looksScreen.style.display = 'flex';
+        if (backBtn) backBtn.style.display = 'flex';
+        if (languageBtn) languageBtn.style.display = 'flex';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        const restartBtn = document.getElementById('restartBtn');
+        if (restartBtn) restartBtn.style.display = 'flex';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'none';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'flex';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'flex';
+        const welcomeText = document.getElementById('welcomeText');
+        if (welcomeText) {
+          welcomeText.setAttribute('data-translate', 'onboarding.how_will_you_look');
+          welcomeText.textContent = 'Hogyan fogsz kinézni?';
+          if (window.translationManager) {
+            window.translationManager.applyTranslations();
+          }
+        }
+        if (welcomeIcon) {
+          welcomeIcon.classList.add('welcome-icon-small');
+        }
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '#111B07';
+          mainScrollArea.classList.add('login-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'none';
+        if (nameScreen) nameScreen.style.display = 'none';
+        
+        // Initialize color grid when looks screen is shown
+        const looksColorGrid = document.getElementById('looksColorGrid');
+        if (looksColorGrid && typeof generateColorGrid === 'function') {
+          // Small delay to ensure DOM is ready
+          setTimeout(() => {
+            if (!looksColorGrid.hasChildNodes()) {
+              console.log('🎨 Generating color grid from handleHashChange...');
+              generateColorGrid();
+              const blobbyBtn = document.getElementById('blobbyBtn');
+              if (blobbyBtn) blobbyBtn.classList.add('active');
+            }
+          }, 100);
+        }
+      } else if (hash === '#name') {
+        if (onboardingMain) onboardingMain.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
+        if (loginFailedScreen) loginFailedScreen.style.display = 'none';
+        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
+        if (restartScreen) restartScreen.style.display = 'none';
+        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
+        if (looksScreen) looksScreen.style.display = 'none';
+        if (nameScreen) nameScreen.style.display = 'flex';
+        if (backBtn) backBtn.style.display = 'flex';
+        if (languageBtn) languageBtn.style.display = 'flex';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        const restartBtn = document.getElementById('restartBtn');
+        if (restartBtn) restartBtn.style.display = 'flex';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'none';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'flex';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'flex';
+        const welcomeText = document.getElementById('welcomeText');
+        if (welcomeText) {
+          welcomeText.setAttribute('data-translate', 'onboarding.how_can_we_call_you');
+          welcomeText.textContent = 'Hogyan hívhatunk?';
+          if (window.translationManager) {
+            window.translationManager.applyTranslations();
+          }
+        }
+        if (welcomeIcon) {
+          welcomeIcon.classList.add('welcome-icon-small');
+        }
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '#111B07';
+          mainScrollArea.classList.add('login-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'none';
+        if (window.initializeNameScreen) {
+          window.initializeNameScreen();
+        }
+      } else if (hash === '#preferences1') {
+        if (onboardingMain) onboardingMain.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
+        if (loginFailedScreen) loginFailedScreen.style.display = 'none';
+        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
+        if (restartScreen) restartScreen.style.display = 'none';
+        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
+        if (looksScreen) looksScreen.style.display = 'none';
+        if (nameScreen) nameScreen.style.display = 'none';
+        const preferences2Screen = document.getElementById('preferences2Screen');
+        if (preferences1Screen) preferences1Screen.style.display = 'flex';
+        if (preferences2Screen) preferences2Screen.style.display = 'none';
+        if (backBtn) backBtn.style.display = 'flex';
+        if (languageBtn) languageBtn.style.display = 'flex';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        const restartBtn = document.getElementById('restartBtn');
+        if (restartBtn) restartBtn.style.display = 'flex';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'none';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'flex';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'flex';
+        const welcomeText = document.getElementById('welcomeText');
+        if (welcomeText) {
+          welcomeText.setAttribute('data-translate', 'onboarding.preferences_title');
+          welcomeText.textContent = 'Válaszd ki a preferenciáidat';
+          if (window.translationManager) {
+            window.translationManager.applyTranslations();
+          }
+        }
+        if (preferencesStepIndicator) {
+          preferencesStepIndicator.style.display = 'inline-block';
+          preferencesStepIndicator.textContent = '1/2';
+        }
+        if (welcomeIcon) {
+          welcomeIcon.classList.add('welcome-icon-small');
+        }
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '#111B07';
+          mainScrollArea.classList.add('login-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'none';
+        
+        // Preferences 1 értesítési beállítások inicializálása
+        loadOnboardingNotifSettings().then(() => {
+          attachOnboardingNotifHandlers();
+        }).catch(e => console.error('[Onboarding][Notifs] init failed:', e));
+      } else if (hash === '#preferences2') {
+        const preferences2Screen = document.getElementById('preferences2Screen');
+        if (onboardingMain) onboardingMain.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
+        if (loginFailedScreen) loginFailedScreen.style.display = 'none';
+        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
+        if (restartScreen) restartScreen.style.display = 'none';
+        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
+        if (looksScreen) looksScreen.style.display = 'none';
+        if (nameScreen) nameScreen.style.display = 'none';
+        if (preferences1Screen) preferences1Screen.style.display = 'none';
+        if (preferences2Screen) preferences2Screen.style.display = 'flex';
+        if (backBtn) backBtn.style.display = 'flex';
+        if (languageBtn) languageBtn.style.display = 'flex';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        const restartBtn = document.getElementById('restartBtn');
+        if (restartBtn) restartBtn.style.display = 'flex';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'none';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'flex';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'flex';
+        const welcomeText = document.getElementById('welcomeText');
+        if (welcomeText) {
+          welcomeText.setAttribute('data-translate', 'onboarding.preferences_title');
+          welcomeText.textContent = 'Válaszd ki a preferenciáidat';
+          if (window.translationManager) {
+            window.translationManager.applyTranslations();
+          }
+        }
+        if (preferencesStepIndicator) {
+          preferencesStepIndicator.style.display = 'inline-block';
+          preferencesStepIndicator.textContent = '2/2';
+        }
+        if (welcomeIcon) {
+          welcomeIcon.classList.add('welcome-icon-small');
+        }
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '#111B07';
+          mainScrollArea.classList.add('login-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'none';
+      } else if (hash === '#legal-terms') {
+        const preferences2Screen = document.getElementById('preferences2Screen');
+        const legalTermsScreen = document.getElementById('legalTermsScreen');
+        const lastThingsScreen = document.getElementById('lastThingsScreen');
+        if (onboardingMain) onboardingMain.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
+        if (loginFailedScreen) loginFailedScreen.style.display = 'none';
+        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
+        if (restartScreen) restartScreen.style.display = 'none';
+        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
+        if (looksScreen) looksScreen.style.display = 'none';
+        if (nameScreen) nameScreen.style.display = 'none';
+        if (preferences1Screen) preferences1Screen.style.display = 'none';
+        if (preferences2Screen) preferences2Screen.style.display = 'none';
+        if (legalTermsScreen) legalTermsScreen.style.display = 'flex';
+        if (lastThingsScreen) lastThingsScreen.style.display = 'none';
+        if (backBtn) backBtn.style.display = 'flex';
+        if (languageBtn) languageBtn.style.display = 'flex';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        const restartBtn = document.getElementById('restartBtn');
+        if (restartBtn) restartBtn.style.display = 'flex';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'none';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'flex';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'flex';
+        const welcomeText = document.getElementById('welcomeText');
+        if (welcomeText) {
+          welcomeText.setAttribute('data-translate', 'onboarding.legal_terms_title');
+          welcomeText.textContent = 'Fogadd el a használati feltételek';
+          if (window.translationManager) {
+            window.translationManager.applyTranslations();
+          }
+        }
+        if (preferencesStepIndicator) {
+          preferencesStepIndicator.style.display = 'inline-block';
+          preferencesStepIndicator.setAttribute('data-translate', 'onboarding.legal_terms_desc');
+          preferencesStepIndicator.textContent = 'Mindjárt megvagy!';
+          if (window.translationManager) {
+            window.translationManager.applyTranslations();
+          }
+        }
+        if (welcomeIcon) {
+          welcomeIcon.classList.add('welcome-icon-small');
+        }
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '#111B07';
+          mainScrollArea.classList.add('login-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'none';
+      } else if (hash === '#last-things') {
+        const preferences2Screen = document.getElementById('preferences2Screen');
+        const legalTermsScreen = document.getElementById('legalTermsScreen');
+        const lastThingsScreen = document.getElementById('lastThingsScreen');
+        if (onboardingMain) onboardingMain.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
+        if (loginFailedScreen) loginFailedScreen.style.display = 'none';
+        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
+        if (restartScreen) restartScreen.style.display = 'none';
+        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
+        if (looksScreen) looksScreen.style.display = 'none';
+        if (nameScreen) nameScreen.style.display = 'none';
+        if (preferences1Screen) preferences1Screen.style.display = 'none';
+        if (preferences2Screen) preferences2Screen.style.display = 'none';
+        if (legalTermsScreen) legalTermsScreen.style.display = 'none';
+        if (lastThingsScreen) lastThingsScreen.style.display = 'flex';
+        if (backBtn) backBtn.style.display = 'none';
+        if (languageBtn) languageBtn.style.display = 'flex';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        const restartBtnLast = document.getElementById('restartBtn');
+        if (restartBtnLast) restartBtnLast.style.display = 'none';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'none';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'flex';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'flex';
+        const welcomeText = document.getElementById('welcomeText');
+        if (welcomeText) {
+          welcomeText.setAttribute('data-translate', 'onboarding.last_things_title');
+          welcomeText.textContent = 'Utolsó dolgok';
+          if (window.translationManager) {
+            window.translationManager.applyTranslations();
+          }
+        }
+        if (preferencesStepIndicator) {
+          preferencesStepIndicator.style.display = 'inline-block';
+          preferencesStepIndicator.setAttribute('data-translate', 'onboarding.last_things_desc');
+          preferencesStepIndicator.textContent = 'Tényleg mindjárt vége.';
+          if (window.translationManager) {
+            window.translationManager.applyTranslations();
+          }
+        }
+        if (welcomeIcon) {
+          welcomeIcon.classList.add('welcome-icon-small');
+        }
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '#111B07';
+          mainScrollArea.classList.add('login-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'none';
+        initLastThingsUI();
+      } else if (hash === '#finished') {
+        const preferences2Screen = document.getElementById('preferences2Screen');
+        const legalTermsScreen = document.getElementById('legalTermsScreen');
+        const lastThingsScreen = document.getElementById('lastThingsScreen');
+        const finishedScreen = document.getElementById('finishedScreen');
+        if (onboardingMain) onboardingMain.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
+        if (loginFailedScreen) loginFailedScreen.style.display = 'none';
+        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
+        if (restartScreen) restartScreen.style.display = 'none';
+        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
+        if (looksScreen) looksScreen.style.display = 'none';
+        if (nameScreen) nameScreen.style.display = 'none';
+        if (preferences1Screen) preferences1Screen.style.display = 'none';
+        if (preferences2Screen) preferences2Screen.style.display = 'none';
+        if (legalTermsScreen) legalTermsScreen.style.display = 'none';
+        if (lastThingsScreen) lastThingsScreen.style.display = 'none';
+        if (finishedScreen) finishedScreen.style.display = 'flex';
+        if (backBtn) backBtn.style.display = 'none';
+        if (languageBtn) languageBtn.style.display = 'flex';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        const restartBtnFinished = document.getElementById('restartBtn');
+        if (restartBtnFinished) restartBtnFinished.style.display = 'none';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'none';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'flex';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'none';
+        if (preferencesStepIndicator) {
+          preferencesStepIndicator.style.display = 'none';
+        }
+        if (welcomeIcon) {
+          welcomeIcon.classList.remove('welcome-icon-small');
+        }
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '#111B07';
+          mainScrollArea.classList.add('login-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'none';
+        // Apply translations for finished screen
+        if (window.translationManager) {
+          window.translationManager.applyTranslations();
+        }
+      } else {
+        // Show welcome screen (no hash or empty hash)
+        if (onboardingMain) onboardingMain.style.display = 'flex';
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
+        if (loginFailedScreen) loginFailedScreen.style.display = 'none';
+        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
+        if (restartScreen) restartScreen.style.display = 'none';
+        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
+        const looksScreen = document.getElementById('looksScreen');
+        if (looksScreen) looksScreen.style.display = 'none';
+        if (languageBtn) languageBtn.style.display = 'flex';
+        if (backToSetupBtn) backToSetupBtn.style.display = 'none';
+        if (backBtn) backBtn.style.display = 'none';
+        const restartBtn = document.getElementById('restartBtn');
+        if (restartBtn) restartBtn.style.display = 'none';
+        const languageScreenHeader = document.getElementById('languageScreenHeader');
+        if (languageScreenHeader) languageScreenHeader.style.display = 'none';
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) mainHeader.style.display = 'flex';
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        if (welcomeContainer) welcomeContainer.style.display = 'none';
+        if (mainScrollArea) {
+          mainScrollArea.style.background = '';
+          mainScrollArea.classList.remove('language-screen-active', 'login-screen-active');
+        }
+        if (loginPromptText) loginPromptText.style.display = 'none';
+      }
+      
+      // Show/hide restart button based on current screen
+      const restartBtn = document.getElementById('restartBtn');
+      if (restartBtn) {
+        const currentHash = window.location.hash;
+        if (currentHash === '' || currentHash === '#restart') {
+          restartBtn.style.display = 'none';
+        } else {
+          restartBtn.style.display = 'flex';
+        }
+      }
+      
+      // Always hide screens that shouldn't be visible
+      if (hash !== '#login') {
+        if (loginScreen) loginScreen.style.display = 'none';
+      }
+      if (hash !== '#login-progress') {
+        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
+      }
+      if (hash !== '#login-failed') {
+        if (loginFailedScreen) loginFailedScreen.style.display = 'none';
+      }
+      if (hash !== '#login-success') {
+        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
+      }
+      if (hash !== '#restart') {
+        if (restartScreen) restartScreen.style.display = 'none';
+      }
+      
+      // Always hide language screen when not in language hash
+      if (hash !== '#language' && hash !== '#login#language') {
+        const languageSelectScreen = document.getElementById('languageSelectScreen');
+        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
+      }
+      if (hash !== '#name' && hash !== '#preferences1' && hash !== '#preferences2' && nameScreen) {
+        nameScreen.style.display = 'none';
+      }
+    }
+    
+    // Mark button as entered after animation completes
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initial hash handling
+      handleHashChange();
+      
+      // Listen for hash changes
+      window.addEventListener('hashchange', handleHashChange);
+      const startBtn = document.querySelector('.onboarding-start-btn');
+      if (startBtn) {
+        setTimeout(() => {
+          startBtn.classList.add('entered');
+        }, 1600); // 0.6s delay + 1s animation duration
+      }
+
+        const pref2Next = document.getElementById('preferences2NextBtn');
+        if (pref2Next) {
+          pref2Next.addEventListener('click', () => {
+            window.location.hash = '#legal-terms';
+          });
+        }
+
+        const legalNext = document.getElementById('legalTermsNextBtn');
+        if (legalNext) {
+          legalNext.addEventListener('click', async () => {
+            try {
+              await saveOnboardingTermsAccepted();
+            } catch (e) {
+              console.error('[Onboarding][Terms] save failed, continuing anyway', e);
+            }
+            window.location.hash = '#last-things';
+          });
+        }
+
+        const lastNext = document.getElementById('lastThingsNextBtn');
+        if (lastNext) {
+          lastNext.addEventListener('click', async () => {
+            try {
+              // Mentjük az "Utolsó dolgok" beállításait (pl. dayDependentGreetings)
+              await saveLastThingsSettings();
+            } catch (e) {
+              console.error('[Onboarding][LastThings] save failed, continuing anyway', e);
+            }
+
+            try {
+              // Végső felhasználói adatok mentése (email, jobTitle, accessLevel, stb.)
+              await saveFinalOnboardingData();
+            } catch (e) {
+              console.error('[Onboarding][Final] save failed, continuing anyway', e);
+            }
+
+            // Navigálás a finished képernyőre
+            window.location.hash = '#finished';
+          });
+        }
+
+        const finishedHomeBtn = document.getElementById('finishedHomeBtn');
+        if (finishedHomeBtn) {
+          finishedHomeBtn.addEventListener('click', () => {
+            window.location.href = '/';
+          });
+          // Animáció hozzáadása
+          setTimeout(() => {
+            finishedHomeBtn.classList.add('entered');
+          }, 300);
+        }
+
+      // Language screen toggle
+      const languageBtn = document.getElementById('languageBtn');
+      const backToSetupBtn = document.getElementById('backToSetupBtn');
+      const onboardingMain = document.getElementById('onboardingMain');
+      const languageSelectScreen = document.getElementById('languageSelectScreen');
+      const mainScrollArea = document.querySelector('.main-scroll-area');
+
+      // Language codes in order
+      const languageCodes = ['hu', 'en', 'de', 'es', 'fr', 'zh', 'ja', 'sv', 'ru'];
+      let languageDropdown = null;
+      
+      // Get language names in current language
+      const getLanguageNames = () => {
+        const names = [];
+        if (window.translationManager && window.translationManager.translations) {
+          languageCodes.forEach(code => {
+            const name = window.translationManager.getTranslation(`onboarding.languages.${code}`);
+            names.push(name || code);
+          });
+        } else {
+          // Fallback to Hungarian names
+          names.push('Magyar', 'English', 'Német', 'Spanyol', 'Francia', 'Kínai', 'Japán', 'Svéd', 'Orosz');
+        }
+        return names;
+      };
+      
+      // Update dropdown options
+      const updateDropdownOptions = () => {
+        if (!languageDropdown) return;
+        const newOptions = getLanguageNames();
+        languageDropdown.options = newOptions;
+        languageDropdown.updateDisplay();
+        languageDropdown.restoreOrder();
+      };
+      
+      // Initialize dropdown - wait for translation manager to be ready
+      const initDropdown = () => {
+        const dropdownContainer = document.getElementById('languageDropdown');
+        if (!dropdownContainer) return;
+        
+        // Get current language from translation manager or localStorage
+        let currentLang = 'hu'; // default
+        if (window.translationManager && window.translationManager.currentLanguage) {
+          currentLang = window.translationManager.currentLanguage;
+        } else {
+          const savedLang = localStorage.getItem('eu2k_language');
+          const validLanguages = ['hu', 'en', 'de', 'es', 'fr', 'zh', 'ja', 'sv', 'ru'];
+          if (savedLang && validLanguages.includes(savedLang)) {
+            currentLang = savedLang;
+          }
+        }
+        
+        // Get selected index based on current language
+        const selectedIndex = languageCodes.indexOf(currentLang);
+        const options = getLanguageNames();
+        
+        languageDropdown = new LanguageDropdown(dropdownContainer, {
+          options: options,
+          selectedIndex: selectedIndex >= 0 ? selectedIndex : 0,
+          onChange: async (selected, index) => {
+            console.log('Language changed to:', selected);
+            // Get language code from index
+            const langCode = languageCodes[index];
+            if (langCode && window.translationManager) {
+              await window.translationManager.switchLanguage(langCode);
+              // Update dropdown options after language change
+              updateDropdownOptions();
+            }
+          }
+        });
+      };
+      
+      // Wait for translation manager to initialize and translations to load
+      const waitForTranslations = () => {
+        if (window.translationManager && window.translationManager.isInitialized && window.translationManager.translations) {
+          initDropdown();
+        } else if (window.translationManager) {
+          // Wait a bit more for translations to load
+          setTimeout(waitForTranslations, 100);
+        } else {
+          // Wait for translation manager to be available
+          setTimeout(waitForTranslations, 100);
+        }
+      };
+      
+      waitForTranslations();
+      
+      // Also listen for language changes to update dropdown
+      if (window.translationManager) {
+        const originalSwitchLanguage = window.translationManager.switchLanguage.bind(window.translationManager);
+        window.translationManager.switchLanguage = async function(language) {
+          await originalSwitchLanguage(language);
+          updateDropdownOptions();
+        };
+      }
+
+      // Preferences 2 dropdownok inicializálása (Általános)
+      setTimeout(initOnboardingGeneralDropdowns, 150);
+
+      // Restart button - navigate to restart confirmation screen
+      const restartBtn = document.getElementById('restartBtn');
+      if (restartBtn) {
+        restartBtn.addEventListener('click', () => {
+          // Store previous hash for back button
+          const currentHash = window.location.hash || '';
+          if (currentHash !== '#restart') {
+            sessionStorage.setItem('eu2k_previous_hash', currentHash);
+          }
+          window.location.hash = '#restart';
+        });
+      }
+
+      // Show language screen
+      languageBtn.addEventListener('click', () => {
+        const currentHash = window.location.hash;
+        if (currentHash === '#login') {
+          window.location.hash = '#login#language';
+        } else {
+          window.location.hash = '#language';
+        }
+      });
+
+      // Hide language screen
+      backToSetupBtn.addEventListener('click', () => {
+        const currentHash = window.location.hash;
+        if (currentHash === '#login#language') {
+          // Go back to login
+          window.location.hash = '#login';
+        } else if (currentHash === '#language') {
+          // Go back to welcome (but don't do anything if already on welcome)
+          window.location.hash = '';
+        }
+      });
+
+      // Show login screen
+      const loginStartBtn = document.getElementById('startBtn');
+      const backBtn = document.getElementById('backBtn');
+      const loginScreen = document.getElementById('loginScreen');
+      
+      if (loginStartBtn) {
+        loginStartBtn.addEventListener('click', () => {
+          window.location.hash = '#login';
+        });
+      }
+
+      // Back button - go to previous step (hello screen)
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          window.location.hash = '';
+        });
+      }
+
+      // Language screen header buttons
+      const backBtnLanguage = document.getElementById('backBtnLanguage');
+      const backToSetupBtnLanguage = document.getElementById('backToSetupBtnLanguage');
+      const restartBtnLanguage = document.getElementById('restartBtnLanguage');
+      
+      if (backBtnLanguage) {
+        backBtnLanguage.addEventListener('click', () => {
+          window.location.hash = '#login';
+        });
+      }
+      
+      if (backToSetupBtnLanguage) {
+        backToSetupBtnLanguage.addEventListener('click', () => {
+          window.location.hash = '';
+        });
+      }
+      
+      if (restartBtnLanguage) {
+        restartBtnLanguage.addEventListener('click', () => {
+          // Store previous hash for back button
+          const currentHash = window.location.hash || '';
+          if (currentHash !== '#restart') {
+            sessionStorage.setItem('eu2k_previous_hash', currentHash);
+          }
+          window.location.hash = '#restart';
+        });
+      }
+
+      // Initialize button group
+      const buttonGroupContainer = document.getElementById('buttonGroupContainer');
+      if (buttonGroupContainer) {
+        const buttonGroup = new ButtonGroup(buttonGroupContainer, {
+          buttons: [
+            {
+              id: 'student',
+              text: 'Diák',
+              icon: 'assets/onboarding/accountTypes/student.svg',
+              type: 'green'
+            },
+            {
+              id: 'teacher',
+              text: 'Tanár',
+              icon: 'assets/onboarding/accountTypes/teacher.svg',
+              type: 'green'
+            },
+            {
+              id: 'parent',
+              text: 'Szülő',
+              icon: 'assets/onboarding/accountTypes/parent.svg',
+              type: 'green'
+            },
+            {
+              id: 'guest',
+              text: 'Vendég',
+              type: 'blue',
+              isGuest: true
+            }
+          ],
+          onButtonClick: (button, index) => {
+            updateLoginInfo(button.id);
+            // Start login process for student/teacher/parent
+            if (button.id === 'student' || button.id === 'teacher') {
+              startMicrosoftLogin(button.id).catch(error => {
+                console.error('❌ Login error:', error);
+              });
+            } else if (button.id === 'parent') {
+              startGoogleLogin().catch(error => {
+                console.error('❌ Login error:', error);
+              });
+            }
+            // Guest doesn't need login
+          }
+        });
+        
+        // Function to update login info based on selected button
+        const updateLoginInfo = (buttonId) => {
+          const loginLogo = document.getElementById('loginLogo');
+          const loginInfoText = document.getElementById('loginInfoText');
+          const loginRecommendedText = document.getElementById('loginRecommendedText');
+          
+          // Fade out animation
+          if (loginLogo) {
+            loginLogo.style.opacity = '0';
+            
+            // Wait for fade out to complete, then change image and fade in
+            setTimeout(() => {
+              if (buttonId === 'student' || buttonId === 'teacher') {
+                loginLogo.src = 'assets/onboarding/accountTypes/microsoft.png';
+                loginLogo.alt = 'Microsoft';
+                loginLogo.removeAttribute('data-is-guest');
+                loginInfoText.innerHTML = '<span data-translate="onboarding.school_account_required">Iskolai fiókoddal kell bejelentkezned</span>';
+                loginRecommendedText.style.display = 'none';
+                if (window.translationManager) {
+                  window.translationManager.applyTranslations();
+                }
+              } else if (buttonId === 'parent') {
+                loginLogo.src = 'assets/onboarding/accountTypes/google-logo.png';
+                loginLogo.alt = 'Google';
+                loginLogo.removeAttribute('data-is-guest');
+                loginInfoText.innerHTML = '<span data-translate="onboarding.google_account_required">A Google fiókoddal kell majd bejelentkezned</span>';
+                loginRecommendedText.style.display = 'none';
+                if (window.translationManager) {
+                  window.translationManager.applyTranslations();
+                }
+              } else if (buttonId === 'guest') {
+                loginLogo.src = 'assets/onboarding/accountTypes/student.svg';
+                loginLogo.alt = 'Vendég';
+                loginLogo.setAttribute('data-is-guest', 'true');
+                loginInfoText.innerHTML = '<span data-translate="onboarding.guest_info">Vendégként nem kell bejelentkezned, de sok funkció korlátozva lesz neked</span>';
+                loginRecommendedText.style.display = 'none';
+                if (window.translationManager) {
+                  window.translationManager.applyTranslations();
+                }
+              } else {
+                // Remove guest attribute for other logos
+                loginLogo.removeAttribute('data-is-guest');
+              }
+              
+              // Fade in animation
+              setTimeout(() => {
+                loginLogo.style.opacity = '1';
+              }, 50); // Small delay to ensure image is loaded
+            }, 150); // Half of transition duration for fade out
+          }
+        };
+        
+        // Add hover events to buttons
+        if (buttonGroup && buttonGroup.buttonElements) {
+          buttonGroup.buttonElements.forEach((btn, index) => {
+            const buttonId = buttonGroup.buttons[index].id;
+            btn.addEventListener('mouseenter', () => {
+              updateLoginInfo(buttonId);
+            });
+          });
+        }
+      }
+
+      // Microsoft login flow: MSAL (Graph token) + Firebase signInWithCredential
+      async function startMicrosoftLogin(accountType) {
+        console.log('🔐 Starting Microsoft Sign-In process...', accountType);
+        
+        // Check if user is already logged in
+        if (window.auth && window.auth.currentUser) {
+          console.log('⚠️ User already logged in, signing out first...');
+          try {
+            await window.signOut(window.auth);
+            console.log('✅ Signed out successfully');
+          } catch (error) {
+            console.error('❌ Error signing out:', error);
+          }
+        }
+        
+        // Update progress screen logo based on account type
+        const loginProgressLogo = document.getElementById('loginProgressLogo');
+        if (loginProgressLogo) {
+          loginProgressLogo.src = 'assets/onboarding/accountTypes/microsoft.png';
+          loginProgressLogo.alt = 'Microsoft';
+        }
+        
+        // Show progress screen
+        window.location.hash = '#login-progress';
+        
+        // Mark that we're starting auth
+        localStorage.setItem('eu2k-auth-in-progress', 'true');
+        localStorage.setItem('eu2k-auth-start-time', Date.now().toString());
+        
+        // Wait for Firebase + MSAL to be ready
+        if (!window.auth) {
+          console.error('❌ Firebase auth not initialized');
+          window.location.hash = '#login-failed';
+          return;
+        }
+        if (!window.msalInstance) {
+          console.error('❌ MSAL not initialized');
+          window.location.hash = '#login-failed';
+          return;
+        }
+        
+        try {
+          // 1️⃣ Microsoft login MSAL-lal (itt kérjük el a Graph scope-okat is)
+          console.log('🪟 Starting MSAL loginPopup for Microsoft account + Graph scopes...');
+          const loginResponse = await window.msalInstance.loginPopup({
+            scopes: window.graphScopes || ['User.Read'],
+            prompt: 'select_account'
+          });
+          
+          const account = loginResponse.account;
+          if (!account) {
+            throw new Error('No MSAL account returned from loginPopup');
+          }
+          window.msalInstance.setActiveAccount(account);
+          
+          // 2️⃣ Graph access token lekérése MSAL-tól (silent, ugyanabból a loginból)
+          console.log('🔐 Acquiring Microsoft Graph access token via MSAL...');
+          const tokenResponse = await window.msalInstance.acquireTokenSilent({
+            scopes: window.graphScopes || ['User.Read'],
+            account
+          });
+          
+          const msAccessToken = tokenResponse?.accessToken;
+          if (!msAccessToken) {
+            throw new Error('No access token received from MSAL');
+          }
+          
+          // 3️⃣ Ugyanazzal a Microsoft access tokennel beléptetjük a Firebase-t
+          console.log('🔄 Signing in to Firebase with Microsoft access token (signInWithCredential)...');
+          const msProviderForFirebase = createMsProviderForFirebase();
+          const firebaseCredential = msProviderForFirebase.credential({
+            accessToken: msAccessToken
+          });
+          
+          const result = await signInWithCredential(window.auth, firebaseCredential);
+          
+          console.log('✅ Firebase sign-in with Microsoft credential successful');
+          console.log('User:', result.user);
+          
+          // Store user info
+          localStorage.setItem('eu2k-auth-logged-in', 'true');
+          localStorage.setItem('eu2k-user-type', accountType);
+          if (result.user.displayName) {
+            localStorage.setItem('eu2k-auth-display-name', result.user.displayName);
+          }
+          if (result.user.email) {
+            localStorage.setItem('eu2k-auth-email', result.user.email);
+          }
+          if (result.user.photoURL) {
+            localStorage.setItem('eu2k-auth-photo-url', result.user.photoURL);
+          }
+          
+          // Store localAccountId for Firebase Storage path
+          if (result.user.uid) {
+            localStorage.setItem('eu2k-auth-uid', result.user.uid);
+          }
+          
+          // 4️⃣ Microsoft Graph access token elmentése későbbi Graph API hívásokhoz
+          try {
+            localStorage.setItem('eu2k-graph-access-token', msAccessToken);
+            console.log('🔑 Saved Microsoft Graph access token from MSAL login');
+          } catch (e) {
+            console.warn('⚠️ Could not save Graph access token to localStorage:', e);
+          }
+          
+          localStorage.removeItem('eu2k-auth-in-progress');
+          
+          // Success - navigate to looks screen
+          window.location.hash = '#looks';
+          
+          // TODO: FIX MSAL tenant configuration before re-enabling
+          /* KIKOMMENTEZVE - MSAL tenant probléma miatt
+          // 🔥 AUTOMATIKUSAN lekérjük a Microsoft profilképet
+          console.log('🎯 Attempting to fetch Microsoft profile picture automatically...');
+          setTimeout(async () => {
+            try {
+              const blob = await fetchMicrosoftProfilePicture();
+              if (blob) {
+                profileImageBlob = blob;
+                const imageUrl = URL.createObjectURL(blob);
+                const previewImg = document.getElementById('looksPreviewImage');
+                if (previewImg) {
+                  previewImg.src = imageUrl;
+                  previewImg.style.display = 'block';
+                }
+                console.log('✅ Microsoft profile picture loaded automatically!');
+              }
+            } catch (error) {
+              console.error('❌ Auto-fetch profile picture failed:', error);
+            }
+          }, 500); // Small delay to ensure looks screen is loaded
+          */
+          
+        } catch (error) {
+          console.error('❌ Popup auth failed:', error);
+          console.error('Error code:', error?.code);
+          console.error('Error message:', error?.message);
+          console.error('Error details:', {
+            code: error?.code,
+            message: error?.message,
+            email: error?.email,
+            credential: error?.credential,
+            customData: error?.customData,
+            stack: error?.stack
+          });
+          
+          // Log specific error types
+          if (error?.code === 'auth/popup-closed-by-user') {
+            console.error('❌ User closed the popup window');
+            // Navigate to login-failed screen when popup is closed
+            localStorage.removeItem('eu2k-auth-in-progress');
+            window.location.hash = '#login-failed';
+            return;
+          } else if (error?.code === 'auth/popup-blocked') {
+            console.error('❌ Popup was blocked by browser');
+          } else if (error?.code === 'auth/unauthorized-domain') {
+            console.error('❌ Domain not authorized in Firebase Console');
+          } else if (error?.code === 'auth/operation-not-allowed') {
+            console.error('❌ Microsoft provider not enabled in Firebase Console');
+          } else if (error?.message?.includes('unauthorized_client')) {
+            console.error('❌ Azure App Registration issue: Client not enabled for consumers or wrong tenant');
+            console.error('❌ Check Azure Portal > App registrations > Your App > Authentication');
+          } else if (error?.message?.includes('tenant')) {
+            console.error('❌ Tenant ID issue: Check if tenant ID is correct in Azure');
+          }
+          
+          localStorage.removeItem('eu2k-auth-in-progress');
+          
+          // Failed - show failed screen
+          window.location.hash = '#login-failed';
+        }
+      }
+
+      // Google login function using Firebase
+      async function startGoogleLogin() {
+        console.log('🔐 Starting Google Sign-In process...');
+        
+        // Check if user is already logged in
+        if (window.auth && window.auth.currentUser) {
+          console.log('⚠️ User already logged in, signing out first...');
+          try {
+            await window.signOut(window.auth);
+            console.log('✅ Signed out successfully');
+          } catch (error) {
+            console.error('❌ Error signing out:', error);
+          }
+        }
+        
+        // Update progress screen logo
+        const loginProgressLogo = document.getElementById('loginProgressLogo');
+        if (loginProgressLogo) {
+          loginProgressLogo.src = 'assets/onboarding/accountTypes/google-logo.png';
+          loginProgressLogo.alt = 'Google';
+        }
+        
+        // Show progress screen
+        window.location.hash = '#login-progress';
+        
+        // Mark that we're starting auth
+        localStorage.setItem('eu2k-auth-in-progress', 'true');
+        localStorage.setItem('eu2k-auth-start-time', Date.now().toString());
+        
+        // Wait for Firebase to be ready
+        if (!window.auth || !window.googleProvider) {
+          console.error('❌ Firebase auth not initialized');
+          window.location.hash = '#login-failed';
+          return;
+        }
+        
+        try {
+          console.log('🪟 Attempting signInWithPopup for Google...');
+          
+          if (!window.signInWithPopup) {
+            throw new Error('signInWithPopup not available');
+          }
+          
+          const result = await window.signInWithPopup(window.auth, window.googleProvider);
+          
+          console.log('✅ Google popup auth successful');
+          console.log('User:', result.user);
+          
+          // Store user info
+          localStorage.setItem('eu2k-auth-logged-in', 'true');
+          localStorage.setItem('eu2k-user-type', 'parent');
+          if (result.user.displayName) {
+            localStorage.setItem('eu2k-auth-display-name', result.user.displayName);
+          }
+          if (result.user.email) {
+            localStorage.setItem('eu2k-auth-email', result.user.email);
+          }
+          if (result.user.photoURL) {
+            localStorage.setItem('eu2k-auth-photo-url', result.user.photoURL);
+          }
+          
+          localStorage.removeItem('eu2k-auth-in-progress');
+          
+          // Success - navigate to looks screen
+          window.location.hash = '#looks';
+          
+        } catch (error) {
+          console.error('❌ Google popup auth failed:', error);
+          console.error('Error code:', error?.code);
+          console.error('Error message:', error?.message);
+          console.error('Error details:', {
+            code: error?.code,
+            message: error?.message,
+            email: error?.email,
+            credential: error?.credential,
+            customData: error?.customData,
+            stack: error?.stack
+          });
+          
+          // Log specific error types
+          if (error?.code === 'auth/popup-closed-by-user') {
+            console.error('❌ User closed the popup window');
+            // Navigate to login-failed screen when popup is closed
+            localStorage.removeItem('eu2k-auth-in-progress');
+            window.location.hash = '#login-failed';
+            return;
+          } else if (error?.code === 'auth/popup-blocked') {
+            console.error('❌ Popup was blocked by browser');
+          } else if (error?.code === 'auth/unauthorized-domain') {
+            console.error('❌ Domain not authorized in Firebase Console');
+          } else if (error?.code === 'auth/operation-not-allowed') {
+            console.error('❌ Google provider not enabled in Firebase Console');
+          }
+          
+          localStorage.removeItem('eu2k-auth-in-progress');
+          
+          // Failed - show failed screen
+          window.location.hash = '#login-failed';
+        }
+      }
+
+      // Retry button handler - navigate to restart screen
+      const loginRetryBtn = document.getElementById('loginRetryBtn');
+      if (loginRetryBtn) {
+        loginRetryBtn.addEventListener('click', () => {
+          // Store previous hash for back button
+          const currentHash = window.location.hash || '';
+          if (currentHash !== '#restart') {
+            sessionStorage.setItem('eu2k_previous_hash', currentHash);
+          }
+          window.location.hash = '#restart';
+        });
+      }
+
+      // Restart confirm button handler - clear all progress and reset to first step
+      const restartConfirmBtn = document.getElementById('restartConfirmBtn');
+      if (restartConfirmBtn) {
+        restartConfirmBtn.addEventListener('click', async () => {
+          // Clear onboarding-related Firestore data before signing out
+          const user = window.auth?.currentUser;
+          if (user && window.db && window.firestoreDoc && window.firestoreDeleteDoc && window.firestoreDeleteField && window.firestoreUpdateDoc) {
+            try {
+              // Delete the notifs settings document
+              const notifsRef = window.firestoreDoc(window.db, `users/${user.uid}/settings/notifs`);
+              try {
+                await window.firestoreDeleteDoc(notifsRef);
+                console.log('[Onboarding][Restart] Deleted notifs settings document');
+              } catch (e) {
+                console.warn('[Onboarding][Restart] Error deleting notifs document (may not exist):', e);
+              }
+
+              // Delete onboarding-related fields from main user document (but NEVER touch accessLevel/email/onboardingFinished)
+              const userRef = window.firestoreDoc(window.db, `users/${user.uid}`);
+              try {
+                await window.firestoreUpdateDoc(userRef, {
+                  // onboarding / preferences
+                  termsAccepted: window.firestoreDeleteField(),
+                  dayDependentGreetings: window.firestoreDeleteField(),
+                  // avatar & name
+                  displayName: window.firestoreDeleteField(),
+                  pfpType: window.firestoreDeleteField(),
+                  pfpColor: window.firestoreDeleteField(),
+                  pfpUrl: window.firestoreDeleteField(),
+                  useProvidedPfp: window.firestoreDeleteField(),
+                  avatarUpdatedAt: window.firestoreDeleteField(),
+                  // profile metadata written at finish
+                  jobTitle: window.firestoreDeleteField(),
+                  birthyear: window.firestoreDeleteField(),
+                  lastUpdated: window.firestoreDeleteField()
+                });
+                console.log('[Onboarding][Restart] Deleted onboarding-related fields from user document');
+              } catch (e) {
+                console.warn('[Onboarding][Restart] Error deleting onboarding fields from user document (may not exist):', e);
+              }
+
+              // Delete onboarding-related fields from general_data/general helper document
+              try {
+                const generalRef = window.firestoreDoc(window.db, `users/${user.uid}/general_data/general`);
+                await window.firestoreUpdateDoc(generalRef, {
+                  nickname: window.firestoreDeleteField(),
+                  displayName: window.firestoreDeleteField(),
+                  pfpType: window.firestoreDeleteField(),
+                  pfpColor: window.firestoreDeleteField(),
+                  pfpUrl: window.firestoreDeleteField(),
+                  useProvidedPfp: window.firestoreDeleteField(),
+                  updatedAt: window.firestoreDeleteField()
+                });
+                console.log('[Onboarding][Restart] Deleted onboarding-related fields from general_data/general');
+              } catch (e) {
+                console.warn('[Onboarding][Restart] Error deleting fields from general_data/general (may not exist):', e);
+              }
+            } catch (e) {
+              console.error('[Onboarding][Restart] Error clearing Firestore data:', e);
+            }
+          }
+
+          // Clear all localStorage data related to onboarding and language
+          localStorage.removeItem('eu2k_language');
+          // Clear any other onboarding-related data
+          const keysToRemove = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && (key.startsWith('eu2k_') || key.startsWith('onboarding_'))) {
+              keysToRemove.push(key);
+            }
+          }
+          keysToRemove.forEach(key => localStorage.removeItem(key));
+          
+          // Sign out from Firebase if logged in
+          if (window.auth && window.auth.currentUser) {
+            try {
+              await window.signOut(window.auth);
+              console.log('✅ Signed out successfully');
+            } catch (error) {
+              console.error('❌ Error signing out:', error);
+            }
+          }
+          
+          // Clear session storage
+          sessionStorage.removeItem('eu2k_previous_hash');
+          
+          // Go back to welcome screen
+          window.location.hash = '';
+        });
+      }
+
+      // Back button handler for restart screen
+      const backBtnRestart = document.getElementById('backBtn');
+      if (backBtnRestart) {
+        // We'll handle this in handleHashChange for #restart
+      }
+
+      // Logout button handler
+      const loginLogoutBtn = document.getElementById('loginLogoutBtn');
+      if (loginLogoutBtn) {
+        loginLogoutBtn.addEventListener('click', async () => {
+          console.log('🔒 Starting logout process...');
+          
+          // Sign out from Firebase Auth
+          if (window.auth && window.signOut) {
+            try {
+              await window.signOut(window.auth);
+              console.log('✅ Signed out from Firebase successfully');
+            } catch (error) {
+              console.error('❌ Error signing out from Firebase:', error);
+              // Continue with cleanup even if signOut fails
+            }
+          }
+          
+          // Clear all localStorage data related to onboarding and language
+          localStorage.removeItem('eu2k_language');
+          localStorage.removeItem('eu2k-auth-logged-in');
+          localStorage.removeItem('eu2k-user-type');
+          localStorage.removeItem('eu2k-auth-display-name');
+          localStorage.removeItem('eu2k-auth-email');
+          localStorage.removeItem('eu2k-auth-photo-url');
+          localStorage.removeItem('eu2k-auth-in-progress');
+          localStorage.removeItem('eu2k-auth-start-time');
+          localStorage.removeItem('eu2k-ms-access-token');
+          
+          const keysToRemove = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && (key.startsWith('eu2k_') || key.startsWith('onboarding_'))) {
+              keysToRemove.push(key);
+            }
+          }
+          keysToRemove.forEach(key => localStorage.removeItem(key));
+
+          console.log('✅ Logout complete, clearing localStorage');
+          
+          // Go back to welcome screen
+          window.location.hash = '';
+        });
+      }
+
+      // Looks screen initialization
+      const looksScreen = document.getElementById('looksScreen');
+      const looksColorGrid = document.getElementById('looksColorGrid');
+      const looksPreviewCircle = document.getElementById('looksPreviewCircle');
+      const looksPreviewImage = document.getElementById('looksPreviewImage');
+      const namePreviewImage = document.getElementById('namePreviewImage');
+      const nameInput = document.getElementById('nameInput');
+      const nameContinueBtn = document.getElementById('nameContinueBtn');
+      const useSchoolProfileBtn = document.getElementById('useSchoolProfileBtn');
+      const blobbyBtn = document.getElementById('blobbyBtn');
+      const randomBtn = document.getElementById('randomBtn');
+      
+      // Avatar options - használjuk a rendelkezésre álló képeket
+      const colorOptions = [
+        { id: 'red', name: 'Piros', image: 'assets/onboarding/avatars/red.png' },
+        { id: 'orange', name: 'Narancssárga', image: 'assets/onboarding/avatars/orange.png' },
+        { id: 'green', name: 'Zöld', image: 'assets/onboarding/avatars/green.png' },
+        { id: 'blue', name: 'Kék', image: 'assets/onboarding/avatars/blue.png' },
+        { id: 'purple', name: 'Lila', image: 'assets/onboarding/avatars/purple.png' },
+        { id: 'black', name: 'Fekete', image: 'assets/onboarding/avatars/black.png' }
+      ];
+      
+      let selectedColorId = null;
+      let selectedAvatarType = 'blobby';
+      let profileImageBlob = null;
+      let useSchoolProfileSelected = false;
+      
+      // Generate color grid with random positioning
+      function generateColorGrid() {
+        console.log('🎨 Generating avatar grid...');
+        if (!looksColorGrid) {
+          console.error('❌ looksColorGrid element not found!');
+          return;
+        }
+        
+        // Shuffle colors for random positioning
+        const shuffledColors = [...colorOptions].sort(() => Math.random() - 0.5);
+        
+        // First row: 4 items
+        const firstRow = shuffledColors.slice(0, 4);
+        // Second row: 2 items + continue button
+        const secondRow = shuffledColors.slice(4, 6);
+        
+        looksColorGrid.innerHTML = '';
+        
+        // First row
+        const row1 = document.createElement('div');
+        row1.className = 'looks-color-row';
+        firstRow.forEach(color => {
+          const item = createColorItem(color);
+          row1.appendChild(item);
+        });
+        looksColorGrid.appendChild(row1);
+        
+        // Second row
+        const row2 = document.createElement('div');
+        row2.className = 'looks-color-row';
+        secondRow.forEach(color => {
+          const item = createColorItem(color);
+          row2.appendChild(item);
+        });
+        
+        // Continue button
+        const continueBtnContainer = document.createElement('div');
+        continueBtnContainer.style.flex = '2';
+        continueBtnContainer.style.display = 'flex';
+        const continueBtn = document.createElement('button');
+        continueBtn.className = 'looks-continue-btn';
+        continueBtn.textContent = 'Tovább';
+        continueBtn.addEventListener('click', async () => {
+          const usingSchoolProfile = useSchoolProfileSelected;
+          const effectiveColor = selectedColorId || null;
+          
+          if (!usingSchoolProfile && !effectiveColor) {
+            alert('Válassz egy avatárt vagy használd az iskolai profilképedet!');
+            return;
+          }
+          
+          if (usingSchoolProfile && !profileImageBlob) {
+            const blob = await fetchMicrosoftProfilePicture();
+            if (blob) {
+              profileImageBlob = blob;
+            } else {
+              console.warn('⚠️ Nem sikerült lekérni az iskolai profilképet, színes avatárt fogunk használni.');
+            }
+          }
+          
+          const finalUseSchoolProfile = usingSchoolProfile && !!profileImageBlob;
+          const finalColor = finalUseSchoolProfile ? '' : effectiveColor;
+          const colorProvidedFlag = !!finalColor;
+          
+          localStorage.setItem('eu2k-onboarding-use-provided-pfp', colorProvidedFlag ? 'true' : 'false');
+          if (colorProvidedFlag && finalColor) {
+            localStorage.setItem('eu2k-selected-color', finalColor);
+            localStorage.setItem('eu2k-onboarding-avatar', finalColor);
+          } else {
+            localStorage.removeItem('eu2k-selected-color');
+          }
+          
+          if (profileImageBlob) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              localStorage.setItem('eu2k-profile-image', reader.result);
+            };
+            reader.readAsDataURL(profileImageBlob);
+          }
+          
+          const saved = await saveAvatarSelectionToFirestore(colorProvidedFlag, finalColor);
+          if (!saved) {
+            alert('Nem sikerült elmenteni a választásodat. Próbáld újra!');
+            return;
+          }
+          
+          console.log('✅ Profile selection saved');
+          window.location.hash = '#name';
+        });
+        continueBtnContainer.appendChild(continueBtn);
+        row2.appendChild(continueBtnContainer);
+        
+        looksColorGrid.appendChild(row2);
+        console.log('✅ Avatar grid generated with', colorOptions.length, 'avatars');
+        
+        // Alapértelmezett kiválasztás - véletlenszerű
+        if (!selectedColorId) {
+          const randomColor = colorOptions[Math.floor(Math.random() * colorOptions.length)];
+          selectedColorId = randomColor.id;
+          useSchoolProfileSelected = false;
+          selectedAvatarType = 'blobby';
+          if (useSchoolProfileBtn) useSchoolProfileBtn.classList.remove('active');
+          if (blobbyBtn) blobbyBtn.classList.add('active');
+        }
+        const preselectedItem = looksColorGrid.querySelector(`.looks-color-item[data-color-id="${selectedColorId}"]`);
+        if (preselectedItem) {
+          preselectedItem.classList.add('selected');
+          const selectedColor = colorOptions.find(color => color.id === selectedColorId);
+          if (selectedColor && looksPreviewImage) {
+            looksPreviewImage.src = selectedColor.image;
+            looksPreviewImage.style.display = 'block';
+          }
+        }
+      }
+      
+      // Preferences 1 értesítési beállítások inicializálása
+      loadOnboardingNotifSettings().then(() => {
+        attachOnboardingNotifHandlers();
+      }).catch(e => console.error('[Onboarding][Notifs] init failed:', e));
+      function createColorItem(color) {
+        console.log('🖼️ Creating avatar item:', color.id, color.image);
+        const item = document.createElement('button');
+        item.className = 'looks-color-item';
+        item.dataset.colorId = color.id;
+        
+        const circle = document.createElement('div');
+        circle.className = 'looks-color-circle';
+        
+        // Avatár kép betöltése
+        const img = document.createElement('img');
+        img.src = color.image;
+        img.alt = color.name;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.style.borderRadius = '50%';
+        img.onerror = () => {
+          console.error('❌ Failed to load image:', color.image);
+          img.style.display = 'none';
+          circle.classList.add('looks-color-circle--placeholder');
+        };
+        img.onload = () => console.log('✅ Image loaded:', color.image);
+        circle.appendChild(img);
+        
+        const label = document.createElement('div');
+        label.className = 'looks-color-label';
+        label.textContent = color.name;
+        
+        item.appendChild(circle);
+        item.appendChild(label);
+        
+        item.addEventListener('click', () => {
+          // Remove selected class from all items
+          document.querySelectorAll('.looks-color-item').forEach(el => {
+            el.classList.remove('selected');
+          });
+          // Add selected class to clicked item
+          item.classList.add('selected');
+          selectedColorId = color.id;
+          
+          // Update preview
+          if (looksPreviewImage) {
+            looksPreviewImage.src = color.image;
+            looksPreviewImage.style.display = 'block';
+          }
+          
+          useSchoolProfileSelected = false;
+          if (useSchoolProfileBtn) useSchoolProfileBtn.classList.remove('active');
+          if (blobbyBtn) blobbyBtn.classList.add('active');
+        });
+        
+        return item;
+      }
+      
+      // Graph API token kinyerése a Firebase Microsoft bejelentkezésből (elsődleges forrás)
+      function getGraphAccessTokenFromFirebase() {
+        try {
+          const token = localStorage.getItem('eu2k-graph-access-token');
+          if (token) {
+            console.log('🔑 Using Graph access token from Firebase login');
+            return token;
+          }
+        } catch (e) {
+          console.warn('⚠️ Could not read Graph token from localStorage:', e);
+        }
+        return null;
+      }
+
+      async function getGraphAccessToken() {
+        // 1️⃣ Próbáljuk meg a Firebase Microsoft loginből elmentett tokent használni
+        const firebaseToken = getGraphAccessTokenFromFirebase();
+        if (firebaseToken) {
+          return firebaseToken;
+        }
+
+        // 2️⃣ Ha nincs elmentett token, fallback: MSAL silent token (csak ha van account)
+        if (!window.msalInstance) {
+          console.error('❌ MSAL instance not initialized and no Firebase Graph token available');
+          return null;
+        }
+
+        const scopes = window.graphScopes || ['User.Read']; // Microsoft Graph scope
+
+        try {
+          console.log('🔑 Getting Microsoft Graph access token (silent only)...');
+
+          // Próbáljunk meg egy már létező accountot használni
+          let account = window.msalInstance.getActiveAccount();
+          if (!account) {
+            const allAccounts = window.msalInstance.getAllAccounts();
+            if (allAccounts && allAccounts.length > 0) {
+              account = allAccounts[0];
+              window.msalInstance.setActiveAccount(account);
+              console.log('ℹ️ Using existing MSAL account from cache:', account.username);
+            }
+          }
+
+          // Ha továbbra sincs account, nem próbálunk új login popupot indítani
+          if (!account) {
+            console.warn('⚠️ No MSAL account found, skipping Graph token acquisition (no extra login).');
+            return null;
+          }
+
+          // Token lekérése silent módban – ha ez nem sikerül, nem erőltetünk új bejelentkezést
+          console.log('🔐 Acquiring token silently (no interactive login)...');
+          const tokenResponse = await window.msalInstance.acquireTokenSilent({
+            scopes: scopes,
+            account
+          });
+
+          console.log('✅ Graph access token acquired successfully');
+          return tokenResponse.accessToken;
+        } catch (error) {
+          console.warn('⚠️ Silent Graph token acquisition failed, not triggering interactive login:', error);
+          return null;
+        }
+      }
+
+      // Microsoft Graph API - Get profile picture
+      async function fetchMicrosoftProfilePicture() {
+        try {
+          console.log('💖 Starting Microsoft profile picture fetch flow...');
+          
+          // 1️⃣ KÉRJÜK A GRAPH TOKENT MSAL-ból
+          const graphToken = await getGraphAccessToken();
+          if (!graphToken) {
+            console.warn('⚠️ No Microsoft Graph access token available – skipping automatic school profile picture.');
+            return null;
+          }
+          
+          console.log('📸 Fetching Microsoft profile picture from Graph API...');
+          
+          // 2️⃣ PROFILKÉP LEKÉRÉSE BLOBKÉNT a Graph API-ról
+          const imageRes = await fetch("https://graph.microsoft.com/v1.0/me/photo/$value", {
+            headers: {
+              "Authorization": `Bearer ${graphToken}`
+            }
+          });
+          
+          if (!imageRes.ok) {
+            if (imageRes.status === 404) {
+              console.log("ℹ️ Nincs profilképed a Microsoft fiókodon 🥺💔");
+              alert('Nincs profilkép a Microsoft fiókodon. Válassz egy avatart!');
+            } else {
+              console.error(`❌ Graph API error: ${imageRes.status} ${imageRes.statusText}`);
+              alert(`Hiba történt a profilkép lekérésekor: ${imageRes.status}`);
+            }
+            return null;
+          }
+          
+          // 3️⃣ BLOB KONVERTÁLÁSA
+          const blob = await imageRes.blob();
+          console.log('✅ Profile picture blob received:', blob.size, 'bytes, type:', blob.type);
+
+          // 4️⃣ FIREBASE STORAGE-BA FELTÖLTÉS
+          const user = window.auth?.currentUser;
+          const uid = user?.uid || window.msalInstance?.getActiveAccount()?.localAccountId || 'unknown-user';
+          
+          console.log('☁️ Uploading profile picture to Firebase Storage...');
+          const storageRef = ref(storage, `profilePhotos/${uid}.jpg`);
+          
+          try {
+            await uploadBytes(storageRef, blob);
+            console.log('✅ Profile picture uploaded to Firebase Storage successfully! 🎉');
+            console.log(`📍 Storage path: profilePhotos/${uid}.jpg`);
+          } catch (uploadError) {
+            console.error('❌ Error uploading profile picture to Firebase:', uploadError);
+            alert('Nem sikerült feltölteni a profilképet a Firebase Storage-ba.');
+            return blob; // Return blob anyway for preview
+          }
+
+          return blob;
+        } catch (error) {
+          console.error('❌ Error in fetchMicrosoftProfilePicture:', error);
+          alert('Váratlan hiba történt a profilkép lekérésekor.');
+          return null;
+        }
+      }
+      
+      // Use school profile button handler
+      if (useSchoolProfileBtn) {
+        useSchoolProfileBtn.addEventListener('click', async () => {
+          useSchoolProfileSelected = true;
+          useSchoolProfileBtn.classList.add('active');
+          if (blobbyBtn) blobbyBtn.classList.remove('active');
+          
+          if (!profileImageBlob) {
+            const blob = await fetchMicrosoftProfilePicture();
+            if (blob) {
+              profileImageBlob = blob;
+              const imageUrl = URL.createObjectURL(blob);
+              looksPreviewImage.src = imageUrl;
+              looksPreviewImage.style.display = 'block';
+            } else {
+              console.log('⚠️ No profile picture available');
+            }
+          } else {
+            const imageUrl = URL.createObjectURL(profileImageBlob);
+            looksPreviewImage.src = imageUrl;
+            looksPreviewImage.style.display = 'block';
+          }
+        });
+      }
+      
+      // Avatar type buttons
+      if (blobbyBtn) {
+        blobbyBtn.addEventListener('click', () => {
+          blobbyBtn.classList.add('active');
+          useSchoolProfileSelected = false;
+          if (useSchoolProfileBtn) useSchoolProfileBtn.classList.remove('active');
+          selectedAvatarType = 'blobby';
+        });
+      }
+      
+      if (randomBtn) {
+        randomBtn.addEventListener('click', () => {
+          // Randomly select an avatar
+          const randomColor = colorOptions[Math.floor(Math.random() * colorOptions.length)];
+          selectedColorId = randomColor.id;
+          useSchoolProfileSelected = false;
+          if (useSchoolProfileBtn) useSchoolProfileBtn.classList.remove('active');
+          if (blobbyBtn) blobbyBtn.classList.add('active');
+          
+          // Update UI
+          document.querySelectorAll('.looks-color-item').forEach(item => {
+            item.classList.remove('selected');
+            if (item.dataset.colorId === randomColor.id) {
+              item.classList.add('selected');
+            }
+          });
+          
+          // Update preview
+          if (looksPreviewImage) {
+            looksPreviewImage.src = randomColor.image;
+            looksPreviewImage.style.display = 'block';
+          }
+        });
+      }
+      
+      if (nameContinueBtn) {
+        nameContinueBtn.addEventListener('click', async () => {
+          const nicknameValue = (nameInput?.value || '').trim();
+          if (!nicknameValue) {
+            alert('Kérlek add meg a neved!');
+            nameInput?.focus();
+            return;
+          }
+          localStorage.setItem('eu2k-nickname', nicknameValue);
+          const saved = await saveNicknameToGeneral(nicknameValue);
+          if (saved) {
+            console.log('✅ Nickname mentve');
+            window.location.hash = '#preferences1';
+          } else {
+            alert('Nem sikerült elmenteni a nevedet. Próbáld újra!');
+          }
+        });
+      }
+
+
+      // --- Általános (Preferences 2) - dropdownok ---
+
+      function initOnboardingEditionDropdown() {
+        const container = document.getElementById('onbEditionDropdown');
+        if (!container || !window.LanguageDropdown) return;
+
+        const getEditionOptions = () => {
+          if (window.translationManager && window.translationManager.translations) {
+            const general = window.translationManager.getTranslation('pages.settings.edition_options.general_public');
+            const betaPublic = window.translationManager.getTranslation('pages.settings.edition_options.beta_public');
+            const betaClosed = window.translationManager.getTranslation('pages.settings.edition_options.beta_closed');
+            if (general && general !== 'pages.settings.edition_options.general_public' &&
+                betaPublic && betaPublic !== 'pages.settings.edition_options.beta_public' &&
+                betaClosed && betaClosed !== 'pages.settings.edition_options.beta_closed') {
+              return [general, betaPublic, betaClosed];
+            }
+          }
+          const currentLang = window.translationManager?.currentLanguage || localStorage.getItem('eu2k_language') || 'hu';
+          const fallbackOptions = {
+            'hu': ['Általános - Nyilvános', 'Béta - Nyilvános', 'Béta - Zárt'],
+            'en': ['General - Public', 'Beta - Public', 'Beta - Closed'],
+            'de': ['Allgemein - Öffentlich', 'Beta - Öffentlich', 'Beta - Geschlossen'],
+            'es': ['General - Público', 'Beta - Público', 'Beta - Cerrado'],
+            'fr': ['Général - Public', 'Bêta - Public', 'Bêta - Fermé'],
+            'zh': ['通用 - 公开', '测试版 - 公开', '测试版 - 封闭'],
+            'ja': ['一般 - 公開', 'ベータ - 公開', 'ベータ - 非公開'],
+            'sv': ['Allmän - Offentlig', 'Beta - Offentlig', 'Beta - Stängd'],
+            'ru': ['Общий - Публичный', 'Бета - Публичный', 'Бета - Закрытый']
+          };
+          return fallbackOptions[currentLang] || fallbackOptions['hu'];
+        };
+
+        const savedEdition = localStorage.getItem('eu2k_edition') || 'beta-closed';
+        const editionMap = {
+          'general-public': 0,
+          'beta-public': 1,
+          'beta-closed': 2
+        };
+        const selectedIndex = editionMap[savedEdition] ?? 2;
+
+        const initWithOptions = () => {
+          const options = getEditionOptions();
+          if (options.some(opt => opt && opt.includes('pages.settings.edition_options'))) {
+            setTimeout(initWithOptions, 100);
+            return;
+          }
+          try {
+            const dropdown = new LanguageDropdown(container, {
+              options,
+              selectedIndex,
+              onChange: (selected, index) => {
+                const keys = ['general-public', 'beta-public', 'beta-closed'];
+                localStorage.setItem('eu2k_edition', keys[index]);
+              }
+            });
+            // Onboardingben is maradjon vizuálisan disable-nek tűnő
+            setTimeout(() => {
+              const trigger = container.querySelector('.language-dropdown-trigger');
+              if (trigger) {
+                trigger.style.opacity = '0.5';
+                trigger.style.pointerEvents = 'none';
+              }
+            }, 200);
+          } catch (e) {
+            console.error('[Onboarding] Error creating EditionDropdown:', e);
+          }
+        };
+
+        initWithOptions();
+      }
+
+      function initOnboardingThemeDropdowns() {
+        if (!window.LanguageDropdown) return;
+
+        const getColorSchemeOptions = () => {
+          if (window.translationManager && window.translationManager.translations) {
+            const green = window.translationManager.getTranslation('pages.settings.theme_color_options.green');
+            const purple = window.translationManager.getTranslation('pages.settings.theme_color_options.purple');
+            const red = window.translationManager.getTranslation('pages.settings.theme_color_options.red');
+            const orange = window.translationManager.getTranslation('pages.settings.theme_color_options.orange');
+            const lightBlue = window.translationManager.getTranslation('pages.settings.theme_color_options.light_blue');
+            const black = window.translationManager.getTranslation('pages.settings.theme_color_options.black');
+            const pink = window.translationManager.getTranslation('pages.settings.theme_color_options.pink');
+            const darkBlue = window.translationManager.getTranslation('pages.settings.theme_color_options.dark_blue');
+            if (green && green !== 'pages.settings.theme_color_options.green' &&
+                purple && purple !== 'pages.settings.theme_color_options.purple') {
+              return [green, purple, red, orange, lightBlue, black, pink, darkBlue].filter(Boolean);
+            }
+          }
+          const currentLang = window.translationManager?.currentLanguage || localStorage.getItem('eu2k_language') || 'hu';
+          const fallbackOptions = {
+            'hu': ['Zöld (Alapértelmezett)', 'Lila', 'Piros', 'Narancssárga', 'Világoskék', 'Fekete', 'Rózsaszín', 'Sötétkék'],
+            'en': ['Green (Default)', 'Purple', 'Red', 'Orange', 'Light Blue', 'Black', 'Pink', 'Dark Blue'],
+            'de': ['Grün (Standard)', 'Lila', 'Rot', 'Orange', 'Hellblau', 'Schwarz', 'Rosa', 'Dunkelblau'],
+            'es': ['Verde (Predeterminado)', 'Morado', 'Rojo', 'Naranja', 'Azul Claro', 'Negro', 'Rosa', 'Azul Oscuro'],
+            'fr': ['Vert (Par défaut)', 'Violet', 'Rouge', 'Orange', 'Bleu Clair', 'Noir', 'Rose', 'Bleu Foncé'],
+            'zh': ['绿色（默认）', '紫色', '红色', '橙色', '浅蓝色', '黑色', '粉色', '深蓝色'],
+            'ja': ['緑（デフォルト）', '紫', '赤', 'オレンジ', 'ライトブルー', '黒', 'ピンク', 'ダークブルー'],
+            'sv': ['Grön (Standard)', 'Lila', 'Röd', 'Orange', 'Ljusblå', 'Svart', 'Rosa', 'Mörkblå'],
+            'ru': ['Зеленый (По умолчанию)', 'Фиолетовый', 'Красный', 'Оранжевый', 'Светло-синий', 'Черный', 'Розовый', 'Темно-синий']
+          };
+          return fallbackOptions[currentLang] || fallbackOptions['hu'];
+        };
+
+        const getThemeOptions = () => {
+          if (window.translationManager && window.translationManager.translations) {
+            const dark = window.translationManager.getTranslation('pages.settings.theme_theme_options.dark');
+            const light = window.translationManager.getTranslation('pages.settings.theme_theme_options.light');
+            const system = window.translationManager.getTranslation('pages.settings.theme_theme_options.system');
+            if (dark && dark !== 'pages.settings.theme_theme_options.dark' &&
+                light && light !== 'pages.settings.theme_theme_options.light') {
+              return [dark, light, system].filter(Boolean);
+            }
+          }
+          const currentLang = window.translationManager?.currentLanguage || localStorage.getItem('eu2k_language') || 'hu';
+          const fallbackOptions = {
+            'hu': ['Sötét', 'Világos', 'Rendszertéma'],
+            'en': ['Dark', 'Light', 'System Theme'],
+            'de': ['Dunkel', 'Hell', 'Systemtema'],
+            'es': ['Oscuro', 'Claro', 'Tema del Sistema'],
+            'fr': ['Sombre', 'Clair', 'Thème Système'],
+            'zh': ['深色', '浅色', '系统主题'],
+            'ja': ['ダーク', 'ライト', 'システムテーマ'],
+            'sv': ['Mörk', 'Ljus', 'Systemtema'],
+            'ru': ['Темный', 'Светлый', 'Системная тема']
+          };
+          return fallbackOptions[currentLang] || fallbackOptions['hu'];
+        };
+
+        const initWithOptions = () => {
+          const colorSchemeOptions = getColorSchemeOptions();
+          const themeOptions = getThemeOptions();
+          if (colorSchemeOptions.some(opt => opt && opt.includes('pages.settings.theme_color_options')) ||
+              themeOptions.some(opt => opt && opt.includes('pages.settings.theme_theme_options'))) {
+            setTimeout(initWithOptions, 100);
+            return;
+          }
+
+          const colorSchemeContainer = document.getElementById('onbColorSchemeDropdown');
+          const themeContainer = document.getElementById('onbThemeDropdown');
+
+          if (colorSchemeContainer) {
+            try {
+              const colorDropdown = new LanguageDropdown(colorSchemeContainer, {
+                options: colorSchemeOptions,
+                selectedIndex: 0,
+                onChange: () => {} // Onboardingben csak vizuális
+              });
+              setTimeout(() => {
+                const trigger = colorSchemeContainer.querySelector('.language-dropdown-trigger');
+                if (trigger) {
+                  trigger.style.opacity = '0.5';
+                  trigger.style.pointerEvents = 'none';
+                }
+              }, 200);
+            } catch (e) {
+              console.error('[Onboarding] Error creating ColorSchemeDropdown:', e);
+            }
+          }
+
+          if (themeContainer) {
+            try {
+              const themeDropdown = new LanguageDropdown(themeContainer, {
+                options: themeOptions,
+                selectedIndex: 0,
+                onChange: () => {} // Onboardingben csak vizuális
+              });
+              setTimeout(() => {
+                const trigger = themeContainer.querySelector('.language-dropdown-trigger');
+                if (trigger) {
+                  trigger.style.opacity = '0.5';
+                  trigger.style.pointerEvents = 'none';
+                }
+              }, 200);
+            } catch (e) {
+              console.error('[Onboarding] Error creating ThemeDropdown:', e);
+            }
+          }
+        };
+
+        initWithOptions();
+      }
+
+      function initOnboardingGeneralDropdowns() {
+        if (!window.translationManager || !window.LanguageDropdown) {
+          setTimeout(initOnboardingGeneralDropdowns, 100);
+          return;
+        }
+        initOnboardingEditionDropdown();
+        initOnboardingThemeDropdowns();
+      }
+      function getLocalAvatarSelection() {
+        const storedColor = localStorage.getItem('eu2k-selected-color') || localStorage.getItem('eu2k-onboarding-avatar') || null;
+        const normalizedColor = storedColor && storedColor.trim() !== '' ? storedColor : null;
+        const colorProvided = !!normalizedColor;
+        return {
+          useSchoolProfile: !colorProvided,
+          colorId: normalizedColor
+        };
+      }
+      
+      async function fetchAvatarSelectionFromFirestore() {
+        if (!window.auth?.currentUser || !window.db || !window.firestoreDoc || !window.firestoreSetDoc) {
+          return null;
+        }
+        try {
+          const uid = window.auth.currentUser.uid;
+          const userDocRef = window.firestoreDoc(window.db, 'users', uid);
+          const userDocSnap = await window.firestoreGetDoc(userDocRef);
+          if (userDocSnap.exists()) {
+            const data = userDocSnap.data() || {};
+            const colorProvided = !!data.useProvidedPfp;
+            const colorId = colorProvided ? (data.pfpColor || null) : null;
+            return {
+              useSchoolProfile: !colorProvided,
+              colorId
+            };
+          }
+        } catch (error) {
+          console.error('❌ Nem sikerült lekérni az avatar választást a Firestore-ból:', error);
+        }
+        return null;
+      }
+      
+      async function getAvatarSelectionState() {
+        const firestoreSelection = await fetchAvatarSelectionFromFirestore();
+        if (firestoreSelection) return firestoreSelection;
+        return getLocalAvatarSelection();
+      }
+      
+      async function fetchStoredProfilePhotoUrl() {
+        const fallback = localStorage.getItem('eu2k-profile-image') ||
+                         localStorage.getItem('eu2k-auth-photo-url') ||
+                         '';
+        const uid = window.auth?.currentUser?.uid;
+        if (!uid) return fallback;
+        try {
+          const photoRef = ref(storage, `profilePhotos/${uid}.jpg`);
+          const url = await getDownloadURL(photoRef);
+          return url || fallback;
+        } catch (error) {
+          console.warn('⚠️ Nem sikerült letölteni a tárolt profilképet:', error.message);
+          return fallback;
+        }
+      }
+      
+      async function resolveAvatarImageSource(selection) {
+        if (selection?.useSchoolProfile) {
+          return await fetchStoredProfilePhotoUrl();
+        }
+        const colorId = selection?.colorId || null;
+        if (colorId) {
+          const option = colorOptions.find(color => color.id === colorId);
+          return option ? option.image : '';
+        }
+        return '';
+      }
+      
+      window.initializeNameScreen = async function initializeNameScreen() {
+        const selection = await getAvatarSelectionState();
+        const imageSrc = await resolveAvatarImageSource(selection);
+        if (imageSrc && namePreviewImage) {
+          namePreviewImage.src = imageSrc;
+          namePreviewImage.style.display = 'block';
+        } else if (namePreviewImage) {
+          namePreviewImage.style.display = 'none';
+        }
+        if (nameInput) {
+          const storedName = localStorage.getItem('eu2k-nickname') || '';
+          nameInput.value = storedName;
+        }
+      }
+
+      async function saveFinalOnboardingData() {
+        const user = window.auth?.currentUser;
+        if (!user || !window.db || !window.firestoreDoc || !window.firestoreSetDoc || !window.firestoreGetDoc || !window.firestoreUpdateDoc) {
+          console.warn('[Onboarding][Final] Firebase nem elérhető, kihagyom a végső mentést');
+          return;
+        }
+
+        let email = user.email || '';
+        let jobTitle = '';
+
+        try {
+          const graphToken = await getGraphAccessToken();
+          if (graphToken) {
+            const profileRes = await fetch('https://graph.microsoft.com/v1.0/me?$select=mail,jobTitle,userPrincipalName', {
+              headers: { 'Authorization': `Bearer ${graphToken}` }
+            });
+            if (profileRes.ok) {
+              const profile = await profileRes.json();
+              email = profile.mail || profile.userPrincipalName || email;
+              jobTitle = profile.jobTitle || jobTitle;
+            } else {
+              console.warn('[Onboarding][Final] Graph profile fetch failed:', profileRes.status, profileRes.statusText);
+            }
+          }
+        } catch (e) {
+          console.warn('[Onboarding][Final] Graph profile fetch error:', e);
+        }
+
+        // Heurisztika accessLevel-re
+        const lowerEmail = (email || '').toLowerCase();
+        let accessLevel = 'basic';
+        if (jobTitle && !/^\d{4}/.test(jobTitle.trim())) {
+          accessLevel = 'teacher';
+        }
+
+        const ownerEmails = [
+          'turoczi.adam@europa2000.hu',
+          'papp.andras@europa2000.hu'
+        ];
+        const adminEmails = [
+          'administrator@europa2000.hu',
+          'remetei.zoltan@europa2000.hu',
+          'laczo.sylvia@europa2000.hu',
+          'hegyi.marianna@europa2000.hu'
+        ];
+
+        if (ownerEmails.includes(lowerEmail)) {
+          accessLevel = 'owner';
+        } else if (adminEmails.includes(lowerEmail)) {
+          accessLevel = 'admin';
+        }
+
+        const birthyear = ''; // Jelenleg nincs külön input, üres stringgel hozzuk létre
+        const nowIso = new Date().toISOString();
+
+        const userRef = window.firestoreDoc(window.db, 'users', user.uid);
+
+        const payload = {
+          email: email || '',
+          jobTitle: jobTitle || '',
+          birthyear,
+          onboardingFinished: true,
+          accessLevel,
+          lastUpdated: nowIso
+        };
+
+        try {
+          const snap = await window.firestoreGetDoc(userRef);
+          if (snap && snap.exists()) {
+            await window.firestoreUpdateDoc(userRef, payload);
+          } else {
+            await window.firestoreSetDoc(userRef, payload);
+          }
+          console.log('[Onboarding][Final] Felhasználói adatok elmentve:', payload);
+        } catch (e) {
+          console.error('[Onboarding][Final] Nem sikerült elmenteni a felhasználói adatokat:', e);
+        }
+
+        // accessLevel lokális mentése (egyszerű „titkosítás” base64-gyel)
+        try {
+          const encoded = btoa(JSON.stringify({ level: accessLevel, ts: Date.now() }));
+          localStorage.setItem('eu2k-access-level', encoded);
+        } catch (e) {
+          console.warn('[Onboarding][Final] Nem sikerült lokálisan menteni az accessLevel-t:', e);
+        }
+      }
+      
+      async function saveNicknameToGeneral(nickname) {
+        if (!window.auth?.currentUser) {
+          console.error('❌ Nem található bejelentkezett felhasználó');
+          return false;
+        }
+        if (!window.db || !window.firestoreDoc || !window.firestoreSetDoc) {
+          console.error('❌ Firestore nem elérhető');
+          return false;
+        }
+        try {
+          const uid = window.auth.currentUser.uid;
+          const selection = await getAvatarSelectionState();
+          const useSchoolProfile = !!selection?.useSchoolProfile;
+          const colorId = selection?.colorId || null;
+
+          const pfpType = useSchoolProfile ? 'school' : 'blobby';
+          const pfpColor = useSchoolProfile ? '' : (colorId || '');
+          // A Graph API-s URL-t tároljuk, még ha jelenleg nem is működik teljesen
+          const pfpUrl = useSchoolProfile ? 'https://graph.microsoft.com/v1.0/me/photo/$value' : '';
+
+          const generalRef = window.firestoreDoc(window.db, 'users', uid, 'general_data', 'general');
+          const nowIso = new Date().toISOString();
+
+          await window.firestoreSetDoc(generalRef, {
+            nickname,
+            displayName: nickname,
+            pfpType,
+            pfpColor,
+            pfpUrl,
+            useProvidedPfp: pfpType === 'blobby',
+            updatedAt: nowIso
+          }, { merge: true });
+
+          // Fő felhasználói dokumentum frissítése
+          const userRef = window.firestoreDoc(window.db, 'users', uid);
+          await window.firestoreSetDoc(userRef, {
+            displayName: nickname,
+            pfpType,
+            pfpColor,
+            pfpUrl,
+            useProvidedPfp: pfpType === 'blobby',
+            avatarUpdatedAt: nowIso
+          }, { merge: true });
+
+          return true;
+        } catch (error) {
+          console.error('❌ Nem sikerült menteni a becenevet:', error);
+          return false;
+        }
+      }
+      
+      async function saveAvatarSelectionToFirestore(colorProvided, colorId) {
+        if (!window.auth || !window.auth.currentUser) {
+          console.error('❌ Nem található bejelentkezett felhasználó, nem tudok menteni.');
+          return false;
+        }
+        if (!window.db || !window.firestoreDoc || !window.firestoreSetDoc) {
+          console.error('❌ Firestore nincs inicializálva.');
+          return false;
+        }
+        
+        try {
+          const uid = window.auth.currentUser.uid;
+          const userDocRef = window.firestoreDoc(window.db, 'users', uid);
+
+          // Ha van szín, akkor blobby; ha nincs, akkor school (iskolai profilkép)
+          const pfpType = colorProvided ? 'blobby' : 'school';
+          const pfpColor = colorProvided ? (colorId || '') : '';
+          const pfpUrl = pfpType === 'school'
+            ? 'https://graph.microsoft.com/v1.0/me/photo/$value'
+            : '';
+
+          await window.firestoreSetDoc(userDocRef, {
+            pfpType,
+            pfpColor,
+            pfpUrl,
+            useProvidedPfp: pfpType === 'blobby',
+            avatarUpdatedAt: new Date().toISOString()
+          }, { merge: true });
+          console.log('☁️ Avatar választás mentve Firestore-ba');
+          return true;
+        } catch (error) {
+          console.error('❌ Nem sikerült menteni a Firestore-ba:', error);
+          return false;
+        }
+      }
+      
+      // Initialize color grid when looks screen is shown
+      if (looksScreen) {
+        console.log('👀 Setting up looks screen observer...');
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+              const isVisible = looksScreen.style.display === 'flex';
+              console.log('🔄 Looks screen visibility changed:', isVisible, 'display:', looksScreen.style.display);
+              // Ha a képernyő látható és még nincsenek avatar elemek, generáljuk le a gridet
+              if (isVisible) {
+                const hasAvatarItems = looksColorGrid && looksColorGrid.querySelector('.looks-color-item');
+                if (!hasAvatarItems) {
+                  console.log('🎨 Triggering generateColorGrid()...');
+                  generateColorGrid();
+                  // Set blobby as default selected
+                  if (blobbyBtn) blobbyBtn.classList.add('active');
+                }
+              }
+            }
+          });
+        });
+        
+        observer.observe(looksScreen, {
+          attributes: true,
+          attributeFilter: ['style']
+        });
+        
+        // AZONNAL generáljuk le, ha már látható
+        if (looksScreen.style.display === 'flex') {
+          console.log('🎨 Looks screen already visible, generating grid immediately...');
+          generateColorGrid();
+          if (blobbyBtn) blobbyBtn.classList.add('active');
+        }
+      } else {
+        console.error('❌ looksScreen element not found!');
+      }
+    });
+  </script>
+</body>
+
+</html>

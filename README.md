@@ -2,9 +2,13 @@
 
 # EU2K Hub
 
-**Status:** ⚠️ Closed Beta  
+**Status:** ✅ Open Beta  
 **Version:** 0.6bbc (Closed beta)  
 **Known issues:** Event Hub not fully working, working on updating the onboarding proccess
+
+**Status:** ⚠️ Closed Beta  
+**Version:** 0.8bbc (Closed beta)  
+**Known issues:** Pages not supporting EDR will not show up, this includes YouHub, Event Hub, Settings, Account.
 
 ---
 

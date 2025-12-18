@@ -149,13 +149,13 @@ class TranslationManager {
             localStorage.setItem(this.storageKey, language);
             
             await this.loadTranslations(language);
+            // Várunk egy kicsit, hogy a fordítások biztosan betöltődjenek
+            await new Promise(resolve => setTimeout(resolve, 50));
             this.applyTranslations();
-            
-            // If the new things popup is open, update its content
-            if (typeof updatePopupContent === 'function' && window.newThingsData) {
-                updatePopupContent(window.newThingsData);
-            }
-            
+
+            // Frissítjük a nyelvválasztó radio button-ok állapotát
+            this.updateLanguageSelector();
+
             console.log(`Language switched to: ${language}`);
         } catch (error) {
             console.error('Error switching language:', error);
@@ -173,12 +173,10 @@ class TranslationManager {
                     this.switchLanguage(language);
                 }
             });
-            
-            // Set current language
-            if (radio.value === this.currentLanguage) {
-                radio.checked = true;
-            }
         });
+
+        // Frissítjük a jelenlegi nyelvnek megfelelően a radio button-ok állapotát
+        this.updateLanguageSelector();
 
         // Material Design radio buttons for language switching
         const mdLanguageRadios = document.querySelectorAll('md-radio[name="language"]');
@@ -196,6 +194,14 @@ class TranslationManager {
                 const language = e.target.getAttribute('data-language');
                 this.switchLanguage(language);
             });
+        });
+    }
+
+    // Frissíti a nyelvválasztó radio button-ok állapotát a jelenlegi nyelvnek megfelelően
+    updateLanguageSelector() {
+        const languageRadios = document.querySelectorAll('input[name="language"]');
+        languageRadios.forEach(radio => {
+            radio.checked = (radio.value === this.currentLanguage);
         });
     }
 

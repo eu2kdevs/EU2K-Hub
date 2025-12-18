@@ -79,7 +79,7 @@
     inner.style.display = 'flex';
     inner.style.alignItems = 'center';
     inner.style.justifyContent = 'center';
-    inner.style.backgroundColor = '#0F1511';
+    inner.style.backgroundColor = '#000000';
 
     // Mount for the flutter iframe
     mountEl = document.createElement('div');
@@ -114,7 +114,7 @@
       if (window.flutterHandler && window.flutterHandler.iframes) {
         const iframe = window.flutterHandler.iframes.get('contained');
         if (iframe) {
-          iframe.style.backgroundColor = '#0F1511';
+          iframe.style.backgroundColor = '#000000';
           iframe.style.width = '100%';
           iframe.style.height = '100%';
           iframe.style.opacity = '1';
@@ -134,7 +134,7 @@
         if (window.flutterHandler && window.flutterHandler.iframes) {
           const iframe = window.flutterHandler.iframes.get('uncontained');
           if (iframe) {
-            iframe.style.backgroundColor = '#0F1511';
+            iframe.style.backgroundColor = '#000000';
             iframe.style.width = '100%';
             iframe.style.height = '100%';
             iframe.style.opacity = '1';
@@ -177,8 +177,17 @@
         }
         for (const a of args) {
           if (typeof a === 'string' && READY_ALIASES.some(sig => a.includes(sig))) {
-            removeHideGuard();
-            fadeOutAndRemove();
+            // Várunk még, ameddig a fordítások nincsenek alkalmazva
+            const checkAndHide = () => {
+              if (window.__eu2kTranslationsApplied === true) {
+                removeHideGuard();
+                fadeOutAndRemove();
+              } else {
+                // Ha még nincs alkalmazva, várunk még
+                setTimeout(checkAndHide, 100);
+              }
+            };
+            checkAndHide();
             break;
           }
         }
@@ -269,6 +278,60 @@
     }
   }
 
+  async function ensureTranslationSystem() {
+    // Ha még nincs betöltve a fordítási rendszer, betöltjük
+    if (!window.translationManager) {
+      const base = window.location.pathname.includes('/EU2K-Hub/') ? '/EU2K-Hub/' : '/';
+      try {
+        await loadScript(base + 'assets/js/translations.js');
+        // Várunk, amíg a TranslationManager elérhető lesz
+        let attempts = 0;
+        while (!window.translationManager && attempts < 50) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          attempts++;
+        }
+        if (window.translationManager && !window.translationManager.isInitialized) {
+          const savedLanguage = localStorage.getItem('eu2k_language') || 'hu';
+          await window.translationManager.init();
+          if (window.translationManager.currentLanguage !== savedLanguage) {
+            await window.translationManager.switchLanguage(savedLanguage);
+          }
+          // Frissítjük a szövegeket, amikor a fordítási rendszer betöltődött
+          if (window.updateLoadingText) {
+            setTimeout(() => {
+              window.updateLoadingText();
+            }, 50);
+          }
+        }
+      } catch (e) {
+        console.warn('[Loader] Failed to load translation system:', e);
+      }
+    } else if (!window.translationManager.isInitialized) {
+      try {
+        const savedLanguage = localStorage.getItem('eu2k_language') || 'hu';
+        await window.translationManager.init();
+        if (window.translationManager.currentLanguage !== savedLanguage) {
+          await window.translationManager.switchLanguage(savedLanguage);
+        }
+        // Frissítjük a szövegeket, amikor a fordítási rendszer betöltődött
+        if (window.updateLoadingText) {
+          setTimeout(() => {
+            window.updateLoadingText();
+          }, 50);
+        }
+      } catch (e) {
+        console.warn('[Loader] Failed to initialize translation system:', e);
+      }
+    } else {
+      // Ha már inicializálva van, csak frissítjük a szövegeket
+      if (window.updateLoadingText) {
+        setTimeout(() => {
+          window.updateLoadingText();
+        }, 50);
+      }
+    }
+  }
+
   // Boot
   // interceptLogs(); // no longer needed; we rely on window load event
   console.log('EU2K Page Overlay Loader initialized');
@@ -288,8 +351,10 @@
         overlayEl.style.display = 'block';
         overlayEl.style.opacity = '1';
       }
-      // Show MP4 indicator immediately
-      showVideoIndicator();
+      // Show loader indicator immediately
+      setTimeout(() => {
+        showVideoIndicator();
+      }, 50);
       // Release any deferred scripts once the indicator is visible
       releaseDeferredScripts();
     } else {
@@ -302,8 +367,8 @@
       overlayEl.style.transition = 'opacity 300ms ease-in-out';
       overlayEl.style.borderRadius = '32px';
       // Default visual style
-      overlayEl.style.background = '#0F1511';
-      overlayEl.style.backgroundColor = '#0F1511';
+      overlayEl.style.background = '#000000';
+      overlayEl.style.backgroundColor = '#000000';
 
       const inner = document.createElement('div');
       inner.style.position = 'relative';
@@ -312,7 +377,7 @@
       inner.style.display = 'flex';
       inner.style.alignItems = 'center';
       inner.style.justifyContent = 'center';
-      inner.style.backgroundColor = '#0F1511';
+      inner.style.backgroundColor = '#000000';
 
       mountEl = document.createElement('div');
       mountEl.setAttribute('id', 'eu2k-overlay-mount');
@@ -329,8 +394,10 @@
       window.addEventListener('resize', positionOverlay);
       window.addEventListener('scroll', positionOverlay, { passive: true });
 
-      // Show MP4 indicator immediately
-      showVideoIndicator();
+      // Show loader indicator immediately
+      setTimeout(() => {
+        showVideoIndicator();
+      }, 50);
 
       // After DOM is ready, copy main content visual style (if available)
       whenDomReady(() => {
@@ -340,53 +407,260 @@
         });
       });
     }
-    // Hide overlay when browser finishes loading (load event), wait 500ms, then fade out
+    // Hide overlay when browser finishes loading (load event), wait for translations, then fade out
     window.addEventListener('load', () => {
-      setTimeout(() => {
-        fadeOutAndRemove();
-      }, 500);
+      const checkAndHide = () => {
+        // Várunk, ameddig a fordítások nincsenek alkalmazva
+        if (window.__eu2kTranslationsApplied === true) {
+          setTimeout(() => {
+            fadeOutAndRemove();
+          }, 500);
+        } else {
+          // Ha még nincs alkalmazva, várunk még
+          setTimeout(checkAndHide, 100);
+        }
+      };
+      checkAndHide();
     });
   })();
 })();
 
-function showVideoIndicator() {
-  const mountElRef = window.__eu2kOverlayMount || document.getElementById('eu2k-overlay-mount');
-  if (!mountElRef) return;
+async function ensureTranslationSystem() {
+  // Ha még nincs betöltve a fordítási rendszer, betöltjük
+  if (!window.translationManager) {
+    const base = window.location.pathname.includes('/EU2K-Hub/') ? '/EU2K-Hub/' : '/';
+    try {
+      await loadScript(base + 'assets/js/translations.js');
+      // Várunk, amíg a TranslationManager elérhető lesz
+      let attempts = 0;
+      while (!window.translationManager && attempts < 50) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+      }
+      if (window.translationManager && !window.translationManager.isInitialized) {
+        const savedLanguage = localStorage.getItem('eu2k_language') || 'hu';
+        await window.translationManager.init();
+        if (window.translationManager.currentLanguage !== savedLanguage) {
+          await window.translationManager.switchLanguage(savedLanguage);
+        }
+      }
+    } catch (e) {
+      console.warn('[Loader] Failed to load translation system:', e);
+    }
+  } else if (!window.translationManager.isInitialized) {
+    try {
+      const savedLanguage = localStorage.getItem('eu2k_language') || 'hu';
+      await window.translationManager.init();
+      if (window.translationManager.currentLanguage !== savedLanguage) {
+        await window.translationManager.switchLanguage(savedLanguage);
+      }
+    } catch (e) {
+      console.warn('[Loader] Failed to initialize translation system:', e);
+    }
+  }
+}
 
+function showVideoIndicator() {
+  console.log('[Loader] showVideoIndicator called');
+  const mountElRef = window.__eu2kOverlayMount || document.getElementById('eu2k-overlay-mount');
+  if (!mountElRef) {
+    console.warn('[Loader] Mount element not found, retrying...');
+    // Próbáljuk meg újra később
+    setTimeout(showVideoIndicator, 100);
+    return;
+  }
+
+  console.log('[Loader] Mount element found, creating loader');
   mountElRef.style.display = 'flex';
+  mountElRef.style.flexDirection = 'column';
   mountElRef.style.alignItems = 'center';
   mountElRef.style.justifyContent = 'center';
   mountElRef.style.width = '100%';
   mountElRef.style.height = '100%';
-  mountElRef.style.backgroundColor = '#0F1511'; // 🌿 a mount maga is sötétzöldes háttér
+  mountElRef.style.backgroundColor = '#000000';
+  
+  // Biztosítjuk, hogy a fordítási rendszer betöltődött (aszinkron, nem blokkoljuk a loader megjelenítését)
+  ensureTranslationSystem().then(() => {
+    // Amikor a fordítási rendszer betöltődött, frissítjük a szövegeket
+    if (window.updateLoadingText) {
+      window.updateLoadingText();
+    }
+  });
 
-  // wrapper a videó köré (ez fogja kitölteni a fekete részeket)
-  const wrapper = document.createElement('div');
-  wrapper.style.display = 'flex';
-  wrapper.style.alignItems = 'center';
-  wrapper.style.justifyContent = 'center';
-  wrapper.style.width = '100%';
-  wrapper.style.height = '100%';
-  wrapper.style.backgroundColor = '#0F1511'; // zöldesfekete háttér
-  wrapper.style.borderRadius = '32px';
+  // CSS loader stílusok hozzáadása, ha még nincs
+  if (!document.getElementById('eu2k-loader-styles')) {
+    const style = document.createElement('style');
+    style.id = 'eu2k-loader-styles';
+    style.textContent = `
+      .eu2k-loader {
+        width: 80px;
+        aspect-ratio: 1;
+        border: 10px solid #0000;
+        padding: 5px;
+        box-sizing: border-box;
+        background: 
+          radial-gradient(farthest-side,#fff 98%,#0000 ) 0 0/20px 20px no-repeat,
+          conic-gradient(from 90deg at 10px 10px,#0000 90deg,#fff 0) content-box,
+          conic-gradient(from -90deg at 40px 40px,#0000 90deg,#fff 0) content-box,
+          #000;
+        filter: blur(4px) contrast(10);
+        animation: eu2k-l11 2s infinite;
+        position: relative;
+        z-index: 1;
+      }
+      .eu2k-loader-text {
+        color: #ffffff;
+        font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        font-size: 14px;
+        margin-top: 20px;
+        text-align: center;
+        white-space: nowrap;
+      }
+      @keyframes eu2k-l11 {
+        0%   {background-position:0 0}
+        25%  {background-position:100% 0}
+        50%  {background-position:100% 100%}
+        75%  {background-position:0% 100%}
+        100% {background-position:0% 0}
+      }
+    `;
+    document.head.appendChild(style);
+  }
 
-  const base = window.location.pathname.includes('/EU2K-Hub/') ? '/EU2K-Hub/' : '/';
-  const video = document.createElement('video');
-  video.src = base + 'assets/animation/m3elidga.mp4';
-  video.autoplay = true;
-  video.muted = true;
-  video.loop = true;
-  video.playsInline = true;
-  video.style.maxHeight = '80vh';
-  video.style.maxWidth = '80vw';
-  video.style.width = 'auto';
-  video.style.height = 'auto';
-  video.style.objectFit = 'cover';
-  video.style.display = 'block';
-  video.style.borderRadius = '32px';
-  video.style.backgroundColor = '#0F1511'; // extra biztonságképp 💅
+  // Loader div létrehozása
+  const loader = document.createElement('div');
+  loader.className = 'eu2k-loader';
 
-  wrapper.appendChild(video);
+  // Szöveg elem létrehozása
+  const loaderText = document.createElement('div');
+  loaderText.className = 'eu2k-loader-text';
+  loaderText.id = 'eu2k-loader-text';
+  
+  // Betöltési állapot követése
+  let loadingStep = 0;
+  
+  // Helper függvény a fordítások lekéréséhez
+  function getLoadingTranslation(key, fallback) {
+    // Ha a fordítási rendszer elérhető, használjuk
+    if (window.translationManager && window.translationManager.getTranslation) {
+      try {
+        const translation = window.translationManager.getTranslation(key);
+        if (translation && typeof translation === 'string' && translation !== key) {
+          return translation;
+        }
+      } catch (e) {
+        console.warn('[Loader] Translation error for key:', key, e);
+      }
+    }
+    // Fallback a magyar szövegre
+    return fallback;
+  }
+  
+  const loadingSteps = [
+    { key: 'pages.loading.loading_page', fallback: 'Oldal betöltése...', condition: () => document.readyState === 'loading' },
+    { key: 'pages.loading.loading_scripts', fallback: 'Scriptek és stílusok betöltése...', condition: () => document.readyState === 'interactive' && (!window.translationManager || !window.translationManager.isInitialized) },
+    { key: 'pages.loading.loading_translation_system', fallback: 'Nyelvrendszer betöltése...', condition: () => document.readyState === 'interactive' && (!window.translationManager || !window.translationManager.isInitialized) },
+    { key: 'pages.loading.applying_translations', fallback: 'Fordítások alkalmazása...', condition: () => window.translationManager && window.translationManager.isInitialized && !window.__eu2kTranslationsApplied },
+    { key: 'pages.loading.final_initialization', fallback: 'Végső inicializálás...', condition: () => document.readyState === 'complete' && window.translationManager && window.translationManager.isInitialized && window.__eu2kTranslationsApplied }
+  ];
+  
+  function updateLoadingText() {
+    if (!loaderText) return;
+    
+    const readyState = document.readyState;
+    
+    // Ellenőrizzük a nyelvrendszer állapotát
+    const translationReady = window.translationManager && window.translationManager.isInitialized;
+    const translationsApplied = window.__eu2kTranslationsApplied === true;
+    
+    // Válasszuk ki a megfelelő lépést
+    let currentStep = loadingSteps.find(step => step.condition()) || loadingSteps[loadingSteps.length - 1];
+    
+    // Ha a nyelvrendszer betöltődött, de még nincs alkalmazva, mutassuk azt
+    if (translationReady && !translationsApplied) {
+      currentStep = loadingSteps.find(step => step.key === 'pages.loading.applying_translations') || currentStep;
+    }
+    
+    // Ha a fordítási rendszer betöltődött, de még a 'loading' állapotban vagyunk, 
+    // akkor is frissítsük a szöveget, hogy leforduljon
+    if (translationReady && readyState === 'loading' && currentStep.key === 'pages.loading.loading_page') {
+      // Ez az "oldal betöltése" lépés, frissítsük a fordítással
+    }
+    
+    // Használjuk a fordítási rendszert, ha elérhető - mindig frissítjük
+    const translatedText = getLoadingTranslation(currentStep.key, currentStep.fallback);
+    
+    if (loaderText.textContent !== translatedText) {
+      loaderText.textContent = translatedText;
+    }
+  }
+  
+  // Kezdeti szöveg
+  updateLoadingText();
+  
+  // Állapot változások követése
+  document.addEventListener('readystatechange', updateLoadingText);
+  
+  // Scriptek betöltésének követése
+  const observer = new MutationObserver(() => {
+    updateLoadingText();
+  });
+  observer.observe(document.head, { childList: true, subtree: true });
+  
+  // Nyelvrendszer betöltésének követése - folytatjuk, amíg a fordítások nincsenek alkalmazva
+  const checkTranslationStatus = setInterval(() => {
+    updateLoadingText();
+    // Csak akkor állítjuk le, ha minden kész
+    if (window.translationManager && window.translationManager.isInitialized && window.__eu2kTranslationsApplied === true) {
+      clearInterval(checkTranslationStatus);
+    }
+  }, 100);
+  
+  // Figyeljük a fordítási rendszer betöltését és alkalmazását - gyakrabban frissítjük
+  const checkTranslationReady = setInterval(() => {
+    if (window.translationManager && window.translationManager.isInitialized) {
+      // Frissítjük a szövegeket, amikor a fordítási rendszer elérhető
+      updateLoadingText();
+      // Ha a fordítások alkalmazva lettek, frissítjük még egyszer és leállítjuk
+      if (window.__eu2kTranslationsApplied === true) {
+        updateLoadingText();
+        clearInterval(checkTranslationReady);
+      }
+    }
+  }, 50);
+  
+  // Amikor a fordítási rendszer betöltődik, azonnal frissítjük a szövegeket
+  const checkTranslationManager = setInterval(() => {
+    if (window.translationManager && window.translationManager.isInitialized && window.translationManager.translations) {
+      // Frissítjük a szövegeket azonnal
+      updateLoadingText();
+      clearInterval(checkTranslationManager);
+    }
+  }, 100);
+  
+  // További ellenőrzés: amikor a fordítási rendszer betöltődik, frissítjük a szövegeket
+  const originalApplyTranslations = window.translationManager?.applyTranslations;
+  if (window.translationManager && originalApplyTranslations) {
+    window.translationManager.applyTranslations = function() {
+      const result = originalApplyTranslations.call(this);
+      // Frissítjük a loading szövegeket is
+      setTimeout(() => {
+        if (window.updateLoadingText) {
+          window.updateLoadingText();
+        }
+      }, 50);
+      return result;
+    };
+  }
+  
+  // Globális elérhetőség, hogy a ensureTranslationSystem hívhatja
+  window.updateLoadingText = updateLoadingText;
+
   mountElRef.innerHTML = '';
-  mountElRef.appendChild(wrapper);
+  mountElRef.appendChild(loader);
+  mountElRef.appendChild(loaderText);
+  console.log('[Loader] Loader element created and added to DOM');
+  
+  // Force reflow to ensure styles are applied
+  void loader.offsetHeight;
 }
