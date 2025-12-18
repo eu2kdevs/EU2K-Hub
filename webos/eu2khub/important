@@ -1,0 +1,9 @@
+A bejelentkezett fiók szimulálásához:
+    localStorage.setItem('schoolAccount', 'true');
+    // or
+    localStorage.setItem('publicAccount', 'true');
+
+Frissítési popup megjelenítéséhez:
+    resetNewThingsPopup()
+
+

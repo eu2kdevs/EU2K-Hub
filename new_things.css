@@ -1,0 +1,201 @@
+:root {
+  color-scheme: dark;
+  --md-sys-color-primary: rgb(155 212 160);
+  --md-sys-color-surface-tint: rgb(155 212 160);
+  --md-sys-color-on-primary: rgb(0 57 21);
+  --md-sys-color-primary-container: rgb(27 81 41);
+  --md-sys-color-on-primary-container: rgb(182 241 187);
+  --md-sys-color-secondary: rgb(157 212 158);
+  --md-sys-color-on-secondary: rgb(2 57 19);
+  --md-sys-color-secondary-container: rgb(30 81 39);
+  --md-sys-color-on-secondary-container: rgb(184 241 185);
+  --md-sys-color-tertiary: rgb(154 212 162);
+  --md-sys-color-on-tertiary: rgb(0 57 23);
+  --md-sys-color-tertiary-container: rgb(25 81 42);
+  --md-sys-color-on-tertiary-container: rgb(181 241 189);
+  --md-sys-color-error: rgb(255 179 178);
+  --md-sys-color-on-error: rgb(86 29 32);
+  --md-sys-color-error-container: rgb(115 51 53);
+  --md-sys-color-on-error-container: rgb(255 218 217);
+  --md-sys-color-background: rgb(16 21 16);
+  --md-sys-color-on-background: rgb(224 228 220);
+  --md-sys-color-surface: rgb(16 21 16);
+  --md-sys-color-on-surface: rgb(224 228 220);
+  --md-sys-color-surface-variant: rgb(65 73 65);
+  --md-sys-color-on-surface-variant: rgb(193 201 190);
+  --md-sys-color-outline: rgb(139 147 137);
+  --md-sys-color-outline-variant: rgb(65 73 65);
+  --md-sys-color-shadow: rgb(0 0 0);
+  --md-sys-color-scrim: rgb(0 0 0);
+  --md-sys-color-inverse-surface: rgb(224 228 220);
+  --md-sys-color-inverse-on-surface: rgb(45 50 44);
+  --md-sys-color-inverse-primary: rgb(53 105 63);
+  --md-sys-color-primary-fixed: rgb(182 241 187);
+  --md-sys-color-on-primary-fixed: rgb(0 33 9);
+  --md-sys-color-primary-fixed-dim: rgb(155 212 160);
+  --md-sys-color-on-primary-fixed-variant: rgb(27 81 41);
+  --md-sys-color-secondary-fixed: rgb(184 241 185);
+  --md-sys-color-on-secondary-fixed: rgb(0 33 8);
+  --md-sys-color-secondary-fixed-dim: rgb(157 212 158);
+  --md-sys-color-on-secondary-fixed-variant: rgb(30 81 39);
+  --md-sys-color-tertiary-fixed: rgb(181 241 189);
+  --md-sys-color-on-tertiary-fixed: rgb(0 33 11);
+  --md-sys-color-tertiary-fixed-dim: rgb(154 212 162);
+  --md-sys-color-on-tertiary-fixed-variant: rgb(25 81 42);
+  --md-sys-color-surface-dim: rgb(16 21 16);
+  --md-sys-color-surface-bright: rgb(54 58 53);
+  --md-sys-color-surface-container-lowest: rgb(11 15 11);
+  --md-sys-color-surface-container-low: rgb(24 29 24);
+  --md-sys-color-surface-container: rgb(28 33 28);
+  --md-sys-color-surface-container-high: rgb(38 43 38);
+  --md-sys-color-surface-container-highest: rgb(49 54 49);
+  --sidebar-bg: #101510;
+  --main-bg: #0b0f0b;
+  --surface-bg: #101510;
+  --card-bg: #232823;
+  --red: #272B26;
+  --green-btn: #2d3a2d;
+  --green-btn-arrow: #b6c6b6;
+  --text-main: #e3e3e3;
+  --text-secondary: #a0a0a0;
+  --border-radius: 32px;
+  --card-radius: 32px;
+  --news-radius: 20px;
+  --sidebar-width: 76px;
+  --sidebar-width-open: 198px;
+  --transition: 0.2s cubic-bezier(.4,0,.2,1);
+}
+
+/* Új dolgok Popup */
+.new-things-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(11, 15, 11, 0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.new-things-container {
+  position: relative;
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  padding: 32px 18px 32px 18px;
+  max-width: 400px;
+  width: 400px !important;
+  margin: 20px;
+  box-sizing: border-box;
+}
+
+.new-things-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: #3D433C;
+  border-radius: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.new-things-close-btn:hover {
+  border-radius: 15px;
+}
+
+.new-things-content {
+  text-align: center;
+}
+
+.new-things-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.new-things-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+}
+
+.new-things-icon-top {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 12px;
+}
+
+.new-things-title {
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.new-things-subtitle {
+  color: #FFFFFF;
+  opacity: 0.65;
+  font-size: 0.95rem;
+  margin: 0 0 20px 0;
+}
+
+.new-things-image-container {
+  background: #3D433C;
+  border-radius: 32px;
+  padding: 30px;
+  margin: 0 0 20px 0;
+  display: flex;
+  justify-content: center;
+  height: 220px;
+  box-sizing: border-box;
+}
+
+.new-things-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: luminosity;
+  opacity: 0.93;
+}
+
+.new-things-list {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.new-things-item {
+  color: #C2C3C2;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.new-things-footer {
+  text-align: center;
+}
+
+.new-things-link {
+  color: #B7F1B9;
+  text-decoration: underline;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.new-things-link:hover {
+  color: #FFFFFF;
+}
+
+.new-things-link strong {
+  font-weight: 700;
+}
+
+.new-things-link b {
+  font-weight: 700;
+}

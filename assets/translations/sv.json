@@ -1,0 +1,580 @@
+﻿{
+  "onboarding": {
+    "greeting": "Hej!",
+    "start": "Låt oss börja",
+    "restart": "Starta om",
+    "language": "Språk",
+    "back": "Tillbaka",
+    "back_to_setup": "Tillbaka till inställningar",
+    "who_are_you": "Vem är du?",
+    "recommended_login": "Rekommenderad inloggningsmetod:",
+    "school_account_required": "Du behöver logga in med ditt skolkonto",
+    "google_account_required": "Du behöver logga in med ditt Google-konto",
+    "guest_info": "Som gäst behöver du inte logga in, men många funktioner kommer att vara begränsade",
+    "choose_login_method": "Välj en inloggningsmetod",
+    "choose_language": "Välj ett språk",
+    "login_in_progress": "Inloggning pågår",
+    "login_interrupted": "Inloggning avbruten",
+    "try_again": "Försök igen",
+    "retry": "Försök igen",
+    "logout": "Logga ut",
+    "restart_confirm": "Är du säker på att du vill börja om?",
+    "restart_warning": "All din framsteg hittills kommer att gå förlorad!",
+    "how_will_you_look": "Hur kommer du att se ut?",
+    "use_school_profile": "Använd skolprofilbild",
+    "random": "Slumpmässig",
+    "preferences_title": "Välj dina preferenser",
+    "preferences_step_1": "1/2",
+    "preferences_notifications_title": "Aviseringar",
+    "preferences_notifications_desc": "Du kan ändra detta senare i Inställningar.",
+    "last_things_title": "Sista sakerna",
+    "last_things_desc": "Verkligen nästan klar.",
+    "legal_terms_title": "Acceptera användarvillkoren",
+    "legal_terms_desc": "Nästan klar!",
+    "finish": "Slutför",
+    "go_to_home": "Gå till startsidan",
+    "finished_title": "Vi är klara!",
+    "languages": {
+      "hu": "Ungerska",
+      "en": "Engelska",
+      "de": "Tyska",
+      "es": "Spanska",
+      "fr": "Franska",
+      "zh": "Kinesiska",
+      "ja": "Japanska",
+      "sv": "Svenska",
+      "ru": "Ryska"
+    }
+  },
+  "navigation": {
+    "home": "Hem",
+    "qr": "QR-kod",
+    "youhub": "YouHub",
+    "event_hub": "Event Hub"
+  },
+  "pages": {
+    "qr": {
+      "title": "YouHub"
+    },
+    "youhub": {
+      "title": "YouHub"
+    },
+    "general": {
+      "login": "Logga in"
+    },
+    "settings": {
+      "title": "Inställningar",
+      "general": "Allmänt",
+      "notifications": "Aviseringar & Ljud",
+      "functions": "Funktioner",
+      "pages": "Sidor",
+      "chat": "Chatt",
+      "credits": "Krediter och Juridisk Information",
+      "apply": "Tillämpa",
+      "edition_title": "Upplaga",
+      "edition_desc": "Välj vilken upplaga av Hub du vill använda!",
+      "edition_options": {
+        "general_public": "Allmän - Offentlig",
+        "beta_public": "Beta - Offentlig",
+        "beta_closed": "Beta - Stängd"
+      },
+      "language_title": "Språk",
+      "theme_title": "Färgschema",
+      "theme_desc": "Du kan välja från 8 basfärger plus ljust och mörkt läge.",
+      "theme_color_scheme_label": "Färgschema",
+      "theme_theme_label": "Tema",
+      "theme_color_options": {
+        "green": "Grön (Standard)",
+        "purple": "Lila",
+        "red": "Röd",
+        "orange": "Orange",
+        "light_blue": "Ljusblå",
+        "black": "Svart",
+        "pink": "Rosa",
+        "dark_blue": "Mörkblå"
+      },
+      "theme_theme_options": {
+        "dark": "Mörk",
+        "light": "Ljus",
+        "system": "Systemtema"
+      },
+      "back_to_home": "startsidan",
+      "back_to_youhub": "YouHub",
+      "back_to_event_hub": "Event Hub",
+      "back_to_food_hub": "Food Hub",
+      "back_to_fitness_hub": "Fitness Hub",
+      "back_to_class_hub": "Class Hub",
+      "back_to_qr": "QR-kod",
+      "back_to_account": "Konto",
+      "back_to_privacy": "Integritetspolicy",
+      "back_to_terms": "Användarvillkor",
+      "back_to_est": "EST",
+      "back_to_onboarding": "Introduktion",
+      "back": "Tillbaka till",
+      "functions_options": {
+        "descriptive_texts_title": "Beskrivande Texter",
+        "descriptive_texts_default": "Standard",
+        "descriptive_texts_reduced": "Reducerad"
+      },
+      "pages_options": {
+        "home_title": "Hem",
+        "youhub_title": "YouHub",
+        "layout_title": "Layout",
+        "layout_default": "Standard",
+        "layout_custom": "Anpassad",
+        "reset_layout_title": "Återställ Layout",
+        "reset_button": "Återställ",
+        "custom_cards_title": "Anpassade Kort",
+        "view_button": "Visa",
+        "date_format_title": "Datumformat",
+        "date_format_yyyy_mm_dd": "åååå.mm.dd",
+        "date_format_yyyy_dd_mm": "åååå.dd.mm",
+        "date_format_mm_yyyy_dd": "mm.åååå.dd",
+        "date_format_mm_dd_yyyy": "mm.dd.åååå",
+        "date_format_dd_mm_yyyy": "dd.mm.åååå"
+      },
+      "about": {
+        "title": "Om",
+        "description": "Här kan du se Hubens versionsnummer och annan intressant, till och med användbar information om din Hub.",
+        "version_label": "Version:",
+        "edition_label": "Upplaga:",
+        "created_by_label": "Skapad av:",
+        "published_by_label": "Publicerad av:",
+        "maintained_by_label": "Underhållen av:",
+        "advanced_info": "Avancerad information:",
+        "ui_name_label": "Användargränssnitt (UI):",
+        "ui_version_label": "Användargränssnitt (UI) version:",
+        "kernel_version_label": "Kärnversion:",
+        "yhc_version_label": "YouHub-komponentversion:",
+        "chc_version_label": "Class Hub-komponentversion:",
+        "fihc_version_label": "Fitness Hub-komponentversion:",
+        "fohc_version_label": "Food Hub-komponentversion:",
+        "ehc_version_label": "Event Hub-komponentversion:",
+        "eu2k_suite_label": "EU2K Suite"
+      }
+    },
+    "privacy_policy": {
+      "effective_date": "<strong>Ikraftträdandedatum:</strong> 11 januari 2025",
+      "section_1_title": "1. Introduktion",
+      "section_1_text": "EU2K Hub är det digitala centret för Európa 2000 Gimnázium, skapat för elever, lärare och intresserade. Vårt mål är att göra skollivet enklare och roligare samtidigt som vi strävar efter transparens och säkerhet i datahantering. Denna integritetspolicy beskriver i detalj hur vi hanterar dina personuppgifter.",
+      "section_2_title": "2. Vilka data samlar vi in?",
+      "section_2_1_title": "2.1. Inloggnings- och profildata",
+      "section_2_1_1": "<strong>Autentiseringsdata:</strong> Grundläggande information från Microsoft-, Google- eller Apple-konton (namn, e-postadress, profilbild)",
+      "section_2_1_2": "<strong>Användarprofil:</strong> Visningsnamn, profilbilder, födelsedatum (valfritt), kontotyp (elev, lärare, förälder)",
+      "section_2_1_3": "<strong>Inställningar:</strong> Språkinställningar, notifikationsinställningar, meddelandeinställningar",
+      "section_2_2_title": "2.2. Skoldata",
+      "section_2_2_1": "<strong>Klassinformation:</strong> Klassnamn, namn och kontaktinformation för klasskamrater och lärare",
+      "section_2_2_2": "<strong>Studiedata:</strong> Betyg, schema, prov, läxor (om tillgängliga)",
+      "section_2_2_3": "<strong>Klassprofil:</strong> Klassbannerbild, beskrivning, klassstatistik",
+      "section_2_3_title": "2.3. Gemenskapsinnehåll",
+      "section_2_3_1": "<strong>Inlägg och kommentarer:</strong> Innehåll skapat i YouHub, Event Hub och andra gemenskapsfunktioner",
+      "section_2_3_2": "<strong>Evenemang:</strong> Skapade eller deltagna evenemang, kurser, möten",
+      "section_2_3_3": "<strong>Röstningar:</strong> Deltagande i röstningar och opinionsundersökningar",
+      "section_2_4_title": "2.4. Funktionsspecifika data",
+      "section_2_4_1": "<strong>YouHub:</strong> Statistik, schema, notifikationer, förslag, klassens månadsresultat",
+      "section_2_4_2": "<strong>Event Hub:</strong> Evenemangsdeltagande, QR-kodskanningar",
+      "section_2_4_3": "<strong>Class Hub:</strong> Klassinformation, elevgrupper",
+      "section_2_4_4": "<strong>Food Hub:</strong> Matpreferenser (om tillgängliga)",
+      "section_2_4_5": "<strong>QR-kodläsning:</strong> Tidsstämplar och platser för skannade QR-koder",
+      "section_2_5_title": "2.5. Tekniska data",
+      "section_2_5_1": "<strong>Webbläsardata:</strong> Webbläsartyp, operativsystem, enhetstyp",
+      "section_2_5_2": "<strong>Användningsdata:</strong> Sidvisningar, klick, sessionsinformation",
+      "section_2_5_3": "<strong>Lokal lagring:</strong> Användning av localStorage och sessionStorage för att lagra inloggningsstatus, inställningar och andra preferenser",
+      "section_3_title": "3. Hur använder vi data?",
+      "section_3_1_title": "3.1. Tjänsteförsörjning",
+      "section_3_1_1": "Hantering och autentisering av användarkonton",
+      "section_3_1_2": "Drift av skolfunktioner (schema, betyg, evenemang)",
+      "section_3_1_3": "Tillhandahållande av gemenskapsfunktioner (inlägg, kommentarer, evenemang)",
+      "section_3_1_4": "Skicka notifikationer om viktig information",
+      "section_3_2_title": "3.2. Tjänsteförbättring",
+      "section_3_2_1": "Analys av användningsstatistik för att förbättra tjänsten",
+      "section_3_2_2": "Identifiering och korrigering av fel",
+      "section_3_2_3": "Optimering av användarupplevelsen",
+      "section_3_3_title": "3.3. Rättslig efterlevnad",
+      "section_3_3_1": "Efterlevnad av GDPR och andra dataskyddslagar",
+      "section_3_3_2": "Verifiering av behörigheter och säkerhetsåtgärder",
+      "section_3_important": "<strong>Viktigt:</strong> Vi använder data enbart för de ändamål som nämns ovan. Vi säljer eller delar dem inte med externa företag i kommersiella syften.",
+      "section_4_title": "4. Tredjepartstjänster",
+      "section_4_1_title": "4.1. Firebase (Google)",
+      "section_4_1_1": "<strong>Firebase Authentication:</strong> Hantering av användarautentisering",
+      "section_4_1_2": "<strong>Cloud Firestore:</strong> Datalagring och synkronisering",
+      "section_4_1_3": "<strong>Firebase Storage:</strong> Fillagring (bilder, dokument)",
+      "section_4_1_4": "<strong>Firebase Analytics:</strong> Insamling av användningsstatistik (endast med samtycke)",
+      "section_4_1_5": "<strong>Firebase Functions:</strong> Körning av backend-funktioner",
+      "section_4_1_text": "Data lagras i regionen Europa (europe-west1). Mer information: <a href=\"https://firebase.google.com/support/privacy\" target=\"_blank\">Firebase Integritet</a>",
+      "section_4_2_title": "4.2. Microsoft Clarity",
+      "section_4_2_1": "<strong>Användning:</strong> Analys av webbplatsens användningsstatistik och användarbeteende (endast med samtycke)",
+      "section_4_2_2": "<strong>Datahantering:</strong> Enligt Microsofts integritetsriktlinjer",
+      "section_4_2_3": "<strong>Mer information:</strong> <a href=\"https://clarity.microsoft.com/terms\" target=\"_blank\">Microsoft Clarity Villkor</a>",
+      "section_4_3_title": "4.3. Microsoft Graph API",
+      "section_4_3_1": "<strong>Användning:</strong> Hämtning av Microsoft-kontoinformation (namn, e-post, profilbild)",
+      "section_4_3_2": "<strong>Datahantering:</strong> Endast minimala data som behövs för inloggning",
+      "section_5_title": "5. Cookies och spårningsteknologier",
+      "section_5_1_title": "5.1. Tekniska cookies (nödvändiga)",
+      "section_5_1_1": "<strong>Inloggningsstatus:</strong> Upprätthållande av session",
+      "section_5_1_2": "<strong>Inställningar:</strong> Språkinställningar, lagring av preferenser",
+      "section_5_1_3": "<strong>Lokal lagring:</strong> Användning av localStorage och sessionStorage",
+      "section_5_2_title": "5.2. Analytiska cookies (samtycke krävs)",
+      "section_5_2_1": "<strong>Firebase Analytics:</strong> Insamling av användningsstatistik",
+      "section_5_2_2": "<strong>Microsoft Clarity:</strong> Analys av användarbeteende",
+      "section_5_text": "Föregående samtycke krävs för användning av analytiska cookies. När webbplatsen laddas första gången visas en cookie-banner där du kan acceptera eller avvisa dessa cookies. Samtycket kan när som helst återkallas i inställningarna.",
+      "section_6_title": "6. Vem har tillgång till data?",
+      "section_6_1_title": "6.1. Användarbehörigheter",
+      "section_6_1_1": "<strong>Elever:</strong> Sina egna data, sina klassdata, grundläggande information om klasskamrater",
+      "section_6_1_2": "<strong>Lärare:</strong> Sina egna data, sina klassdata, grundläggande information om elever",
+      "section_6_1_3": "<strong>Föräldrar:</strong> Sina egna data, sina barns skoldata (om behöriga)",
+      "section_6_1_4": "<strong>Administratörer:</strong> Begränsad åtkomst för systemunderhåll",
+      "section_6_2_title": "6.2. Gemensam redigering",
+      "section_6_2_1": "För vissa funktioner (t.ex. klassprofil) kan gemenskapsmedlemmar gemensamt redigera innehåll",
+      "section_6_2_2": "Klassprofilens innehåll är synligt för klassmedlemmar",
+      "section_6_3_title": "6.3. Tredje parter",
+      "section_6_3_1": "Firebase (Google) tjänster för datalagring och bearbetning",
+      "section_6_3_2": "Microsoft Clarity (endast med samtycke) för användningsstatistik",
+      "section_6_3_3": "Dessa leverantörer hanterar data enligt sina egna integritetspolicyer",
+      "section_7_title": "7. Hur skyddar vi dina data?",
+      "section_7_1_title": "7.1. Tekniska säkerhetsåtgärder",
+      "section_7_1_1": "<strong>Autentisering:</strong> Alla inloggningar sker via autentiserade Microsoft-, Google- eller Apple-konton",
+      "section_7_1_2": "<strong>Kryptering:</strong> Dataöverföring och lagring sker via krypterade anslutningar (HTTPS/TLS)",
+      "section_7_1_3": "<strong>Firebase Security Rules:</strong> Strikt åtkomstkontroll för data",
+      "section_7_1_4": "<strong>Regelbundna säkerhetskontroller:</strong> Regelbunden systemrevision",
+      "section_7_2_title": "7.2. Organisatoriska åtgärder",
+      "section_7_2_1": "Vi begränsar strikt åtkomsten till data",
+      "section_7_2_2": "Endast auktoriserade personer har tillgång till data",
+      "section_7_2_3": "Vi genomför regelbunden utbildning om dataskydd",
+      "section_7_3_title": "7.3. Dataminimering",
+      "section_7_3_1": "Vi samlar endast in data som behövs för tjänstens funktion",
+      "section_7_3_2": "Vi granskar regelbundet datainsamlingen och tar bort onödiga data",
+      "section_8_title": "8. Vilka rättigheter har du?",
+      "section_8_intro": "Enligt allmänna dataskyddsförordningen (GDPR) har du följande rättigheter:",
+      "section_8_1": "<strong>Rätt till tillgång:</strong> Du kan begära en kopia av dina data",
+      "section_8_2": "<strong>Rätt till rättelse:</strong> Du kan begära korrigering av felaktiga data",
+      "section_8_3": "<strong>Rätt till radering:</strong> Du kan begära radering av dina data (om det inte finns någon rättslig grund för ytterligare lagring)",
+      "section_8_4": "<strong>Rätt till begränsning:</strong> Du kan begära begränsning av behandlingen av dina data",
+      "section_8_5": "<strong>Rätt till dataportabilitet:</strong> Du kan begära överföring av dina data i ett strukturerat, allmänt använt format",
+      "section_8_6": "<strong>Rätt till invändning:</strong> Du kan när som helst återkalla ditt samtycke till analytiska cookies",
+      "section_8_7": "<strong>Rätt att lämna klagomål:</strong> Du kan lämna in ett klagomål till dataskyddsmyndigheten",
+      "section_8_contact": "För att utöva dina rättigheter, skriv till följande e-postadress: <a href=\"mailto:turoczi.adam@europa2000.hu\">turoczi.adam@europa2000.hu</a>",
+      "section_9_title": "9. Datalagringsperiod",
+      "section_9_1": "<strong>Användarkontodata:</strong> Så länge kontot är aktivt eller tills radering",
+      "section_9_2": "<strong>Gemenskapsinnehåll:</strong> Tills användaren raderar det eller tills kontot raderas",
+      "section_9_3": "<strong>Analytiska data:</strong> Maximalt 26 månader (om samtycke ges)",
+      "section_9_4": "<strong>Lokal lagring (localStorage):</strong> Tills användaren raderar det eller tills webbläsarens cache raderas",
+      "section_9_text": "Vid kontoradering raderas alla personuppgifter, utom de som en rättslig skyldighet (t.ex. redovisningsdata) eller ett berättigat intresse (t.ex. säkerhetsloggar) kräver att behållas.",
+      "section_10_title": "10. Dataskydd för barn",
+      "section_10_text1": "EU2K Hub används främst i en skolmiljö där elever vanligtvis är under 14 år. Det är viktigt att föräldrar och lärare är medvetna om datahantering. Ett skolkonto krävs för att använda plattformen, som står under skolans tillsyn.",
+      "section_10_text2": "Om vi hanterar data för barn under 14 år krävs gemensamt samtycke från skolan och föräldrarna. För eventuella frågor, kontakta skolan eller kontakten nedan.",
+      "section_11_title": "11. Kontakt och klagomål",
+      "section_11_intro": "Om du har frågor om dataskydd eller vill utöva dina rättigheter, skriv till oss:",
+      "section_11_email": "<strong>E-post:</strong> <a href=\"mailto:turoczi.adam@europa2000.hu\">turoczi.adam@europa2000.hu</a>",
+      "section_11_authority_intro": "<strong>Dataskyddsmyndighet:</strong> Om du anser att hanteringen av dina data bryter mot dataskyddslagar kan du lämna in ett klagomål till Nationella myndigheten för dataskydd och informationsfrihet (NAIH):",
+      "section_11_authority_details": "<strong>NAIH:</strong><br>Adress: 1055 Budapest, Falk Miksa utca 9-11.<br>Telefon: +36 1 391 1400<br>E-post: <a href=\"mailto:ugyfelszolgalat@naih.hu\">ugyfelszolgalat@naih.hu</a><br>Webb: <a href=\"https://www.naih.hu\" target=\"_blank\">www.naih.hu</a>",
+      "footer": "© 2025 EU2K Hub – Alla rättigheter förbehållna."
+    }
+  },
+  "popup_notifications_title": "Popup-aviseringar",
+  "event_hub_popup_label": "Event Hub",
+  "new_things_popup_label": "Nyheter",
+  "beta_popup_label": "Betaversion",
+  "wd_popup_label": "Varningar & Kritiska saker",
+  "popups_popup_label": "Popup-fönster",
+  "notifications_and_sound": "Aviseringar & Ljud",
+  "silent_mode_title": "Tyst läge",
+  "silent_mode_desc": "Så länge du är i skolan följer inget ljud aviseringarna.",
+  "turn_on_sound": "Slå på ljud",
+  "sounds_title": "Ljud",
+  "notification_sound_title": "Aviseringsljud",
+  "bubble1": "Bubble 1",
+  "bubble2": "Bubble 2",
+  "bubble3": "Bubble 3",
+  "push_notifications_title": "Push-aviseringar",
+  "push_notifications_desc": "Push-aviseringar är snabba, tryckliknande aviseringar som visas uppe till höger på din skärm.",
+  "sort_label": "Sortera",
+  "categories_option": "Kategorier",
+  "abc_order_option": "Alfabetisk ordning",
+  "news_label": "Nyheter",
+  "events_label": "Evenemang & Event Hub",
+  "messages_label": "Meddelanden",
+  "posts_label": "Inlägg",
+  "invites_label": "Inbjudningar",
+  "new_things_label": "Nyheter",
+  "location_mute_title": "Situationsbaserad tystnad",
+  "silent_mode_popup_title": "Tyst läge",
+  "silent_mode_popup_desc": "Med den här knappen kan du stänga av tyst läge för idag.\n\nDet verkar som att du är under skoltid, så aviseringar kan vara störande.\n\nOm du ändå stänger av det är det en bra idé att sätta enheten på ljudlöst under lektionerna.",
+  "silent_mode_popup_confirm": "Stäng av tyst läge för idag",
+  "youhub": {
+    "header": {
+      "edit": "Redigera"
+    },
+    "banners": {
+      "info": {
+        "title": "Detta är det nya designet.",
+        "description": "Vi hoppas att du gillar Europa Design System. Om du har några frågor, ge feedback, även härifrån.",
+        "feedback": "Feedback",
+        "close": "Stäng"
+      },
+      "warning": {
+        "title": "YouHub är fortfarande i betaversion.",
+        "description": "Vi är glada att du är intresserad av YouHub, men notera att du använder ofärdig programvara.",
+        "feedback": "Feedback",
+        "close": "Stäng"
+      }
+    },
+    "revert": {
+      "title": "Är du säker på att du vill återställa ordningen?",
+      "text": "Din nuvarande layout kommer att gå förlorad och du måste återställa den manuellt!",
+      "button": "Återställ"
+    },
+    "dev_mode": {
+      "title": "Utvecklarläge",
+      "text": "Ange lösenord:",
+      "password_placeholder": "Lösenord",
+      "login_button": "Logga in"
+    },
+    "myclass": {
+      "title": "Min Klass",
+      "month": "Min Klass Månad",
+      "suggestions": "Klassförslag",
+      "info": "Information",
+      "states": {
+        "suggestions_summer": {
+          "title": "Du kan inte vänta så mycket på skolan.",
+          "description": "Skolan börjar om {days} dagar.",
+          "list_item1": "Vi arbetar med att implementera Suggestions Hub.",
+          "list_item2": "När det är klart kommer dina favoritidéer att visas här."
+        },
+        "suggestions_normal": {
+          "description": "Klassidéer och feedback kommer att visas här snart.",
+          "list_item1": "Vi arbetar med att implementera Suggestions Hub.",
+          "list_item2": "När det är klart kommer dina favoritidéer att visas här."
+        },
+        "info1": {
+          "tag": "Information",
+          "title": "Klasskontaktkort",
+          "description": "Du kommer snart att kunna se ditt klasskontaktkort här.",
+          "list_item1": "QR-kod för din klass och lärare.",
+          "list_item2": "Enkel delning med andra."
+        },
+        "info2": {
+          "tag": "Information",
+          "title": "Klassgrunddata",
+          "description": "Klassstorlek, rumsfördelning och klasslärareinformation kommer att visas här.",
+          "list_item1": "Rumsfördelning, valda data.",
+          "list_item2": "Klasslärarens kontaktinformation"
+        }
+      }
+    },
+    "notifications": {
+      "title": "Aviseringar",
+      "history": "Historik",
+      "empty": {
+        "title": "Du har inga aviseringar",
+        "subtitle": "Kom tillbaka senare :D"
+      },
+      "detail": {
+        "title": "Aviseringar",
+        "subtitle": "Välj en avisering",
+        "sent_to": "Skickat till:",
+        "delete": "Radera",
+        "snooze": "Skjuta upp",
+        "notification": "Avisering",
+        "notification_label": "Avisering"
+      }
+    },
+    "suggestions": {
+      "title": "Förslag",
+      "hive": "Hive",
+      "submit": "Skicka",
+      "hive_placeholder": {
+        "title": "Hive Förslag",
+        "description": "Du kommer att se inskickade idéer här när detta gränssnitt är klart."
+      },
+      "submit_steps": {
+        "step1": {
+          "heading": "Grundinformation",
+          "title_label": "Titel",
+          "title_placeholder": "Skriv här...",
+          "content_label": "Förslag",
+          "content_placeholder": "Skriv här...",
+          "type_heading": "Välj typen",
+          "hive_title": "Hive",
+          "hive_description": "Om du väljer detta kommer ditt Förslag att läggas till i Hive och ledningen kommer att överväga din idé."
+        },
+        "step2": {
+          "heading": "Visa för vem",
+          "user_label": "Visa för vem",
+          "user_placeholder": "Skriv här...",
+          "group_label": "Målgrupp",
+          "group_placeholder": "Skriv här...",
+          "share_heading": "Delning",
+          "share_title": "Extern delning",
+          "share_description": "Tillåt skolan att dela ditt Förslag även på externa plattformar."
+        }
+      },
+      "actions": {
+        "next": "Nästa",
+        "submit": "Skicka förslag"
+      },
+      "card": {
+        "author": "Namn",
+        "type_ai_prompt": "AI-prompt",
+        "title": "Titel",
+        "description": "Beskrivning",
+        "placeholder_title": "Förslag",
+        "placeholder_description": "Dina nya förslag kommer att visas här.",
+        "type_suggestion": "Förslag",
+        "type_hive": "Hive"
+      },
+      "edit_mode": {
+        "enter": "Redigera",
+        "exit": "Avsluta redigeringsläge"
+      },
+      "prediction": "Förutsägelse",
+      "default_notification_title": "Notifikation",
+      "unknown_user": "Okänd användare",
+      "unknown_error": "Okänt fel",
+      "tabs": {
+        "suggestions": "Förslag",
+        "class_suggestions": "Klassförslag"
+      },
+      "notifications": {
+        "actions": {
+          "snooze": "Skjuta upp",
+          "open": "Öppna"
+        },
+        "types": {
+          "info": "Information",
+          "success": "Framgång",
+          "warning": "Varning",
+          "error": "Fel"
+        },
+        "messages": {
+          "info": "Detta är en informationsnotifikation.",
+          "info_blue": "Detta är en blå informationsnotifikation.",
+          "success": "Operationen slutfördes framgångsrikt!",
+          "warning": "Vänligen fyll i de obligatoriska fälten.",
+          "error": "Ett fel uppstod under operationen!",
+          "test": "Detta är en testnotifikation.",
+          "test_shown": "Testnotifikation visad",
+          "testing_all": "Testar alla notifikationstyper..."
+        }
+      }
+    },
+    "calendar": {
+      "empty": {
+        "title": "Kalendern är inte tillgänglig ännu.",
+        "subtitle": "Kom tillbaka senare!"
+      }
+    },
+    "messages": {
+      "login_required": "Vänligen logga in för att skicka.",
+      "fill_required": "Vänligen fyll i fälten titel och förslag.",
+      "submit_success": "Ditt förslag har skickats framgångsrikt!",
+      "submit_error": "Kunde inte skicka förslaget. Försök igen senare.",
+      "wrong_password": "Fel lösenord!",
+      "delete_error": "Ett fel uppstod vid radering."
+    }
+  },
+  "admin": {
+    "console": {
+      "title": "Admin-konsol",
+      "password_text": "Ange lösenord:",
+      "password_placeholder": "Lösenord",
+      "login_button": "Logga in",
+      "sync": {
+        "users_title": "Användarsynkronisering",
+        "users_description": "Läser alla användare från users-samlingen och skapar/uppdaterar motsvarande dokument.",
+        "names_button": "Synkronisera namn",
+        "pictures_button": "Synkronisera bilder",
+        "syncing": "Synkroniserar...",
+        "loading_users": "Laddar användare...",
+        "no_users": "Inga användare i users-samlingen.",
+        "processing": "användare bearbetas...",
+        "processed": "Bearbetat:",
+        "success_names": "Framgång! användarnamn synkroniserade.",
+        "success_pictures": "Framgång! användarbilder synkroniserade.",
+        "done": "Klar! framgångsrika, fel.",
+        "error": "Fel:",
+        "info_show": "Visa information",
+        "info_hide": "Dölj information",
+        "info_text": "Namn: public/users/nevek/{userId} - Fältet name innehåller värdet displayName\n\nBilder: public/users/profilePictures/{userId} - Innehåller fälten useProvidedPfp, pfpColor och profilePictureUrl"
+      },
+      "assign_class": {
+        "title": "Tilldela till klass",
+        "description": "Du kan tilldela användare till klasser i samlingen classes/{classId}/users.",
+        "button": "Tilldela till klass",
+        "popup1": {
+          "title": "Välj klass",
+          "text": "Ange gruppnamnet:",
+          "placeholder": "Skriv här...",
+          "checkbox_title": "Skapa värden",
+          "checkbox_description": "Om markerad, fyller grades-dokumenten med värden (0.00-5.00).",
+          "next": "Nästa"
+        },
+        "popup2": {
+          "title": "Välj användare",
+          "text": "Ange användarnamn eller klicka på automatisk tilldelning:",
+          "placeholder": "Skriv här...",
+          "back": "Tillbaka",
+          "finish": "Slutför",
+          "auto": "Auto"
+        }
+      },
+      "messages": {
+        "password_required": "Vänligen ange lösenordet!",
+        "wrong_password": "Fel lösenord!",
+        "password_check_error": "Ett fel uppstod vid kontroll av lösenordet. Försök igen.",
+        "session_expired": "Sessionen har gått ut. Vänligen logga in igen.",
+        "class_name_required": "Vänligen ange klassnamnet!",
+        "class_not_found": "Ingen klass hittades med detta namn!",
+        "no_class_selected": "Ingen klass vald!",
+        "login_required": "Du måste vara inloggad!",
+        "auto_success": "användare automatiskt valda.",
+        "auto_error": "Ett fel uppstod under automatisk val.",
+        "no_users_selected": "Inga användare valda!",
+        "assign_success": "Framgång! användare tilldelade till klassen.",
+        "assign_done": "Klar! framgångsrika, fel.",
+        "assign_error": "Ett fel uppstod vid tilldelning till klassen."
+      },
+      "status": {
+        "missing_data": "Saknade data",
+        "wrong_data": "Felaktiga data",
+        "error": "Fel",
+        "success": "Framgång",
+        "operation_complete": "Åtgärd slutförd",
+        "session_expired": "Sessionen har gått ut"
+      }
+    }
+  },
+  "general": {
+    "close": "Stäng",
+    "unknown_user": "Okänd användare"
+  },
+  "footer": {
+    "participated": "Deltog:",
+    "legal": {
+      "title": "Juridiska Uttalanden",
+      "privacy": "Integritetspolicy",
+      "terms": "Användarvillkor",
+      "beta": "Beta-mjukvaru Användningsmeddelande"
+    },
+    "hubs": {
+      "title": "Hubs"
+    },
+    "special": {
+      "title": "Vår Specialitet",
+      "company": "Skapa ditt eget EU2K Företag!"
+    },
+    "copyright": "© 2025 EU2K Devs och Európa 2000 Gimnázium. Alla rättigheter förbehållna.",
+    "beta": "BETA"
+  }
+},
+  "maintenance": {
+    "title": "Hubben kommer alldeles strax!",
+    "description": "Du behöver inte vänta särskilt länge ;)."
+  },
+  "guest": {
+    "youhub_title": "YouHub är inte tillgängligt för gäster.",
+    "youhub_description": "Logga in för att låsa upp oändliga möjligheter med YouHub.",
+    "settings_title": "Du kan inte komma åt den här delen som gäst.",
+    "settings_description": "Logga in för mer anpassning och bekvämlighet!."
+  }

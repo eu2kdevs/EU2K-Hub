@@ -1,0 +1,474 @@
+﻿<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Örülünk hogy ennyire érdeklődsz a YouHub iránt, de egyelőre még fejlesztés alatt van, és nem alkalmas a mostani állapotában a használatra. Nézz vissza később 👋">
+  <title data-translate="pages.youhub.title">YouHub</title>
+  <!-- Bootstrap overlay mount (appears at the very beginning of page load) -->
+  <script>
+    (function(){
+      if (!document.getElementById('eu2k-page-overlay')) {
+        var o = document.createElement('div');
+        o.id = 'eu2k-page-overlay';
+        o.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#0B0F0B;border-radius:32px;opacity:1;transition:opacity 300ms ease-in-out;';
+        var inner = document.createElement('div');
+        inner.style.cssText = 'position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0B0F0B;border-radius:32px;';
+        var m = document.createElement('div');
+        m.id = 'eu2k-overlay-mount';
+        m.style.cssText = 'position:relative;width:100%;height:100%';
+        inner.appendChild(m);
+        o.appendChild(inner);
+        document.documentElement.appendChild(o);
+      }
+    })();
+  </script>
+  <!-- Global overlay loader (plays centered MP4 and fades out after window load + 500ms) -->
+  <script src="/EU2K-Hub/assets/js/page-overlay-loader.js"></script>
+  <script src="/assets/js/page-overlay-loader.js"></script>
+  <link rel="stylesheet" href="youhub.css">
+  <link rel="icon" href="./favicon.ico">
+  <!--
+  <script type="importmap">
+    {
+      "imports": {
+  "@material/web/": "./assets/js/material-web-all.js"
+      }
+    }
+  </script>
+  <script type="module">
+  import './assets/js/@material/web/all.js';
+  import { styles as typescaleStyles } from './assets/js/@material/web/md-typescale-styles.js';
+
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+-->
+  <script src="./assets/js/permissions.js"></script>
+  <script src="./assets/js/translations.js"></script>
+  <script src="./assets/js/welcome-screen.js"></script>
+  <script src="./assets/js/dpad-navigation.js"></script>
+  <!--
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+  import { initializeApp } from "./assets/js/firebase-app-11.10.0.js";
+  // Analytics is disabled on webOS builds to avoid network fetches
+  // import { getAnalytics } from "./assets/js/firebase-analytics-11.10.0.js";
+  import { getFirestore } from "./assets/js/firebase-firestore-11.10.0.js";
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
+      authDomain: "eu2k-hub.firebaseapp.com",
+      projectId: "eu2k-hub",
+      storageBucket: "eu2k-hub.firebasestorage.app",
+      messagingSenderId: "560244867055",
+      appId: "1:560244867055:web:3cd51b85baead94989001a",
+      measurementId: "G-2JDPR089WD"
+    };
+
+  // Initialize Firebase (analytics omitted)
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Make db globally available
+  window.db = db;
+  </script>
+-->
+</head>
+
+<body>
+  <div class="app-bg">
+    <aside class="sidebar">
+      <nav class="nav-menu">
+          <button class="nav-item list-button nav-item-list" type="button" aria-label="Menü">
+            <div class="nav-icon-container">
+              <img src="../../assets/navbar/menu.svg" class="nav-icon" alt="Menü">
+            </div>
+            <span data-translate="navigation.menu">Menü</span>
+          </button>
+  <a class="nav-item" href="index.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/home_icon.svg" class="nav-icon" alt="Otthon">
+          </div>
+          <span data-translate="navigation.home">Otthon</span>
+        </a>
+  <a class="nav-item" href="qr-code.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
+          </div>
+          <span data-translate="navigation.qr">QR-Kód</span>
+        </a>
+  <a class="nav-item active" href="youhub.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
+          </div>
+          <span data-translate="navigation.youhub">YouHub</span>
+        </a>
+  <a class="nav-item" href="event_hub.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/eventh_hub_icon.svg" class="nav-icon" alt="Event Hub">
+          </div>
+          <span data-translate="navigation.event_hub">Event Hub</span>
+        </a>
+      </nav>
+    </aside>
+    <script>
+      (function() {
+        const sidebar = document.querySelector('.sidebar');
+        const toggleButton = document.querySelector('.list-button');
+        if (sidebar && toggleButton) {
+          toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            const icon = toggleButton.querySelector('.nav-icon');
+            if (icon) {
+              const isOpen = sidebar.classList.contains('open');
+              icon.src = isOpen ? '../../assets/navbar/menu_open.svg' : '../../assets/navbar/menu.svg';
+            }
+          });
+        }
+        function markActiveNavItem() {
+          const currentPath = window.location.pathname.replace(/\/$/, '');
+          const currentName = currentPath.split('/').pop() || 'index.html';
+          document.querySelectorAll('.nav-menu .nav-item[href]').forEach(link => {
+            try {
+              const linkPath = new URL(link.getAttribute('href'), window.location.href).pathname.replace(/\/$/, '');
+              const linkName = linkPath.split('/').pop() || 'index.html';
+              if (linkName === currentName) {
+                link.classList.add('active');
+              } else {
+                link.classList.remove('active');
+              }
+            } catch (e) {}
+          });
+        }
+        function updateNavIcons() {
+          document.querySelectorAll('.nav-item:not(.list-button) .nav-icon').forEach(img => {
+            const item = img.closest('.nav-item');
+            if (!item) return;
+            const isActive = item.classList.contains('active');
+            const src = img.getAttribute('src') || '';
+            if (src.includes('/assets/navbar/')) {
+              if (isActive && !src.includes('/assets/navbar/filled/')) {
+                img.setAttribute('src', src.replace('/assets/navbar/', '/assets/navbar/filled/'));
+              } else if (!isActive && src.includes('/assets/navbar/filled/')) {
+                img.setAttribute('src', src.replace('/assets/navbar/filled/', '/assets/navbar/'));
+              }
+            }
+          });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+          markActiveNavItem();
+          updateNavIcons();
+        });
+      })();
+    </script>
+    <main class="main-area">
+      <div class="main-content">
+        <header class="header">
+          <div class="header-icons">
+            <a href="./system/account.html" class="header-icon-link" tabindex="0">
+              <img src="./assets/account_icon.svg" class="header-icon" alt="Account">
+            </a>
+            <a href=".//settings" class="header-icon-link" tabindex="0">
+              <img src="./assets/settings_icon.svg" class="header-icon" alt="Settings">
+            </a>
+          </div>
+        </header>
+        <div class="courses-container">
+          <!-- Block ikon -->
+          <img src="./assets/settings_icons/community_page/block.svg" class="courses-block-icon" alt="Block">
+          
+          <!-- Kurzusok cím -->
+          <h1 class="courses-title" data-translate="pages.youhub.title">YouHub</h1>
+          
+          <!-- Leíró szöveg -->
+          <p class="courses-description">
+            <span data-translate="pages.youhub.description">Örülünk hogy ennyire érdeklődsz a YouHub iránt, de egyelőre még fejlesztés alatt van, és nem alkalmas a mostani állapotában a használatra.</span>
+            <br><br>
+            <span data-translate="pages.courses.description2">Viszont, addig tudsz visszajelzést adni, és elmondani</span> <strong data-translate="pages.courses.description3">szerinted</strong> <span data-translate="pages.courses.description4">mi lenne ide a legjobb ;)</span>
+          </p>
+          
+          <!-- Visszajelzés gomb -->
+          <button class="feedback-button" tabindex="0">
+            <img src="./assets/courses_icons/feedback_icon.svg" class="feedback-icon" alt="Visszajelzés">
+            <span class="feedback-text" data-translate="pages.courses.feedback_button">Visszajelzés</span>
+          </button>
+        </div>
+        <div class="m3e-loader" role="status" aria-live="polite" aria-label="Betöltés">
+          <svg class="m3e" viewBox="-50 -50 100 100" width="64" height="64" aria-hidden="true">
+            <g class="spin">
+              <path fill="currentColor">
+                <animate 
+                  attributeName="d" 
+                  dur="2400ms" 
+                  repeatCount="indefinite"
+                  calcMode="linear"
+                  keyTimes="0;0.142;0.285;0.428;0.571;0.714;0.857;1"
+                  values="
+        M 40 0 C 40 22.1 22.1 40 0 40 C -22.1 40 -40 22.1 -40 0 C -40 -22.1 -22.1 -40 0 -40 C 22.1 -40 40 -22.1 40 0 Z;
+        M 38 8 C 36 24 20 38 0 38 C -20 38 -36 24 -38 8 C -40 -8 -24 -36 0 -38 C 24 -36 38 -20 38 -8 Z;
+        M 34 16 C 30 28 16 38 0 38 C -16 38 -30 28 -34 16 C -38 4 -28 -30 0 -38 C 28 -30 38 -4 34 -16 Z;
+        M 28 28 C 20 36 8 40 0 40 C -8 40 -20 36 -28 28 C -36 20 -40 8 -40 0 C -40 -8 -36 -20 -28 -28 C -20 -36 -8 -40 0 -40 C 8 -40 20 -36 28 -28 C 36 -20 40 -8 40 0 C 40 8 36 20 28 28 Z;
+        M 20 34 C 8 38 -8 38 -20 34 C -32 28 -38 12 -38 0 C -38 -12 -32 -28 -20 -34 C -8 -38 8 -38 20 -34 C 32 -28 38 -12 38 0 C 38 12 32 28 20 34 Z;
+        M 28 28 C 20 36 8 40 0 40 C -8 40 -20 36 -28 28 C -36 20 -40 8 -40 0 C -40 -8 -36 -20 -28 -28 C -20 -36 -8 -40 0 -40 C 8 -40 20 -36 28 -28 C 36 -20 40 -8 40 0 C 40 8 36 20 28 28 Z;
+        M 38 8 C 36 24 20 38 0 38 C -20 38 -36 24 -38 8 C -40 -8 -24 -36 0 -38 C 24 -36 38 -20 38 -8 Z;
+        M 40 0 C 40 22.1 22.1 40 0 40 C -22.1 40 -40 22.1 -40 0 C -40 -22.1 -22.1 -40 0 -40 C 22.1 -40 40 -22.1 40 0 Z
+        " />
+              </path>
+            </g>
+          </svg>
+        </div>
+        
+        <style>
+        :root {
+          --m3e-size: 64px;
+          --m3e-color: #6750A4;
+          --m3e-rotate: 1800ms;
+          --m3e-bg: color-mix(in oklab, var(--m3e-color) 16%, transparent);
+        }
+        
+        .m3e-loader {
+          display: inline-grid;
+          place-items: center;
+          width: var(--m3e-size);
+          height: var(--m3e-size);
+          color: var(--m3e-color);
+        }
+        
+        .m3e-loader::before {
+          content: "";
+          grid-area: 1/1;
+          width: 100%;
+          height: 100%;
+          border-radius: 999px;
+          background: var(--m3e-bg);
+        }
+        
+        .m3e {
+          grid-area: 1/1;
+        }
+        
+        .spin {
+          animation: m3e-rotate var(--m3e-rotate) linear infinite;
+        }
+        
+        @keyframes m3e-rotate {
+          to { transform: rotate(360deg); }
+        }
+        
+        @media (prefers-color-scheme: dark) {
+          :root { --m3e-color: #D0BCFF; }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+          .spin { animation: none; }
+        }
+        </style>
+  <!-- Bandcamp embed removed (external iframe not downloaded). -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Feedback Popup -->
+  <div class="feedback-popup-overlay" id="feedbackPopup" style="display: none;">
+    <div class="feedback-popup">
+      <!-- Header -->
+      <div class="feedback-popup-header">
+        <img src="./assets/courses_icons/feedback_icon.svg" class="feedback-popup-icon" alt="Visszajelzés">
+        <span class="feedback-popup-title">Visszajelzés</span>
+  <button class="feedback-close-btn" onclick="closeFeedbackPopup()" tabindex="0">
+          <img src="./assets/close.svg" class="feedback-close-icon" alt="Bezárás">
+        </button>
+      </div>
+
+      <!-- Input textbox -->
+      <div class="feedback-input-container">
+        <textarea class="feedback-input" placeholder="Ide írj..."></textarea>
+        <div class="feedback-input-limit">Maximum 1000 karakter</div>
+      </div>
+
+      <!-- Kategória kártyák -->
+      <div class="feedback-category-section">
+        <div class="feedback-category-container">
+          <div class="feedback-category-header">
+            <span class="feedback-category-title">Kategória</span>
+          </div>
+
+          <div class="feedback-category-buttons">
+            <button class="feedback-category-btn active" data-category="function" tabindex="0">
+              <span>Funkció amit javítani kéne</span>
+              <div class="feedback-category-check">
+                <img src="./assets/check.svg" class="feedback-check-icon" alt="Check">
+              </div>
+            </button>
+
+            <button class="feedback-category-btn" data-category="feature" tabindex="0">
+              <span>Funkció amit látni szeretnék</span>
+              <div class="feedback-category-check">
+                <img src="./assets/check.svg" class="feedback-check-icon" alt="Check">
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Info chip -->
+        <div class="feedback-category-info">
+          <img src="./assets/info.svg" class="feedback-info-icon" alt="Info">
+          <span>Nagyon köszönjük, hogy segítesz nekünk fejleszteni a Hubot! Ezek a
+            visszajelzések névtelenek, nem fogjuk tudni ki küldte be.</span>
+        </div>
+      </div>
+
+      <!-- Cím input és küldés gomb egy sorban -->
+      <div class="feedback-bottom-section">
+        <div class="feedback-title-container">
+          <input type="text" class="feedback-title-input" placeholder="Cím...">
+        </div>
+  <button class="feedback-send-btn" onclick="submitFeedback()" tabindex="0">
+          <img src="./assets/send.svg" class="feedback-send-icon" alt="Küldés">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Feedback gomb és popup kezelése
+    const feedbackButton = document.querySelector('.feedback-button');
+    const feedbackPopup = document.getElementById('feedbackPopup');
+
+    if (feedbackButton && feedbackPopup) {
+      // Feedback popup megnyitása
+      feedbackButton.addEventListener('click', () => {
+        feedbackPopup.style.display = 'flex';
+        feedbackPopup.classList.remove('closing');
+      });
+
+      // Popup bezárása overlay-re kattintáskor
+      feedbackPopup.addEventListener('click', (e) => {
+        if (e.target === feedbackPopup) {
+          closeFeedbackPopup();
+        }
+      });
+    }
+
+    // Bezáró függvény animációval
+    function closeFeedbackPopup() {
+      const feedbackPopup = document.getElementById('feedbackPopup');
+      if (feedbackPopup) {
+        feedbackPopup.classList.add('closing');
+        setTimeout(() => {
+          feedbackPopup.style.display = 'none';
+          feedbackPopup.classList.remove('closing');
+        }, 300); // 300ms animáció után bezárás
+      }
+    }
+
+    // Kategória gombok kezelése
+    const feedbackCategoryBtns = document.querySelectorAll('.feedback-category-btn');
+    feedbackCategoryBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Eltávolítjuk az active osztályt minden gombról
+        feedbackCategoryBtns.forEach(b => b.classList.remove('active'));
+        // Hozzáadjuk az active osztályt az aktuális gombhoz
+        btn.classList.add('active');
+      });
+    });
+
+    // Feedback beküldés függvény
+    async function submitFeedback() {
+      try {
+        // Form adatok összegyűjtése
+        const titleInput = document.querySelector('.feedback-title-input');
+        const descriptionInput = document.querySelector('.feedback-input');
+        const activeCategory = document.querySelector('.feedback-category-btn.active');
+
+        // Validáció
+        if (!titleInput.value.trim()) {
+          showToast('Kérlek add meg a címet!', 'error');
+          return;
+        }
+        if (!descriptionInput.value.trim()) {
+          showToast('Kérlek írj le valamit!', 'error');
+          return;
+        }
+        if (!activeCategory) {
+          showToast('Kérlek válassz kategóriát!', 'error');
+          return;
+        }
+
+        // Kategória meghatározása
+        const categoryData = activeCategory.getAttribute('data-category');
+        const collectionName = categoryData === 'function' ? 'fix_things' : 'new_recommendations';
+
+        // Firestore v9 függvények importálása
+  const { collection, doc, getDocs, setDoc, serverTimestamp } = await import("./assets/js/firebase-firestore-11.10.0.js");
+
+        // Következő dokumentum ID meghatározása
+        const collectionRef = collection(db, 'homePageData', 'feedback', collectionName);
+        const snapshot = await getDocs(collectionRef);
+
+        let nextId = 1;
+        if (!snapshot.empty) {
+          const docIds = snapshot.docs.map(docSnapshot => parseInt(docSnapshot.id)).filter(id => !isNaN(id));
+          if (docIds.length > 0) {
+            nextId = Math.max(...docIds) + 1;
+          }
+        }
+
+        // Új feedback dokumentum létrehozása
+        const feedbackData = {
+          title: titleInput.value.trim(),
+          description: descriptionInput.value.trim(),
+          class: '8.E', // Hardcoded amíg nincs Firebase Auth - utána jobDescription lesz
+          timestamp: serverTimestamp()
+        };
+
+        const newDocRef = doc(collectionRef, nextId.toString());
+        await setDoc(newDocRef, feedbackData);
+
+        // Sikeres beküldés - toast megjelenítése
+        showToast('✓ Sikeresen beküldted a visszajelzést!', 'success');
+
+        // Form resetelése
+        titleInput.value = '';
+        descriptionInput.value = '';
+
+        // Popup bezárása
+        closeFeedbackPopup();
+
+      } catch (error) {
+        console.error('Hiba a feedback beküldésekor:', error);
+        showToast('Hiba történt a beküldés során. Próbáld újra!', 'error');
+      }
+    }
+
+    // Általános toast megjelenítő függvény
+    function showToast(message, type = 'success') {
+      // Meglévő toast eltávolítása
+      const existingToast = document.querySelector('.feedback-toast');
+      if (existingToast) {
+        existingToast.remove();
+      }
+
+      // Új toast létrehozása
+      const toast = document.createElement('div');
+      toast.className = `feedback-toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      // Megjelenítés
+      setTimeout(() => toast.classList.add('show'), 10);
+
+      // 3 másodperc után eltűnik
+      setTimeout(() => {
+        toast.classList.remove('show');
+        toast.classList.add('hide');
+
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 3000);
+    }
+  </script>
+</body>
+
+</html>

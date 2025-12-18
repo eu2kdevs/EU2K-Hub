@@ -1,0 +1,654 @@
+﻿{
+  "onboarding": {
+    "greeting": "Hello!",
+    "start": "Let's start",
+    "restart": "Restart",
+    "language": "Language",
+    "back": "Back",
+    "back_to_setup": "Back to setup",
+    "who_are_you": "Who are you?",
+    "recommended_login": "Recommended login method:",
+    "school_account_required": "You will need to log in with your school account",
+    "google_account_required": "You will need to log in with your Google account",
+    "guest_info": "As a guest, you don't need to log in, but many features will be limited",
+    "choose_login_method": "Choose a login method",
+    "choose_language": "Choose a language",
+    "login_in_progress": "Login in progress",
+    "login_interrupted": "Login interrupted",
+    "try_again": "Try again",
+    "retry": "Retry",
+    "logout": "Logout",
+    "restart_confirm": "Are you sure you want to start again?",
+    "restart_warning": "All your progress so far will be lost!",
+    "how_will_you_look": "How will you look?",
+    "use_school_profile": "Use school profile picture",
+    "random": "Random",
+    "preferences_title": "Choose your preferences",
+    "preferences_step_1": "1/2",
+    "preferences_notifications_title": "Notifications",
+    "preferences_notifications_desc": "You can modify this later in Settings.",
+    "last_things_title": "Last things",
+    "last_things_desc": "Really almost done.",
+    "legal_terms_title": "Accept the terms of service",
+    "legal_terms_desc": "Almost there!",
+    "finish": "Finish",
+    "go_to_home": "Go to home page",
+    "finished_title": "We're done!",
+    "languages": {
+      "hu": "Hungarian",
+      "en": "English",
+      "de": "German",
+      "es": "Spanish",
+      "fr": "French",
+      "zh": "Chinese",
+      "ja": "Japanese",
+      "sv": "Swedish",
+      "ru": "Russian"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "qr": "QR Code",
+    "youhub": "YouHub",
+    "event_hub": "Event Hub"
+  },
+  "pages": {
+    "qr": {
+      "title": "YouHub"
+    },
+    "youhub": {
+      "title": "YouHub"
+    },
+    "general": {
+      "login": "Login"
+    },
+    "settings": {
+      "title": "Settings",
+      "general": "General",
+      "notifications": "Notifications & Sound",
+      "functions": "Functions",
+      "pages": "Pages",
+      "chat": "Chat",
+      "credits": "Credits and Legal Info",
+      "apply": "Apply",
+      "edition_title": "Edition",
+      "edition_desc": "Choose which edition of the Hub you want to use!",
+      "edition_options": {
+        "general_public": "General - Public",
+        "beta_public": "Beta - Public",
+        "beta_closed": "Beta - Closed"
+      },
+      "language_title": "Language",
+      "theme_title": "Color Scheme",
+      "theme_desc": "You can choose from 8 base colors plus light and dark modes.",
+      "theme_color_scheme_label": "Color Scheme",
+      "theme_theme_label": "Theme",
+      "theme_color_options": {
+        "green": "Green (Default)",
+        "purple": "Purple",
+        "red": "Red",
+        "orange": "Orange",
+        "light_blue": "Light Blue",
+        "black": "Black",
+        "pink": "Pink",
+        "dark_blue": "Dark Blue"
+      },
+      "theme_theme_options": {
+        "dark": "Dark",
+        "light": "Light",
+        "system": "System Theme"
+      },
+      "back_to_home": "Home Page",
+      "back_to_youhub": "YouHub",
+      "back_to_event_hub": "Event Hub",
+      "back_to_food_hub": "Food Hub",
+      "back_to_fitness_hub": "Fitness Hub",
+      "back_to_class_hub": "Class Hub",
+      "back_to_qr": "QR Code",
+      "back_to_account": "Account",
+      "back_to_privacy": "Privacy Policy",
+      "back_to_terms": "Terms of Service",
+      "back_to_est": "EST",
+      "back": "Back to",
+      "back_to_onboarding": "Onboarding",
+      "functions_options": {
+        "descriptive_texts_title": "Descriptive Texts",
+        "descriptive_texts_default": "Default",
+        "descriptive_texts_reduced": "Reduced"
+      },
+      "pages_options": {
+        "home_title": "Home",
+        "youhub_title": "YouHub",
+        "layout_title": "Layout",
+        "layout_default": "Default",
+        "layout_custom": "Custom",
+        "reset_layout_title": "Reset Layout",
+        "reset_button": "Reset",
+        "custom_cards_title": "Custom Cards",
+        "view_button": "View",
+        "date_format_title": "Date Format",
+        "date_format_yyyy_mm_dd": "yyyy.mm.dd",
+        "date_format_yyyy_dd_mm": "yyyy.dd.mm",
+        "date_format_mm_yyyy_dd": "mm.yyyy.dd",
+        "date_format_mm_dd_yyyy": "mm.dd.yyyy",
+        "date_format_dd_mm_yyyy": "dd.mm.yyyy"
+      },
+      "about": {
+        "title": "About",
+        "description": "Here you can see the Hub's version number, and other interesting, even useful information about your Hub.",
+        "version_label": "Version:",
+        "edition_label": "Edition:",
+        "created_by_label": "Created by:",
+        "published_by_label": "Published by:",
+        "maintained_by_label": "Maintained by:",
+        "advanced_info": "Advanced information:",
+        "ui_name_label": "User Interface (UI):",
+        "ui_version_label": "User Interface (UI) version:",
+        "kernel_version_label": "Kernel version:",
+        "yhc_version_label": "YouHub component version:",
+        "chc_version_label": "Class Hub component version:",
+        "fihc_version_label": "Fitness Hub component version:",
+        "fohc_version_label": "Food Hub component version:",
+        "ehc_version_label": "Event Hub component version:",
+        "eu2k_suite_label": "EU2K Suite"
+      }
+    },
+    "privacy_policy": {
+      "effective_date": "<strong>Effective date:</strong> January 11, 2025",
+      "section_1_title": "1. Introduction",
+      "section_1_text": "EU2K Hub is the digital center of Európa 2000 Gimnázium, created for students, teachers, and interested parties. Our goal is to make school life simpler and more enjoyable while striving for transparency and security in data handling. This privacy policy details how we handle your personal data.",
+      "section_2_title": "2. What data do we collect?",
+      "section_2_1_title": "2.1. Login and profile data",
+      "section_2_1_1": "<strong>Authentication data:</strong> Basic information from Microsoft, Google, or Apple accounts (name, email address, profile picture)",
+      "section_2_1_2": "<strong>User profile:</strong> Display name, profile pictures, date of birth (optional), account type (student, teacher, parent)",
+      "section_2_1_3": "<strong>Settings:</strong> Language settings, notification settings, messaging settings",
+      "section_2_2_title": "2.2. School data",
+      "section_2_2_1": "<strong>Class information:</strong> Class name, names and contact information of classmates and teachers",
+      "section_2_2_2": "<strong>Academic data:</strong> Grades, schedule, assignments, homework (if available)",
+      "section_2_2_3": "<strong>Class profile:</strong> Class banner image, description, class statistics",
+      "section_2_3_title": "2.3. Community content",
+      "section_2_3_1": "<strong>Posts and comments:</strong> Content created in YouHub, Event Hub, and other community features",
+      "section_2_3_2": "<strong>Events:</strong> Created or attended events, courses, meetings",
+      "section_2_3_3": "<strong>Votes:</strong> Participation in votes and opinion polls",
+      "section_2_4_title": "2.4. Function-specific data",
+      "section_2_4_1": "<strong>YouHub:</strong> Statistics, schedule, notifications, suggestions, class month performance",
+      "section_2_4_2": "<strong>Event Hub:</strong> Event participation, QR code scans",
+      "section_2_4_3": "<strong>Class Hub:</strong> Class information, student groups",
+      "section_2_4_4": "<strong>Food Hub:</strong> Meal preferences (if available)",
+      "section_2_4_5": "<strong>QR code reading:</strong> Timestamps and locations of scanned QR codes",
+      "section_2_5_title": "2.5. Technical data",
+      "section_2_5_1": "<strong>Browser data:</strong> Browser type, operating system, device type",
+      "section_2_5_2": "<strong>Usage data:</strong> Page visits, clicks, session information",
+      "section_2_5_3": "<strong>Local storage:</strong> Use of localStorage and sessionStorage to store login status, settings, and other preferences",
+      "section_3_title": "3. How do we use the data?",
+      "section_3_1_title": "3.1. Service provision",
+      "section_3_1_1": "User account management and authentication",
+      "section_3_1_2": "Operation of school functions (schedule, grades, events)",
+      "section_3_1_3": "Provision of community features (posts, comments, events)",
+      "section_3_1_4": "Sending notifications about important information",
+      "section_3_2_title": "3.2. Service improvement",
+      "section_3_2_1": "Analysis of usage statistics to improve the service",
+      "section_3_2_2": "Identification and correction of errors",
+      "section_3_2_3": "User experience optimization",
+      "section_3_3_title": "3.3. Legal compliance",
+      "section_3_3_1": "Compliance with GDPR and other data protection laws",
+      "section_3_3_2": "Verification of permissions and security measures",
+      "section_3_important": "<strong>Important:</strong> We use data solely for the purposes mentioned above. We do not sell or share them with external companies for commercial purposes.",
+      "section_4_title": "4. Third-party services",
+      "section_4_1_title": "4.1. Firebase (Google)",
+      "section_4_1_1": "<strong>Firebase Authentication:</strong> User authentication management",
+      "section_4_1_2": "<strong>Cloud Firestore:</strong> Data storage and synchronization",
+      "section_4_1_3": "<strong>Firebase Storage:</strong> File storage (images, documents)",
+      "section_4_1_4": "<strong>Firebase Analytics:</strong> Usage statistics collection (only with consent)",
+      "section_4_1_5": "<strong>Firebase Functions:</strong> Backend function execution",
+      "section_4_1_text": "Data is stored in the Europe (europe-west1) region. More information: <a href=\"https://firebase.google.com/support/privacy\" target=\"_blank\">Firebase Privacy</a>",
+      "section_4_2_title": "4.2. Microsoft Clarity",
+      "section_4_2_1": "<strong>Usage:</strong> Website usage statistics and user behavior analysis (only with consent)",
+      "section_4_2_2": "<strong>Data handling:</strong> According to Microsoft privacy guidelines",
+      "section_4_2_3": "<strong>More information:</strong> <a href=\"https://clarity.microsoft.com/terms\" target=\"_blank\">Microsoft Clarity Terms</a>",
+      "section_4_3_title": "4.3. Microsoft Graph API",
+      "section_4_3_1": "<strong>Usage:</strong> Retrieval of Microsoft account information (name, email, profile picture)",
+      "section_4_3_2": "<strong>Data handling:</strong> Only minimal data necessary for login",
+      "section_5_title": "5. Cookies and tracking technologies",
+      "section_5_1_title": "5.1. Technical cookies (required)",
+      "section_5_1_1": "<strong>Login status:</strong> Session maintenance",
+      "section_5_1_2": "<strong>Settings:</strong> Language settings, preference storage",
+      "section_5_1_3": "<strong>Local storage:</strong> Use of localStorage and sessionStorage",
+      "section_5_2_title": "5.2. Analytics cookies (consent required)",
+      "section_5_2_1": "<strong>Firebase Analytics:</strong> Usage statistics collection",
+      "section_5_2_2": "<strong>Microsoft Clarity:</strong> User behavior analysis",
+      "section_5_text": "Prior consent is required for the use of analytics cookies. When the website first loads, a cookie banner appears where you can accept or reject these cookies. Consent can be withdrawn at any time in the settings.",
+      "section_6_title": "6. Who has access to the data?",
+      "section_6_1_title": "6.1. User permissions",
+      "section_6_1_1": "<strong>Students:</strong> Their own data, their class data, basic information of classmates",
+      "section_6_1_2": "<strong>Teachers:</strong> Their own data, their class data, basic information of students",
+      "section_6_1_3": "<strong>Parents:</strong> Their own data, their children's school data (if authorized)",
+      "section_6_1_4": "<strong>Administrators:</strong> Limited access for system maintenance",
+      "section_6_2_title": "6.2. Collaborative editing",
+      "section_6_2_1": "For certain features (e.g., class profile), community members can collaboratively edit content",
+      "section_6_2_2": "Class profile content is visible to class members",
+      "section_6_3_title": "6.3. Third parties",
+      "section_6_3_1": "Firebase (Google) services for data storage and processing",
+      "section_6_3_2": "Microsoft Clarity (only with consent) for usage statistics",
+      "section_6_3_3": "These providers handle data according to their own privacy policies",
+      "section_7_title": "7. How do we protect your data?",
+      "section_7_1_title": "7.1. Technical security measures",
+      "section_7_1_1": "<strong>Authentication:</strong> All logins occur through authenticated Microsoft, Google, or Apple accounts",
+      "section_7_1_2": "<strong>Encryption:</strong> Data transmission and storage occurs through encrypted connections (HTTPS/TLS)",
+      "section_7_1_3": "<strong>Firebase Security Rules:</strong> Strict access control for data",
+      "section_7_1_4": "<strong>Regular security checks:</strong> Regular system auditing",
+      "section_7_2_title": "7.2. Organizational measures",
+      "section_7_2_1": "We strictly limit access to data",
+      "section_7_2_2": "Only authorized persons have access to data",
+      "section_7_2_3": "We conduct regular training on data protection",
+      "section_7_3_title": "7.3. Data minimization",
+      "section_7_3_1": "We only collect data necessary for service operation",
+      "section_7_3_2": "We regularly review data collection and delete unnecessary data",
+      "section_8_title": "8. What rights do you have?",
+      "section_8_intro": "According to the General Data Protection Regulation (GDPR), you have the following rights:",
+      "section_8_1": "<strong>Right of access:</strong> You can request a copy of your data",
+      "section_8_2": "<strong>Right to rectification:</strong> You can request correction of incorrect data",
+      "section_8_3": "<strong>Right to erasure:</strong> You can request deletion of your data (if there is no legal basis for further storage)",
+      "section_8_4": "<strong>Right to restriction:</strong> You can request restriction of processing of your data",
+      "section_8_5": "<strong>Right to data portability:</strong> You can request transfer of your data in a structured, commonly used format",
+      "section_8_6": "<strong>Right to object:</strong> You can withdraw your consent to analytics cookies at any time",
+      "section_8_7": "<strong>Right to lodge a complaint:</strong> You can file a complaint with the data protection authority",
+      "section_8_contact": "To exercise your rights, write to the following email address: <a href=\"mailto:turoczi.adam@europa2000.hu\">turoczi.adam@europa2000.hu</a>",
+      "section_9_title": "9. Data retention period",
+      "section_9_1": "<strong>User account data:</strong> While the account is active, or until deletion",
+      "section_9_2": "<strong>Community content:</strong> Until the user deletes it, or until account deletion",
+      "section_9_3": "<strong>Analytics data:</strong> Maximum 26 months (if consent is given)",
+      "section_9_4": "<strong>Local storage (localStorage):</strong> Until the user deletes it, or until browser cache is cleared",
+      "section_9_text": "When the account is deleted, all personal data is deleted, except those that legal obligation (e.g., accounting data) or legitimate interest (e.g., security logs) requires to be retained.",
+      "section_10_title": "10. Children's data protection",
+      "section_10_text1": "EU2K Hub is primarily used in a school environment where students are generally under 14 years old. It is important that parents and teachers are aware of data handling. A school account is required to use the platform, which is under the supervision of the school.",
+      "section_10_text2": "If we handle data of children under 14, the joint consent of the school and parents is required. For any questions, please contact the school or the contact person below.",
+      "section_11_title": "11. Contact and complaints",
+      "section_11_intro": "If you have questions about data protection or wish to exercise your rights, write to us:",
+      "section_11_email": "<strong>Email:</strong> <a href=\"mailto:turoczi.adam@europa2000.hu\">turoczi.adam@europa2000.hu</a>",
+      "section_11_authority_intro": "<strong>Data protection authority:</strong> If you feel that the handling of your data violates data protection laws, you can file a complaint with the National Authority for Data Protection and Freedom of Information (NAIH):",
+      "section_11_authority_details": "<strong>NAIH:</strong><br>Address: 1055 Budapest, Falk Miksa utca 9-11.<br>Phone: +36 1 391 1400<br>Email: <a href=\"mailto:ugyfelszolgalat@naih.hu\">ugyfelszolgalat@naih.hu</a><br>Web: <a href=\"https://www.naih.hu\" target=\"_blank\">www.naih.hu</a>",
+      "footer": "© 2025 EU2K Hub – All rights reserved."
+    },
+    "terms_of_service": {
+      "effective_date": "<strong>Effective date:</strong> January 11, 2025",
+      "section_1_title": "1. Introduction",
+      "section_1_text": "Welcome to EU2K Hub! EU2K Hub is the digital center of Európa 2000 Gimnázium, created for students, teachers, and interested parties. By using the platform, you accept these terms of service. Please read this document carefully before using the service.",
+      "section_2_title": "2. Accounts and Permissions",
+      "section_2_1_title": "2.1. Account Creation",
+      "section_2_1_1": "<strong>School account required:</strong> A school account (Microsoft, Google, or Apple) is required to use the platform",
+      "section_2_1_2": "<strong>User types:</strong> The platform supports three user types: student, teacher, and parent",
+      "section_2_1_3": "<strong>Account security:</strong> You are responsible for the security of your account. Do not share your password or login credentials with others",
+      "section_2_2_title": "2.2. Account Types and Permissions",
+      "section_2_2_1": "<strong>Students:</strong> Can access their own data, their class data, YouHub, Event Hub, and other community features",
+      "section_2_2_2": "<strong>Teachers:</strong> Can access their class data, their students' basic information, and create and manage events",
+      "section_2_2_3": "<strong>Parents:</strong> Can access their children's school data (if authorized), and receive notifications about important information",
+      "section_2_3_title": "2.3. Account Misuse",
+      "section_2_3_text": "If the system detects misuse (e.g., a student logging in with a parent account), we reserve the right to modify the account type, send notifications, or even restrict functions. Any form of system exploitation is prohibited and will result in punishment.",
+      "section_3_title": "3. Acceptable Use",
+      "section_3_1_title": "3.1. General Rules",
+      "section_3_1_1": "You may only use the platform for lawful and school purposes",
+      "section_3_1_2": "It is prohibited to use or obtain others' accounts",
+      "section_3_1_3": "It is prohibited to circumvent the security of the system or network",
+      "section_3_1_4": "It is prohibited to distribute viruses, malware, or other harmful software",
+      "section_3_2_title": "3.2. Community Behavior",
+      "section_3_2_1": "Behave respectfully towards other users",
+      "section_3_2_2": "Harassment, threats, or abuse of any kind is prohibited",
+      "section_3_2_3": "Discrimination, hate speech, or offending others is prohibited",
+      "section_3_2_4": "Spam, advertising, or unsolicited content is prohibited",
+      "section_4_title": "4. Content Rules",
+      "section_4_1_title": "4.1. Uploaded Content",
+      "section_4_1_1": "<strong>Responsibility:</strong> You are responsible for all content you upload or share on the platform",
+      "section_4_1_2": "<strong>Prohibited content:</strong> It is prohibited to upload content that violates others' rights, is illegal, or offensive",
+      "section_4_1_3": "<strong>Intellectual property:</strong> Only upload content you have rights to",
+      "section_4_2_title": "4.2. Content Moderation",
+      "section_4_2_text": "We reserve the right to delete, modify, or remove any content that violates these terms or platform rules at any time. Repeated violations may result in account suspension or deletion.",
+      "section_5_title": "5. Intellectual Property",
+      "section_5_1_title": "5.1. Platform Content",
+      "section_5_1_text": "The EU2K Hub platform, design, logo, and all related content are the intellectual property of Európa 2000 Gimnázium and EU2K Devs. Use of the platform does not grant rights to copy, distribute, or modify the content.",
+      "section_5_2_title": "5.2. User Content",
+      "section_5_2_text": "Content uploaded to the platform remains your property. However, by using the platform, you grant permission to display, store, and manage the content to the extent necessary for the platform to function.",
+      "section_6_title": "6. Liability",
+      "section_6_1_title": "6.1. Service Availability",
+      "section_6_1_text": "The platform is provided \"as is\". We do not assume responsibility for continuous availability, error-free operation, or data loss. The service may be temporarily unavailable due to regular maintenance and updates.",
+      "section_6_2_title": "6.2. Third-Party Content",
+      "section_6_2_text": "The platform may contain content created by third parties (e.g., events, courses). Only the creator is responsible for such content. The Hub, the school, and the platform developers do not assume responsibility for such content.",
+      "section_6_3_title": "6.3. User Responsibility",
+      "section_6_3_text": "You are responsible for your use of the platform and all activities conducted through your account. You are personally liable for violations or breaches of these terms.",
+      "section_7_title": "7. Service Modifications",
+      "section_7_text": "We reserve the right to modify, update, or discontinue the platform or any part of it at any time. We will notify users of significant changes, but we do not assume responsibility for the availability of previous features.",
+      "section_7_beta": "<strong>Important:</strong> The platform is currently in beta version. This means features may change, errors may occur, and full support is not yet available.",
+      "section_8_title": "8. Account Termination",
+      "section_8_1_title": "8.1. Voluntary Termination",
+      "section_8_1_text": "You may request deletion of your account at any time through settings or by contacting us. After account deletion, all personal data will be deleted, except for those required to be retained by legal obligations or legitimate interests.",
+      "section_8_2_title": "8.2. Suspension or Deletion",
+      "section_8_2_text": "In case of serious violations or breaches of these terms, we reserve the right to immediately suspend or delete the account without prior notice. In such cases, the user is not entitled to refund or compensation.",
+      "section_9_title": "9. Changes to Terms",
+      "section_9_text": "We reserve the right to modify these terms of service at any time. We will notify users of significant changes via email or through the platform. Continued use of the service after changes constitutes acceptance of the modifications.",
+      "section_10_title": "10. Contact",
+      "section_10_intro": "If you have questions about the terms of service or wish to report a violation, write to us:",
+      "section_10_email": "<strong>Email:</strong> <a href=\"mailto:turoczi.adam@europa2000.hu\">turoczi.adam@europa2000.hu</a>",
+      "section_10_response": "We will try to respond to all questions or reports within 48 hours.",
+      "footer": "© 2025 EU2K Hub – All rights reserved."
+    }
+  },
+  "popup_notifications_title": "Pop-up Notifications",
+  "event_hub_popup_label": "Event Hub",
+  "new_things_popup_label": "New Things",
+  "beta_popup_label": "Beta Version",
+  "wd_popup_label": "Warnings & Critical Things",
+  "popups_popup_label": "Pop-up Windows",
+  "notifications_and_sound": "Notifications & Sound",
+  "silent_mode_title": "Silent Mode",
+  "silent_mode_desc": "While you are at school, sound will not follow notifications.",
+  "turn_on_sound": "Turn on Sound",
+  "sounds_title": "Sounds",
+  "notification_sound_title": "Notification Sound",
+  "bubble1": "Bubble 1",
+  "bubble2": "Bubble 2",
+  "bubble3": "Bubble 3",
+  "push_notifications_title": "Push Notifications",
+  "push_notifications_desc": "Push notifications are quick, pressure-like notifications appearing in the top right corner of your screen.",
+  "sort_label": "Sort",
+  "categories_option": "Categories",
+  "abc_order_option": "Alphabetical Order",
+  "news_label": "News",
+  "events_label": "Events & Event Hub",
+  "messages_label": "Messages",
+  "posts_label": "Posts",
+  "invites_label": "Invites",
+  "new_things_label": "New Things",
+  "location_mute_title": "Location-based mute",
+  "silent_mode_popup_title": "Silent mode",
+  "silent_mode_popup_desc": "With this button you can turn off silent mode for today.\n\nIt seems you are in school hours, so notifications might be disturbing.\n\nIf you still turn it off, it's a good idea to mute your device during classes.",
+  "silent_mode_popup_confirm": "Turn off silent mode for today",
+  "youhub": {
+    "header": {
+      "edit": "Edit"
+    },
+    "banners": {
+      "info": {
+        "title": "This is the new design.",
+        "description": "We hope you like the Europa Design System. If you have any questions, please provide feedback, even from here.",
+        "feedback": "Feedback",
+        "close": "Close"
+      },
+      "warning": {
+        "title": "YouHub is still in beta.",
+        "description": "We're glad you're interested in YouHub, but please note that you're using unfinished software.",
+        "feedback": "Feedback",
+        "close": "Close"
+      }
+    },
+    "revert": {
+      "title": "Are you sure you want to reset the order?",
+      "text": "Your current layout will be lost and you'll need to reset it manually!",
+      "button": "Reset"
+    },
+    "dev_mode": {
+      "title": "Developer Mode",
+      "text": "Enter password:",
+      "password_placeholder": "Password",
+      "login_button": "Login"
+    },
+    "myclass": {
+      "title": "My Class",
+      "month": "My Class Month",
+      "suggestions": "Class Suggestions",
+      "info": "Information",
+      "states": {
+        "suggestions_summer": {
+          "title": "You can't wait for school that much.",
+          "description": "School starts in {days} days.",
+          "list_item1": "We're working on implementing the Suggestions Hub.",
+          "list_item2": "When ready, your favorite ideas will appear here."
+        },
+        "suggestions_normal": {
+          "description": "Class ideas and feedback will appear here soon.",
+          "list_item1": "We're working on implementing the Suggestions Hub.",
+          "list_item2": "When ready, your favorite ideas will appear here."
+        },
+        "info1": {
+          "tag": "Information",
+          "title": "Class contact card",
+          "description": "You'll be able to see your class contact card here soon.",
+          "list_item1": "QR Code for your class and teachers.",
+          "list_item2": "Easy sharing with others."
+        },
+        "info2": {
+          "tag": "Information",
+          "title": "Class basic data",
+          "description": "Class size, room assignment, and class teacher information will appear here.",
+          "list_item1": "Room assignment, selected data.",
+          "list_item2": "Class teacher contact information"
+        }
+      }
+    },
+    "notifications": {
+      "title": "Notifications",
+      "history": "History",
+      "empty": {
+        "title": "You have no notifications",
+        "subtitle": "Check back later :D"
+      },
+      "detail": {
+        "title": "Notifications",
+        "subtitle": "Select a notification",
+        "sent_to": "Sent to:",
+        "delete": "Delete",
+        "snooze": "Snooze",
+        "notification": "Notification"
+      }
+    },
+    "suggestions": {
+      "title": "Suggestions",
+      "hive": "Hive",
+      "submit": "Submit",
+      "hive_placeholder": {
+        "title": "Hive Suggestions",
+        "description": "You will see submitted ideas here once this interface is ready."
+      },
+      "submit_steps": {
+        "step1": {
+          "heading": "Basic information",
+          "title_label": "Title",
+          "title_placeholder": "Type here...",
+          "content_label": "Suggestion",
+          "content_placeholder": "Type here...",
+          "type_heading": "Choose the type",
+          "hive_title": "Hive",
+          "hive_description": "If you choose this, your Suggestion will be added to Hive, and the leadership will consider your idea."
+        },
+        "step2": {
+          "heading": "Display to whom",
+          "user_label": "Display to whom",
+          "user_placeholder": "Type here...",
+          "group_label": "Target group",
+          "group_placeholder": "Type here...",
+          "share_heading": "Sharing",
+          "share_title": "External Sharing",
+          "share_description": "Allow the school to share your Suggestion on external platforms as well."
+        }
+      },
+      "actions": {
+        "next": "Next",
+        "submit": "Submit suggestion"
+      },
+      "card": {
+        "author": "Name",
+        "type_ai_prompt": "AI prompt",
+        "title": "Title",
+        "description": "Description",
+        "placeholder_title": "Suggestion",
+        "placeholder_description": "Your new suggestions will appear here.",
+        "type_suggestion": "Suggestion",
+        "type_hive": "Hive"
+      },
+      "edit_mode": {
+        "enter": "Edit",
+        "exit": "Exit edit mode"
+      },
+      "prediction": "Prediction",
+      "default_notification_title": "Notification",
+      "unknown_user": "Unknown user",
+      "unknown_error": "Unknown error",
+      "tabs": {
+        "suggestions": "Suggestions",
+        "class_suggestions": "Class Suggestions"
+      },
+      "notifications": {
+        "actions": {
+          "snooze": "Snooze",
+          "open": "Open"
+        },
+        "types": {
+          "info": "Information",
+          "success": "Success",
+          "warning": "Warning",
+          "error": "Error"
+        },
+        "messages": {
+          "info": "This is an informational notification.",
+          "info_blue": "This is a blue informational notification.",
+          "success": "The operation completed successfully!",
+          "warning": "Please fill in the required fields.",
+          "error": "An error occurred during the operation!",
+          "test": "This is a test notification.",
+          "test_shown": "Test notification displayed",
+          "testing_all": "Testing all notification types..."
+        }
+      }
+    },
+    "calendar": {
+      "empty": {
+        "title": "Calendar is not yet available.",
+        "subtitle": "Check back later!"
+      }
+    },
+    "messages": {
+      "login_required": "Please log in to submit.",
+      "fill_required": "Please fill in the title and suggestion fields.",
+      "submit_success": "Your suggestion has been submitted successfully!",
+      "submit_error": "Failed to submit the suggestion. Please try again later.",
+      "wrong_password": "Wrong password!",
+      "delete_error": "An error occurred while deleting."
+    }
+  },
+  "admin": {
+    "console": {
+      "title": "Admin Console",
+      "password_text": "Enter password:",
+      "password_placeholder": "Password",
+      "login_button": "Login",
+      "sync": {
+        "users_title": "User synchronization",
+        "users_description": "Reads all users from the users collection and creates/updates the appropriate documents.",
+        "names_button": "Sync names",
+        "pictures_button": "Sync pictures",
+        "syncing": "Synchronizing...",
+        "loading_users": "Loading users...",
+        "no_users": "No users in the users collection.",
+        "processing": "users being processed...",
+        "processed": "Processed:",
+        "success_names": "Success! user names synchronized.",
+        "success_pictures": "Success! user pictures synchronized.",
+        "done": "Done! successful, errors.",
+        "error": "Error:",
+        "info_show": "Show information",
+        "info_hide": "Hide information",
+        "info_text": "Names: public/users/nevek/{userId} - The name field contains the displayName value\n\nPictures: public/users/profilePictures/{userId} - Contains the useProvidedPfp, pfpColor, and profilePictureUrl fields"
+      },
+      "assign_class": {
+        "title": "Assign to class",
+        "description": "You can assign users to classes in the classes/{classId}/users collection.",
+        "button": "Assign to class",
+        "popup1": {
+          "title": "Select class",
+          "text": "Enter the group name:",
+          "placeholder": "Type here...",
+          "checkbox_title": "Create values",
+          "checkbox_description": "If checked, fills the grades documents with values (0.00-5.00).",
+          "next": "Next"
+        },
+        "popup2": {
+          "title": "Select users",
+          "text": "Enter user names, or click auto-assign:",
+          "placeholder": "Type here...",
+          "back": "Back",
+          "finish": "Finish",
+          "auto": "Auto"
+        }
+      },
+      "messages": {
+        "password_required": "Please enter the password!",
+        "wrong_password": "Wrong password!",
+        "password_check_error": "An error occurred while checking the password. Please try again.",
+        "session_expired": "Session expired. Please log in again.",
+        "class_name_required": "Please enter the class name!",
+        "class_not_found": "No class found with this name!",
+        "no_class_selected": "No class selected!",
+        "login_required": "You must be logged in!",
+        "auto_success": "users automatically selected.",
+        "auto_error": "An error occurred during automatic selection.",
+        "no_users_selected": "No users selected!",
+        "assign_success": "Success! users assigned to class.",
+        "assign_done": "Done! successful, errors.",
+        "assign_error": "An error occurred while assigning to class."
+      },
+      "status": {
+        "missing_data": "Missing data",
+        "wrong_data": "Wrong data",
+        "error": "Error",
+        "success": "Success",
+        "operation_complete": "Operation complete",
+        "session_expired": "Session expired"
+      }
+    }
+  },
+  "general": {
+    "close": "Close",
+    "unknown_user": "Unknown user(s)",
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    }
+  },
+  "footer": {
+    "participated": "Participated by:",
+    "legal": {
+      "title": "Legal Statements",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "beta": "Beta Software Usage Notice"
+    },
+    "hubs": {
+      "title": "Hubs"
+    },
+    "special": {
+      "title": "Our Specialty",
+      "company": "Make your own EU2K Company!"
+    },
+    "copyright": "© 2025 EU2K Devs and Európa 2000 Gimnázium. All Rights Reserved.",
+    "beta": "BETA"
+  }
+},
+  "maintenance": {
+    "title": "The Hub is arriving soon!",
+    "description": "You don’t have to wait long ;)."
+  },
+  "guest": {
+    "youhub_title": "YouHub is not available for guests.",
+    "youhub_description": "Sign in to unlock endless possibilities with YouHub.",
+    "settings_title": "You cannot access this section as a guest.",
+    "settings_description": "Sign in for more customization and convenience!."
+  }
