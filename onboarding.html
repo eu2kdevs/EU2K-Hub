@@ -2081,8 +2081,34 @@
           
           // 2️⃣ Graph access token kinyerése a Firebase response-ból
           console.log('🔑 Extracting Microsoft Graph access token from Firebase credential...');
-          const credential = OAuthProvider.credentialFromResult(result);
-          const graphAccessToken = credential?.accessToken;
+          console.log('🔍 Full result object:', result);
+          console.log('🔍 result._tokenResponse:', result?._tokenResponse);
+          console.log('🔍 result.credential:', result?.credential);
+          
+          // Próbáljuk meg az OAuthProvider.credentialFromResult metódust használni
+          let graphAccessToken = null;
+          try {
+            // Firebase Auth v9+ esetén az OAuthProvider.credentialFromResult metódust kell használni
+            if (typeof OAuthProvider !== 'undefined' && OAuthProvider.credentialFromResult) {
+              const credential = OAuthProvider.credentialFromResult(result);
+              graphAccessToken = credential?.accessToken;
+              console.log('✅ Token extracted using OAuthProvider.credentialFromResult');
+            }
+          } catch (e) {
+            console.warn('⚠️ OAuthProvider.credentialFromResult not available, trying alternative methods:', e);
+          }
+          
+          // Ha nem sikerült az OAuthProvider.credentialFromResult-tal, próbáljuk meg más módon
+          if (!graphAccessToken) {
+            // Firebase Auth-ban az OAuth access token a _tokenResponse objektumban van
+            graphAccessToken = result?._tokenResponse?.oauthAccessToken || 
+                              result?._tokenResponse?.accessToken ||
+                              result?.credential?.accessToken ||
+                              result?._tokenResponse?.oauthIdToken;
+            console.log('🔍 Trying alternative token extraction methods');
+          }
+          
+          console.log('🔍 Extracted token:', graphAccessToken ? 'Found (' + graphAccessToken.substring(0, 20) + '...)' : 'Not found');
           
           if (!graphAccessToken) {
             console.warn('⚠️ No Graph access token in Firebase credential - Graph API calls may not work');
