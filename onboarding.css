@@ -211,10 +211,11 @@ body {
 }
 
 .onboarding-header-icon {
-  width: 22px;
-  height: 22px;
+  width: 22px !important;
+  height: 22px !important;
   flex-shrink: 0;
   display: block;
+  object-fit: contain;
 }
 
 .onboarding-header-text {
@@ -829,6 +830,19 @@ body {
 
 .looks-continue-btn:active {
   animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+}
+
+.looks-default-continue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px 0;
+}
+
+.looks-default-continue .looks-continue-btn {
+  max-width: 300px;
+  width: 100%;
 }
 
 .name-screen {

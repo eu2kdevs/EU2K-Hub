@@ -235,6 +235,10 @@
                   </div>
                 </div>
                 <div class="looks-color-grid" id="looksColorGrid"></div>
+                <!-- Alapértelmezett Tovább gomb (ha nincs grid) -->
+                <div class="looks-default-continue" id="looksDefaultContinue" style="display: none;">
+                  <button class="looks-continue-btn" id="looksDefaultContinueBtn">Tovább</button>
+                </div>
               </div>
             </div>
           </div>
@@ -1738,7 +1742,7 @@
         const finishedHomeBtn = document.getElementById('finishedHomeBtn');
         if (finishedHomeBtn) {
           finishedHomeBtn.addEventListener('click', () => {
-            window.location.href = '/';
+            window.location.href = '/EU2K-Hub/index.html';
           });
           // Animáció hozzáadása
           setTimeout(() => {
@@ -2412,21 +2416,61 @@
           }
           keysToRemove.forEach(key => localStorage.removeItem(key));
           
-          // Sign out from Firebase if logged in
+          // Sign out from Firebase if logged in - használjuk a window.logout() függvényt
           if (window.auth && window.auth.currentUser) {
             try {
-              await window.signOut(window.auth);
-              console.log('✅ Signed out successfully');
+              // Először próbáljuk meg a window.logout() függvényt használni
+              if (typeof window.logout === 'function') {
+                console.log('🔒 Calling window.logout() for complete logout...');
+                await window.logout();
+              } else {
+                // Fallback: közvetlen signOut hívás
+                await window.signOut(window.auth);
+                console.log('✅ Signed out successfully');
+              }
             } catch (error) {
               console.error('❌ Error signing out:', error);
+              // Próbáljuk meg még egyszer közvetlenül
+              try {
+                await window.signOut(window.auth);
+                console.log('✅ Signed out successfully (retry)');
+              } catch (retryError) {
+                console.error('❌ Error signing out (retry failed):', retryError);
+              }
             }
           }
           
+          // További törlés: MSAL account törlése, ha van
+          if (window.msalInstance) {
+            try {
+              const accounts = window.msalInstance.getAllAccounts();
+              if (accounts && accounts.length > 0) {
+                // MSAL account törlése
+                accounts.forEach(account => {
+                  window.msalInstance.removeAccount(account);
+                });
+                console.log('✅ MSAL accounts cleared');
+              }
+            } catch (msalError) {
+              console.warn('⚠️ Error clearing MSAL accounts:', msalError);
+            }
+          }
+          
+          // Graph token törlése
+          localStorage.removeItem('eu2k-graph-access-token');
+          localStorage.removeItem('eu2k-graph-token');
+          localStorage.removeItem('eu2k-ms-access-token');
+          
           // Clear session storage
-          sessionStorage.removeItem('eu2k_previous_hash');
+          sessionStorage.clear();
           
           // Go back to welcome screen
           window.location.hash = '';
+          
+          // Oldal újratöltése, hogy biztosan törlődjenek az auth állapotok
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
         });
       }
 
@@ -2569,60 +2613,15 @@
           row2.appendChild(item);
         });
         
-        // Continue button
+        // Continue button - csak akkor jelenik meg, ha van grid
         const continueBtnContainer = document.createElement('div');
         continueBtnContainer.style.flex = '2';
         continueBtnContainer.style.display = 'flex';
         const continueBtn = document.createElement('button');
         continueBtn.className = 'looks-continue-btn';
         continueBtn.textContent = 'Tovább';
-        continueBtn.addEventListener('click', async () => {
-          const usingSchoolProfile = useSchoolProfileSelected;
-          const effectiveColor = selectedColorId || null;
-          
-          if (!usingSchoolProfile && !effectiveColor) {
-            alert('Válassz egy avatárt vagy használd az iskolai profilképedet!');
-            return;
-          }
-          
-          if (usingSchoolProfile && !profileImageBlob) {
-            const blob = await fetchMicrosoftProfilePicture();
-            if (blob) {
-              profileImageBlob = blob;
-            } else {
-              console.warn('⚠️ Nem sikerült lekérni az iskolai profilképet, színes avatárt fogunk használni.');
-            }
-          }
-          
-          const finalUseSchoolProfile = usingSchoolProfile && !!profileImageBlob;
-          const finalColor = finalUseSchoolProfile ? '' : effectiveColor;
-          const colorProvidedFlag = !!finalColor;
-          
-          localStorage.setItem('eu2k-onboarding-use-provided-pfp', colorProvidedFlag ? 'true' : 'false');
-          if (colorProvidedFlag && finalColor) {
-            localStorage.setItem('eu2k-selected-color', finalColor);
-            localStorage.setItem('eu2k-onboarding-avatar', finalColor);
-          } else {
-            localStorage.removeItem('eu2k-selected-color');
-          }
-          
-          if (profileImageBlob) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              localStorage.setItem('eu2k-profile-image', reader.result);
-            };
-            reader.readAsDataURL(profileImageBlob);
-          }
-          
-          const saved = await saveAvatarSelectionToFirestore(colorProvidedFlag, finalColor);
-          if (!saved) {
-            alert('Nem sikerült elmenteni a választásodat. Próbáld újra!');
-            return;
-          }
-          
-          console.log('✅ Profile selection saved');
-          window.location.hash = '#name';
-        });
+        continueBtn.id = 'looksGridContinueBtn';
+        continueBtn.addEventListener('click', handleDefaultContinue);
         continueBtnContainer.appendChild(continueBtn);
         row2.appendChild(continueBtnContainer);
         
@@ -2836,12 +2835,73 @@
         }
       }
       
+      // Alapértelmezett Tovább gomb handler (ha nincs grid)
+      async function handleDefaultContinue() {
+        const usingSchoolProfile = useSchoolProfileSelected;
+        const effectiveColor = selectedColorId || null;
+        
+        if (!usingSchoolProfile && !effectiveColor) {
+          alert('Válassz egy avatárt vagy használd az iskolai profilképedet!');
+          return;
+        }
+        
+        if (usingSchoolProfile && !profileImageBlob) {
+          const blob = await fetchMicrosoftProfilePicture();
+          if (blob) {
+            profileImageBlob = blob;
+          } else {
+            console.warn('⚠️ Nem sikerült lekérni az iskolai profilképet, színes avatárt fogunk használni.');
+          }
+        }
+        
+        const finalUseSchoolProfile = usingSchoolProfile && !!profileImageBlob;
+        const finalColor = finalUseSchoolProfile ? '' : effectiveColor;
+        const colorProvidedFlag = !!finalColor;
+        
+        localStorage.setItem('eu2k-onboarding-use-provided-pfp', finalUseSchoolProfile ? 'true' : 'false');
+        if (colorProvidedFlag && finalColor) {
+          localStorage.setItem('eu2k-selected-color', finalColor);
+          localStorage.setItem('eu2k-onboarding-avatar', finalColor);
+        } else {
+          localStorage.removeItem('eu2k-selected-color');
+        }
+        
+        if (profileImageBlob) {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            localStorage.setItem('eu2k-profile-image', reader.result);
+          };
+          reader.readAsDataURL(profileImageBlob);
+        }
+        
+        const saved = await saveAvatarSelectionToFirestore(colorProvidedFlag, finalColor);
+        if (!saved) {
+          alert('Nem sikerült elmenteni a választásodat. Próbáld újra!');
+          return;
+        }
+        
+        console.log('✅ Profile selection saved');
+        window.location.hash = '#name';
+      }
+      
+      if (looksDefaultContinueBtn) {
+        looksDefaultContinueBtn.addEventListener('click', handleDefaultContinue);
+      }
+      
       // Use school profile button handler
       if (useSchoolProfileBtn) {
         useSchoolProfileBtn.addEventListener('click', async () => {
           useSchoolProfileSelected = true;
           useSchoolProfileBtn.classList.add('active');
           if (blobbyBtn) blobbyBtn.classList.remove('active');
+          
+          // Grid elrejtése, ha látható
+          if (looksColorGrid && looksColorGrid.innerHTML.trim() !== '') {
+            looksColorGrid.style.display = 'none';
+          }
+          if (looksDefaultContinue) {
+            looksDefaultContinue.style.display = 'flex';
+          }
           
           if (!profileImageBlob) {
             const blob = await fetchMicrosoftProfilePicture();
@@ -2868,30 +2928,82 @@
           useSchoolProfileSelected = false;
           if (useSchoolProfileBtn) useSchoolProfileBtn.classList.remove('active');
           selectedAvatarType = 'blobby';
+          
+          // Grid megjelenítése, ha még nincs
+          const hasAvatarItems = looksColorGrid && looksColorGrid.querySelector('.looks-color-item');
+          if (!hasAvatarItems) {
+            console.log('🎨 Generating color grid after Blobby click...');
+            generateColorGrid();
+          }
+          
+          // Grid megjelenítése, alapértelmezett Tovább gomb elrejtése
+          if (looksColorGrid) {
+            looksColorGrid.style.display = 'grid';
+          }
+          if (looksDefaultContinue) {
+            looksDefaultContinue.style.display = 'none';
+          }
         });
       }
       
       if (randomBtn) {
         randomBtn.addEventListener('click', () => {
-          // Randomly select an avatar
-          const randomColor = colorOptions[Math.floor(Math.random() * colorOptions.length)];
-          selectedColorId = randomColor.id;
-          useSchoolProfileSelected = false;
-          if (useSchoolProfileBtn) useSchoolProfileBtn.classList.remove('active');
-          if (blobbyBtn) blobbyBtn.classList.add('active');
+          // Először válasszunk: iskolai kép vagy blobby
+          const useSchool = Math.random() < 0.5;
           
-          // Update UI
-          document.querySelectorAll('.looks-color-item').forEach(item => {
-            item.classList.remove('selected');
-            if (item.dataset.colorId === randomColor.id) {
-              item.classList.add('selected');
+          if (useSchool && profileImageBlob) {
+            // Iskolai profilkép használata
+            useSchoolProfileSelected = true;
+            selectedColorId = null;
+            if (useSchoolProfileBtn) {
+              useSchoolProfileBtn.classList.add('active');
             }
-          });
-          
-          // Update preview
-          if (looksPreviewImage) {
-            looksPreviewImage.src = randomColor.image;
-            looksPreviewImage.style.display = 'block';
+            if (blobbyBtn) {
+              blobbyBtn.classList.remove('active');
+            }
+            
+            // Profilkép megjelenítése
+            const imageUrl = URL.createObjectURL(profileImageBlob);
+            if (looksPreviewImage) {
+              looksPreviewImage.src = imageUrl;
+              looksPreviewImage.style.display = 'block';
+            }
+          } else {
+            // Blobby választása + random szín
+            useSchoolProfileSelected = false;
+            if (useSchoolProfileBtn) {
+              useSchoolProfileBtn.classList.remove('active');
+            }
+            if (blobbyBtn) {
+              blobbyBtn.classList.add('active');
+            }
+            
+            // Grid megjelenítése, ha még nincs
+            const hasAvatarItems = looksColorGrid && looksColorGrid.querySelector('.looks-color-item');
+            if (!hasAvatarItems) {
+              console.log('🎨 Generating color grid after Random click...');
+              generateColorGrid();
+            }
+            
+            // Random szín választása
+            const randomColor = colorOptions[Math.floor(Math.random() * colorOptions.length)];
+            selectedColorId = randomColor.id;
+            
+            // Update UI
+            setTimeout(() => {
+              document.querySelectorAll('.looks-color-item').forEach(item => {
+                item.classList.remove('selected');
+                if (item.dataset.colorId === randomColor.id) {
+                  item.classList.add('selected');
+                }
+              });
+            }, 100);
+            
+            // Update preview
+            if (looksPreviewImage) {
+              looksPreviewImage.src = randomColor.image;
+              looksPreviewImage.style.display = 'block';
+            }
           }
         });
       }
@@ -3364,22 +3476,55 @@
       }
       
       // Initialize color grid when looks screen is shown
+      // Looks screen inicializálása: alapértelmezetten Microsoft profilkép, ha van
       if (looksScreen) {
         console.log('👀 Setting up looks screen observer...');
+        
+        // Alapértelmezett állapot beállítása: ha van Microsoft profilkép, azt mutassuk
+        const initializeLooksScreen = () => {
+          const savedPhotoUrl = localStorage.getItem('eu2k-onboarding-school-photo-url');
+          const hasAvatarItems = looksColorGrid && looksColorGrid.querySelector('.looks-color-item');
+          
+          if (savedPhotoUrl && !hasAvatarItems) {
+            // Van Microsoft profilkép, alapértelmezett Tovább gomb megjelenítése
+            console.log('✅ Microsoft profilkép találva, alapértelmezett Tovább gomb megjelenítése');
+            useSchoolProfileSelected = true;
+            if (useSchoolProfileBtn) {
+              useSchoolProfileBtn.classList.add('active');
+            }
+            if (blobbyBtn) {
+              blobbyBtn.classList.remove('active');
+            }
+            if (looksColorGrid) {
+              looksColorGrid.style.display = 'none';
+            }
+            if (looksDefaultContinue) {
+              looksDefaultContinue.style.display = 'flex';
+            }
+            
+            // Profilkép megjelenítése
+            if (looksPreviewImage && savedPhotoUrl) {
+              looksPreviewImage.src = savedPhotoUrl;
+              looksPreviewImage.style.display = 'block';
+            }
+          } else if (!hasAvatarItems) {
+            // Nincs profilkép, de még nincs grid sem - alapértelmezett Tovább gomb
+            if (looksColorGrid) {
+              looksColorGrid.style.display = 'none';
+            }
+            if (looksDefaultContinue) {
+              looksDefaultContinue.style.display = 'flex';
+            }
+          }
+        };
+        
         const observer = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
             if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
               const isVisible = looksScreen.style.display === 'flex';
               console.log('🔄 Looks screen visibility changed:', isVisible, 'display:', looksScreen.style.display);
-              // Ha a képernyő látható és még nincsenek avatar elemek, generáljuk le a gridet
               if (isVisible) {
-                const hasAvatarItems = looksColorGrid && looksColorGrid.querySelector('.looks-color-item');
-                if (!hasAvatarItems) {
-                  console.log('🎨 Triggering generateColorGrid()...');
-                  generateColorGrid();
-                  // Set blobby as default selected
-                  if (blobbyBtn) blobbyBtn.classList.add('active');
-                }
+                initializeLooksScreen();
               }
             }
           });
@@ -3390,11 +3535,10 @@
           attributeFilter: ['style']
         });
         
-        // AZONNAL generáljuk le, ha már látható
+        // AZONNAL inicializáljuk, ha már látható
         if (looksScreen.style.display === 'flex') {
-          console.log('🎨 Looks screen already visible, generating grid immediately...');
-          generateColorGrid();
-          if (blobbyBtn) blobbyBtn.classList.add('active');
+          console.log('🎨 Looks screen already visible, initializing...');
+          initializeLooksScreen();
         }
       } else {
         console.error('❌ looksScreen element not found!');
