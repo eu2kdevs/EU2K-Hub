@@ -978,8 +978,8 @@
             <div class="footer-section-first">
               <div class="footer-section-title" data-translate="footer.legal.title">Jogi Nyilatkozatok</div>
               <div class="footer-section-items">
-                <a href="/privacy-policy" class="footer-item" data-translate="footer.legal.privacy">Adatvédelmi&nbsp;Tájékoztató</a>
-                <a href="/terms-of-service" class="footer-item" data-translate="footer.legal.terms">Használati&nbsp;Feltételek</a>
+                <a href="privacy-policy.html" class="footer-item" data-translate="footer.legal.privacy">Adatvédelmi&nbsp;Tájékoztató</a>
+                <a href="terms-of-service.html" class="footer-item" data-translate="footer.legal.terms">Használati&nbsp;Feltételek</a>
                 <div class="footer-item" data-translate="footer.legal.beta">Előzetes-szoftver<br>használati&nbsp;tájékoztatója</div>
               </div>
             </div>
@@ -1231,8 +1231,8 @@
           console.log('[Settings] 🏠 Defaulting to index.html');
         }
         
-        // Normalizáljuk a path-ot
-        referrerPath = referrerPath.replace(/^\/+/, '/').replace(/\/+$/, '');
+        // Normalizáljuk a path-ot - eltávolítjuk az /EU2K-Hub/ prefixet ha van
+        referrerPath = referrerPath.replace(/^\/EU2K-Hub/, '').replace(/^\/+/, '/').replace(/\/+$/, '');
         if (referrerPath === '/' || referrerPath === '') {
           referrerPath = '/index.html';
         }
@@ -1256,31 +1256,56 @@
         }
         
         const pageMap = {
-          '/index.html': { nameKey: 'pages.settings.back_to_home', path: '/index.html' },
-          '/index': { nameKey: 'pages.settings.back_to_home', path: '/index.html' },
-          '/': { nameKey: 'pages.settings.back_to_home', path: '/index.html' },
-          '/youhub.html': { nameKey: 'pages.settings.back_to_youhub', path: '/youhub.html' },
-          '/youhub': { nameKey: 'pages.settings.back_to_youhub', path: '/youhub.html' },
-          '/event_hub.html': { nameKey: 'pages.settings.back_to_event_hub', path: '/event_hub.html' },
-          '/event_hub': { nameKey: 'pages.settings.back_to_event_hub', path: '/event_hub.html' },
-          '/food_hub.html': { nameKey: 'pages.settings.back_to_food_hub', path: '/food_hub.html' },
-          '/food_hub': { nameKey: 'pages.settings.back_to_food_hub', path: '/food_hub.html' },
-          '/fitness_hub.html': { nameKey: 'pages.settings.back_to_fitness_hub', path: '/fitness_hub.html' },
-          '/fitness_hub': { nameKey: 'pages.settings.back_to_fitness_hub', path: '/fitness_hub.html' },
-          '/class_hub.html': { nameKey: 'pages.settings.back_to_class_hub', path: '/class_hub.html' },
-          '/class_hub': { nameKey: 'pages.settings.back_to_class_hub', path: '/class_hub.html' },
-          '/qr-code.html': { nameKey: 'pages.settings.back_to_qr', path: '/qr-code.html' },
-          '/qr-code': { nameKey: 'pages.settings.back_to_qr', path: '/qr-code.html' },
-          '/qr': { nameKey: 'pages.settings.back_to_qr', path: '/qr-code.html' },
-          '/system/account.html': { nameKey: 'pages.settings.back_to_account', path: '/system/account.html' },
-          '/account.html': { nameKey: 'pages.settings.back_to_account', path: '/system/account.html' },
-          '/account': { nameKey: 'pages.settings.back_to_account', path: '/system/account.html' },
-          '/privacy-policy.html': { nameKey: 'pages.settings.back_to_privacy', path: '/privacy-policy.html' },
-          '/privacy-policy': { nameKey: 'pages.settings.back_to_privacy', path: '/privacy-policy.html' },
-          '/terms_of_service.html': { nameKey: 'pages.settings.back_to_terms', path: '/terms_of_service.html' },
-          '/terms_of_service': { nameKey: 'pages.settings.back_to_terms', path: '/terms_of_service.html' },
-          '/onboarding.html': { nameKey: 'pages.settings.back_to_onboarding', path: '/onboarding.html' },
-          '/onboarding': { nameKey: 'pages.settings.back_to_onboarding', path: '/onboarding.html' }
+          '/index.html': { nameKey: 'pages.settings.back_to_home', path: 'index.html' },
+          '/index': { nameKey: 'pages.settings.back_to_home', path: 'index.html' },
+          '/': { nameKey: 'pages.settings.back_to_home', path: 'index.html' },
+          '/EU2K-Hub/index.html': { nameKey: 'pages.settings.back_to_home', path: 'index.html' },
+          '/EU2K-Hub/index': { nameKey: 'pages.settings.back_to_home', path: 'index.html' },
+          '/EU2K-Hub/': { nameKey: 'pages.settings.back_to_home', path: 'index.html' },
+          '/youhub.html': { nameKey: 'pages.settings.back_to_youhub', path: 'youhub.html' },
+          '/youhub': { nameKey: 'pages.settings.back_to_youhub', path: 'youhub.html' },
+          '/EU2K-Hub/youhub.html': { nameKey: 'pages.settings.back_to_youhub', path: 'youhub.html' },
+          '/EU2K-Hub/youhub': { nameKey: 'pages.settings.back_to_youhub', path: 'youhub.html' },
+          '/event_hub.html': { nameKey: 'pages.settings.back_to_event_hub', path: 'event_hub.html' },
+          '/event_hub': { nameKey: 'pages.settings.back_to_event_hub', path: 'event_hub.html' },
+          '/EU2K-Hub/event_hub.html': { nameKey: 'pages.settings.back_to_event_hub', path: 'event_hub.html' },
+          '/EU2K-Hub/event_hub': { nameKey: 'pages.settings.back_to_event_hub', path: 'event_hub.html' },
+          '/food_hub.html': { nameKey: 'pages.settings.back_to_food_hub', path: 'food_hub.html' },
+          '/food_hub': { nameKey: 'pages.settings.back_to_food_hub', path: 'food_hub.html' },
+          '/EU2K-Hub/food_hub.html': { nameKey: 'pages.settings.back_to_food_hub', path: 'food_hub.html' },
+          '/EU2K-Hub/food_hub': { nameKey: 'pages.settings.back_to_food_hub', path: 'food_hub.html' },
+          '/fitness_hub.html': { nameKey: 'pages.settings.back_to_fitness_hub', path: 'fitness_hub.html' },
+          '/fitness_hub': { nameKey: 'pages.settings.back_to_fitness_hub', path: 'fitness_hub.html' },
+          '/EU2K-Hub/fitness_hub.html': { nameKey: 'pages.settings.back_to_fitness_hub', path: 'fitness_hub.html' },
+          '/EU2K-Hub/fitness_hub': { nameKey: 'pages.settings.back_to_fitness_hub', path: 'fitness_hub.html' },
+          '/class_hub.html': { nameKey: 'pages.settings.back_to_class_hub', path: 'class_hub.html' },
+          '/class_hub': { nameKey: 'pages.settings.back_to_class_hub', path: 'class_hub.html' },
+          '/EU2K-Hub/class_hub.html': { nameKey: 'pages.settings.back_to_class_hub', path: 'class_hub.html' },
+          '/EU2K-Hub/class_hub': { nameKey: 'pages.settings.back_to_class_hub', path: 'class_hub.html' },
+          '/qr-code.html': { nameKey: 'pages.settings.back_to_qr', path: 'qr-code.html' },
+          '/qr-code': { nameKey: 'pages.settings.back_to_qr', path: 'qr-code.html' },
+          '/qr': { nameKey: 'pages.settings.back_to_qr', path: 'qr-code.html' },
+          '/EU2K-Hub/qr-code.html': { nameKey: 'pages.settings.back_to_qr', path: 'qr-code.html' },
+          '/EU2K-Hub/qr-code': { nameKey: 'pages.settings.back_to_qr', path: 'qr-code.html' },
+          '/EU2K-Hub/qr': { nameKey: 'pages.settings.back_to_qr', path: 'qr-code.html' },
+          '/system/account.html': { nameKey: 'pages.settings.back_to_account', path: 'system/account.html' },
+          '/account.html': { nameKey: 'pages.settings.back_to_account', path: 'system/account.html' },
+          '/account': { nameKey: 'pages.settings.back_to_account', path: 'system/account.html' },
+          '/EU2K-Hub/system/account.html': { nameKey: 'pages.settings.back_to_account', path: 'system/account.html' },
+          '/EU2K-Hub/account.html': { nameKey: 'pages.settings.back_to_account', path: 'system/account.html' },
+          '/EU2K-Hub/account': { nameKey: 'pages.settings.back_to_account', path: 'system/account.html' },
+          '/privacy-policy.html': { nameKey: 'pages.settings.back_to_privacy', path: 'privacy-policy.html' },
+          '/privacy-policy': { nameKey: 'pages.settings.back_to_privacy', path: 'privacy-policy.html' },
+          '/EU2K-Hub/privacy-policy.html': { nameKey: 'pages.settings.back_to_privacy', path: 'privacy-policy.html' },
+          '/EU2K-Hub/privacy-policy': { nameKey: 'pages.settings.back_to_privacy', path: 'privacy-policy.html' },
+          '/terms_of_service.html': { nameKey: 'pages.settings.back_to_terms', path: 'terms-of-service.html' },
+          '/terms_of_service': { nameKey: 'pages.settings.back_to_terms', path: 'terms-of-service.html' },
+          '/EU2K-Hub/terms_of_service.html': { nameKey: 'pages.settings.back_to_terms', path: 'terms-of-service.html' },
+          '/EU2K-Hub/terms_of_service': { nameKey: 'pages.settings.back_to_terms', path: 'terms-of-service.html' },
+          '/onboarding.html': { nameKey: 'pages.settings.back_to_onboarding', path: 'onboarding.html' },
+          '/onboarding': { nameKey: 'pages.settings.back_to_onboarding', path: 'onboarding.html' },
+          '/EU2K-Hub/onboarding.html': { nameKey: 'pages.settings.back_to_onboarding', path: 'onboarding.html' },
+          '/EU2K-Hub/onboarding': { nameKey: 'pages.settings.back_to_onboarding', path: 'onboarding.html' }
         };
         
         console.log('[Settings] 🔍 Looking for referrerPath in pageMap:', referrerPath);

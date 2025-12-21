@@ -98,6 +98,34 @@
   </script>
   <script src="assets/js/permissions.js"></script>
   <script src="assets/js/translations.js"></script>
+  <script>
+    // Fordítási rendszer inicializálása
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.translationManager) {
+        try {
+          if (!window.translationManager.isInitialized && window.translationManager.init) {
+            await window.translationManager.init();
+          }
+          if (window.translationManager.applyTranslations) {
+            window.translationManager.applyTranslations();
+          }
+        } catch (e) {
+          console.error('[Index] Translation error:', e);
+        }
+      }
+    });
+    // Nyelvváltás storage eseményre is
+    window.addEventListener('storage', async (evt) => {
+      if (evt.key === 'eu2k_language' && window.translationManager) {
+        try {
+          await window.translationManager.switchLanguage(evt.newValue || 'hu');
+          window.translationManager.applyTranslations?.();
+        } catch (e) {
+          console.error('[Index] Storage translation error:', e);
+        }
+      }
+    });
+  </script>
   <!-- <script src="assets/js/welcome-screen.js"></script> -->
   <script src="assets/js/auth-state.js"></script>
   <script src="assets/js/test_firebase.js" type="module"></script>
@@ -924,7 +952,7 @@
             <!-- Logo and participated section -->
             <div class="footer-logo-container">
               <img src="assets/general/footer/eu2k_hub.png" alt="EU2K Hub">
-              <span class="footer-participated-text">Részt vett még:</span>
+              <span class="footer-participated-text" data-translate="footer.participated">Részt vett még:</span>
               <div class="footer-participated-logos">
                 <img src="assets/general/footer/eu2k.png" alt="EU2K">
                 <img src="assets/general/footer/eu2k_devs.png" alt="EU2K Devs">
@@ -934,7 +962,7 @@
             </div>
 
             <!-- Copyright -->
-            <div class="footer-copyright">
+            <div class="footer-copyright" data-translate="footer.copyright">
               © 2025 EU2K Devs és Európa 2000 Gimnázium. All Rights Reserved.
             </div>
 
@@ -951,17 +979,17 @@
           <div class="footer-right">
             <!-- Jogi Nyilatkozatok -->
             <div class="footer-section-first">
-              <div class="footer-section-title">Jogi Nyilatkozatok</div>
+              <div class="footer-section-title" data-translate="footer.legal.title">Jogi Nyilatkozatok</div>
               <div class="footer-section-items">
-                <a href="/privacy-policy" class="footer-item">Adatvédelmi&nbsp;Tájékoztató</a>
-                <a href="/terms-of-service" class="footer-item">Használati&nbsp;Feltételek</a>
+                <a href="privacy-policy.html" class="footer-item" data-translate="footer.legal.privacy">Adatvédelmi&nbsp;Tájékoztató</a>
+                <a href="terms-of-service.html" class="footer-item" data-translate="footer.legal.terms">Használati&nbsp;Feltételek</a>
                 <div class="footer-item">Előzetes-szoftver<br>használati&nbsp;tájékoztatója</div>
               </div>
             </div>
 
             <!-- Hubs -->
             <div class="footer-section">
-              <div class="footer-section-title">Hubs</div>
+              <div class="footer-section-title" data-translate="footer.hubs.title">Hubs</div>
               <div class="footer-section-items">
                 <div class="footer-item">YouHub</div>
                 <div class="footer-item">Class&nbsp;Hub</div>

@@ -731,23 +731,28 @@
     const storage = getStorage(app);
     const db = getFirestore(app);
 
-    // Microsoft provider base setup for Firebase (used with signInWithCredential)
+    // Microsoft provider setup for Firebase with Graph scopes (used with signInWithPopup)
     const createMsProviderForFirebase = () => {
       const provider = new OAuthProvider('microsoft.com');
       provider.setCustomParameters({ 
         tenant: 'ecc426dd-3c83-44af-aad4-85099364fb9e',
         prompt: 'select_account'
       });
+      // Graph scope-ok hozzáadása - így egy consent-ben kérjük mindent
       try { 
-        provider.addScope('User.Read');
+        provider.addScope('openid');
         provider.addScope('profile');
         provider.addScope('email');
-        provider.addScope('openid');
+        provider.addScope('User.Read'); // ← EZ A GRAPH SCOPE
       } catch (error) {
         console.warn('Could not add scopes:', error.message);
       }
       return provider;
     };
+    
+    // Microsoft provider létrehozása és globálissá tétele
+    const microsoftProvider = createMsProviderForFirebase();
+    window.microsoftProvider = microsoftProvider;
 
     // MSAL (Microsoft Authentication Library) setup for Microsoft login + Graph API
     const msalConfig = {
@@ -2025,9 +2030,9 @@
         }
       }
 
-      // Microsoft login flow: MSAL (Graph token) + Firebase signInWithCredential
+      // Microsoft login flow: Firebase signInWithPopup + Graph scope-ok egy consent-ben
       async function startMicrosoftLogin(accountType) {
-        console.log('🔐 Starting Microsoft Sign-In process...', accountType);
+        console.log('🔐 Starting Microsoft Sign-In process with Firebase + Graph scopes...', accountType);
         
         // Check if user is already logged in
         if (window.auth && window.auth.currentUser) {
@@ -2054,55 +2059,44 @@
         localStorage.setItem('eu2k-auth-in-progress', 'true');
         localStorage.setItem('eu2k-auth-start-time', Date.now().toString());
         
-        // Wait for Firebase + MSAL to be ready
+        // Wait for Firebase to be ready
         if (!window.auth) {
           console.error('❌ Firebase auth not initialized');
           window.location.hash = '#login-failed';
           return;
         }
-        if (!window.msalInstance) {
-          console.error('❌ MSAL not initialized');
+        if (!window.microsoftProvider) {
+          console.error('❌ Microsoft provider not initialized');
           window.location.hash = '#login-failed';
           return;
         }
         
         try {
-          // 1️⃣ Microsoft login MSAL-lal (itt kérjük el a Graph scope-okat is)
-          console.log('🪟 Starting MSAL loginPopup for Microsoft account + Graph scopes...');
-          const loginResponse = await window.msalInstance.loginPopup({
-            scopes: window.graphScopes || ['User.Read'],
-            prompt: 'select_account'
-          });
+          // 1️⃣ Firebase signInWithPopup - egy consent-ben kérjük a login-t + Graph scope-okat
+          console.log('🪟 Starting Firebase signInWithPopup with Microsoft provider (includes Graph scopes)...');
+          const result = await signInWithPopup(window.auth, window.microsoftProvider);
           
-          const account = loginResponse.account;
-          if (!account) {
-            throw new Error('No MSAL account returned from loginPopup');
-          }
-          window.msalInstance.setActiveAccount(account);
-          
-          // 2️⃣ Graph access token lekérése MSAL-tól (silent, ugyanabból a loginból)
-          console.log('🔐 Acquiring Microsoft Graph access token via MSAL...');
-          const tokenResponse = await window.msalInstance.acquireTokenSilent({
-            scopes: window.graphScopes || ['User.Read'],
-            account
-          });
-          
-          const msAccessToken = tokenResponse?.accessToken;
-          if (!msAccessToken) {
-            throw new Error('No access token received from MSAL');
-          }
-          
-          // 3️⃣ Ugyanazzal a Microsoft access tokennel beléptetjük a Firebase-t
-          console.log('🔄 Signing in to Firebase with Microsoft access token (signInWithCredential)...');
-          const msProviderForFirebase = createMsProviderForFirebase();
-          const firebaseCredential = msProviderForFirebase.credential({
-            accessToken: msAccessToken
-          });
-          
-          const result = await signInWithCredential(window.auth, firebaseCredential);
-          
-          console.log('✅ Firebase sign-in with Microsoft credential successful');
+          console.log('✅ Firebase sign-in with Microsoft successful');
           console.log('User:', result.user);
+          
+          // 2️⃣ Graph access token kinyerése a Firebase response-ból
+          console.log('🔑 Extracting Microsoft Graph access token from Firebase credential...');
+          const credential = OAuthProvider.credentialFromResult(result);
+          const graphAccessToken = credential?.accessToken;
+          
+          if (!graphAccessToken) {
+            console.warn('⚠️ No Graph access token in Firebase credential - Graph API calls may not work');
+          } else {
+            console.log('✅ Microsoft Graph access token extracted successfully');
+            // Elmentjük a Graph tokent későbbi Graph API hívásokhoz
+            try {
+              localStorage.setItem('eu2k-graph-access-token', graphAccessToken);
+              localStorage.setItem('eu2k-graph-token', graphAccessToken); // Kompatibilitás
+              console.log('🔑 Saved Microsoft Graph access token from Firebase login');
+            } catch (e) {
+              console.warn('⚠️ Could not save Graph access token to localStorage:', e);
+            }
+          }
           
           // Store user info
           localStorage.setItem('eu2k-auth-logged-in', 'true');
@@ -2122,41 +2116,42 @@
             localStorage.setItem('eu2k-auth-uid', result.user.uid);
           }
           
-          // 4️⃣ Microsoft Graph access token elmentése későbbi Graph API hívásokhoz
-          try {
-            localStorage.setItem('eu2k-graph-access-token', msAccessToken);
-            console.log('🔑 Saved Microsoft Graph access token from MSAL login');
-          } catch (e) {
-            console.warn('⚠️ Could not save Graph access token to localStorage:', e);
-          }
-          
           localStorage.removeItem('eu2k-auth-in-progress');
           
           // Success - navigate to looks screen
           window.location.hash = '#looks';
           
-          // TODO: FIX MSAL tenant configuration before re-enabling
-          /* KIKOMMENTEZVE - MSAL tenant probléma miatt
-          // 🔥 AUTOMATIKUSAN lekérjük a Microsoft profilképet
-          console.log('🎯 Attempting to fetch Microsoft profile picture automatically...');
-          setTimeout(async () => {
-            try {
-              const blob = await fetchMicrosoftProfilePicture();
-              if (blob) {
-                profileImageBlob = blob;
-                const imageUrl = URL.createObjectURL(blob);
-                const previewImg = document.getElementById('looksPreviewImage');
-                if (previewImg) {
-                  previewImg.src = imageUrl;
-                  previewImg.style.display = 'block';
+          // 🔥 AUTOMATIKUSAN lekérjük a Microsoft profilképet (ha van Graph token)
+          // A blob-ot localStorage-ba mentjük, és a looks screen betöltésekor használjuk
+          if (graphAccessToken) {
+            console.log('🎯 Attempting to fetch Microsoft profile picture automatically...');
+            setTimeout(async () => {
+              try {
+                const blob = await fetchMicrosoftProfilePicture();
+                if (blob) {
+                  // Blob elmentése localStorage-ba (base64 formátumban)
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    const base64data = reader.result;
+                    localStorage.setItem('eu2k-onboarding-school-photo-blob', base64data);
+                    localStorage.setItem('eu2k-onboarding-school-photo-url', URL.createObjectURL(blob));
+                    console.log('✅ Microsoft profile picture saved to localStorage');
+                    
+                    // Profilkép megjelenítése a looks screen-en
+                    const imageUrl = URL.createObjectURL(blob);
+                    const previewImg = document.getElementById('looksPreviewImage');
+                    if (previewImg) {
+                      previewImg.src = imageUrl;
+                      previewImg.style.display = 'block';
+                    }
+                  };
+                  reader.readAsDataURL(blob);
                 }
-                console.log('✅ Microsoft profile picture loaded automatically!');
+              } catch (error) {
+                console.error('❌ Auto-fetch profile picture failed:', error);
               }
-            } catch (error) {
-              console.error('❌ Auto-fetch profile picture failed:', error);
-            }
-          }, 500); // Small delay to ensure looks screen is loaded
-          */
+            }, 500); // Small delay to ensure looks screen is loaded
+          }
           
         } catch (error) {
           console.error('❌ Popup auth failed:', error);
@@ -2481,6 +2476,33 @@
       let profileImageBlob = null;
       let useSchoolProfileSelected = false;
       
+      // Ellenőrizzük, hogy van-e localStorage-ba mentett profilkép blob (async)
+      (async () => {
+        const savedPhotoUrl = localStorage.getItem('eu2k-onboarding-school-photo-url');
+        if (savedPhotoUrl) {
+          // Ha van mentett URL, próbáljuk meg a blob-ot is visszaállítani
+          const savedPhotoBlob = localStorage.getItem('eu2k-onboarding-school-photo-blob');
+          if (savedPhotoBlob) {
+            try {
+              // Base64-ből blob konvertálás
+              const response = await fetch(savedPhotoBlob);
+              const blob = await response.blob();
+              profileImageBlob = blob;
+              console.log('✅ Restored profile picture blob from localStorage');
+              
+              // Profilkép megjelenítése, ha a looks screen aktív
+              const previewImg = document.getElementById('looksPreviewImage');
+              if (previewImg && window.location.hash === '#looks') {
+                previewImg.src = savedPhotoUrl;
+                previewImg.style.display = 'block';
+              }
+            } catch (e) {
+              console.warn('⚠️ Could not restore profile picture blob from localStorage:', e);
+            }
+          }
+        }
+      })();
+      
       // Generate color grid with random positioning
       function generateColorGrid() {
         console.log('🎨 Generating avatar grid...');
@@ -2658,7 +2680,8 @@
       // Graph API token kinyerése a Firebase Microsoft bejelentkezésből (elsődleges forrás)
       function getGraphAccessTokenFromFirebase() {
         try {
-          const token = localStorage.getItem('eu2k-graph-access-token');
+          // Először próbáljuk az új kulcsot
+          const token = localStorage.getItem('eu2k-graph-access-token') || localStorage.getItem('eu2k-graph-token');
           if (token) {
             console.log('🔑 Using Graph access token from Firebase login');
             return token;
@@ -2670,22 +2693,23 @@
       }
 
       async function getGraphAccessToken() {
-        // 1️⃣ Próbáljuk meg a Firebase Microsoft loginből elmentett tokent használni
+        // 1️⃣ Próbáljuk meg a Firebase Microsoft loginből elmentett tokent használni (elsődleges)
         const firebaseToken = getGraphAccessTokenFromFirebase();
         if (firebaseToken) {
           return firebaseToken;
         }
 
-        // 2️⃣ Ha nincs elmentett token, fallback: MSAL silent token (csak ha van account)
+        // 2️⃣ Fallback: MSAL silent token (csak ha van account és MSAL inicializálva van)
+        // Ez csak akkor kell, ha régi felhasználó MSAL-lal lépett be korábban
         if (!window.msalInstance) {
-          console.error('❌ MSAL instance not initialized and no Firebase Graph token available');
+          console.warn('⚠️ No Firebase Graph token available and MSAL not initialized');
           return null;
         }
 
         const scopes = window.graphScopes || ['User.Read']; // Microsoft Graph scope
 
         try {
-          console.log('🔑 Getting Microsoft Graph access token (silent only)...');
+          console.log('🔑 Trying to get Graph token from MSAL (fallback only)...');
 
           // Próbáljunk meg egy már létező accountot használni
           let account = window.msalInstance.getActiveAccount();
@@ -2705,16 +2729,16 @@
           }
 
           // Token lekérése silent módban – ha ez nem sikerül, nem erőltetünk új bejelentkezést
-          console.log('🔐 Acquiring token silently (no interactive login)...');
+          console.log('🔐 Acquiring token silently from MSAL (no interactive login)...');
           const tokenResponse = await window.msalInstance.acquireTokenSilent({
             scopes: scopes,
             account
           });
 
-          console.log('✅ Graph access token acquired successfully');
+          console.log('✅ Graph access token acquired from MSAL (fallback)');
           return tokenResponse.accessToken;
         } catch (error) {
-          console.warn('⚠️ Silent Graph token acquisition failed, not triggering interactive login:', error);
+          console.warn('⚠️ Silent Graph token acquisition from MSAL failed:', error);
           return null;
         }
       }

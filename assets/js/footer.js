@@ -74,8 +74,8 @@
         <div class="footer-section-first">
           <div class="footer-section-title" data-translate="footer.legal.title">Jogi Nyilatkozatok</div>
           <div class="footer-section-items">
-            <a href="/privacy-policy" class="footer-item" data-translate="footer.legal.privacy">Adatvédelmi&nbsp;Tájékoztató</a>
-            <a href="/terms-of-service" class="footer-item" data-translate="footer.legal.terms">Használati&nbsp;Feltételek</a>
+            <a href="privacy-policy.html" class="footer-item" data-translate="footer.legal.privacy">Adatvédelmi&nbsp;Tájékoztató</a>
+            <a href="terms-of-service.html" class="footer-item" data-translate="footer.legal.terms">Használati&nbsp;Feltételek</a>
             <div class="footer-item" data-translate="footer.legal.beta">Előzetes-szoftver<br>használati&nbsp;tájékoztatója</div>
           </div>
         </div>

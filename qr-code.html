@@ -100,6 +100,34 @@
   </script>
   <script src="assets/js/permissions.js"></script>
   <script src="assets/js/translations.js"></script>
+  <script>
+    // Fordítási rendszer inicializálása
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.translationManager) {
+        try {
+          if (!window.translationManager.isInitialized && window.translationManager.init) {
+            await window.translationManager.init();
+          }
+          if (window.translationManager.applyTranslations) {
+            window.translationManager.applyTranslations();
+          }
+        } catch (e) {
+          console.error('[QR] Translation error:', e);
+        }
+      }
+    });
+    // Nyelvváltás storage eseményre is
+    window.addEventListener('storage', async (evt) => {
+      if (evt.key === 'eu2k_language' && window.translationManager) {
+        try {
+          await window.translationManager.switchLanguage(evt.newValue || 'hu');
+          window.translationManager.applyTranslations?.();
+        } catch (e) {
+          console.error('[QR] Storage translation error:', e);
+        }
+      }
+    });
+  </script>
   <script src="assets/js/auth-state.js"></script>
   <script src="assets/js/test_firebase.js" type="module"></script>
   <script src="assets/js/firebase-performance.js" type="module"></script>
@@ -536,17 +564,17 @@
           <div class="footer-right">
             <!-- Jogi Nyilatkozatok -->
             <div class="footer-section-first">
-              <div class="footer-section-title">Jogi Nyilatkozatok</div>
+              <div class="footer-section-title" data-translate="footer.legal.title">Jogi Nyilatkozatok</div>
               <div class="footer-section-items">
-                <a href="/privacy-policy" class="footer-item">Adatvédelmi&nbsp;Tájékoztató</a>
-                <a href="/terms-of-service" class="footer-item">Használati&nbsp;Feltételek</a>
+                <a href="privacy-policy.html" class="footer-item" data-translate="footer.legal.privacy">Adatvédelmi&nbsp;Tájékoztató</a>
+                <a href="terms-of-service.html" class="footer-item" data-translate="footer.legal.terms">Használati&nbsp;Feltételek</a>
                 <div class="footer-item">Előzetes-szoftver<br>használati&nbsp;tájékoztatója</div>
               </div>
             </div>
 
             <!-- Hubs -->
             <div class="footer-section">
-              <div class="footer-section-title">Hubs</div>
+              <div class="footer-section-title" data-translate="footer.hubs.title">Hubs</div>
               <div class="footer-section-items">
                 <div class="footer-item">YouHub</div>
                 <div class="footer-item">Class&nbsp;Hub</div>
@@ -1083,7 +1111,7 @@
         // Add timeout wrapper
         const streamPromise = navigator.mediaDevices.getUserMedia(constraints);
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Camera timeout')), 5000)
+          setTimeout(() => reject(new Error('Camera timeout')), 10000)
         );
 
         currentStream = await Promise.race([streamPromise, timeoutPromise]);
