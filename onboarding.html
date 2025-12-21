@@ -787,6 +787,11 @@
     window.firestoreDoc = doc;
     window.firestoreSetDoc = setDoc;
     window.firestoreGetDoc = getDoc;
+    // Storage functions for profile picture upload
+    window.storage = storage;
+    window.storageRef = ref;
+    window.storageUploadBytes = uploadBytes;
+    window.storageGetDownloadURL = getDownloadURL;
     window.firestoreUpdateDoc = updateDoc;
     window.firestoreDeleteField = deleteField;
     window.firestoreDeleteDoc = deleteDoc;
@@ -2810,10 +2815,11 @@
           const uid = user?.uid || window.msalInstance?.getActiveAccount()?.localAccountId || 'unknown-user';
           
           console.log('☁️ Uploading profile picture to Firebase Storage...');
-          const storageRef = ref(storage, `profilePhotos/${uid}.jpg`);
+          // Használjuk a globális storage függvényeket
+          const storageRef = window.storageRef(window.storage, `profilePhotos/${uid}.jpg`);
           
           try {
-            await uploadBytes(storageRef, blob);
+            await window.storageUploadBytes(storageRef, blob);
             console.log('✅ Profile picture uploaded to Firebase Storage successfully! 🎉');
             console.log(`📍 Storage path: profilePhotos/${uid}.jpg`);
           } catch (uploadError) {
