@@ -2119,18 +2119,14 @@
           
           console.log('🔍 Extracted token:', graphAccessToken ? 'Found (' + graphAccessToken.substring(0, 20) + '...)' : 'Not found');
           
+          // SECURITY: Graph token NEM kerül localStorage-ba!
+          // A Graph API hívások Firebase Function-n keresztül történnek
           if (!graphAccessToken) {
-            console.warn('⚠️ No Graph access token in Firebase credential - Graph API calls may not work');
+            console.warn('⚠️ No Graph access token in Firebase credential - Graph API calls will use Firebase Function');
           } else {
-            console.log('✅ Microsoft Graph access token extracted successfully');
-            // Elmentjük a Graph tokent későbbi Graph API hívásokhoz
-            try {
-              localStorage.setItem('eu2k-graph-access-token', graphAccessToken);
-              localStorage.setItem('eu2k-graph-token', graphAccessToken); // Kompatibilitás
-              console.log('🔑 Saved Microsoft Graph access token from Firebase login');
-            } catch (e) {
-              console.warn('⚠️ Could not save Graph access token to localStorage:', e);
-            }
+            console.log('✅ Microsoft Graph access token extracted (will be used via Firebase Function, NOT stored)');
+            // SECURITY: Graph token NEM mentjük localStorage-ba!
+            // A token csak memóriában van, és Firebase Function-n keresztül használjuk
           }
           
           // Store user info
@@ -2156,13 +2152,13 @@
           // Success - navigate to looks screen
           window.location.hash = '#looks';
           
-          // 🔥 AUTOMATIKUSAN lekérjük a Microsoft profilképet (ha van Graph token)
+          // 🔥 AUTOMATIKUSAN lekérjük a Microsoft profilképet Firebase Function-n keresztül
           // A blob-ot localStorage-ba mentjük, és a looks screen betöltésekor használjuk
-          if (graphAccessToken) {
-            console.log('🎯 Attempting to fetch Microsoft profile picture automatically...');
-            setTimeout(async () => {
-              try {
-                const blob = await fetchMicrosoftProfilePicture();
+          // SECURITY: Graph token NEM kerül localStorage-ba, csak a profilkép blob
+          console.log('🎯 Attempting to fetch Microsoft profile picture automatically via Firebase Function...');
+          setTimeout(async () => {
+            try {
+              const blob = await fetchMicrosoftProfilePicture();
                 if (blob) {
                   // Blob elmentése localStorage-ba (base64 formátumban)
                   const reader = new FileReader();
@@ -2456,10 +2452,31 @@
             }
           }
           
-          // Graph token törlése
-          localStorage.removeItem('eu2k-graph-access-token');
-          localStorage.removeItem('eu2k-graph-token');
-          localStorage.removeItem('eu2k-ms-access-token');
+          // SECURITY: Graph token törlése (ha valami mégis localStorage-ba került)
+          // Töröljük az összes Graph tokenet, hogy biztosan ne maradjon semmi
+          const graphTokenKeys = ['eu2k-graph-access-token', 'eu2k-graph-token', 'eu2k-ms-access-token'];
+          graphTokenKeys.forEach(key => {
+            try {
+              localStorage.removeItem(key);
+            } catch (e) {
+              // Ignore
+            }
+          });
+          
+          // Töröljük az MSAL által mentett tokeneket is
+          try {
+            Object.keys(localStorage).forEach(key => {
+              if (key.includes('msal') || key.toLowerCase().includes('graph') || key.toLowerCase().includes('microsoft')) {
+                try {
+                  localStorage.removeItem(key);
+                } catch (e) {
+                  // Ignore
+                }
+              }
+            });
+          } catch (e) {
+            // Ignore
+          }
           
           // Clear session storage
           sessionStorage.clear();
@@ -2707,27 +2724,22 @@
         return item;
       }
       
-      // Graph API token kinyerése a Firebase Microsoft bejelentkezésből (elsődleges forrás)
+      // SECURITY: Graph token NEM olvasható localStorage-ból!
+      // A Graph API hívások Firebase Function-n keresztül történnek
+      // Ez a függvény már nem használható, de megtartjuk kompatibilitás miatt
       function getGraphAccessTokenFromFirebase() {
-        try {
-          // Először próbáljuk az új kulcsot
-          const token = localStorage.getItem('eu2k-graph-access-token') || localStorage.getItem('eu2k-graph-token');
-          if (token) {
-            console.log('🔑 Using Graph access token from Firebase login');
-            return token;
-          }
-        } catch (e) {
-          console.warn('⚠️ Could not read Graph token from localStorage:', e);
-        }
+        // SECURITY: Graph token NEM kerül localStorage-ba, ezért itt semmit nem olvasunk
+        console.warn('⚠️ getGraphAccessTokenFromFirebase() is deprecated - use Firebase Function instead');
         return null;
       }
 
+      // SECURITY: Graph token NEM olvasható localStorage-ból!
+      // A Graph API hívások Firebase Function-n keresztül történnek
       async function getGraphAccessToken() {
-        // 1️⃣ Próbáljuk meg a Firebase Microsoft loginből elmentett tokent használni (elsődleges)
-        const firebaseToken = getGraphAccessTokenFromFirebase();
-        if (firebaseToken) {
-          return firebaseToken;
-        }
+        // SECURITY: Graph token NEM kerül localStorage-ba!
+        // Minden Graph API hívás Firebase Function-n keresztül történik
+        console.warn('⚠️ getGraphAccessToken() is deprecated - use Firebase Function callGraphAPI() instead');
+        return null;
 
         // 2️⃣ Fallback: MSAL silent token (csak ha van account és MSAL inicializálva van)
         // Ez csak akkor kell, ha régi felhasználó MSAL-lal lépett be korábban
@@ -2774,39 +2786,45 @@
       }
 
       // Microsoft Graph API - Get profile picture
+      // SECURITY: Firebase Function-n keresztül hívjuk a Graph API-t (nem localStorage-ból!)
       async function fetchMicrosoftProfilePicture() {
         try {
           console.log('💖 Starting Microsoft profile picture fetch flow...');
           
-          // 1️⃣ KÉRJÜK A GRAPH TOKENT MSAL-ból
-          const graphToken = await getGraphAccessToken();
-          if (!graphToken) {
-            console.warn('⚠️ No Microsoft Graph access token available – skipping automatic school profile picture.');
+          // SECURITY: Graph API hívás Firebase Function-n keresztül (nem localStorage-ból!)
+          if (!window.callGraphAPI) {
+            console.error('❌ callGraphAPI function not available - Firebase Function not loaded');
             return null;
           }
           
-          console.log('📸 Fetching Microsoft profile picture from Graph API...');
+          console.log('📸 Fetching Microsoft profile picture via Firebase Function...');
           
-          // 2️⃣ PROFILKÉP LEKÉRÉSE BLOBKÉNT a Graph API-ról
-          const imageRes = await fetch("https://graph.microsoft.com/v1.0/me/photo/$value", {
-            headers: {
-              "Authorization": `Bearer ${graphToken}`
-            }
-          });
+          // 2️⃣ PROFILKÉP LEKÉRÉSE BLOBKÉNT a Graph API-ról Firebase Function-n keresztül
+          const result = await window.callGraphAPI('/me/photo/$value', 'GET', null, true); // true = blob response
           
-          if (!imageRes.ok) {
-            if (imageRes.status === 404) {
+          if (!result.success) {
+            if (result.status === 404) {
               console.log("ℹ️ Nincs profilképed a Microsoft fiókodon 🥺💔");
               alert('Nincs profilkép a Microsoft fiókodon. Válassz egy avatart!');
             } else {
-              console.error(`❌ Graph API error: ${imageRes.status} ${imageRes.statusText}`);
-              alert(`Hiba történt a profilkép lekérésekor: ${imageRes.status}`);
+              console.error(`❌ Graph API error: ${result.status} ${result.error}`);
+              alert(`Hiba történt a profilkép lekérésekor: ${result.status || 'Unknown error'}`);
             }
             return null;
           }
           
-          // 3️⃣ BLOB KONVERTÁLÁSA
-          const blob = await imageRes.blob();
+          // 3️⃣ BLOB KONVERTÁLÁSA (ha a Function blob-ot ad vissza)
+          let blob;
+          if (result.data instanceof Blob) {
+            blob = result.data;
+          } else if (result.data) {
+            // Ha base64 string, konvertáljuk blob-ba
+            const base64Response = await fetch(`data:image/jpeg;base64,${result.data}`);
+            blob = await base64Response.blob();
+          } else {
+            console.error('❌ No blob data received from Firebase Function');
+            return null;
+          }
           console.log('✅ Profile picture blob received:', blob.size, 'bytes, type:', blob.type);
 
           // 4️⃣ FIREBASE STORAGE-BA FELTÖLTÉS
