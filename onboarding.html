@@ -2201,25 +2201,53 @@
           // SECURITY: Graph token NEM kerül localStorage-ba!
           // A Graph API hívások Firebase Function-n keresztül történnek
           // DE: A token-t el kell menteni Firestore-ba, hogy a Firebase Function használhassa
-          if (graphAccessToken && result.user.uid && window.db && window.firestoreDoc && window.firestoreSetDoc) {
+          console.log('🔍 Checking Firebase availability:', {
+            hasGraphToken: !!graphAccessToken,
+            hasUid: !!result.user.uid,
+            hasDb: !!window.db,
+            hasFirestoreDoc: !!window.firestoreDoc,
+            hasFirestoreSetDoc: !!window.firestoreSetDoc,
+            hasFirestoreTimestamp: !!window.firestoreTimestamp
+          });
+          
+          if (graphAccessToken && result.user.uid && window.db && window.firestoreDoc && window.firestoreSetDoc && window.firestoreTimestamp) {
             try {
               // Save Graph token to Firestore with 1 hour expiration
-              const expiresAt = Timestamp.fromMillis(Date.now() + 3600000); // 1 hour from now
+              console.log('💾 Saving Graph token to Firestore...');
+              const FirestoreTimestamp = window.firestoreTimestamp;
+              if (!FirestoreTimestamp || typeof FirestoreTimestamp.fromMillis !== 'function') {
+                throw new Error('FirestoreTimestamp is not available or invalid');
+              }
+              const expiresAt = FirestoreTimestamp.fromMillis(Date.now() + 3600000); // 1 hour from now
               const tokenRef = window.firestoreDoc(window.db, `graphTokens/${result.user.uid}`);
               await window.firestoreSetDoc(tokenRef, {
                 accessToken: graphAccessToken,
                 expiresAt: expiresAt,
-                createdAt: Timestamp.now()
+                createdAt: FirestoreTimestamp.now()
               });
               console.log('✅ Microsoft Graph access token saved to Firestore (expires in 1 hour)');
             } catch (tokenSaveError) {
               console.error('❌ Error saving Graph token to Firestore:', tokenSaveError);
+              console.error('Error details:', {
+                error: tokenSaveError.message,
+                stack: tokenSaveError.stack,
+                hasTimestamp: !!window.firestoreTimestamp,
+                timestampType: typeof window.firestoreTimestamp
+              });
               // Continue anyway - the function will handle missing token gracefully
             }
           } else if (!graphAccessToken) {
             console.warn('⚠️ No Graph access token in Firebase credential - Graph API calls may fail');
           } else {
             console.warn('⚠️ Firebase not ready to save Graph token - Graph API calls may fail');
+            console.warn('Missing:', {
+              hasGraphToken: !!graphAccessToken,
+              hasUid: !!result.user.uid,
+              hasDb: !!window.db,
+              hasFirestoreDoc: !!window.firestoreDoc,
+              hasFirestoreSetDoc: !!window.firestoreSetDoc,
+              hasFirestoreTimestamp: !!window.firestoreTimestamp
+            });
           }
           
           // Store user info
