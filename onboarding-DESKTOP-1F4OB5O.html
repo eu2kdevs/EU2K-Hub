@@ -2159,29 +2159,30 @@
           setTimeout(async () => {
             try {
               const blob = await fetchMicrosoftProfilePicture();
-              if (blob) {
-                // Blob elmentése localStorage-ba (base64 formátumban)
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                  const base64data = reader.result;
-                  localStorage.setItem('eu2k-onboarding-school-photo-blob', base64data);
-                  localStorage.setItem('eu2k-onboarding-school-photo-url', URL.createObjectURL(blob));
-                  console.log('✅ Microsoft profile picture saved to localStorage');
-                  
-                  // Profilkép megjelenítése a looks screen-en
-                  const imageUrl = URL.createObjectURL(blob);
-                  const previewImg = document.getElementById('looksPreviewImage');
-                  if (previewImg) {
-                    previewImg.src = imageUrl;
-                    previewImg.style.display = 'block';
-                  }
-                };
-                reader.readAsDataURL(blob);
+                if (blob) {
+                  // Blob elmentése localStorage-ba (base64 formátumban)
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    const base64data = reader.result;
+                    localStorage.setItem('eu2k-onboarding-school-photo-blob', base64data);
+                    localStorage.setItem('eu2k-onboarding-school-photo-url', URL.createObjectURL(blob));
+                    console.log('✅ Microsoft profile picture saved to localStorage');
+                    
+                    // Profilkép megjelenítése a looks screen-en
+                    const imageUrl = URL.createObjectURL(blob);
+                    const previewImg = document.getElementById('looksPreviewImage');
+                    if (previewImg) {
+                      previewImg.src = imageUrl;
+                      previewImg.style.display = 'block';
+                    }
+                  };
+                  reader.readAsDataURL(blob);
+                }
+              } catch (error) {
+                console.error('❌ Auto-fetch profile picture failed:', error);
               }
-            } catch (error) {
-              console.error('❌ Auto-fetch profile picture failed:', error);
-            }
-          }, 500); // Small delay to ensure looks screen is loaded
+            }, 500); // Small delay to ensure looks screen is loaded
+          }
           
         } catch (error) {
           console.error('❌ Popup auth failed:', error);
