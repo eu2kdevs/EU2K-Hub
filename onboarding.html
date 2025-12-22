@@ -718,6 +718,7 @@
     import { GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteField, deleteDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js";
 
     // Firebase configuration
     const firebaseConfig = {
@@ -734,6 +735,7 @@
     const auth = getAuth(app);
     const storage = getStorage(app);
     const db = getFirestore(app);
+    const functions = getFunctions(app, 'europe-west1');
 
     // Microsoft provider setup for Firebase with Graph scopes (used with signInWithPopup)
     const createMsProviderForFirebase = () => {
@@ -815,6 +817,82 @@
       } catch (error) {
         console.error('❌ Error signing out:', error);
         return false;
+      }
+    };
+
+    // Firebase Functions - callGraphAPI wrapper
+    // This function calls the Firebase callable function 'callGraphAPI'
+    window.callGraphAPI = async (endpoint, method = 'GET', body = null, expectBlob = false) => {
+      try {
+        // Get current user's ID token
+        const user = auth.currentUser;
+        if (!user) {
+          console.error('❌ No authenticated user for Graph API call');
+          return { success: false, error: 'No authenticated user', status: 401 };
+        }
+
+        // Get ID token
+        const idToken = await user.getIdToken();
+        
+        // Create callable function reference
+        const callGraphAPI = httpsCallable(functions, 'callGraphAPI');
+        
+        // Call the function
+        const result = await callGraphAPI({
+          idToken: idToken,
+          endpoint: endpoint,
+          method: method,
+          body: body
+        });
+
+        // Handle response
+        const data = result.data;
+        
+        if (data.success) {
+          // If expecting blob/image and we got base64
+          if (expectBlob && data.type === 'image' && typeof data.data === 'string') {
+            // Convert base64 to blob
+            const base64Response = await fetch(`data:${data.mimeType || 'image/jpeg'};base64,${data.data}`);
+            const blob = await base64Response.blob();
+            return { success: true, data: blob, type: 'blob' };
+          }
+          
+          return { success: true, data: data.data, type: data.type };
+        } else {
+          return { success: false, error: data.error || 'Unknown error', status: data.status || 500 };
+        }
+      } catch (error) {
+        console.error('❌ Error calling Graph API function:', error);
+        
+        // Handle Firebase Functions HttpsError
+        let status = 500;
+        let errorMessage = error.message || 'Graph API call failed';
+        
+        if (error.code) {
+          // Map Firebase Functions error codes to HTTP status codes
+          if (error.code === 'functions/unauthenticated' || error.code === 'unauthenticated') {
+            status = 401;
+          } else if (error.code === 'functions/invalid-argument' || error.code === 'invalid-argument') {
+            status = 400;
+          } else if (error.code === 'functions/failed-precondition' || error.code === 'failed-precondition') {
+            status = 412;
+          } else if (error.code === 'functions/not-found' || error.code === 'not-found') {
+            status = 404;
+          } else if (error.code === 'functions/internal' || error.code === 'internal') {
+            status = 500;
+          }
+          
+          // Extract status from error details if available
+          if (error.details && error.details.status) {
+            status = error.details.status;
+          }
+        }
+        
+        return { 
+          success: false, 
+          error: errorMessage, 
+          status: status
+        };
       }
     };
   </script>
