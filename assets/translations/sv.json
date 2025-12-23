@@ -433,8 +433,8 @@
       "hive": "Hive",
       "submit": "Skicka",
       "hive_placeholder": {
-        "title": "Hive Förslag",
-        "description": "Du kommer att se inskickade idéer här när detta gränssnitt är klart."
+        "title": "Bina bygger fortfarande på Hive!",
+        "description": "Det interaktiva feedbacksystemet kommer snart att vara tillgängligt."
       },
       "submit_steps": {
         "step1": {
@@ -491,7 +491,7 @@
         },
         "types": {
           "info": "Information",
-          "success": "Framgång",
+          "success": "Framgångsrikt inskickat",
           "warning": "Varning",
           "error": "Fel"
         },

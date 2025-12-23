@@ -433,8 +433,8 @@
       "hive": "Hive",
       "submit": "提交",
       "hive_placeholder": {
-        "title": "Hive建议",
-        "description": "一旦此界面准备就绪，你将在这里看到提交的想法。"
+        "title": "蜜蜂还在建造Hive！",
+        "description": "交互式反馈系统即将推出。"
       },
       "submit_steps": {
         "step1": {
@@ -491,7 +491,7 @@
         },
         "types": {
           "info": "信息",
-          "success": "成功",
+          "success": "提交成功",
           "warning": "警告",
           "error": "错误"
         },

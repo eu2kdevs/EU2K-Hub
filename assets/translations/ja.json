@@ -433,8 +433,8 @@
       "hive": "Hive",
       "submit": "送信",
       "hive_placeholder": {
-        "title": "Hive提案",
-        "description": "このインターフェースが準備でき次第、ここに送信されたアイデアが表示されます。"
+        "title": "ミツバチがまだHiveを建設中です！",
+        "description": "インタラクティブなフィードバックシステムは間もなく利用可能になります。"
       },
       "submit_steps": {
         "step1": {
@@ -491,7 +491,7 @@
         },
         "types": {
           "info": "情報",
-          "success": "成功",
+          "success": "送信成功",
           "warning": "警告",
           "error": "エラー"
         },

@@ -436,8 +436,8 @@
       "hive": "Hive",
       "submit": "Einreichen",
       "hive_placeholder": {
-        "title": "Hive Vorschläge",
-        "description": "Du wirst hier eingereichte Ideen sehen, sobald diese Oberfläche fertig ist."
+        "title": "Die Bienen bauen noch am Hive!",
+        "description": "Das interaktive Feedback-System wird bald verfügbar sein."
       },
       "submit_steps": {
         "step1": {
@@ -494,7 +494,7 @@
         },
         "types": {
           "info": "Information",
-          "success": "Erfolg",
+          "success": "Erfolgreich eingereicht",
           "warning": "Warnung",
           "error": "Fehler"
         },

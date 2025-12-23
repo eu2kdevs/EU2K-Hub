@@ -433,8 +433,8 @@
       "hive": "Hive",
       "submit": "Enviar",
       "hive_placeholder": {
-        "title": "Sugerencias Hive",
-        "description": "Verás ideas enviadas aquí una vez que esta interfaz esté lista."
+        "title": "¡Las abejas aún están construyendo el Hive!",
+        "description": "El sistema de retroalimentación interactivo estará disponible pronto."
       },
       "submit_steps": {
         "step1": {
@@ -491,7 +491,7 @@
         },
         "types": {
           "info": "Información",
-          "success": "Éxito",
+          "success": "Envío exitoso",
           "warning": "Advertencia",
           "error": "Error"
         },

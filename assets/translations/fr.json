@@ -433,8 +433,8 @@
       "hive": "Hive",
       "submit": "Soumettre",
       "hive_placeholder": {
-        "title": "Suggestions Hive",
-        "description": "Tu verras les idées soumises ici une fois que cette interface sera prête."
+        "title": "Les abeilles construisent encore le Hive !",
+        "description": "Le système de retour interactif sera bientôt disponible."
       },
       "submit_steps": {
         "step1": {
@@ -491,7 +491,7 @@
         },
         "types": {
           "info": "Information",
-          "success": "Succès",
+          "success": "Soumission réussie",
           "warning": "Avertissement",
           "error": "Erreur"
         },

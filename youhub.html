@@ -692,8 +692,8 @@
                     </div>
                     <div class="suggestions-hive suggestions-section" data-suggestions-section="hive">
                       <div class="suggestions-hive-placeholder-card">
-                        <p class="suggestions-hive-title" data-translate="youhub.suggestions.hive_placeholder.title" data-translate-fallback="Hive Javaslatok">Hive Javaslatok</p>
-                        <p class="suggestions-hive-desc" data-translate="youhub.suggestions.hive_placeholder.description" data-translate-fallback="Itt fogod látni a beküldött ötleteket, amint elkészült ez a felület.">Itt fogod látni a beküldött ötleteket, amint elkészült ez a felület.</p>
+                        <p class="suggestions-hive-title" data-translate="youhub.suggestions.hive_placeholder.title" data-translate-fallback="A Hive-ot még építik a méhek!">A Hive-ot még építik a méhek!</p>
+                        <p class="suggestions-hive-desc" data-translate="youhub.suggestions.hive_placeholder.description" data-translate-fallback="Nemsokára az interaktív visszajelző rendszer elérhető lesz.">Nemsokára az interaktív visszajelző rendszer elérhető lesz.</p>
                       </div>
                     </div>
                     <div class="suggestions-submit suggestions-section" data-suggestions-section="submit">
@@ -890,6 +890,7 @@
 
             const DEFAULT_NAV_ID = 'suggestions';
             let activeNavId = DEFAULT_NAV_ID;
+            let previousNavId = DEFAULT_NAV_ID; // Track previous nav to return after submit
             let currentSubmitStep = 1;
 
             function persistFormState() {
@@ -1123,6 +1124,11 @@
             function setActiveNav(targetId, forceFallback = false) {
               const desiredId = targetId || DEFAULT_NAV_ID;
               let matchedSection = false;
+              
+              // Track previous nav (except when going to submit)
+              if (activeNavId !== 'submit' && activeNavId !== desiredId) {
+                previousNavId = activeNavId;
+              }
 
               suggestionNavButtons.forEach((btn) => {
                 if (!btn) return;
@@ -1750,10 +1756,13 @@ async function handleSuggestionSubmit() {
     ]);
 
     clearFormState();
-    setActiveNav(DEFAULT_NAV_ID);
+    // Return to previous nav (hive or suggestions) after successful submit
+    const returnNavId = previousNavId || DEFAULT_NAV_ID;
+    setActiveNav(returnNavId);
     loadLatestSuggestions();
     const successMsg = window.translationManager?.getTranslation('youhub.messages.submit_success') || 'A javaslatot sikeresen beküldted!';
-    await window.showNotification(successMsg, 'Sikeres beküldés', 'positive');
+    const successTitle = window.translationManager?.getTranslation('youhub.notifications.types.success') || 'Sikeres beküldés';
+    await window.showNotification(successMsg, successTitle, 'positive');
   } catch (error) {
     console.error('[Suggestions] Submission failed', error);
     const errorMsg = window.translationManager?.getTranslation('youhub.messages.submit_error') || 'Nem sikerült beküldeni a javaslatot. Próbáld újra később.';

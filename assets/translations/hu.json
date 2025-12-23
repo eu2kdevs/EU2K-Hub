@@ -499,8 +499,8 @@
       "hive": "Hive",
       "submit": "Beküldés",
       "hive_placeholder": {
-        "title": "Hive Javaslatok",
-        "description": "Itt fogod látni a beküldött ötleteket, amint elkészült ez a felület."
+        "title": "A Hive-ot még építik a méhek!",
+        "description": "Nemsokára az interaktív visszajelző rendszer elérhető lesz."
       },
       "submit_steps": {
         "step1": {
@@ -556,6 +556,7 @@
           "open": "Megnyitás"
         },
         "types": {
+          "success": "Sikeres beküldés",
           "info": "Információ",
           "success": "Sikeres művelet",
           "warning": "Figyelmeztetés",

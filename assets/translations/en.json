@@ -493,8 +493,8 @@
       "hive": "Hive",
       "submit": "Submit",
       "hive_placeholder": {
-        "title": "Hive Suggestions",
-        "description": "You will see submitted ideas here once this interface is ready."
+        "title": "The bees are still building the Hive!",
+        "description": "The interactive feedback system will be available soon."
       },
       "submit_steps": {
         "step1": {
