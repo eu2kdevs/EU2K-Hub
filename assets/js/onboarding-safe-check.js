@@ -85,6 +85,24 @@
   }
 
   /**
+   * Save current step before page unload (refresh/close)
+   */
+  function saveCurrentStepBeforeUnload() {
+    try {
+      const currentHash = window.location.hash || '';
+      const currentStep = getCurrentStep();
+      
+      // Only save if it's a valid step (not ignored)
+      if (currentStep > 0 && !isIgnoredStep(currentHash)) {
+        localStorage.setItem('eu2k_onboarding_last_step', currentStep.toString());
+        console.log('[OnboardingSafeCheck] Saved current step before unload:', currentStep, currentHash);
+      }
+    } catch (e) {
+      console.warn('[OnboardingSafeCheck] Failed to save step before unload:', e);
+    }
+  }
+
+  /**
    * Track button click and save navigation state
    */
   function trackNavigation(fromStep, toStep) {
@@ -166,13 +184,13 @@
   }
 
   /**
-   * Handle page refresh
+   * Handle page refresh - only restore if we're on an ignored step
    */
   function handleRefresh() {
     const currentHash = window.location.hash || '';
     const currentStep = getCurrentStep();
 
-    // If we're on an ignored step, check localStorage for previous step
+    // Only restore if we're on an ignored step
     if (isIgnoredStep(currentHash)) {
       try {
         const lastStep = parseInt(localStorage.getItem('eu2k_onboarding_last_step') || '1');
@@ -189,15 +207,14 @@
       }
     }
 
-    // Check navigation consistency
-    checkNavigationConsistency();
+    // Don't check consistency on refresh - only on button clicks
   }
 
   /**
    * Initialize safe check
    */
   function initSafeCheck() {
-    // Handle initial load
+    // Handle initial load - only restore if on ignored step
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
         setTimeout(handleRefresh, 100);
@@ -206,32 +223,32 @@
       setTimeout(handleRefresh, 100);
     }
 
-    // Track hash changes
+    // Save current step before page unload (refresh/close)
+    window.addEventListener('beforeunload', () => {
+      saveCurrentStepBeforeUnload();
+    });
+
+    // Track hash changes - only track, don't check consistency
     let lastHash = window.location.hash || '';
     window.addEventListener('hashchange', () => {
       const currentHash = window.location.hash || '';
       const fromStep = getStepIndex(lastHash);
       const toStep = getStepIndex(currentHash);
 
-      // Track navigation
+      // Track navigation (but don't check consistency automatically)
       if (fromStep > 0 && toStep > 0 && !isIgnoredStep(currentHash)) {
         trackNavigation(fromStep, toStep);
       }
 
-      // Check consistency after a short delay
-      setTimeout(() => {
-        checkNavigationConsistency();
-      }, 50);
-
       lastHash = currentHash;
     });
 
-    // Track button clicks
+    // Track button clicks - ONLY check consistency on button clicks
     document.addEventListener('click', (e) => {
       const target = e.target;
       
       // Check if it's a navigation button
-      const isNextButton = target.closest('[id*="Next"], [id*="next"], .onboarding-start-btn, .button-group-item');
+      const isNextButton = target.closest('[id*="Next"], [id*="next"], .onboarding-start-btn, .button-group-item, [data-action="next"], [data-action="continue"]');
       const isLoginButton = target.closest('.button-group-item[data-login-type]');
       
       if (isNextButton || isLoginButton) {
@@ -261,7 +278,13 @@
         }
 
         if (nextStep > 0 && currentStep > 0) {
+          // Save navigation state
           trackNavigation(currentStep, nextStep);
+          
+          // Check consistency ONLY when button is clicked
+          setTimeout(() => {
+            checkNavigationConsistency();
+          }, 100);
         }
       }
     }, true); // Use capture phase to catch events early
