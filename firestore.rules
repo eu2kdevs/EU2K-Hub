@@ -1,52 +1,162 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users collection - csak saját adatok olvasása/írása
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-      
-      // General data subcollection
-      match /general_data/{document=**} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
-      }
+
+    function isSignedIn() {
+      return request.auth != null;
     }
-    
-    // Settings collection - csak saját beállítások
-    match /settings/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-      
-      match /{document=**} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
-      }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.admin == true;
     }
-    
-    // Admin only collections
-    match /admin/{document=**} {
-      allow read, write: if request.auth != null && request.auth.token.admin == true;
+
+    function isOwner() {
+      return isSignedIn() && request.auth.token.owner == true;
     }
-    
-    // Teacher accessible collections
+
+    function isTeacher() {
+      return isSignedIn() && request.auth.token.teacher == true;
+    }
+
+    function isPrivileged() {
+      return isAdmin() || isOwner();
+    }
+
+    function isClassStaff() {
+      return isAdmin() || isOwner() || isTeacher();
+    }
+
+    // -----------------------------
+    // CLASSES (admin / owner / teacher mindent csinálhat)
+    // -----------------------------
     match /classes/{document=**} {
-      allow read: if request.auth != null && 
-        (request.auth.token.teacher == true || request.auth.token.admin == true);
-      allow write: if request.auth != null && request.auth.token.admin == true;
+      allow read, write: if isClassStaff();
     }
-    
-    // Public read collections
+
+    // -----------------------------
+    // VERSION (publikus read)
+    // -----------------------------
+    match /version/{document=**} {
+      allow read: if true;
+      allow write: if isPrivileged();
+    }
+
+    // -----------------------------
+    // FEEDBACK
+    // -----------------------------
+    match /homePageData/feedback/{subcollection}/{document=**} {
+      allow write: if true;
+      allow read: if isClassStaff();
+    }
+
+    // -----------------------------
+    // EVENTS / NEWS / NEW-THINGS
+    // -----------------------------
+    match /homePageData/{docId}/{document=**} {
+      allow read: if docId in ['events', 'news', 'new-things'];
+      allow write: if isClassStaff();
+    }
+
+    // -----------------------------
+    // USERS
+    // -----------------------------
+    match /users/{userId} {
+      allow read: if true;
+
+      match /{document=**} {
+        allow read, write: if isSignedIn() && (
+          request.auth.uid == userId ||
+          isClassStaff()
+        );
+      }
+    }
+
+    // -----------------------------
+    // PUBLIC USER CARDS
+    // -----------------------------
+    match /public/users/{collection}/{userId} {
+      allow read: if true;
+      allow write: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    // -----------------------------
+    // SUGGESTIONS (root)
+    // -----------------------------
+    match /suggestions/{suggestionId} {
+      allow read: if true;
+      allow write: if isSignedIn() &&
+        request.resource.data.ownerId == request.auth.uid;
+    }
+
+    // -----------------------------
+    // USER SUGGESTIONS
+    // -----------------------------
+    match /users/{userId}/suggestions/{suggestionId} {
+      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow write: if isSignedIn() &&
+        request.auth.uid == userId &&
+        request.resource.data.ownerId == request.auth.uid;
+    }
+
+    // -----------------------------
+    // EVENT HUB
+    // -----------------------------
+    match /event_hub/{document=**} {
+      allow read: if true;
+      allow write: if isClassStaff();
+    }
+
+    // -----------------------------
+    // EVENTS (root)
+    // -----------------------------
+    match /events/{document=**} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    // -----------------------------
+    // GROUPS
+    // -----------------------------
+    match /groups/{document=**} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    // -----------------------------
+    // SETTINGS (csak saját)
+    // -----------------------------
+    match /settings/{userId}/{document=**} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    // -----------------------------
+    // ADMIN COLLECTIONS
+    // -----------------------------
+    match /admin/{document=**} {
+      allow read, write: if isAdmin();
+    }
+
+    // -----------------------------
+    // ANNOUNCEMENTS
+    // -----------------------------
     match /announcements/{document=**} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && 
-        (request.auth.token.teacher == true || request.auth.token.admin == true);
+      allow read: if isSignedIn();
+      allow write: if isTeacher() || isAdmin();
     }
-    
-    // Graph tokens collection - users can write their own tokens
+
+    // -----------------------------
+    // GRAPH TOKENS
+    // -----------------------------
     match /graphTokens/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
     }
-    
-    // Default deny all other access
+
+    // -----------------------------
+    // FALLBACK
+    // -----------------------------
     match /{document=**} {
-      allow read, write: if false;
+      allow read: if isPrivileged();
+      allow write: if isSignedIn();
     }
   }
 }

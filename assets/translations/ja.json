@@ -53,8 +53,52 @@
     "event_hub": "Event Hub"
   },
   "pages": {
+    "index": {
+      "title": "EU2K Hub",
+      "welcome": "Hubへようこそ！",
+      "upcoming_events": "今後のイベント",
+      "news": "ニュース",
+      "event_name": "イベント名",
+      "event_description": "イベントの説明",
+      "event_location": "イベントの場所",
+      "event_date_place": "日付と場所",
+      "external_info": "外部情報",
+      "something_wrong": "問題が発生しました",
+      "fixing_soon": "すぐに修正します",
+      "banner": {
+        "title": "これが新しいデザインです。",
+        "description": "Europaデザインシステムを気に入っていただければ幸いです。ご質問がございましたら、こちらからでもフィードバックをお願いします。",
+        "feedback": "フィードバック",
+        "close": "閉じる"
+      }
+    },
     "qr": {
-      "title": "YouHub"
+      "title": "QRコード",
+      "camera_in_use": "カメラが使用中です。",
+      "blocked_title": "おっと！",
+      "blocked_text": "権限が付与されていないため、カメラを使用できません。この機能を動作させるには、有効にしてください！",
+      "enable_button": "有効にする",
+      "auth": "参加確認",
+      "switch_camera": "カメラを切り替える",
+      "off_camera": "カメラをオフにする",
+      "on_camera": "カメラをオンにする",
+      "restart_camera": "カメラを再起動",
+      "game_start": "ゲームを開始",
+      "camera_switch": "カメラを切り替える",
+      "permission_title": "少し待ってください！",
+      "permission_list_1": "QRコードをスキャンするには、カメラへのアクセスを許可する必要があります。",
+      "permission_list_2": "Hubは自動的にカメラを使用することはありません。",
+      "permission_list_3": "カメラがアクティブな場合、右上隅に常に明確なインジケーターが表示されます。",
+      "permission_list_4": "今権限を付与すると、この機能が利用可能になります。",
+      "permission_list_5": "カメラを使用する他の機能も有効になります。",
+      "game_notice": "ゲーム機能はHubではまだサポートされていません。",
+      "auth_notice": "参加確認機能は間もなく利用可能になります。",
+      "banner": {
+        "title": "これが新しいデザインです。",
+        "description": "Europaデザインシステムを気に入っていただければ幸いです。ご質問がございましたら、こちらからでもフィードバックをお願いします。",
+        "feedback": "フィードバック",
+        "close": "閉じる"
+      }
     },
     "youhub": {
       "title": "YouHub"
@@ -305,6 +349,10 @@
     "header": {
       "edit": "編集"
     },
+    "edit_mode": {
+      "enter": "編集",
+      "exit": "編集モードを終了"
+    },
     "banners": {
       "info": {
         "title": "これが新しいデザインです。",
@@ -544,6 +592,9 @@
         "session_expired": "セッションが期限切れ"
       }
     }
+  },
+  "common": {
+    "ok": "了解"
   },
   "general": {
     "close": "閉じる",

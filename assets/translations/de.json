@@ -53,13 +53,60 @@
     "event_hub": "Event Hub"
   },
   "pages": {
+    "index": {
+      "title": "EU2K Hub",
+      "welcome": "Willkommen im Hub!",
+      "upcoming_events": "Bevorstehende Veranstaltungen",
+      "news": "Nachrichten",
+      "event_name": "Veranstaltungsname",
+      "event_description": "Veranstaltungsbeschreibung",
+      "event_location": "Veranstaltungsort",
+      "event_date_place": "Datum und Ort",
+      "external_info": "Externe Informationen",
+      "something_wrong": "Etwas ist schief gelaufen",
+      "fixing_soon": "Wir werden es bald beheben",
+      "banner": {
+        "title": "Das ist das neue Design.",
+        "description": "Wir hoffen, dass dir das Europa Design System gefällt. Wenn du Fragen hast, gib uns gerne Feedback, auch von hier aus.",
+        "feedback": "Feedback",
+        "close": "Schließen"
+      }
+    },
     "qr": {
-      "title": "YouHub"
+      "title": "QR-Code",
+      "camera_in_use": "Kamera wird verwendet.",
+      "blocked_title": "Ups!",
+      "blocked_text": "Wir können die Kamera nicht verwenden, da du keine Berechtigung erteilt hast. Bitte aktiviere sie, damit diese Funktion funktioniert!",
+      "enable_button": "Aktivieren",
+      "auth": "Teilnahmebestätigung",
+      "switch_camera": "Kamera wechseln",
+      "off_camera": "Kamera ausschalten",
+      "on_camera": "Kamera einschalten",
+      "restart_camera": "Kamera neu starten",
+      "game_start": "Spiel starten",
+      "camera_switch": "Kamera wechseln",
+      "permission_title": "Moment mal!",
+      "permission_list_1": "Um QR-Codes zu scannen, musst du den Kamerazugriff erlauben.",
+      "permission_list_2": "Der Hub verwendet deine Kamera niemals automatisch.",
+      "permission_list_3": "Du erhältst immer eine klare Anzeige in der oberen rechten Ecke, wenn die Kamera aktiv ist.",
+      "permission_list_4": "Wenn du jetzt die Berechtigung erteilst, wird diese Funktion verfügbar.",
+      "permission_list_5": "Weitere kamerabasierte Funktionen werden ebenfalls aktiviert.",
+      "game_notice": "Die Spiele-Funktion wird im Hub noch nicht unterstützt.",
+      "auth_notice": "Die Teilnahmebestätigung wird bald verfügbar sein.",
+      "banner": {
+        "title": "Das ist das neue Design.",
+        "description": "Wir hoffen, dass dir das Europa Design System gefällt. Wenn du Fragen hast, gib uns gerne Feedback, auch von hier aus.",
+        "feedback": "Feedback",
+        "close": "Schließen"
+      }
     },
     "youhub": {
       "title": "YouHub"
     },
-    "general": {
+    "common": {
+    "ok": "OK"
+  },
+  "general": {
       "login": "Anmelden"
     },
     "settings": {
@@ -305,6 +352,10 @@
     "header": {
       "edit": "Bearbeiten"
     },
+    "edit_mode": {
+      "enter": "Bearbeiten",
+      "exit": "Bearbeitungsmodus verlassen"
+    },
     "banners": {
       "info": {
         "title": "Dies ist das neue Design.",
@@ -544,6 +595,9 @@
         "session_expired": "Sitzung abgelaufen"
       }
     }
+  },
+  "common": {
+    "ok": "OK"
   },
   "general": {
     "close": "Schließen",

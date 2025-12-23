@@ -53,8 +53,52 @@
     "event_hub": "Event Hub"
   },
   "pages": {
+    "index": {
+      "title": "EU2K Hub",
+      "welcome": "Välkommen till Hub!",
+      "upcoming_events": "Kommande Evenemang",
+      "news": "Nyheter",
+      "event_name": "Evenemangsnamn",
+      "event_description": "Evenemangsbeskrivning",
+      "event_location": "Evenemangsplats",
+      "event_date_place": "Datum och Plats",
+      "external_info": "Extern Information",
+      "something_wrong": "Något gick fel",
+      "fixing_soon": "Vi fixar det snart",
+      "banner": {
+        "title": "Detta är det nya designen.",
+        "description": "Vi hoppas att du gillar Europa Design System. Om du har några frågor, vänligen ge feedback, även härifrån.",
+        "feedback": "Feedback",
+        "close": "Stäng"
+      }
+    },
     "qr": {
-      "title": "YouHub"
+      "title": "QR-kod",
+      "camera_in_use": "Kameran används.",
+      "blocked_title": "Hoppsan!",
+      "blocked_text": "Vi kan inte använda kameran eftersom du inte har beviljat tillstånd. Vänligen aktivera den så att denna funktion fungerar!",
+      "enable_button": "Aktivera",
+      "auth": "Deltagandebekräftelse",
+      "switch_camera": "Växla Kamera",
+      "off_camera": "Stäng Av Kamera",
+      "on_camera": "Sätt På Kamera",
+      "restart_camera": "Starta Om Kamera",
+      "game_start": "Starta Spel",
+      "camera_switch": "Växla Kamera",
+      "permission_title": "Låt oss pausa ett ögonblick!",
+      "permission_list_1": "För att skanna QR-koder behöver du tillåta kameråtkomst.",
+      "permission_list_2": "Hub använder aldrig din kamera automatiskt.",
+      "permission_list_3": "Du får alltid en tydlig indikator i övre högra hörnet när kameran är aktiv.",
+      "permission_list_4": "Om du beviljar tillstånd nu kommer denna funktion att bli tillgänglig.",
+      "permission_list_5": "Andra kamerabaserade funktioner kommer också att aktiveras.",
+      "game_notice": "Spelfunktionen stöds inte ännu i Hub.",
+      "auth_notice": "Deltagandebekräftelsefunktionen kommer snart att vara tillgänglig.",
+      "banner": {
+        "title": "Detta är det nya designen.",
+        "description": "Vi hoppas att du gillar Europa Design System. Om du har några frågor, vänligen ge feedback, även härifrån.",
+        "feedback": "Feedback",
+        "close": "Stäng"
+      }
     },
     "youhub": {
       "title": "YouHub"
@@ -305,6 +349,10 @@
     "header": {
       "edit": "Redigera"
     },
+    "edit_mode": {
+      "enter": "Redigera",
+      "exit": "Avsluta Redigeringsläge"
+    },
     "banners": {
       "info": {
         "title": "Detta är det nya designet.",
@@ -544,6 +592,9 @@
         "session_expired": "Sessionen har gått ut"
       }
     }
+  },
+  "common": {
+    "ok": "OK"
   },
   "general": {
     "close": "Stäng",

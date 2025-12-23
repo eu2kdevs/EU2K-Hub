@@ -359,8 +359,8 @@
       newsRow.innerHTML = '';
       
       const placeholderData = {
-        title: 'Valami baj van',
-        description: 'Nemsokára kijavítjuk',
+        title: window.translationManager?.getTranslation('pages.index.something_wrong') || 'Valami baj van',
+        description: window.translationManager?.getTranslation('pages.index.fixing_soon') || 'Nemsokára kijavítjuk',
         image: 'assets/general/image_placeholder_blue.svg',
         date: new Date()
       };
@@ -528,7 +528,10 @@
         }
         if (titleEl) titleEl.textContent = '';
         if (descEl) descEl.textContent = '';
-        if (dateEl) dateEl.textContent = 'Dátum és Hely';
+        if (dateEl) {
+          dateEl.textContent = window.translationManager?.getTranslation('pages.index.event_date_place') || 'Dátum és Hely';
+          dateEl.setAttribute('data-translate', 'pages.index.event_date_place');
+        }
         if (linkBtnContainer) {
           linkBtnContainer.innerHTML = '';
           linkBtnContainer.style.display = 'none';
@@ -642,10 +645,11 @@
         } else if (place) {
           dateText = place;
         } else if (!dateText) {
-          dateText = 'Dátum és Hely';
+          dateText = window.translationManager?.getTranslation('pages.index.event_date_place') || 'Dátum és Hely';
         }
         
         dateEl.textContent = dateText;
+        dateEl.setAttribute('data-translate', 'pages.index.event_date_place');
       }
 
       // Handle link button
@@ -653,7 +657,8 @@
         linkBtnContainer.innerHTML = '';
         const linkBtn = document.createElement('button');
         linkBtn.className = 'event-card-link-btn';
-        linkBtn.textContent = 'Külsős Információk';
+        linkBtn.textContent = window.translationManager?.getTranslation('pages.index.external_info') || 'Külsős Információk';
+        linkBtn.setAttribute('data-translate', 'pages.index.external_info');
         linkBtn.onclick = (e) => {
           e.stopPropagation();
           let url = link;
@@ -848,13 +853,13 @@
                     </div>
               <div class="banner-content">
                 <div class="banner-texts">
-                  <span class="info-banner-title">Ez az új dizájn.</span>
-                  <span class="info-banner-desc">Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is.</span>
+                  <span class="info-banner-title" data-translate="pages.index.banner.title" data-translate-fallback="Ez az új dizájn.">Ez az új dizájn.</span>
+                  <span class="info-banner-desc" data-translate="pages.index.banner.description" data-translate-fallback="Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is.">Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is.</span>
                   </div>
                 <div class="banner-actions-wrapper">
                   <div class="banner-actions">
-                    <button class="banner-btn secondary" type="button">Visszajelzés</button>
-                    <button class="banner-btn primary" type="button">Bezárás</button>
+                    <button class="banner-btn secondary" type="button" data-translate="pages.index.banner.feedback" data-translate-fallback="Visszajelzés">Visszajelzés</button>
+                    <button class="banner-btn primary" type="button" data-translate="pages.index.banner.close" data-translate-fallback="Bezárás">Bezárás</button>
                   </div>
                 </div>
               </div>
@@ -869,7 +874,7 @@
               <div class="event-card-overlay event-card-overlay--lg">
                 <div class="event-card-title">Title</div>
                 <div class="event-card-desc">Body</div>
-                <div class="event-card-date">Dátum és Hely</div>
+                <div class="event-card-date" data-translate="pages.index.event_date_place" data-translate-fallback="Dátum és Hely">Dátum és Hely</div>
                   </div>
                 </div>
 
@@ -878,7 +883,7 @@
               <div class="event-card-overlay event-card-overlay--md">
                 <div class="event-card-title">Title</div>
                 <div class="event-card-desc">Body</div>
-                <div class="event-card-date">Dátum és Hely</div>
+                <div class="event-card-date" data-translate="pages.index.event_date_place" data-translate-fallback="Dátum és Hely">Dátum és Hely</div>
                   </div>
                 </div>
 

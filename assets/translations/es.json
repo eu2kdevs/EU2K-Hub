@@ -53,8 +53,52 @@
     "event_hub": "Event Hub"
   },
   "pages": {
+    "index": {
+      "title": "EU2K Hub",
+      "welcome": "¡Bienvenido al Hub!",
+      "upcoming_events": "Próximos Eventos",
+      "news": "Noticias",
+      "event_name": "Nombre del Evento",
+      "event_description": "Descripción del evento",
+      "event_location": "Ubicación del Evento",
+      "event_date_place": "Fecha y Ubicación",
+      "external_info": "Información Externa",
+      "something_wrong": "Algo salió mal",
+      "fixing_soon": "Lo arreglaremos pronto",
+      "banner": {
+        "title": "Este es el nuevo diseño.",
+        "description": "Esperamos que te guste el Sistema de Diseño Europa. Si tienes alguna pregunta, por favor proporciona comentarios, incluso desde aquí.",
+        "feedback": "Comentarios",
+        "close": "Cerrar"
+      }
+    },
     "qr": {
-      "title": "YouHub"
+      "title": "Código QR",
+      "camera_in_use": "La cámara está en uso.",
+      "blocked_title": "¡Ups!",
+      "blocked_text": "No podemos usar la cámara porque no has otorgado permiso. ¡Por favor actívala para que esta función funcione!",
+      "enable_button": "Activar",
+      "auth": "Confirmación de Participación",
+      "switch_camera": "Cambiar Cámara",
+      "off_camera": "Apagar Cámara",
+      "on_camera": "Encender Cámara",
+      "restart_camera": "Reiniciar Cámara",
+      "game_start": "Iniciar Juego",
+      "camera_switch": "Cambiar Cámara",
+      "permission_title": "¡Hagamos una pausa por un momento!",
+      "permission_list_1": "Para escanear códigos QR, necesitas permitir el acceso a la cámara.",
+      "permission_list_2": "El Hub nunca usa tu cámara automáticamente.",
+      "permission_list_3": "Siempre recibirás un indicador claro en la esquina superior derecha cuando la cámara esté activa.",
+      "permission_list_4": "Si otorgas permiso ahora, esta función estará disponible.",
+      "permission_list_5": "También se activarán otras funciones que usan la cámara.",
+      "game_notice": "La función Juegos aún no está soportada en el Hub.",
+      "auth_notice": "La función Confirmación de Participación estará disponible pronto.",
+      "banner": {
+        "title": "Este es el nuevo diseño.",
+        "description": "Esperamos que te guste el Sistema de Diseño Europa. Si tienes alguna pregunta, por favor proporciona comentarios, incluso desde aquí.",
+        "feedback": "Comentarios",
+        "close": "Cerrar"
+      }
     },
     "youhub": {
       "title": "YouHub"
@@ -305,6 +349,10 @@
     "header": {
       "edit": "Editar"
     },
+    "edit_mode": {
+      "enter": "Editar",
+      "exit": "Salir del Modo Edición"
+    },
     "banners": {
       "info": {
         "title": "Este es el nuevo diseño.",
@@ -544,6 +592,9 @@
         "session_expired": "Sesión expirada"
       }
     }
+  },
+  "common": {
+    "ok": "De acuerdo"
   },
   "general": {
     "close": "Cerrar",

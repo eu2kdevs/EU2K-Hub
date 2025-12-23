@@ -329,13 +329,13 @@
                     </div>
               <div class="banner-content">
                 <div class="banner-texts">
-                  <span class="info-banner-title">Ez az új dizájn.</span>
-                  <span class="info-banner-desc">Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is.</span>
+                  <span class="info-banner-title" data-translate="pages.qr.banner.title" data-translate-fallback="Ez az új dizájn.">Ez az új dizájn.</span>
+                  <span class="info-banner-desc" data-translate="pages.qr.banner.description" data-translate-fallback="Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is.">Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is.</span>
                   </div>
                 <div class="banner-actions-wrapper">
                   <div class="banner-actions">
-                    <button class="banner-btn secondary" type="button">Visszajelzés</button>
-                    <button class="banner-btn primary" type="button">Bezárás</button>
+                    <button class="banner-btn secondary" type="button" data-translate="pages.qr.banner.feedback" data-translate-fallback="Visszajelzés">Visszajelzés</button>
+                    <button class="banner-btn primary" type="button" data-translate="pages.qr.banner.close" data-translate-fallback="Bezárás">Bezárás</button>
                   </div>
                 </div>
               </div>
@@ -1446,7 +1446,7 @@
         
         if (icon) icon.src = 'assets/qr-code/cam_enable.svg';
         if (text) {
-          text.textContent = 'Kamera Bekapcsolása';
+          text.textContent = window.translationManager?.getTranslation('pages.qr.on_camera') || 'Kamera Bekapcsolása';
           text.setAttribute('data-translate', 'pages.qr.on_camera');
         }
 
@@ -1472,8 +1472,8 @@
         
         if (icon) icon.src = 'assets/qr-code/cam_disable.svg';
         if (text) {
-          text.textContent = 'Kamera Kikapcsolása';
-          text.setAttribute('data-translate', 'qr.off_camera');
+          text.textContent = window.translationManager?.getTranslation('pages.qr.off_camera') || 'Kamera Kikapcsolása';
+          text.setAttribute('data-translate', 'pages.qr.off_camera');
         }
         
         // Restart camera

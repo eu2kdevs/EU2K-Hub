@@ -53,8 +53,52 @@
     "event_hub": "Event Hub"
   },
   "pages": {
+    "index": {
+      "title": "EU2K Hub",
+      "welcome": "Welcome to the Hub!",
+      "upcoming_events": "Upcoming Events",
+      "news": "News",
+      "event_name": "Event Name",
+      "event_description": "Event description",
+      "event_location": "Event Location",
+      "event_date_place": "Date and Location",
+      "external_info": "External Information",
+      "something_wrong": "Something went wrong",
+      "fixing_soon": "We'll fix it soon",
+      "banner": {
+        "title": "This is the new design.",
+        "description": "We hope you like the Europa Design System. If you have any questions, please provide feedback, even from here.",
+        "feedback": "Feedback",
+        "close": "Close"
+      }
+    },
     "qr": {
-      "title": "YouHub"
+      "title": "QR Code",
+      "camera_in_use": "Camera is in use.",
+      "blocked_title": "Oops!",
+      "blocked_text": "We can't use the camera because you haven't granted permission. Please enable it so this feature can work!",
+      "enable_button": "Enable",
+      "auth": "Participation Confirmation",
+      "switch_camera": "Switch Camera",
+      "off_camera": "Turn Off Camera",
+      "on_camera": "Turn On Camera",
+      "restart_camera": "Restart Camera",
+      "game_start": "Start Game",
+      "camera_switch": "Switch Camera",
+      "permission_title": "Let's pause for a moment!",
+      "permission_list_1": "To scan QR codes, you need to allow camera access.",
+      "permission_list_2": "The Hub never uses your camera automatically.",
+      "permission_list_3": "You'll always get a clear indicator in the top right corner when the camera is active.",
+      "permission_list_4": "If you grant permission now, this feature will become available.",
+      "permission_list_5": "Other camera-using features will also be activated.",
+      "game_notice": "The Games feature is not yet supported in the Hub.",
+      "auth_notice": "The Participation Confirmation feature will be available soon.",
+      "banner": {
+        "title": "This is the new design.",
+        "description": "We hope you like the Europa Design System. If you have any questions, please provide feedback, even from here.",
+        "feedback": "Feedback",
+        "close": "Close"
+      }
     },
     "youhub": {
       "title": "YouHub"
@@ -366,6 +410,10 @@
     "header": {
       "edit": "Edit"
     },
+    "edit_mode": {
+      "enter": "Edit",
+      "exit": "Exit Edit Mode"
+    },
     "banners": {
       "info": {
         "title": "This is the new design.",
@@ -604,6 +652,9 @@
         "session_expired": "Session expired"
       }
     }
+  },
+  "common": {
+    "ok": "OK"
   },
   "general": {
     "close": "Close",

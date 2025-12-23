@@ -53,8 +53,52 @@
     "event_hub": "Event Hub"
   },
   "pages": {
+    "index": {
+      "title": "EU2K Hub",
+      "welcome": "Üdvözöllek a Hub-ban!",
+      "upcoming_events": "Közelgő Események",
+      "news": "Hírek",
+      "event_name": "Esemény neve",
+      "event_description": "Esemény leírása",
+      "event_location": "Esemény Helye",
+      "event_date_place": "Dátum és Hely",
+      "external_info": "Külsős Információk",
+      "something_wrong": "Valami baj van",
+      "fixing_soon": "Nemsokára kijavítjuk",
+      "banner": {
+        "title": "Ez az új dizájn.",
+        "description": "Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is.",
+        "feedback": "Visszajelzés",
+        "close": "Bezárás"
+      }
+    },
     "qr": {
-      "title": "YouHub"
+      "title": "QR-Kód",
+      "camera_in_use": "A kamera használatban van.",
+      "blocked_title": "Ajjaj!",
+      "blocked_text": "Nem tudjuk használni a kamerát, mert nem adtál rá engedélyt. Kérjük, engedélyezd, hogy működhessen ez a funkció!",
+      "enable_button": "Engedélyezés",
+      "auth": "Részvétel Igazolása",
+      "switch_camera": "Kamera Fordítása",
+      "off_camera": "Kamera Kikapcsolása",
+      "on_camera": "Kamera Bekapcsolása",
+      "restart_camera": "Kamera Újraindítása",
+      "game_start": "Játék Indítása",
+      "camera_switch": "Kamera Váltása",
+      "permission_title": "Álljunk meg egy percre!",
+      "permission_list_1": "A QR-kód beolvasásához engedélyezned kell a kamera használatát.",
+      "permission_list_2": "A Hub soha nem használja a kamerádat automatikusan.",
+      "permission_list_3": "Minden alkalommal egyértelmű jelzést kapsz a jobb felső sarokban, amikor a kamera aktív.",
+      "permission_list_4": "Ha most megadod az engedélyt, ez a funkció elérhetővé válik.",
+      "permission_list_5": "További kamerát használó lehetőségek is aktiválódnak.",
+      "game_notice": "A Játékok funkció még nem támogatott a Hubban.",
+      "auth_notice": "A Részvétel Igazolása funkció nemsokára elérhető lesz.",
+      "banner": {
+        "title": "Ez az új dizájn.",
+        "description": "Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is.",
+        "feedback": "Visszajelzés",
+        "close": "Bezárás"
+      }
     },
     "youhub": {
       "title": "YouHub"
@@ -371,6 +415,10 @@
     "header": {
       "edit": "Szerkesztés"
     },
+    "edit_mode": {
+      "enter": "Szerkesztés",
+      "exit": "Kilépés a szerkesztési módból"
+    },
     "banners": {
       "info": {
         "title": "Ez az új dizájn.",
@@ -643,6 +691,9 @@
         "session_expired": "Munkamenet lejárt"
       }
     }
+  },
+  "common": {
+    "ok": "Rendben"
   },
   "general": {
     "close": "Bezárás",

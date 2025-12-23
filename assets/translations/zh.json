@@ -53,8 +53,52 @@
     "event_hub": "Event Hub"
   },
   "pages": {
+    "index": {
+      "title": "EU2K Hub",
+      "welcome": "欢迎来到 Hub！",
+      "upcoming_events": "即将举行的活动",
+      "news": "新闻",
+      "event_name": "活动名称",
+      "event_description": "活动描述",
+      "event_location": "活动地点",
+      "event_date_place": "日期和地点",
+      "external_info": "外部信息",
+      "something_wrong": "出了点问题",
+      "fixing_soon": "我们会尽快修复",
+      "banner": {
+        "title": "这是新设计。",
+        "description": "我们希望您喜欢 Europa 设计系统。如果您有任何问题，请提供反馈，甚至可以从这里。",
+        "feedback": "反馈",
+        "close": "关闭"
+      }
+    },
     "qr": {
-      "title": "YouHub"
+      "title": "二维码",
+      "camera_in_use": "相机正在使用中。",
+      "blocked_title": "哎呀！",
+      "blocked_text": "我们无法使用相机，因为您没有授予权限。请启用它以便此功能可以工作！",
+      "enable_button": "启用",
+      "auth": "参与确认",
+      "switch_camera": "切换相机",
+      "off_camera": "关闭相机",
+      "on_camera": "打开相机",
+      "restart_camera": "重启相机",
+      "game_start": "开始游戏",
+      "camera_switch": "切换相机",
+      "permission_title": "让我们暂停一下！",
+      "permission_list_1": "要扫描二维码，您需要允许相机访问。",
+      "permission_list_2": "Hub 永远不会自动使用您的相机。",
+      "permission_list_3": "当相机处于活动状态时，您始终会在右上角收到清晰的指示器。",
+      "permission_list_4": "如果您现在授予权限，此功能将变为可用。",
+      "permission_list_5": "其他使用相机的功能也将被激活。",
+      "game_notice": "游戏功能在 Hub 中尚不支持。",
+      "auth_notice": "参与确认功能即将推出。",
+      "banner": {
+        "title": "这是新设计。",
+        "description": "我们希望您喜欢 Europa 设计系统。如果您有任何问题，请提供反馈，甚至可以从这里。",
+        "feedback": "反馈",
+        "close": "关闭"
+      }
     },
     "youhub": {
       "title": "YouHub"
@@ -305,6 +349,10 @@
     "header": {
       "edit": "编辑"
     },
+    "edit_mode": {
+      "enter": "编辑",
+      "exit": "退出编辑模式"
+    },
     "banners": {
       "info": {
         "title": "这是新设计。",
@@ -544,6 +592,9 @@
         "session_expired": "会话已过期"
       }
     }
+  },
+  "common": {
+    "ok": "确定"
   },
   "general": {
     "close": "关闭",
