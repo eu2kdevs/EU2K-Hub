@@ -26,34 +26,41 @@ service cloud.firestore {
       return isAdmin() || isOwner() || isTeacher();
     }
 
+    /*
+      User saját osztályának ellenőrzése
+      classId = classFinishes + classType (pl. 2030e)
+    */
+    function userBelongsToClass(classId) {
+      let ownClassRef =
+        /databases/$(database)/documents/users/$(request.auth.uid)/groups/ownclass;
+
+      return isSignedIn()
+        && exists(ownClassRef)
+        && (
+          get(ownClassRef).data.classFinishes +
+          get(ownClassRef).data.classType
+        ) == classId;
+    }
+
     // -----------------------------
-    // CLASSES (admin / owner / teacher mindent csinálhat)
+    // CLASSES
     // -----------------------------
     match /classes/{classId} {
-      // Osztály dokumentum olvasása: saját osztály vagy ClassStaff
-      allow read: if isClassStaff() || 
-        (isSignedIn() && 
-         exists(/databases/$(database)/documents/users/$(request.auth.uid)/general_data/ownClass) &&
-         get(/databases/$(database)/documents/users/$(request.auth.uid)/general_data/ownClass).data.classId == classId);
+      allow read: if isClassStaff() || userBelongsToClass(classId);
       allow write: if isClassStaff();
-      
-      // Grades subcollection: saját osztály vagy ClassStaff
+
       match /grades/{gradeId} {
-        allow read: if isClassStaff() || 
-          (isSignedIn() && 
-           exists(/databases/$(database)/documents/users/$(request.auth.uid)/general_data/ownClass) &&
-           get(/databases/$(database)/documents/users/$(request.auth.uid)/general_data/ownClass).data.classId == classId);
+        allow read: if isClassStaff() || userBelongsToClass(classId);
         allow write: if isClassStaff();
       }
-      
-      // Egyéb subcollections: csak ClassStaff
+
       match /{document=**} {
         allow read, write: if isClassStaff();
       }
     }
 
     // -----------------------------
-    // VERSION (publikus read)
+    // VERSION
     // -----------------------------
     match /version/{document=**} {
       allow read: if true;
@@ -99,22 +106,19 @@ service cloud.firestore {
     }
 
     // -----------------------------
-    // SUGGESTIONS (root)
+    // SUGGESTIONS
     // -----------------------------
     match /suggestions/{suggestionId} {
       allow read: if true;
-      allow write: if isSignedIn() &&
-        request.resource.data.ownerId == request.auth.uid;
+      allow write: if isSignedIn()
+        && request.resource.data.ownerId == request.auth.uid;
     }
 
-    // -----------------------------
-    // USER SUGGESTIONS
-    // -----------------------------
     match /users/{userId}/suggestions/{suggestionId} {
       allow read: if isSignedIn() && request.auth.uid == userId;
-      allow write: if isSignedIn() &&
-        request.auth.uid == userId &&
-        request.resource.data.ownerId == request.auth.uid;
+      allow write: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.ownerId == request.auth.uid;
     }
 
     // -----------------------------
@@ -126,7 +130,7 @@ service cloud.firestore {
     }
 
     // -----------------------------
-    // EVENTS (root)
+    // EVENTS
     // -----------------------------
     match /events/{document=**} {
       allow read: if true;
@@ -142,14 +146,14 @@ service cloud.firestore {
     }
 
     // -----------------------------
-    // SETTINGS (csak saját)
+    // SETTINGS
     // -----------------------------
     match /settings/{userId}/{document=**} {
       allow read, write: if isSignedIn() && request.auth.uid == userId;
     }
 
     // -----------------------------
-    // ADMIN COLLECTIONS
+    // ADMIN
     // -----------------------------
     match /admin/{document=**} {
       allow read, write: if isAdmin();

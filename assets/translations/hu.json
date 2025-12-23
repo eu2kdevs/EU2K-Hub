@@ -23,6 +23,13 @@
     "how_will_you_look": "Hogyan fogsz kinézni?",
     "use_school_profile": "Iskolai profilkép használata",
     "random": "Random",
+    "name_label": "Neved:",
+    "name_placeholder": "Ide írd...",
+    "name_hint": "Ezen a néven fogunk szólítani, ha Tanár vagy, erre különösen figyelj!",
+    "continue": "Tovább",
+    "how_can_we_call_you": "Hogyan hívhatunk?",
+    "preferences_general_title": "Általános",
+    "login_success": "Bejelentkezés sikeres!",
     "preferences_title": "Válaszd ki a preferenciáidat",
     "preferences_step_1": "1/2",
     "preferences_notifications_title": "Értesítések",
@@ -211,6 +218,11 @@
       }
     },
     "privacy_policy": {
+      "title": "Adatvédelmi tájékoztató",
+      "banner": {
+        "title": "Ez az új dizájn.",
+        "description": "Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is."
+      },
       "effective_date": "<strong>Hatálybalépés dátuma:</strong> 2025. január 11.",
       "section_1_title": "1. Bevezetés",
       "section_1_text": "Az EU2K Hub az Európa 2000 Gimnázium digitális központja, amelyet diákok, tanárok és érdeklődők számára hoztunk létre. Célunk, hogy egyszerűbbé és élvezetesebbé tegyük az iskolai életet, miközben átláthatóságra és biztonságra törekszünk az adatok kezelésében. Ez az adatvédelmi tájékoztató részletesen bemutatja, hogyan kezeljük az Ön személyes adatait.",
@@ -328,6 +340,11 @@
       "footer": "© 2025 EU2K Hub – Minden jog fenntartva."
     },
     "terms_of_service": {
+      "title": "Használati Feltételek",
+      "banner": {
+        "title": "Ez az új dizájn.",
+        "description": "Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is."
+      },
       "effective_date": "<strong>Hatálybalépés dátuma:</strong> 2025. január 11.",
       "section_1_title": "1. Bevezetés",
       "section_1_text": "Üdvözöljük az EU2K Hub-ban! Az EU2K Hub az Európa 2000 Gimnázium digitális központja, amelyet diákok, tanárok és érdeklődők számára hoztunk létre. A platform használatával Ön elfogadja ezeket a használati feltételeket. Kérjük, olvassa el figyelmesen ezt a dokumentumot, mielőtt használná a szolgáltatást.",
@@ -397,6 +414,8 @@
         "beta": "Előzetes-szoftver használati tájékoztatója"
       },
       "hubs": {
+        "title": "Hubok",
+        "soon": "HAMAROSAN",
         "title": "Hubs"
       },
       "special": {
@@ -712,8 +731,13 @@
       "october": "Október",
       "november": "November",
     "december": "December"
-    }
   },
+  "account": {
+    "tooltip": {
+      "no_class": "Nincs osztály"
+    }
+  }
+},
   "guest": {
     "youhub_title": "A YouHub vendégek számára nem használható.",
     "youhub_description": "Jelentkezz be hogy elérhess végtelen lehetőségeket a YouHubbal.",

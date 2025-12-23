@@ -23,6 +23,13 @@
     "how_will_you_look": "Hur kommer du att se ut?",
     "use_school_profile": "Använd skolprofilbild",
     "random": "Slumpmässig",
+    "name_label": "Ditt namn:",
+    "name_placeholder": "Skriv här...",
+    "name_hint": "Vi kommer att kalla dig med detta namn. Om du är lärare, var särskilt uppmärksam på detta!",
+    "continue": "Fortsätt",
+    "how_can_we_call_you": "Hur kan vi kalla dig?",
+    "preferences_general_title": "Allmänt",
+    "login_success": "Inloggning lyckades!",
     "preferences_title": "Välj dina preferenser",
     "preferences_step_1": "1/2",
     "preferences_notifications_title": "Aviseringar",
@@ -198,6 +205,11 @@
       }
     },
     "privacy_policy": {
+      "title": "Integritetspolicy",
+      "banner": {
+        "title": "Detta är det nya designen.",
+        "description": "Vi hoppas att du gillar Europa Design System. Om du har några frågor, vänligen ge feedback, även härifrån."
+      },
       "effective_date": "<strong>Ikraftträdandedatum:</strong> 11 januari 2025",
       "section_1_title": "1. Introduktion",
       "section_1_text": "EU2K Hub är det digitala centret för Európa 2000 Gimnázium, skapat för elever, lärare och intresserade. Vårt mål är att göra skollivet enklare och roligare samtidigt som vi strävar efter transparens och säkerhet i datahantering. Denna integritetspolicy beskriver i detalj hur vi hanterar dina personuppgifter.",
@@ -609,7 +621,8 @@
       "beta": "Beta-mjukvaru Användningsmeddelande"
     },
     "hubs": {
-      "title": "Hubs"
+      "title": "Hubs",
+      "soon": "KOMMER SNART"
     },
     "special": {
       "title": "Vår Specialitet",
@@ -628,5 +641,10 @@
     "youhub_description": "Logga in för att låsa upp oändliga möjligheter med YouHub.",
     "settings_title": "Du kan inte komma åt den här delen som gäst.",
     "settings_description": "Logga in för mer anpassning och bekvämlighet!."
+  },
+  "account": {
+    "tooltip": {
+      "no_class": "Ingen klass"
+    }
   }
 }

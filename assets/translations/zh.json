@@ -23,6 +23,13 @@
     "how_will_you_look": "你会是什么样子？",
     "use_school_profile": "使用学校头像",
     "random": "随机",
+    "name_label": "你的名字:",
+    "name_placeholder": "在这里输入...",
+    "name_hint": "我们将用这个名字称呼你。如果你是老师，请特别注意这一点！",
+    "continue": "继续",
+    "how_can_we_call_you": "我们怎么称呼你？",
+    "preferences_general_title": "常规",
+    "login_success": "登录成功！",
     "preferences_title": "选择你的偏好",
     "preferences_step_1": "1/2",
     "preferences_notifications_title": "通知",
@@ -198,6 +205,11 @@
       }
     },
     "privacy_policy": {
+      "title": "隐私政策",
+      "banner": {
+        "title": "这是新设计。",
+        "description": "我们希望您喜欢Europa设计系统。如果您有任何问题，请提供反馈，即使从这里也可以。"
+      },
       "effective_date": "<strong>生效日期:</strong> 2025年1月11日",
       "section_1_title": "1. 介绍",
       "section_1_text": "EU2K Hub是Európa 2000 Gimnázium的数字中心，为学生、教师和感兴趣的人创建。我们的目标是在追求数据处理的透明度和安全性的同时，使学校生活更简单、更愉快。本隐私政策详细说明了我们如何处理您的个人数据。",
@@ -609,7 +621,8 @@
       "beta": "测试版软件使用通知"
     },
     "hubs": {
-      "title": "Hubs"
+      "title": "Hubs",
+      "soon": "即将推出"
     },
     "special": {
       "title": "我们的特色",
@@ -628,5 +641,10 @@
     "youhub_description": "登录即可解锁 YouHub 的无限可能。",
     "settings_title": "作为访客，你无法访问此部分。",
     "settings_description": "登录以获得更多个性化和便利体验!."
+  },
+  "account": {
+    "tooltip": {
+      "no_class": "无班级"
+    }
   }
 }

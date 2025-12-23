@@ -23,6 +23,13 @@
     "how_will_you_look": "どのように見えますか？",
     "use_school_profile": "学校のプロフィール写真を使用",
     "random": "ランダム",
+    "name_label": "あなたの名前:",
+    "name_placeholder": "ここに入力...",
+    "name_hint": "この名前で呼びます。教師の場合は、特に注意してください！",
+    "continue": "続ける",
+    "how_can_we_call_you": "どのように呼べばいいですか？",
+    "preferences_general_title": "一般",
+    "login_success": "ログイン成功！",
     "preferences_title": "好みを選択",
     "preferences_step_1": "1/2",
     "preferences_notifications_title": "通知",
@@ -198,6 +205,11 @@
       }
     },
     "privacy_policy": {
+      "title": "プライバシーポリシー",
+      "banner": {
+        "title": "これが新しいデザインです。",
+        "description": "Europaデザインシステムを気に入っていただければ幸いです。ご質問がある場合は、ここからでもフィードバックをお願いします。"
+      },
       "effective_date": "<strong>発効日:</strong> 2025年1月11日",
       "section_1_title": "1. はじめに",
       "section_1_text": "EU2K Hubは、Európa 2000 Gimnáziumのデジタルセンターで、学生、教師、関係者のために作成されました。私たちの目標は、データの取り扱いにおいて透明性とセキュリティを追求しながら、学校生活をより簡単で楽しいものにすることです。このプライバシーポリシーは、個人データの取り扱い方法を詳しく説明しています。",
@@ -609,7 +621,8 @@
       "beta": "ベータソフトウェア使用通知"
     },
     "hubs": {
-      "title": "Hubs"
+      "title": "Hubs",
+      "soon": "近日公開"
     },
     "special": {
       "title": "私たちの専門",
@@ -628,5 +641,10 @@
     "youhub_description": "YouHub で無限の可能性を開くには、ログインしてください。",
     "settings_title": "このセクションはゲストとしては利用できません。",
     "settings_description": "さらに快適にカスタマイズするには、ログインしてください！."
+  },
+  "account": {
+    "tooltip": {
+      "no_class": "クラスなし"
+    }
   }
 }

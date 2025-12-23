@@ -42,6 +42,7 @@
   </script>
   <script src="assets/js/page-overlay-loader.js"></script>
   <script src="assets/js/translations.js"></script>
+  <script src="assets/js/onboarding-safe-check.js"></script>
   <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -193,7 +194,7 @@
           <!-- Login Success Screen (Temporary) -->
           <div class="login-success-screen" id="loginSuccessScreen" style="display: none;" data-screen="login-success">
             <div class="login-success-container">
-              <h1 class="login-success-title">Bejelentkezés sikeres!</h1>
+              <h1 class="login-success-title" data-translate="onboarding.login_success" data-translate-fallback="Bejelentkezés sikeres!">Bejelentkezés sikeres!</h1>
               <button class="onboarding-start-btn login-logout-btn" id="loginLogoutBtn">
                 <span class="onboarding-start-text" data-translate="onboarding.logout">Kijelentkezés</span>
               </button>
@@ -1437,9 +1438,12 @@
         const welcomeText = document.getElementById('welcomeText');
         if (welcomeText) {
           welcomeText.setAttribute('data-translate', 'onboarding.how_can_we_call_you');
-          welcomeText.textContent = 'Hogyan hívhatunk?';
+          welcomeText.setAttribute('data-translate-fallback', 'Hogyan hívhatunk?');
           if (window.translationManager) {
+            welcomeText.textContent = window.translationManager.getTranslation('onboarding.how_can_we_call_you') || 'Hogyan hívhatunk?';
             window.translationManager.applyTranslations();
+          } else {
+            welcomeText.textContent = 'Hogyan hívhatunk?';
           }
         }
         if (welcomeIcon) {
@@ -2756,9 +2760,15 @@
         continueBtnContainer.style.display = 'flex';
         const continueBtn = document.createElement('button');
         continueBtn.className = 'looks-continue-btn';
-        continueBtn.textContent = 'Tovább';
+        continueBtn.setAttribute('data-translate', 'onboarding.continue');
+        continueBtn.setAttribute('data-translate-fallback', 'Tovább');
+        continueBtn.textContent = window.translationManager?.getTranslation('onboarding.continue') || 'Tovább';
         continueBtn.id = 'looksGridContinueBtn';
         continueBtn.addEventListener('click', handleDefaultContinue);
+        // Apply translations when language changes
+        if (window.translationManager) {
+          window.translationManager.applyTranslationsToElement(continueBtn);
+        }
         continueBtnContainer.appendChild(continueBtn);
         row2.appendChild(continueBtnContainer);
         
@@ -3403,11 +3413,16 @@
         const uid = window.auth?.currentUser?.uid;
         if (!uid) return fallback;
         try {
-          const photoRef = ref(storage, `profilePhotos/${uid}.jpg`);
-          const url = await getDownloadURL(photoRef);
+          // Use global storage functions
+          if (!window.storage || !window.storageRef || !window.storageGetDownloadURL) {
+            console.warn('⚠️ Storage functions not available');
+            return fallback;
+          }
+          const photoRef = window.storageRef(window.storage, `profilePhotos/${uid}.jpg`);
+          const url = await window.storageGetDownloadURL(photoRef);
           return url || fallback;
         } catch (error) {
-          console.warn('⚠️ Nem sikerült letölteni a tárolt profilképet:', error.message);
+          console.warn('⚠️ Nem sikerült letölteni a tárolt profilképet:', error.message || error);
           return fallback;
         }
       }

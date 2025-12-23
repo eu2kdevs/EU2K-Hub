@@ -23,6 +23,13 @@
     "how_will_you_look": "Comment vas-tu avoir l'air ?",
     "use_school_profile": "Utiliser la photo de profil scolaire",
     "random": "Aléatoire",
+    "name_label": "Ton nom:",
+    "name_placeholder": "Tape ici...",
+    "name_hint": "Nous t'appellerons par ce nom. Si tu es enseignant, fais particulièrement attention à cela!",
+    "continue": "Continuer",
+    "how_can_we_call_you": "Comment pouvons-nous t'appeler?",
+    "preferences_general_title": "Général",
+    "login_success": "Connexion réussie!",
     "preferences_title": "Choisis tes préférences",
     "preferences_step_1": "1/2",
     "preferences_notifications_title": "Notifications",
@@ -198,6 +205,11 @@
       }
     },
     "privacy_policy": {
+      "title": "Politique de confidentialité",
+      "banner": {
+        "title": "C'est le nouveau design.",
+        "description": "Nous espérons que vous aimez le système de design Europa. Si vous avez des questions, veuillez donner votre avis, même depuis ici."
+      },
       "effective_date": "<strong>Date d'entrée en vigueur:</strong> 11 janvier 2025",
       "section_1_title": "1. Introduction",
       "section_1_text": "EU2K Hub est le centre numérique du Európa 2000 Gimnázium, créé pour les étudiants, les enseignants et les personnes intéressées. Notre objectif est de rendre la vie scolaire plus simple et agréable tout en visant la transparence et la sécurité dans la gestion des données. Cette politique de confidentialité détaille comment nous traitons vos données personnelles.",
@@ -609,7 +621,8 @@
       "beta": "Avis d'Utilisation du Logiciel Bêta"
     },
     "hubs": {
-      "title": "Hubs"
+      "title": "Hubs",
+      "soon": "BIENTÔT"
     },
     "special": {
       "title": "Notre Spécialité",
@@ -628,5 +641,10 @@
     "youhub_description": "Connecte-toi pour débloquer des possibilités infinies avec YouHub.",
     "settings_title": "Tu ne peux pas accéder à cette section en tant qu'invité.",
     "settings_description": "Connecte-toi pour bénéficier de plus de personnalisation et de confort !."
+  },
+  "account": {
+    "tooltip": {
+      "no_class": "Pas de classe"
+    }
   }
 }

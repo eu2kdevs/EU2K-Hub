@@ -60,6 +60,7 @@
   <script src="assets/js/page-overlay-loader.js"></script>
   <script src="assets/js/permissions.js"></script>
   <script src="assets/js/translations.js"></script>
+  <script src="assets/js/account-tooltip.js"></script>
   <script src="assets/js/auth-state.js"></script>
   <script src="assets/js/test_firebase.js" type="module"></script>
   <script src="assets/js/firebase-performance.js" type="module"></script>
@@ -1863,7 +1864,6 @@ async function handleSuggestionSubmit() {
               <div class="footer-section-items">
                 <a href="privacy-policy.html" class="footer-item" data-translate="footer.legal.privacy">Adatvédelmi&nbsp;Tájékoztató</a>
                 <a href="terms-of-service.html" class="footer-item" data-translate="footer.legal.terms">Használati&nbsp;Feltételek</a>
-                <div class="footer-item">Előzetes-szoftver<br>használati&nbsp;tájékoztatója</div>
               </div>
             </div>
 
@@ -1871,11 +1871,11 @@ async function handleSuggestionSubmit() {
             <div class="footer-section">
               <div class="footer-section-title" data-translate="footer.hubs.title">Hubs</div>
               <div class="footer-section-items">
-                <div class="footer-item">YouHub</div>
-                <div class="footer-item">Class&nbsp;Hub</div>
-                <div class="footer-item">Food&nbsp;Hub</div>
-                <div class="footer-item">Event&nbsp;Hub</div>
-                <div class="footer-item">Fitness&nbsp;Hub<span class="beta-badge">BETA</span></div>
+                <a href="youhub.html" class="footer-item">YouHub</a>
+                <div class="footer-item">Class&nbsp;Hub<span class="beta-badge" data-translate="footer.hubs.soon" data-translate-fallback="SOON">SOON</span></div>
+                <div class="footer-item">Food&nbsp;Hub<span class="beta-badge" data-translate="footer.hubs.soon" data-translate-fallback="SOON">SOON</span></div>
+                <div class="footer-item">Event&nbsp;Hub<span class="beta-badge" data-translate="footer.hubs.soon" data-translate-fallback="SOON">SOON</span></div>
+                <div class="footer-item">Fitness&nbsp;Hub<span class="beta-badge" data-translate="footer.hubs.soon" data-translate-fallback="SOON">SOON</span></div>
               </div>
             </div>
 

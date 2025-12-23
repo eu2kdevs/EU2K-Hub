@@ -98,6 +98,7 @@
   </script>
   <script src="assets/js/permissions.js"></script>
   <script src="assets/js/translations.js"></script>
+  <script src="assets/js/account-tooltip.js"></script>
   <!-- <script src="assets/js/welcome-screen.js"></script> -->
   <script src="assets/js/auth-state.js"></script>
   <script src="assets/js/test_firebase.js" type="module"></script>
@@ -249,7 +250,7 @@
             <div class="header-content">
             <div class="welcome-container">
                 <img src="assets/privacy-policy/privacy-policy.svg" class="welcome-icon" alt="Privacy Policy">
-                <span class="welcome-text">Használati Feltételek</span>
+                <span class="welcome-text" data-translate="pages.terms_of_service.title" data-translate-fallback="Használati Feltételek">Használati Feltételek</span>
             </div>
               <div class="header-icon-container">
                 <div class="header-icon-gradient">
@@ -277,8 +278,8 @@
                     </div>
               <div class="banner-content">
                 <div class="banner-texts">
-                  <span class="info-banner-title">Ez az új dizájn.</span>
-                  <span class="info-banner-desc">Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is.</span>
+                  <span class="info-banner-title" data-translate="pages.terms_of_service.banner.title" data-translate-fallback="Ez az új dizájn.">Ez az új dizájn.</span>
+                  <span class="info-banner-desc" data-translate="pages.terms_of_service.banner.description" data-translate-fallback="Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is.">Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is.</span>
                   </div>
                 <div class="banner-actions-wrapper">
                   <div class="banner-actions">
@@ -539,19 +540,18 @@
               <div class="footer-section-items">
                 <a href="/privacy-policy" class="footer-item">Adatvédelmi&nbsp;Tájékoztató</a>
                 <a href="/terms-of-service" class="footer-item">Használati&nbsp;Feltételek</a>
-                <div class="footer-item">Előzetes-szoftver<br>használati&nbsp;tájékoztatója</div>
               </div>
             </div>
 
             <!-- Hubs -->
             <div class="footer-section">
-              <div class="footer-section-title">Hubs</div>
+              <div class="footer-section-title" data-translate="footer.hubs.title">Hubs</div>
               <div class="footer-section-items">
-                <div class="footer-item">YouHub</div>
-                <div class="footer-item">Class&nbsp;Hub</div>
-                <div class="footer-item">Food&nbsp;Hub</div>
-                <div class="footer-item">Event&nbsp;Hub</div>
-                <div class="footer-item">Fitness&nbsp;Hub<span class="beta-badge">BETA</span></div>
+                <a href="youhub.html" class="footer-item">YouHub</a>
+                <div class="footer-item">Class&nbsp;Hub<span class="beta-badge" data-translate="footer.hubs.soon" data-translate-fallback="SOON">SOON</span></div>
+                <div class="footer-item">Food&nbsp;Hub<span class="beta-badge" data-translate="footer.hubs.soon" data-translate-fallback="SOON">SOON</span></div>
+                <div class="footer-item">Event&nbsp;Hub<span class="beta-badge" data-translate="footer.hubs.soon" data-translate-fallback="SOON">SOON</span></div>
+                <div class="footer-item">Fitness&nbsp;Hub<span class="beta-badge" data-translate="footer.hubs.soon" data-translate-fallback="SOON">SOON</span></div>
               </div>
             </div>
 

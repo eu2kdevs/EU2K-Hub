@@ -23,6 +23,13 @@
     "how_will_you_look": "How will you look?",
     "use_school_profile": "Use school profile picture",
     "random": "Random",
+    "name_label": "Your name:",
+    "name_placeholder": "Type here...",
+    "name_hint": "We will address you by this name. If you are a teacher, pay special attention to this!",
+    "continue": "Continue",
+    "how_can_we_call_you": "How can we call you?",
+    "preferences_general_title": "General",
+    "login_success": "Login successful!",
     "preferences_title": "Choose your preferences",
     "preferences_step_1": "1/2",
     "preferences_notifications_title": "Notifications",
@@ -198,6 +205,11 @@
       }
     },
     "privacy_policy": {
+      "title": "Privacy Policy",
+      "banner": {
+        "title": "This is the new design.",
+        "description": "We hope you like the Europa Design System. If you have any questions, please give feedback, even from here."
+      },
       "effective_date": "<strong>Effective date:</strong> January 11, 2025",
       "section_1_title": "1. Introduction",
       "section_1_text": "EU2K Hub is the digital center of Európa 2000 Gimnázium, created for students, teachers, and interested parties. Our goal is to make school life simpler and more enjoyable while striving for transparency and security in data handling. This privacy policy details how we handle your personal data.",
@@ -315,6 +327,11 @@
       "footer": "© 2025 EU2K Hub – All rights reserved."
     },
     "terms_of_service": {
+      "title": "Terms of Service",
+      "banner": {
+        "title": "This is the new design.",
+        "description": "We hope you like the Europa Design System. If you have any questions, please give feedback, even from here."
+      },
       "effective_date": "<strong>Effective date:</strong> January 11, 2025",
       "section_1_title": "1. Introduction",
       "section_1_text": "Welcome to EU2K Hub! EU2K Hub is the digital center of Európa 2000 Gimnázium, created for students, teachers, and interested parties. By using the platform, you accept these terms of service. Please read this document carefully before using the service.",
@@ -674,6 +691,11 @@
       "december": "December"
     }
   },
+  "account": {
+    "tooltip": {
+      "no_class": "No class"
+    }
+  },
   "footer": {
     "participated": "Participated by:",
     "legal": {
@@ -683,7 +705,8 @@
       "beta": "Beta Software Usage Notice"
     },
     "hubs": {
-      "title": "Hubs"
+      "title": "Hubs",
+      "soon": "SOON"
     },
     "special": {
       "title": "Our Specialty",

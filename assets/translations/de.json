@@ -23,6 +23,13 @@
     "how_will_you_look": "Wie wirst du aussehen?",
     "use_school_profile": "Schulprofilbild verwenden",
     "random": "Zufällig",
+    "name_label": "Dein Name:",
+    "name_placeholder": "Hier eingeben...",
+    "name_hint": "Wir werden dich mit diesem Namen ansprechen. Wenn du Lehrer bist, achte besonders darauf!",
+    "continue": "Weiter",
+    "how_can_we_call_you": "Wie können wir dich nennen?",
+    "preferences_general_title": "Allgemein",
+    "login_success": "Anmeldung erfolgreich!",
     "preferences_title": "Wähle deine Präferenzen",
     "preferences_step_1": "1/2",
     "preferences_notifications_title": "Benachrichtigungen",
@@ -201,6 +208,11 @@
       }
     },
     "privacy_policy": {
+      "title": "Datenschutzerklärung",
+      "banner": {
+        "title": "Dies ist das neue Design.",
+        "description": "Wir hoffen, Ihnen gefällt das Europa Design System. Wenn Sie Fragen haben, geben Sie bitte Feedback, auch von hier aus."
+      },
       "effective_date": "<strong>Gültigkeitsdatum:</strong> 11. Januar 2025",
       "section_1_title": "1. Einführung",
       "section_1_text": "EU2K Hub ist das digitale Zentrum des Európa 2000 Gimnázium, das für Schüler, Lehrer und Interessierte erstellt wurde. Unser Ziel ist es, das Schulleben einfacher und angenehmer zu gestalten und gleichzeitig Transparenz und Sicherheit im Umgang mit Daten anzustreben. Diese Datenschutzerklärung erläutert im Detail, wie wir Ihre persönlichen Daten verarbeiten.",
@@ -617,6 +629,11 @@
       "december": "Dezember"
     }
   },
+  "account": {
+    "tooltip": {
+      "no_class": "Keine Klasse"
+    }
+  },
   "footer": {
     "participated": "Beteiligt:",
     "legal": {
@@ -626,7 +643,8 @@
       "beta": "Beta-Software-Nutzungshinweis"
     },
     "hubs": {
-      "title": "Hubs"
+      "title": "Hubs",
+      "soon": "BALD"
     },
     "special": {
       "title": "Unsere Spezialität",
