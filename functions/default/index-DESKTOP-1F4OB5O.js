@@ -430,7 +430,8 @@ exports.verifyAdminConsolePassword = onCall(
       const updatedClaims = { 
         ...claims, 
         adminConsolePassword: storedPassword, // Biztosítjuk, hogy a jelszó is benne legyen
-        adminConsoleSessionExpiry: sessionExpiry 
+        adminConsoleSessionExpiry: sessionExpiry,
+        admin: true // Ideiglenesen admin jogosultság az admin console használatához
       };
 
       try {
@@ -499,12 +500,27 @@ exports.checkAdminConsoleSession = onCall(
         console.log('[checkAdminConsoleSession] Session expired, removing');
         const updatedClaims = { ...claims };
         delete updatedClaims.adminConsoleSessionExpiry;
+        // Eltávolítjuk az ideiglenes admin jogosultságot is, ha csak az admin console miatt kapta
+        // De csak akkor, ha nem volt eredetileg admin (megtartjuk az eredeti admin claim-et)
+        if (!claims.admin && updatedClaims.admin) {
+          delete updatedClaims.admin;
+        }
         await auth.setCustomUserClaims(userId, updatedClaims);
         
         return {
           valid: false,
           message: 'Session expired'
         };
+      }
+      
+      // Session érvényes, biztosítjuk hogy az admin claim be van állítva
+      if (!claims.admin) {
+        console.log('[checkAdminConsoleSession] Setting temporary admin claim for active session');
+        const updatedClaims = {
+          ...claims,
+          admin: true // Ideiglenesen admin jogosultság az admin console használatához
+        };
+        await auth.setCustomUserClaims(userId, updatedClaims);
       }
       
       console.log('[checkAdminConsoleSession] Session valid');

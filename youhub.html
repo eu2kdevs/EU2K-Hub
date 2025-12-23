@@ -2702,10 +2702,16 @@ async function handleSuggestionSubmit() {
       // Update edit button text based on current language and mode
       function updateEditButtonText() {
         if (!editText) return;
-        if (isEditMode) {
-          editText.textContent = window.translationManager?.getTranslation('youhub.edit_mode.exit') || 'Kilépés a szerkesztési módból';
-        } else {
-          editText.textContent = window.translationManager?.getTranslation('youhub.edit_mode.enter') || 'Szerkesztés';
+        try {
+          if (isEditMode) {
+            editText.textContent = window.translationManager?.getTranslation('youhub.edit_mode.exit') || 'Kilépés a szerkesztési módból';
+          } else {
+            editText.textContent = window.translationManager?.getTranslation('youhub.edit_mode.enter') || 'Szerkesztés';
+          }
+        } catch (error) {
+          console.warn('[YouHub] Error updating edit button text:', error);
+          // Fallback to default text
+          editText.textContent = isEditMode ? 'Kilépés a szerkesztési módból' : 'Szerkesztés';
         }
       }
       
@@ -2808,8 +2814,13 @@ async function handleSuggestionSubmit() {
           'general.months.november',
           'general.months.december'
         ];
-        const translation = window.translationManager.getTranslation(monthKeys[monthIndex]);
-        return translation || MONTH_NAMES_HU[monthIndex] || '';
+        try {
+          const translation = window.translationManager?.getTranslation(monthKeys[monthIndex]);
+          return translation || MONTH_NAMES_HU[monthIndex] || '';
+        } catch (error) {
+          console.warn('[YouHub] Error getting month translation:', error);
+          return MONTH_NAMES_HU[monthIndex] || '';
+        }
       }
       let myClassGradesData = null;
 
@@ -3193,68 +3204,107 @@ async function handleSuggestionSubmit() {
       const MYCLASS_STATE_TEMPLATES = {
         'myclass-graph': () => graphTemplate,
         'myclass-suggestions': () => {
-          const now = new Date();
-          const currentMonthNumber = now.getMonth() + 1;
-          const isJulyOrAugust = currentMonthNumber === 7 || currentMonthNumber === 8;
-          
-          if (isJulyOrAugust) {
-            const daysUntilStart = getDaysUntilSchoolStarts();
-            const suggestionsTab = window.translationManager?.getTranslation('youhub.tabs.suggestions') || 'Javaslatok';
-            const getTranslation = (key, fallback) => window.translationManager?.getTranslation(key) || fallback;
-            const summerTitle = getTranslation('youhub.myclass.states.suggestions_summer.title', 'Ennyire nem várhatod az iskolát.');
-            const summerDesc = getTranslation('youhub.myclass.states.suggestions_summer.description', 'Az iskola {days} nap múlva kezdődik.').replace('{days}', daysUntilStart);
-            const summerItem1 = getTranslation('youhub.myclass.states.suggestions_summer.list_item1', 'Dolgozunk a megvalósításán a Suggestions Hub-bal.');
-            const summerItem2 = getTranslation('youhub.myclass.states.suggestions_summer.list_item2', 'Amikor kész, a kedvenc ötleteid ide kerülnek.');
-            return buildMyClassStateTemplate(
-              suggestionsTab,
-              summerTitle,
-              summerDesc,
-              `<ul class="myclass-state-list">
-                <li>${summerItem1}</li>
-                <li>${summerItem2}</li>
-              </ul>`
-            );
-          } else {
-            const suggestionsTab = window.translationManager?.getTranslation('youhub.tabs.suggestions') || 'Javaslatok';
-            const classSuggestions = window.translationManager?.getTranslation('youhub.tabs.class_suggestions') || 'Osztály Javaslatai';
-            const getTranslation = (key, fallback) => window.translationManager?.getTranslation(key) || fallback;
-            const normalDesc = getTranslation('youhub.myclass.states.suggestions_normal.description', 'Hamarosan itt fognak megjelenni az osztály ötletei és visszajelzései.');
-            const normalItem1 = getTranslation('youhub.myclass.states.suggestions_normal.list_item1', 'Dolgozunk a megvalósításán a Suggestions Hub-bal.');
-            const normalItem2 = getTranslation('youhub.myclass.states.suggestions_normal.list_item2', 'Amikor kész, a kedvenc ötleteid ide kerülnek.');
-            return buildMyClassStateTemplate(
-              suggestionsTab,
-              classSuggestions,
-              normalDesc,
-              `<ul class="myclass-state-list">
-                <li>${normalItem1}</li>
-                <li>${normalItem2}</li>
-              </ul>`
-            );
+          try {
+            const now = new Date();
+            const currentMonthNumber = now.getMonth() + 1;
+            const isJulyOrAugust = currentMonthNumber === 7 || currentMonthNumber === 8;
+            
+            if (isJulyOrAugust) {
+              const daysUntilStart = getDaysUntilSchoolStarts();
+              const suggestionsTab = window.translationManager?.getTranslation('youhub.tabs.suggestions') || 'Javaslatok';
+              const getTranslation = (key, fallback) => {
+                try {
+                  return window.translationManager?.getTranslation(key) || fallback;
+                } catch {
+                  return fallback;
+                }
+              };
+              const summerTitle = getTranslation('youhub.myclass.states.suggestions_summer.title', 'Ennyire nem várhatod az iskolát.');
+              const summerDesc = getTranslation('youhub.myclass.states.suggestions_summer.description', 'Az iskola {days} nap múlva kezdődik.').replace('{days}', daysUntilStart);
+              const summerItem1 = getTranslation('youhub.myclass.states.suggestions_summer.list_item1', 'Dolgozunk a megvalósításán a Suggestions Hub-bal.');
+              const summerItem2 = getTranslation('youhub.myclass.states.suggestions_summer.list_item2', 'Amikor kész, a kedvenc ötleteid ide kerülnek.');
+              return buildMyClassStateTemplate(
+                suggestionsTab,
+                summerTitle,
+                summerDesc,
+                `<ul class="myclass-state-list">
+                  <li>${summerItem1}</li>
+                  <li>${summerItem2}</li>
+                </ul>`
+              );
+            } else {
+              const suggestionsTab = window.translationManager?.getTranslation('youhub.tabs.suggestions') || 'Javaslatok';
+              const classSuggestions = window.translationManager?.getTranslation('youhub.tabs.class_suggestions') || 'Osztály Javaslatai';
+              const getTranslation = (key, fallback) => {
+                try {
+                  return window.translationManager?.getTranslation(key) || fallback;
+                } catch {
+                  return fallback;
+                }
+              };
+              const normalDesc = getTranslation('youhub.myclass.states.suggestions_normal.description', 'Hamarosan itt fognak megjelenni az osztály ötletei és visszajelzései.');
+              const normalItem1 = getTranslation('youhub.myclass.states.suggestions_normal.list_item1', 'Dolgozunk a megvalósításán a Suggestions Hub-bal.');
+              const normalItem2 = getTranslation('youhub.myclass.states.suggestions_normal.list_item2', 'Amikor kész, a kedvenc ötleteid ide kerülnek.');
+              return buildMyClassStateTemplate(
+                suggestionsTab,
+                classSuggestions,
+                normalDesc,
+                `<ul class="myclass-state-list">
+                  <li>${normalItem1}</li>
+                  <li>${normalItem2}</li>
+                </ul>`
+              );
+            }
+          } catch (error) {
+            console.error('[YouHub][MyClass] Error in suggestions template:', error);
+            return buildMyClassStateTemplate('Javaslatok', 'Hiba', 'Hiba történt a sablon betöltésekor.', '');
           }
         },
         'myclass-info1': () => {
-          const getTranslation = (key, fallback) => window.translationManager?.getTranslation(key) || fallback;
-          return buildMyClassStateTemplate(
-            getTranslation('youhub.myclass.states.info1.tag', 'Információk'),
-            getTranslation('youhub.myclass.states.info1.title', 'Osztály elérhetőségi kártyája'),
-            getTranslation('youhub.myclass.states.info1.description', 'Itt láthatod majd nemsokára az osztályod elérhetőségi kártyáját.'),
-            `<ul class="myclass-state-list">
-              <li>${getTranslation('youhub.myclass.states.info1.list_item1', 'QR-Kód az osztályodnak, és a tanárai.')}</li>
-              <li>${getTranslation('youhub.myclass.states.info1.list_item2', 'Egyszerű megosztás a többiekkel.')}</li>
-            </ul>`
-          );
+          try {
+            const getTranslation = (key, fallback) => {
+              try {
+                return window.translationManager?.getTranslation(key) || fallback;
+              } catch {
+                return fallback;
+              }
+            };
+            return buildMyClassStateTemplate(
+              getTranslation('youhub.myclass.states.info1.tag', 'Információk'),
+              getTranslation('youhub.myclass.states.info1.title', 'Osztály elérhetőségi kártyája'),
+              getTranslation('youhub.myclass.states.info1.description', 'Itt láthatod majd nemsokára az osztályod elérhetőségi kártyáját.'),
+              `<ul class="myclass-state-list">
+                <li>${getTranslation('youhub.myclass.states.info1.list_item1', 'QR-Kód az osztályodnak, és a tanárai.')}</li>
+                <li>${getTranslation('youhub.myclass.states.info1.list_item2', 'Egyszerű megosztás a többiekkel.')}</li>
+              </ul>`
+            );
+          } catch (error) {
+            console.error('[YouHub][MyClass] Error in info1 template:', error);
+            return buildMyClassStateTemplate('Információk', 'Hiba', 'Hiba történt a sablon betöltésekor.', '');
+          }
         },
         'myclass-info2': () => {
-          const getTranslation = (key, fallback) => window.translationManager?.getTranslation(key) || fallback;
-          return buildMyClassStateTemplate(
-            getTranslation('youhub.myclass.states.info2.tag', 'Információk'),
-            getTranslation('youhub.myclass.states.info2.title', 'Osztály alapadatok'),
-            getTranslation('youhub.myclass.states.info2.description', 'Ide kerül az osztály létszáma, termi beosztása és az osztályfőnök adatai.'),
-            `<ul class="myclass-state-list">
-              <li>${getTranslation('youhub.myclass.states.info2.list_item1', 'Termi beosztás, kiválasztott adatai.')}</li>
-              <li>${getTranslation('youhub.myclass.states.info2.list_item2', 'Osztályfőnök elérhetőségei')}</li>
-            </ul>`
-          );
+          try {
+            const getTranslation = (key, fallback) => {
+              try {
+                return window.translationManager?.getTranslation(key) || fallback;
+              } catch {
+                return fallback;
+              }
+            };
+            return buildMyClassStateTemplate(
+              getTranslation('youhub.myclass.states.info2.tag', 'Információk'),
+              getTranslation('youhub.myclass.states.info2.title', 'Osztály alapadatok'),
+              getTranslation('youhub.myclass.states.info2.description', 'Ide kerül az osztály létszáma, termi beosztása és az osztályfőnök adatai.'),
+              `<ul class="myclass-state-list">
+                <li>${getTranslation('youhub.myclass.states.info2.list_item1', 'Termi beosztás, kiválasztott adatai.')}</li>
+                <li>${getTranslation('youhub.myclass.states.info2.list_item2', 'Osztályfőnök elérhetőségei')}</li>
+              </ul>`
+            );
+          } catch (error) {
+            console.error('[YouHub][MyClass] Error in info2 template:', error);
+            return buildMyClassStateTemplate('Információk', 'Hiba', 'Hiba történt a sablon betöltésekor.', '');
+          }
         }
       };
 
@@ -3289,17 +3339,32 @@ async function handleSuggestionSubmit() {
 
       function renderMyClassState(mode) {
         if (!middleSection) return;
-        // Get template function and call it to get fresh template with current language
-        const templateFn = MYCLASS_STATE_TEMPLATES[mode] || MYCLASS_STATE_TEMPLATES['myclass-graph'];
-        const template = typeof templateFn === 'function' ? templateFn() : templateFn;
-        middleSection.innerHTML = template;
-        middleSection.dataset.mode = mode;
-        if (mode === 'myclass-graph') {
-          attachChartResizeObserver();
-          updateMyClassIndicators();
-          updateMyClassChartHeights();
-        } else {
-          detachChartResizeObserver();
+        try {
+          // Get template function and call it to get fresh template with current language
+          const templateFn = MYCLASS_STATE_TEMPLATES[mode] || MYCLASS_STATE_TEMPLATES['myclass-graph'];
+          const template = typeof templateFn === 'function' ? templateFn() : templateFn;
+          middleSection.innerHTML = template;
+          middleSection.dataset.mode = mode;
+          if (mode === 'myclass-graph') {
+            attachChartResizeObserver();
+            updateMyClassIndicators();
+            updateMyClassChartHeights();
+          } else {
+            detachChartResizeObserver();
+          }
+        } catch (error) {
+          console.error('[YouHub][MyClass] Error rendering state:', error);
+          // Fallback to graph template on error
+          if (middleSection && MYCLASS_STATE_TEMPLATES['myclass-graph']) {
+            try {
+              middleSection.innerHTML = typeof MYCLASS_STATE_TEMPLATES['myclass-graph'] === 'function' 
+                ? MYCLASS_STATE_TEMPLATES['myclass-graph']() 
+                : MYCLASS_STATE_TEMPLATES['myclass-graph'];
+              middleSection.dataset.mode = 'myclass-graph';
+            } catch (fallbackError) {
+              console.error('[YouHub][MyClass] Fallback also failed:', fallbackError);
+            }
+          }
         }
       }
       
@@ -4244,8 +4309,8 @@ async function handleSuggestionSubmit() {
           } else {
             window.notificationsData = [];
             window.selectedNotificationId = null;
-        updateNotificationsView();
-      }
+            updateNotificationsView();
+          }
         });
 
         // Also check if user is already logged in

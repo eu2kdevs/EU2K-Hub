@@ -113,6 +113,19 @@ async function showAdminConsolePopup() {
         console.log('[AdminConsole] Session aktív, de hátralévő idő információ nem elérhető');
       }
       
+      // Frissítjük a token-t, hogy az új admin claim érvénybe lépjen
+      try {
+        const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
+        const app = window.firebaseApp || (await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js")).getApp();
+        const auth = getAuth(app);
+        if (auth.currentUser) {
+          await auth.currentUser.getIdToken(true); // Force refresh
+          console.log('[AdminConsole] Token refreshed with new admin claim');
+        }
+      } catch (tokenError) {
+        console.warn('[AdminConsole] Token refresh failed:', tokenError);
+      }
+      
       setAdminConsole(true);
       showAdminConsole();
       startSessionCheck();
@@ -198,6 +211,19 @@ async function checkAdminConsolePassword() {
           console.log('[AdminConsole] Verification result data keys:', Object.keys(data));
         }
       }
+      // Frissítjük a token-t, hogy az új admin claim érvénybe lépjen
+      try {
+        const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
+        const app = window.firebaseApp || (await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js")).getApp();
+        const auth = getAuth(app);
+        if (auth.currentUser) {
+          await auth.currentUser.getIdToken(true); // Force refresh
+          console.log('[AdminConsole] Token refreshed with new admin claim');
+        }
+      } catch (tokenError) {
+        console.warn('[AdminConsole] Token refresh failed:', tokenError);
+      }
+      
       setAdminConsole(true);
       closeAdminConsolePopup();
       showAdminConsole();
@@ -241,9 +267,33 @@ async function startSessionCheck() {
         sessionCheckInterval = null;
         setAdminConsole(false);
         hideAdminConsole();
+        // Frissítjük a token-t, hogy az admin claim eltávolításra kerüljön
+        try {
+          const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
+          const app = window.firebaseApp || (await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js")).getApp();
+          const auth = getAuth(app);
+          if (auth.currentUser) {
+            await auth.currentUser.getIdToken(true); // Force refresh
+            console.log('[AdminConsole] Token refreshed after session expiry');
+          }
+        } catch (tokenError) {
+          console.warn('[AdminConsole] Token refresh failed:', tokenError);
+        }
         const msg = getTranslation('admin.console.messages.session_expired', 'A munkamenet lejárt. Kérlek jelentkezz be újra.');
         const title = getTranslation('admin.console.status.session_expired', 'Munkamenet lejárt');
         await showNotification(msg, title, 'warning');
+      } else {
+        // Session érvényes, biztosítjuk hogy a token frissítve van (ha új admin claim lett beállítva)
+        try {
+          const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
+          const app = window.firebaseApp || (await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js")).getApp();
+          const auth = getAuth(app);
+          if (auth.currentUser) {
+            await auth.currentUser.getIdToken(true); // Force refresh to get updated claims
+          }
+        } catch (tokenError) {
+          console.warn('[AdminConsole] Token refresh failed:', tokenError);
+        }
       }
     } catch (error) {
       console.error('[AdminConsole] Session check failed:', error);
@@ -753,10 +803,10 @@ function initAssignClassFunctionality() {
     }
     
     if (classInput && classGhost) {
-      loadClassSuggestions();
+      loadClassSuggestions().catch(err => console.warn('[AdminConsole] Failed to load class suggestions on init:', err));
       classInput.addEventListener('input', () => updateClassGhost());
       classInput.addEventListener('focus', () => {
-        loadClassSuggestions();
+        loadClassSuggestions().catch(err => console.warn('[AdminConsole] Failed to load class suggestions on focus:', err));
         updateClassGhost();
       });
       classInput.addEventListener('blur', () => {
@@ -777,14 +827,14 @@ function initAssignClassFunctionality() {
     }
     
     if (userInput && userGhost) {
-      loadUserSuggestions();
+      loadUserSuggestions().catch(err => console.warn('[AdminConsole] Failed to load user suggestions on init:', err));
       let lastCommaSpaceDeleted = false;
       userInput.addEventListener('input', () => {
         updateUserGhost();
         lastCommaSpaceDeleted = false;
       });
       userInput.addEventListener('focus', () => {
-        loadUserSuggestions();
+        loadUserSuggestions().catch(err => console.warn('[AdminConsole] Failed to load user suggestions on focus:', err));
         updateUserGhost();
         lastCommaSpaceDeleted = false;
       });
