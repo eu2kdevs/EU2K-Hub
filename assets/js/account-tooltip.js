@@ -13,6 +13,11 @@
    * Initialize account tooltip for all account buttons
    */
   function initAccountTooltip() {
+    if (!document.body) {
+      // Wait for body to be available
+      setTimeout(initAccountTooltip, 100);
+      return;
+    }
     const accountButtons = document.querySelectorAll('#headerAccountBtn, .header-icon-btn[href*="account"]');
     
     accountButtons.forEach(btn => {
@@ -25,25 +30,26 @@
         });
       }
 
-      // Create tooltip element
+      // Create tooltip element - inheriting permission popup styling (border-radius, etc.)
       const tooltip = document.createElement('div');
       tooltip.className = 'account-tooltip';
       tooltip.style.cssText = `
         position: absolute;
-        bottom: 100%;
+        top: 100%;
         right: 0;
-        margin-bottom: 8px;
-        background: var(--card-bg, #1a1a1a);
-        border-radius: 12px;
-        padding: 12px 16px;
-        min-width: 200px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        margin-top: 8px;
+        background: var(--card-bg, #16210B);
+        border-radius: 32px;
+        padding: 16px 20px;
+        min-width: 240px;
+        max-width: 320px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         z-index: 10000;
         display: none;
         flex-direction: row;
         align-items: center;
         gap: 12px;
-        pointer-events: none;
+        pointer-events: auto;
         border: 1px solid rgba(255, 255, 255, 0.1);
       `;
 
@@ -220,20 +226,22 @@
   }
 
   // Re-initialize if account button appears later
-  const observer = new MutationObserver(() => {
-    const accountButtons = document.querySelectorAll('#headerAccountBtn, .header-icon-btn[href*="account"]');
-    accountButtons.forEach(btn => {
-      if (!btn.dataset.tooltipInitialized) {
-        btn.dataset.tooltipInitialized = 'true';
-        // Re-run init for new buttons
-        setTimeout(initAccountTooltip, 100);
-      }
+  if (document.body) {
+    const observer = new MutationObserver(() => {
+      const accountButtons = document.querySelectorAll('#headerAccountBtn, .header-icon-btn[href*="account"]');
+      accountButtons.forEach(btn => {
+        if (!btn.dataset.tooltipInitialized) {
+          btn.dataset.tooltipInitialized = 'true';
+          // Re-run init for new buttons
+          setTimeout(initAccountTooltip, 100);
+        }
+      });
     });
-  });
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
 })();
 

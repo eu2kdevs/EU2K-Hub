@@ -1761,8 +1761,15 @@ async function handleSuggestionSubmit() {
     const returnNavId = previousNavId || DEFAULT_NAV_ID;
     setActiveNav(returnNavId);
     loadLatestSuggestions();
-    const successMsg = window.translationManager?.getTranslation('youhub.messages.submit_success') || 'A javaslatot sikeresen beküldted!';
-    const successTitle = window.translationManager?.getTranslation('youhub.notifications.types.success') || 'Sikeres beküldés';
+    const getTranslation = (key, fallback) => {
+      try {
+        return window.translationManager?.getTranslation(key) || fallback;
+      } catch {
+        return fallback;
+      }
+    };
+    const successMsg = getTranslation('youhub.messages.submit_success', 'A javaslatot sikeresen beküldted!');
+    const successTitle = getTranslation('youhub.notifications.types.success', 'Sikeres beküldés');
     await window.showNotification(successMsg, successTitle, 'positive');
   } catch (error) {
     console.error('[Suggestions] Submission failed', error);

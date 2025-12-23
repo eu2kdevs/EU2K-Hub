@@ -221,7 +221,9 @@
       "title": "Adatvédelmi tájékoztató",
       "banner": {
         "title": "Ez az új dizájn.",
-        "description": "Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is."
+        "description": "Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is.",
+        "feedback": "Visszajelzés",
+        "close": "Bezárás"
       },
       "effective_date": "<strong>Hatálybalépés dátuma:</strong> 2025. január 11.",
       "section_1_title": "1. Bevezetés",
@@ -343,7 +345,9 @@
       "title": "Használati Feltételek",
       "banner": {
         "title": "Ez az új dizájn.",
-        "description": "Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is."
+        "description": "Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is.",
+        "feedback": "Visszajelzés",
+        "close": "Bezárás"
       },
       "effective_date": "<strong>Hatálybalépés dátuma:</strong> 2025. január 11.",
       "section_1_title": "1. Bevezetés",

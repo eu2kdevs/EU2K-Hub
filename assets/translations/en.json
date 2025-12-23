@@ -208,7 +208,9 @@
       "title": "Privacy Policy",
       "banner": {
         "title": "This is the new design.",
-        "description": "We hope you like the Europa Design System. If you have any questions, please give feedback, even from here."
+        "description": "We hope you like the Europa Design System. If you have any questions, please give feedback, even from here.",
+        "feedback": "Feedback",
+        "close": "Close"
       },
       "effective_date": "<strong>Effective date:</strong> January 11, 2025",
       "section_1_title": "1. Introduction",
@@ -330,7 +332,9 @@
       "title": "Terms of Service",
       "banner": {
         "title": "This is the new design.",
-        "description": "We hope you like the Europa Design System. If you have any questions, please give feedback, even from here."
+        "description": "We hope you like the Europa Design System. If you have any questions, please give feedback, even from here.",
+        "feedback": "Feedback",
+        "close": "Close"
       },
       "effective_date": "<strong>Effective date:</strong> January 11, 2025",
       "section_1_title": "1. Introduction",
