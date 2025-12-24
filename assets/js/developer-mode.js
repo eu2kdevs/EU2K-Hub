@@ -141,11 +141,57 @@
     }
   }
 
+  /**
+   * Initialize keyboard shortcut (Ctrl+Shift+D or Cmd+Shift+D)
+   */
+  function initKeyboardShortcut() {
+    document.addEventListener('keydown', (e) => {
+      // Ctrl+Shift+D (Windows/Linux) or Cmd+Shift+D (Mac)
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
+        e.preventDefault();
+        showDevModePopup();
+      }
+      
+      // ESC to close popup
+      if (e.key === 'Escape') {
+        const popup = document.getElementById('devModePopup');
+        if (popup && popup.style.display !== 'none') {
+          closeDevModePopup();
+        }
+      }
+    });
+  }
+
+  /**
+   * Prevent header navigation when popup is open
+   */
+  function preventHeaderNavigation() {
+    // Use event delegation to catch all header button clicks
+    document.addEventListener('click', (e) => {
+      const popup = document.getElementById('devModePopup');
+      // If popup is open, prevent navigation from header buttons
+      if (popup && popup.style.display !== 'none') {
+        const target = e.target.closest('.header-icon-btn, .header-login-btn');
+        if (target && (target.tagName === 'A' || target.closest('a'))) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      }
+    }, true); // Use capture phase to catch early
+  }
+
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initPasswordInput);
+    document.addEventListener('DOMContentLoaded', () => {
+      initPasswordInput();
+      initKeyboardShortcut();
+      preventHeaderNavigation();
+    });
   } else {
     initPasswordInput();
+    initKeyboardShortcut();
+    preventHeaderNavigation();
   }
 
   // Make functions globally available for onclick handlers and other scripts
@@ -156,5 +202,6 @@
   window.checkDevModePassword = checkDevModePassword;
 
   console.log('[DevMode] Developer mode system initialized');
+  console.log('[DevMode] Press Ctrl+Shift+D (or Cmd+Shift+D on Mac) to open developer mode');
 })();
 
