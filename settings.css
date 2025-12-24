@@ -235,7 +235,7 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 4000; /* Dropdownok (2xxx) fölött legyen */
-  pointer-events: none;
+  pointer-events: auto; /* Prevent interaction with elements behind popup */
 }
 
 .permission-overlay-scroll-area .permission-container {

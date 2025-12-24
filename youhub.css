@@ -243,7 +243,7 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 1000; /* High z-index to overlay everything in main-scroll-area */
-  pointer-events: none; /* Allow clicks to pass through the overlay background */
+  pointer-events: auto; /* Prevent interaction with elements behind popup */
 }
 
 .permission-overlay-scroll-area .permission-container {
