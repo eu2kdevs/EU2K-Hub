@@ -104,15 +104,20 @@
 
   /**
    * Track button click and save navigation state
+   * @param {number} fromStep - The step we're coming from
+   * @param {number} toStep - The step we're going to
+   * @param {number|null} explicitNext - Optional explicit next step (if null, calculates as toStep + 1)
    */
-  function trackNavigation(fromStep, toStep) {
+  function trackNavigation(fromStep, toStep, explicitNext = null) {
     if (isIgnoredStep(window.location.hash || '')) {
       return; // Don't track ignored steps
     }
 
     const previous = fromStep > 0 ? fromStep : null;
     const now = toStep;
-    const next = toStep > 0 ? toStep + 1 : null;
+    // If explicitNext is provided, use it; otherwise calculate as toStep + 1
+    // Special case: if we're going to login (step 2) from start (step 1), don't set next yet
+    const next = explicitNext !== null ? explicitNext : (toStep > 0 && !(fromStep === 1 && toStep === 2) ? toStep + 1 : null);
 
     saveNavState(previous, now, next);
   }
@@ -235,7 +240,15 @@
 
       // Only track navigation if it's a valid step transition
       // But NEVER check consistency here - that's only for button clicks!
+      // Special case: don't track navigation from start (step 1) to login (step 2) here
+      // This is handled by the button click handler to prevent setting next: 3
       if (fromStep > 0 && toStep > 0 && !isIgnoredStep(currentHash) && !isRedirecting) {
+        // Don't track if we're going from start to login - that's handled by button click
+        if (fromStep === 1 && toStep === 2) {
+          // Skip tracking here - button click handler will handle it
+          lastHash = currentHash;
+          return;
+        }
         trackNavigation(fromStep, toStep);
       }
 
@@ -260,11 +273,19 @@
         // Special cases
         if (currentHash === '' || currentHash === '#') {
           // From start screen, next is login
-          nextStep = 2;
+          // Track navigation but don't set next - we'll only set it when login button is clicked
+          trackNavigation(1, 2, null); // explicitNext = null means no next step yet
+          // Don't check consistency here - we just arrived at login, wait for user to click login button
+          return;
         } else if (currentHash === '#login') {
           // From login, next depends on which button was clicked
+          // ONLY set nextStep to 3 if login button was clicked
           if (isLoginButton) {
             nextStep = 3; // login-progress
+          } else {
+            // If we're on login but didn't click login button, don't track navigation
+            // This prevents the consistency check from expecting step 3
+            return;
           }
         } else if (currentHash === '#preferences1') {
           nextStep = 7; // preferences2
@@ -280,12 +301,6 @@
         // 1. It's a valid step transition (nextStep > 0 && currentStep > 0)
         // 2. If we're on login screen, only check if login button was clicked
         if (nextStep > 0 && currentStep > 0) {
-          // Special case: on login screen, only check if login button was clicked
-          if (currentHash === '#login' && !isLoginButton) {
-            // Don't check consistency if we're on login but didn't click login button
-            return;
-          }
-          
           // Save navigation state BEFORE the hash changes
           trackNavigation(currentStep, nextStep);
           
