@@ -1,6 +1,7 @@
 /**
  * Account Button Tooltip Handler
- * Displays user profile picture, name, and class name on hover
+ * Displays user profile picture, name, and class name on hover/click
+ * Developer mode: keeps tooltip open on click until clicked again
  */
 
 (function() {
@@ -8,6 +9,18 @@
 
   let userDataCache = null;
   let classDataCache = null;
+  let tooltipPinned = false; // For developer mode
+
+  /**
+   * Check if developer mode is enabled
+   */
+  function isDevModeEnabled() {
+    try {
+      return localStorage.getItem('eu2k-dev-mode') === 'true';
+    } catch {
+      return false;
+    }
+  }
 
   /**
    * Initialize account tooltip for all account buttons
@@ -21,12 +34,14 @@
     const accountButtons = document.querySelectorAll('#headerAccountBtn, .header-icon-btn[href*="account"]');
     
     accountButtons.forEach(btn => {
+      // Skip if already initialized
+      if (btn.dataset.tooltipInitialized) return;
+      btn.dataset.tooltipInitialized = 'true';
+
       // Remove default link behavior
       if (btn.tagName === 'A') {
         btn.addEventListener('click', (e) => {
           e.preventDefault();
-          // Optionally navigate on click if needed
-          // window.location.href = btn.href;
         });
       }
 
@@ -72,6 +87,7 @@
       // Show/hide tooltip on hover
       let hoverTimeout;
       btn.addEventListener('mouseenter', () => {
+        if (tooltipPinned && isDevModeEnabled()) return; // Don't show on hover if pinned
         clearTimeout(hoverTimeout);
         loadUserData().then(() => {
           updateTooltipContent(tooltip);
@@ -80,6 +96,7 @@
       });
 
       btn.addEventListener('mouseleave', () => {
+        if (tooltipPinned && isDevModeEnabled()) return; // Don't hide if pinned
         hoverTimeout = setTimeout(() => {
           tooltip.style.display = 'none';
         }, 100);
@@ -90,9 +107,41 @@
       });
 
       tooltip.addEventListener('mouseleave', () => {
+        if (tooltipPinned && isDevModeEnabled()) return; // Don't hide if pinned
         tooltip.style.display = 'none';
       });
+
+      // Developer mode: click to pin/unpin tooltip
+      btn.addEventListener('click', () => {
+        if (!isDevModeEnabled()) return;
+
+        if (tooltipPinned) {
+          // Unpin: hide tooltip
+          tooltipPinned = false;
+          tooltip.style.display = 'none';
+        } else {
+          // Pin: show tooltip and keep it open
+          tooltipPinned = true;
+          loadUserData().then(() => {
+            updateTooltipContent(tooltip);
+            tooltip.style.display = 'flex';
+          });
+        }
+      });
     });
+  }
+
+  /**
+   * Get current language
+   */
+  function getCurrentLanguage() {
+    try {
+      return window.translationManager?.getCurrentLanguage() || 
+             localStorage.getItem('eu2k_language') || 
+             'hu';
+    } catch {
+      return 'hu';
+    }
   }
 
   /**
@@ -125,6 +174,7 @@
 
       const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
       const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+      const { getStorage, ref, getDownloadURL } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js");
       const auth = getAuth(window.firebaseApp);
       
       if (!auth.currentUser) {
@@ -133,26 +183,55 @@
       }
 
       const uid = auth.currentUser.uid;
+      const storage = getStorage(window.firebaseApp);
+
+      // Load user document
+      const userDocRef = doc(window.db, 'users', uid);
+      const userDocSnap = await getDoc(userDocRef);
+      
+      let userData = {};
+      if (userDocSnap.exists()) {
+        userData = userDocSnap.data();
+      }
 
       // Load user general data
       const userGeneralRef = doc(window.db, 'users', uid, 'general_data', 'general');
       const userGeneralSnap = await getDoc(userGeneralRef);
       
       if (userGeneralSnap.exists()) {
-        userDataCache = userGeneralSnap.data();
+        userData = { ...userData, ...userGeneralSnap.data() };
       }
 
-      // Load ownClass data
-      const ownClassRef = doc(window.db, 'users', uid, 'groups', 'ownclass');
-      const ownClassSnap = await getDoc(ownClassRef);
+      // Load profile picture from Firebase Storage or avatars
+      let profilePictureURL = null;
       
-      if (ownClassSnap.exists()) {
-        const ownClassData = ownClassSnap.data();
-        const classFinishes = (ownClassData.classFinishes || '').toString().trim();
-        const classType = (ownClassData.classType || '').toString().trim().toLowerCase();
+      // Try to load from Firebase Storage (school profile picture)
+      try {
+        const storageRef = ref(storage, `profilePhotos/${uid}`);
+        profilePictureURL = await getDownloadURL(storageRef);
+        console.log('[AccountTooltip] Loaded profile picture from Storage');
+      } catch (error) {
+        // If not found, try to load avatar from assets/avatars
+        if (userData.avatarColor) {
+          // Avatar color format: e.g., "pink", "blue", etc.
+          profilePictureURL = `assets/avatars/${userData.avatarColor}.svg`;
+          console.log('[AccountTooltip] Using avatar from assets/avatars:', userData.avatarColor);
+        }
+      }
+
+      userDataCache = {
+        ...userData,
+        profilePictureURL: profilePictureURL
+      };
+
+      // Load class data from custom claims or Firestore
+      try {
+        const idTokenResult = await auth.currentUser.getIdTokenResult();
+        const customClaims = idTokenResult.claims;
         
-        if (classFinishes && classType) {
-          const classId = `${classFinishes}${classType}`;
+        if (customClaims.class) {
+          // Custom claim has class ID
+          const classId = customClaims.class;
           
           // Load class document to get class name
           const classRef = doc(window.db, 'classes', classId);
@@ -160,11 +239,18 @@
           
           if (classSnap.exists()) {
             classDataCache = classSnap.data();
+            console.log('[AccountTooltip] Loaded class data from custom claim:', classId);
           } else {
-            // Fallback: use calculated classId as name
+            // Fallback: use classId as name
             classDataCache = { name: classId, classId: classId };
           }
+        } else {
+          // Fallback: try to find class from classes/{classId}/users/{userId}
+          // This is more complex, so we'll skip for now
+          console.warn('[AccountTooltip] No class custom claim found');
         }
+      } catch (error) {
+        console.error('[AccountTooltip] Error loading class data:', error);
       }
     } catch (error) {
       console.error('[AccountTooltip] Error loading user data:', error);
@@ -189,7 +275,10 @@
     };
 
     // Set avatar
-    if (userDataCache?.photoURL) {
+    if (userDataCache?.profilePictureURL) {
+      avatarImg.src = userDataCache.profilePictureURL;
+      avatarImg.style.display = 'block';
+    } else if (userDataCache?.photoURL) {
       avatarImg.src = userDataCache.photoURL;
       avatarImg.style.display = 'block';
     } else if (userDataCache?.pfpUrl) {
@@ -208,11 +297,32 @@
                        'User';
     nameSpan.textContent = displayName;
 
-    // Set class name
+    // Set class name with proper formatting based on language
     if (classDataCache?.name) {
-      classSpan.textContent = classDataCache.name;
+      const className = classDataCache.name;
+      const currentLang = getCurrentLanguage();
+      
+      // Format class name based on language
+      // English: "Class 8.E", Hungarian: "8.E Osztály"
+      const classWord = getTranslation('account.tooltip.class', 'Osztály');
+      
+      if (currentLang === 'en') {
+        // English: Class comes first
+        classSpan.textContent = `${classWord} ${className}`;
+      } else {
+        // Hungarian and other languages: Class name comes first
+        classSpan.textContent = `${className} ${classWord}`;
+      }
     } else if (classDataCache?.classId) {
-      classSpan.textContent = classDataCache.classId;
+      const classId = classDataCache.classId;
+      const currentLang = getCurrentLanguage();
+      const classWord = getTranslation('account.tooltip.class', 'Osztály');
+      
+      if (currentLang === 'en') {
+        classSpan.textContent = `${classWord} ${classId}`;
+      } else {
+        classSpan.textContent = `${classId} ${classWord}`;
+      }
     } else {
       classSpan.textContent = getTranslation('account.tooltip.no_class', 'Nincs osztály');
     }
@@ -231,7 +341,6 @@
       const accountButtons = document.querySelectorAll('#headerAccountBtn, .header-icon-btn[href*="account"]');
       accountButtons.forEach(btn => {
         if (!btn.dataset.tooltipInitialized) {
-          btn.dataset.tooltipInitialized = 'true';
           // Re-run init for new buttons
           setTimeout(initAccountTooltip, 100);
         }
@@ -244,4 +353,3 @@
     });
   }
 })();
-

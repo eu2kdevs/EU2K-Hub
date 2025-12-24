@@ -3624,82 +3624,8 @@ async function handleSuggestionSubmit() {
 
       window.addEventListener('resize', fitNotificationsEmptyText);
 
-      // Developer Mode System
-      const DEV_MODE_KEY = 'eu2k-dev-mode';
-      const DEV_MODE_PASSWORD = '01122011';
-
-      function isDevModeEnabled() {
-        try {
-          return localStorage.getItem(DEV_MODE_KEY) === 'true';
-        } catch {
-          return false;
-        }
-      }
-
-      function setDevMode(enabled) {
-        try {
-          localStorage.setItem(DEV_MODE_KEY, enabled ? 'true' : 'false');
-        } catch (e) {
-          console.error('[DevMode] Failed to save dev mode state:', e);
-        }
-      }
-
-      function showDevModePopup() {
-        const openPopup = () => {
-          const popup = document.getElementById('devModePopup');
-          const scrollArea = document.querySelector('.main-scroll-area');
-          if (popup && scrollArea) {
-            scrollArea.scrollTop = 0;
-            scrollArea.classList.add('no-scroll');
-            scrollArea.classList.add('popup-active');
-            popup.style.display = 'flex';
-            const input = document.getElementById('devModePassword');
-            if (input) {
-              input.value = '';
-              setTimeout(() => input.focus(), 100);
-            }
-          }
-        };
-        
-        if (window.tryOpenPopup) {
-          window.tryOpenPopup(openPopup);
-        } else {
-          openPopup();
-        }
-      }
-
-      function closeDevModePopup() {
-        const popup = document.getElementById('devModePopup');
-        const scrollArea = document.querySelector('.main-scroll-area');
-        if (popup) {
-          popup.style.display = 'none';
-        }
-        if (scrollArea) {
-          scrollArea.classList.remove('no-scroll');
-          scrollArea.classList.remove('popup-active');
-        }
-      }
-
-      async function checkDevModePassword() {
-        const input = document.getElementById('devModePassword');
-        if (!input) return;
-        
-        if (input.value === DEV_MODE_PASSWORD) {
-          setDevMode(true);
-          closeDevModePopup();
-          updateNotificationsView();
-          console.log('[DevMode] Developer mode enabled');
-        } else {
-          const msg = window.translationManager?.getTranslation('youhub.messages.wrong_password') || 'Hibás jelszó!';
-          await window.showNotification(msg, 'Hibás adatok', 'danger');
-          input.value = '';
-        }
-      }
-
-      // Make functions globally available for onclick handlers
-      window.checkDevModePassword = checkDevModePassword;
-      window.closeDevModePopup = closeDevModePopup;
-
+      // Developer mode functions are now loaded from developer-mode.js
+      
       try {
         const storedPending = localStorage.getItem('youhub-pending-notification');
         if (storedPending) {
@@ -4439,6 +4365,8 @@ async function handleSuggestionSubmit() {
       ensureClassData(user);
     });
   </script>
+  <script src="assets/js/developer-mode.js"></script>
+  <script src="assets/js/account-tooltip.js"></script>
   <script src="assets/js/footer.js"></script>
 </body>
 

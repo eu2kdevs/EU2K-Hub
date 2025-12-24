@@ -3748,6 +3748,24 @@
       }
     });
   </script>
+
+  <!-- Developer Mode Popup -->
+  <div id="devModePopup" class="permission-overlay-scroll-area" style="display: none;">
+    <div class="permission-container">
+      <button class="permission-close-btn" onclick="closeDevModePopup()">
+        <img src="assets/general/close.svg" alt="Bezárás">
+      </button>
+      <div class="permission-content">
+        <h2 class="permission-title" data-translate="youhub.dev_mode.title" data-translate-fallback="Developer Mód">Developer Mód</h2>
+        <p class="permission-text" data-translate="youhub.dev_mode.text" data-translate-fallback="Jelszó megadása:">Jelszó megadása:</p>
+        <input type="password" id="devModePassword" class="dev-mode-input" data-translate-placeholder="youhub.dev_mode.password_placeholder" placeholder="Jelszó">
+        <button class="permission-ok-btn" onclick="checkDevModePassword()" data-translate="youhub.dev_mode.login_button" data-translate-fallback="Bejelentkezés">Bejelentkezés</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/developer-mode.js"></script>
+  <script src="assets/js/account-tooltip.js"></script>
 </body>
 
 </html>
