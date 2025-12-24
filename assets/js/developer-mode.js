@@ -78,6 +78,90 @@
    * Apply inline styles for developer mode popup elements
    */
   function applyDevModeStyles() {
+    const popup = document.getElementById('devModePopup');
+    if (!popup) return;
+
+    // Permission overlay scroll area styles
+    if (!popup.dataset.styled) {
+      popup.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(11, 15, 11, 0.65);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        pointer-events: auto;
+      `;
+      popup.dataset.styled = 'true';
+    }
+
+    // Permission container styles
+    const container = popup.querySelector('.permission-container');
+    if (container && !container.dataset.styled) {
+      container.style.cssText = `
+        position: relative;
+        background: #16210B;
+        border-radius: 32px;
+        padding: 32px;
+        max-width: 420px;
+        width: 100%;
+        max-height: 100%;
+        height: fit-content;
+        overflow: hidden;
+        box-sizing: border-box;
+        pointer-events: auto;
+      `;
+      container.dataset.styled = 'true';
+    }
+
+    // Permission content styles
+    const content = popup.querySelector('.permission-content');
+    if (content && !content.dataset.styled) {
+      content.style.cssText = `
+        text-align: left;
+        max-height: calc(100vh - 96px);
+        height: fit-content;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #445A2D #16210B;
+        margin-right: -32px;
+        padding-right: 32px;
+        padding-bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      `;
+      content.dataset.styled = 'true';
+    }
+
+    // Permission title styles
+    const title = popup.querySelector('.permission-title');
+    if (title && !title.dataset.styled) {
+      title.style.cssText = `
+        color: #C1EE8D;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0 0 12px 0;
+      `;
+      title.dataset.styled = 'true';
+    }
+
+    // Permission text styles
+    const text = popup.querySelector('.permission-text');
+    if (text && !text.dataset.styled) {
+      text.style.cssText = `
+        color: #E5FDA9;
+        text-align: left;
+        margin: 0 0 18px 0;
+        line-height: 1.6;
+      `;
+      text.dataset.styled = 'true';
+    }
+
     // Dev mode input styles
     const input = document.getElementById('devModePassword');
     if (input && !input.dataset.styled) {
@@ -200,15 +284,25 @@
       });
     }
 
-    // Add keyframes animation if not already present
-    if (!document.getElementById('dev-mode-keyframes')) {
+    // Add keyframes animation and scrollbar styles if not already present
+    if (!document.getElementById('dev-mode-styles')) {
       const style = document.createElement('style');
-      style.id = 'dev-mode-keyframes';
+      style.id = 'dev-mode-styles';
       style.textContent = `
         @keyframes banner-btn-pop {
           0%   { transform: scaleY(1.00); }
           70%  { transform: scaleY(1.32); }
           100% { transform: scaleY(1.25); }
+        }
+        #devModePopup .permission-content::-webkit-scrollbar {
+          width: 8px;
+        }
+        #devModePopup .permission-content::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        #devModePopup .permission-content::-webkit-scrollbar-thumb {
+          background: #445A2D;
+          border-radius: 4px;
         }
       `;
       document.head.appendChild(style);
@@ -237,26 +331,60 @@
    */
   async function checkDevModePassword() {
     const input = document.getElementById('devModePassword');
-    if (!input) return;
+    if (!input) {
+      console.error('[DevMode] Password input not found');
+      return;
+    }
     
     const enteredPassword = input.value;
     console.log('[DevMode] Password entered:', enteredPassword ? '***' : '(empty)');
+    console.log('[DevMode] Password length:', enteredPassword.length);
+    
+    if (!enteredPassword) {
+      console.warn('[DevMode] Empty password entered');
+      const msg = window.translationManager?.getTranslation('youhub.messages.wrong_password') || 'Kérjük, adjon meg jelszót!';
+      if (window.showNotification) {
+        await window.showNotification(msg, 'Hibás adatok', 'danger');
+      } else {
+        alert(msg);
+      }
+      return;
+    }
     
     try {
-      // Import Firebase functions
-      const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
-      const app = window.firebaseApp || (await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js')).getApp();
-      const functions = getFunctions(app, 'europe-west1');
+      // Use existing functions instance or create new one
+      let functions;
+      let verifyPassword;
       
-      // Call verifyAdminConsolePassword function
-      const verifyPassword = httpsCallable(functions, 'verifyAdminConsolePassword');
+      if (window.functions) {
+        // Use existing functions instance
+        console.log('[DevMode] Using existing window.functions');
+        const { httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
+        verifyPassword = httpsCallable(window.functions, 'verifyAdminConsolePassword');
+      } else if (window.createHttpsCallable) {
+        // Use existing createHttpsCallable helper
+        console.log('[DevMode] Using window.createHttpsCallable');
+        verifyPassword = window.createHttpsCallable('verifyAdminConsolePassword');
+      } else {
+        // Import and create new functions instance
+        console.log('[DevMode] Creating new functions instance');
+        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
+        const app = window.firebaseApp || (await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js')).getApp();
+        functions = getFunctions(app, 'europe-west1');
+        verifyPassword = httpsCallable(functions, 'verifyAdminConsolePassword');
+      }
+      
       console.log('[DevMode] Calling verifyAdminConsolePassword function...');
+      console.log('[DevMode] Function callable created:', !!verifyPassword);
       
       const result = await verifyPassword({ password: enteredPassword });
-      console.log('[DevMode] Function result:', result.data);
+      console.log('[DevMode] Function call completed');
+      console.log('[DevMode] Function result:', result);
+      console.log('[DevMode] Function result.data:', result.data);
       
-      if (result.data && result.data.success) {
+      if (result && result.data && result.data.success) {
         // Password verified successfully
+        console.log('[DevMode] Password verified successfully');
         setDevMode(true);
         closeDevModePopup();
         
@@ -274,8 +402,10 @@
         console.log('[DevMode] Developer mode enabled');
       } else {
         // Wrong password
-        const errorMsg = result.data?.message || 'Hibás jelszó!';
-        console.log('[DevMode] Password verification failed:', errorMsg);
+        const errorMsg = result?.data?.message || 'Hibás jelszó!';
+        console.log('[DevMode] Password verification failed');
+        console.log('[DevMode] Error message:', errorMsg);
+        console.log('[DevMode] Full result:', result);
         
         const msg = window.translationManager?.getTranslation('youhub.messages.wrong_password') || errorMsg;
         
@@ -289,14 +419,22 @@
       }
     } catch (error) {
       console.error('[DevMode] Error verifying password:', error);
+      console.error('[DevMode] Error type:', error.constructor.name);
       console.error('[DevMode] Error details:', {
         code: error.code,
         message: error.message,
-        stack: error.stack
+        stack: error.stack,
+        details: error.details
       });
       
       // Show error notification
-      const errorMsg = error.message || 'Hiba történt a jelszó ellenőrzése során';
+      let errorMsg = 'Hiba történt a jelszó ellenőrzése során';
+      if (error.message) {
+        errorMsg = error.message;
+      } else if (error.code) {
+        errorMsg = `Hiba (${error.code}): ${error.message || 'Ismeretlen hiba'}`;
+      }
+      
       const msg = window.translationManager?.getTranslation('youhub.messages.wrong_password') || errorMsg;
       
       if (window.showNotification) {
