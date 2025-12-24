@@ -276,7 +276,16 @@
           nextStep = -1; // finished (ignored)
         }
 
+        // Only check consistency if:
+        // 1. It's a valid step transition (nextStep > 0 && currentStep > 0)
+        // 2. If we're on login screen, only check if login button was clicked
         if (nextStep > 0 && currentStep > 0) {
+          // Special case: on login screen, only check if login button was clicked
+          if (currentHash === '#login' && !isLoginButton) {
+            // Don't check consistency if we're on login but didn't click login button
+            return;
+          }
+          
           // Save navigation state BEFORE the hash changes
           trackNavigation(currentStep, nextStep);
           

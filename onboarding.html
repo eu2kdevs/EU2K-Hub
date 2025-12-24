@@ -1164,6 +1164,40 @@
     }
 
     // Handle URL hash changes
+    // Helper function to hide all onboarding screens
+    function hideAllOnboardingScreens() {
+      const onboardingMain = document.getElementById('onboardingMain');
+      const loginScreen = document.getElementById('loginScreen');
+      const loginProgressScreen = document.getElementById('loginProgressScreen');
+      const loginFailedScreen = document.getElementById('loginFailedScreen');
+      const loginSuccessScreen = document.getElementById('loginSuccessScreen');
+      const restartScreen = document.getElementById('restartScreen');
+      const looksScreen = document.getElementById('looksScreen');
+      const nameScreen = document.getElementById('nameScreen');
+      const preferences1Screen = document.getElementById('preferences1Screen');
+      const preferences2Screen = document.getElementById('preferences2Screen');
+      const legalTermsScreen = document.getElementById('legalTermsScreen');
+      const lastThingsScreen = document.getElementById('lastThingsScreen');
+      const finishedScreen = document.getElementById('finishedScreen');
+      const languageSelectScreen = document.getElementById('languageSelectScreen');
+      
+      // Hide all screens
+      if (onboardingMain) onboardingMain.style.display = 'none';
+      if (loginScreen) loginScreen.style.display = 'none';
+      if (loginProgressScreen) loginProgressScreen.style.display = 'none';
+      if (loginFailedScreen) loginFailedScreen.style.display = 'none';
+      if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
+      if (restartScreen) restartScreen.style.display = 'none';
+      if (looksScreen) looksScreen.style.display = 'none';
+      if (nameScreen) nameScreen.style.display = 'none';
+      if (preferences1Screen) preferences1Screen.style.display = 'none';
+      if (preferences2Screen) preferences2Screen.style.display = 'none';
+      if (legalTermsScreen) legalTermsScreen.style.display = 'none';
+      if (lastThingsScreen) lastThingsScreen.style.display = 'none';
+      if (finishedScreen) finishedScreen.style.display = 'none';
+      if (languageSelectScreen) languageSelectScreen.style.display = 'none';
+    }
+
     function handleHashChange() {
       const hash = window.location.hash;
       
@@ -1216,14 +1250,9 @@
         }
         if (loginPromptText) loginPromptText.style.display = 'none';
       } else if (hash === '#login-failed') {
-        // Show login failed screen
-        if (onboardingMain) onboardingMain.style.display = 'none';
-        if (loginScreen) loginScreen.style.display = 'none';
-        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
+        // Show login failed screen - hide all other screens first
+        hideAllOnboardingScreens();
         if (loginFailedScreen) loginFailedScreen.style.display = 'flex';
-        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
-        if (restartScreen) restartScreen.style.display = 'none';
-        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
         if (backBtn) backBtn.style.display = 'none';
         if (languageBtn) languageBtn.style.display = 'flex';
         if (backToSetupBtn) backToSetupBtn.style.display = 'none';
@@ -1239,14 +1268,9 @@
         }
         if (loginPromptText) loginPromptText.style.display = 'none';
       } else if (hash === '#restart') {
-        // Show restart screen
-        if (onboardingMain) onboardingMain.style.display = 'none';
-        if (loginScreen) loginScreen.style.display = 'none';
-        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
-        if (loginFailedScreen) loginFailedScreen.style.display = 'none';
-        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
+        // Show restart screen - hide all other screens first
+        hideAllOnboardingScreens();
         if (restartScreen) restartScreen.style.display = 'flex';
-        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
         if (backBtn) backBtn.style.display = 'flex';
         if (languageBtn) languageBtn.style.display = 'flex';
         if (backToSetupBtn) backToSetupBtn.style.display = 'none';
@@ -1304,9 +1328,8 @@
         }
         if (loginPromptText) loginPromptText.style.display = 'block';
       } else if (hash === '#login#language') {
-        // Show language screen from login
-        if (onboardingMain) onboardingMain.style.display = 'none';
-        if (loginScreen) loginScreen.style.display = 'none';
+        // Show language screen from login - hide all other screens first
+        hideAllOnboardingScreens();
         if (languageSelectScreen) languageSelectScreen.style.display = 'flex';
         if (languageBtn) languageBtn.style.display = 'none';
         const languageScreenHeader = document.getElementById('languageScreenHeader');
@@ -1333,9 +1356,8 @@
         }
         if (loginPromptText) loginPromptText.style.display = 'none';
       } else if (hash === '#language') {
-        // Show language screen from welcome
-        if (onboardingMain) onboardingMain.style.display = 'none';
-        if (loginScreen) loginScreen.style.display = 'none';
+        // Show language screen from welcome - hide all other screens first
+        hideAllOnboardingScreens();
         if (languageSelectScreen) languageSelectScreen.style.display = 'flex';
         if (languageBtn) languageBtn.style.display = 'none';
         const languageScreenHeader = document.getElementById('languageScreenHeader');
@@ -1656,23 +1678,11 @@
         if (loginPromptText) loginPromptText.style.display = 'none';
         initLastThingsUI();
       } else if (hash === '#finished') {
-        const preferences2Screen = document.getElementById('preferences2Screen');
-        const legalTermsScreen = document.getElementById('legalTermsScreen');
-        const lastThingsScreen = document.getElementById('lastThingsScreen');
+        // Show finished screen - hide all other screens first
+        hideAllOnboardingScreens();
+        // Show finished screen - hide all other screens first
+        hideAllOnboardingScreens();
         const finishedScreen = document.getElementById('finishedScreen');
-        if (onboardingMain) onboardingMain.style.display = 'none';
-        if (loginScreen) loginScreen.style.display = 'none';
-        if (loginProgressScreen) loginProgressScreen.style.display = 'none';
-        if (loginFailedScreen) loginFailedScreen.style.display = 'none';
-        if (loginSuccessScreen) loginSuccessScreen.style.display = 'none';
-        if (restartScreen) restartScreen.style.display = 'none';
-        if (languageSelectScreen) languageSelectScreen.style.display = 'none';
-        if (looksScreen) looksScreen.style.display = 'none';
-        if (nameScreen) nameScreen.style.display = 'none';
-        if (preferences1Screen) preferences1Screen.style.display = 'none';
-        if (preferences2Screen) preferences2Screen.style.display = 'none';
-        if (legalTermsScreen) legalTermsScreen.style.display = 'none';
-        if (lastThingsScreen) lastThingsScreen.style.display = 'none';
         if (finishedScreen) finishedScreen.style.display = 'flex';
         if (backBtn) backBtn.style.display = 'none';
         if (languageBtn) languageBtn.style.display = 'flex';
