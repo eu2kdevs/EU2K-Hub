@@ -195,7 +195,7 @@
       saveCurrentStepBeforeUnload();
     });
 
-    // Track hash changes - DON'T check consistency, just track the change
+    // Track hash changes - track navigation properly
     let lastHash = window.location.hash || '';
     let isButtonClick = false; // Flag to track if hash change was caused by button click
     
@@ -204,10 +204,24 @@
       const fromStep = getStepIndex(lastHash);
       const toStep = getStepIndex(currentHash);
 
-      // Only track navigation if it's a valid step transition and not caused by button click
+      // Track navigation if it's a valid step transition and not caused by button click
       if (fromStep > 0 && toStep > 0 && !isIgnoredStep(currentHash) && !isRedirecting && !isButtonClick) {
-        // Track navigation without setting explicit next
-        trackNavigation(fromStep, toStep, null);
+        // Calculate next step for tracking
+        let nextStep = toStep + 1;
+        // Special cases
+        if (currentHash === '#name') {
+          nextStep = 6; // preferences1
+        } else if (currentHash === '#preferences1') {
+          nextStep = 7; // preferences2
+        } else if (currentHash === '#preferences2') {
+          nextStep = 8; // legal-terms
+        } else if (currentHash === '#legal-terms') {
+          nextStep = 9; // last-things
+        } else if (currentHash === '#last-things') {
+          nextStep = -1; // finished (ignored)
+        }
+        // Track navigation with calculated next step
+        trackNavigation(fromStep, toStep, nextStep > 0 ? nextStep : null);
       }
 
       // DON'T check consistency on hash change - only on button clicks
@@ -233,9 +247,34 @@
         const currentHash = window.location.hash || '';
         const currentStep = getCurrentStep();
         
-        // For back button, DON'T track navigation (allow free backward navigation)
+        // For back button, go to previous step from nav state
         if (isBackButton) {
-          console.log('[OnboardingSafeCheck] Back button clicked, allowing free navigation');
+          console.log('[OnboardingSafeCheck] Back button clicked');
+          const navState = getNavState();
+          
+          if (navState && navState.previous && navState.previous > 0) {
+            // Go to previous step
+            const previousHash = Object.keys(STEP_MAP).find(key => STEP_MAP[key] === navState.previous);
+            if (previousHash !== undefined) {
+              console.log('[OnboardingSafeCheck] Going back to previous step:', navState.previous, previousHash);
+              // Track backward navigation: from current to previous
+              const previousStep = navState.previous;
+              const currentStep = navState.now;
+              // Update nav state: previous becomes now, now becomes previous
+              trackNavigation(currentStep, previousStep, currentStep); // Set next to current step (where we came from)
+              isButtonClick = true; // Prevent double tracking
+              window.location.hash = previousHash;
+              return;
+            }
+          }
+          
+          // Fallback: go to start if no previous step
+          console.log('[OnboardingSafeCheck] No previous step, going to start');
+          if (currentStep > 0) {
+            trackNavigation(currentStep, 1, currentStep); // Track going back to start
+          }
+          isButtonClick = true;
+          window.location.hash = '';
           return;
         }
         

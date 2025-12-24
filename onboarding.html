@@ -1989,12 +1989,8 @@
         });
       }
 
-      // Back button - go to previous step (hello screen)
-      if (backBtn) {
-        backBtn.addEventListener('click', () => {
-          window.location.hash = '';
-        });
-      }
+      // Back button - handled by onboarding-safe-check.js
+      // The safe check script will handle navigation to previous step
 
       // Language screen header buttons
       const backBtnLanguage = document.getElementById('backBtnLanguage');
