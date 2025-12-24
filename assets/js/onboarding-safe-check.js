@@ -117,10 +117,19 @@
     saveNavState(previous, now, next);
   }
 
+  // Flag to prevent infinite redirect loops
+  let isRedirecting = false;
+
   /**
    * Check for navigation inconsistencies
+   * Only call this on button clicks, not on hash changes!
    */
   function checkNavigationConsistency() {
+    // Prevent infinite loops
+    if (isRedirecting) {
+      return true;
+    }
+
     const currentHash = window.location.hash || '';
     const currentStep = getCurrentStep();
     const navState = getNavState();
@@ -130,25 +139,8 @@
       return true;
     }
 
-    // If no nav state, this is the first step or after refresh
+    // If no nav state, this is the first step or after refresh - allow it
     if (!navState) {
-      // If we're not on step 1, check localStorage for last step
-      if (currentStep > 1) {
-        try {
-          const lastStep = parseInt(localStorage.getItem('eu2k_onboarding_last_step') || '1');
-          if (lastStep > 0 && lastStep < currentStep) {
-            // We might have refreshed, restore to last valid step
-            const lastHash = Object.keys(STEP_MAP).find(key => STEP_MAP[key] === lastStep);
-            if (lastHash !== undefined) {
-              console.log('[OnboardingSafeCheck] Restoring to last step:', lastStep, lastHash);
-              window.location.hash = lastHash;
-              return false;
-            }
-          }
-        } catch (e) {
-          console.warn('[OnboardingSafeCheck] Error checking localStorage:', e);
-        }
-      }
       return true;
     }
 
@@ -171,11 +163,16 @@
         return true;
       }
 
-      // Redirect to expected step (for testing, redirect to step 3 if next was 3)
+      // Redirect to expected step
       const expectedHash = Object.keys(STEP_MAP).find(key => STEP_MAP[key] === navState.next);
       if (expectedHash !== undefined) {
         console.log('[OnboardingSafeCheck] Redirecting to expected step:', navState.next, expectedHash);
+        isRedirecting = true;
         window.location.hash = expectedHash;
+        // Reset flag after a short delay to allow the redirect to complete
+        setTimeout(() => {
+          isRedirecting = false;
+        }, 500);
         return false;
       }
     }
@@ -228,15 +225,17 @@
       saveCurrentStepBeforeUnload();
     });
 
-    // Track hash changes - only track, don't check consistency
+    // Track hash changes - only track, NEVER check consistency here!
+    // Checking consistency on hashchange causes infinite loops when redirecting
     let lastHash = window.location.hash || '';
     window.addEventListener('hashchange', () => {
       const currentHash = window.location.hash || '';
       const fromStep = getStepIndex(lastHash);
       const toStep = getStepIndex(currentHash);
 
-      // Track navigation (but don't check consistency automatically)
-      if (fromStep > 0 && toStep > 0 && !isIgnoredStep(currentHash)) {
+      // Only track navigation if it's a valid step transition
+      // But NEVER check consistency here - that's only for button clicks!
+      if (fromStep > 0 && toStep > 0 && !isIgnoredStep(currentHash) && !isRedirecting) {
         trackNavigation(fromStep, toStep);
       }
 
@@ -278,13 +277,14 @@
         }
 
         if (nextStep > 0 && currentStep > 0) {
-          // Save navigation state
+          // Save navigation state BEFORE the hash changes
           trackNavigation(currentStep, nextStep);
           
-          // Check consistency ONLY when button is clicked
+          // Check consistency ONLY when button is clicked, AFTER hash has changed
+          // Wait a bit longer to ensure hash change has completed
           setTimeout(() => {
             checkNavigationConsistency();
-          }, 100);
+          }, 200);
         }
       }
     }, true); // Use capture phase to catch events early
