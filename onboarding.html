@@ -1201,7 +1201,10 @@
     function handleHashChange() {
       const hash = window.location.hash;
       
-      // Hide all screens first
+      // FIRST: Hide ALL screens to prevent overlapping
+      hideAllOnboardingScreens();
+      
+      // Get all elements
       const onboardingMain = document.getElementById('onboardingMain');
       const loginScreen = document.getElementById('loginScreen');
       const loginProgressScreen = document.getElementById('loginProgressScreen');
@@ -1250,8 +1253,7 @@
         }
         if (loginPromptText) loginPromptText.style.display = 'none';
       } else if (hash === '#login-failed') {
-        // Show login failed screen - hide all other screens first
-        hideAllOnboardingScreens();
+        // Show login failed screen
         if (loginFailedScreen) loginFailedScreen.style.display = 'flex';
         if (backBtn) backBtn.style.display = 'none';
         if (languageBtn) languageBtn.style.display = 'flex';
@@ -1268,8 +1270,7 @@
         }
         if (loginPromptText) loginPromptText.style.display = 'none';
       } else if (hash === '#restart') {
-        // Show restart screen - hide all other screens first
-        hideAllOnboardingScreens();
+        // Show restart screen
         if (restartScreen) restartScreen.style.display = 'flex';
         if (backBtn) backBtn.style.display = 'flex';
         if (languageBtn) languageBtn.style.display = 'flex';

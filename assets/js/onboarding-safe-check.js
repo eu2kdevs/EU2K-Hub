@@ -141,67 +141,12 @@
 
   /**
    * Check for navigation inconsistencies
-   * Only call this on button clicks, not on hash changes!
+   * DISABLED: No longer redirects automatically - allows free navigation (including back button)
+   * This function is kept for debugging purposes only
    */
   function checkNavigationConsistency() {
-    // Prevent infinite loops
-    if (isRedirecting) {
-      return true;
-    }
-
-    const currentHash = window.location.hash || '';
-    const currentStep = getCurrentStep();
-    const navState = getNavState();
-
-    // If we're on an ignored step, don't check
-    if (isIgnoredStep(currentHash)) {
-      return true;
-    }
-
-    // If no nav state, this is the first step or after refresh - allow it
-    if (!navState) {
-      return true;
-    }
-
-    // Check if we're on the expected step
-    if (navState.next && currentStep !== navState.next && currentStep > 0) {
-      // Special case: if we're on login-progress, don't redirect until login is complete
-      if (currentHash === '#login-progress' && !isLoginComplete) {
-        console.log('[OnboardingSafeCheck] On login-progress, waiting for login to complete...');
-        return true; // Allow staying on login-progress
-      }
-      
-      // Inconsistency detected
-      console.warn('[OnboardingSafeCheck] Navigation inconsistency detected:', {
-        expected: navState.next,
-        actual: currentStep,
-        currentHash
-      });
-
-      // If we're on an ignored step, allow it
-      if (isIgnoredStep(currentHash)) {
-        return true;
-      }
-
-      // If we're on finished, allow it
-      if (currentHash === '#finished') {
-        return true;
-      }
-
-      // Redirect to expected step
-      const expectedHash = Object.keys(STEP_MAP).find(key => STEP_MAP[key] === navState.next);
-      if (expectedHash !== undefined) {
-        console.log('[OnboardingSafeCheck] Redirecting to expected step:', navState.next, expectedHash);
-        isRedirecting = true;
-        window.location.hash = expectedHash;
-        // Reset flag after a short delay to allow the redirect to complete
-        setTimeout(() => {
-          isRedirecting = false;
-        }, 500);
-        return false;
-      }
-    }
-
+    // DISABLED: Don't redirect automatically - allow free navigation
+    // The next step is still tracked for reference, but we don't enforce it
     return true;
   }
 
@@ -250,7 +195,7 @@
       saveCurrentStepBeforeUnload();
     });
 
-    // Track hash changes - track navigation and check consistency for manual URL changes
+    // Track hash changes - DON'T check consistency, just track the change
     let lastHash = window.location.hash || '';
     let isButtonClick = false; // Flag to track if hash change was caused by button click
     
@@ -259,116 +204,87 @@
       const fromStep = getStepIndex(lastHash);
       const toStep = getStepIndex(currentHash);
 
-      // Only track navigation if it's a valid step transition
-      // Special case: don't track navigation from start (step 1) to login (step 2) here
-      // This is handled by the button click handler to prevent setting next: 3
-      if (fromStep > 0 && toStep > 0 && !isIgnoredStep(currentHash) && !isRedirecting) {
-        // Don't track if we're going from start to login - that's handled by button click
-        if (fromStep === 1 && toStep === 2) {
-          // Skip tracking here - button click handler will handle it
-          lastHash = currentHash;
-          // Reset button click flag
-          isButtonClick = false;
-          return;
-        }
-        // Only track navigation if it wasn't caused by a button click
-        // (button clicks handle their own tracking)
-        if (!isButtonClick) {
-          trackNavigation(fromStep, toStep);
-        }
+      // Only track navigation if it's a valid step transition and not caused by button click
+      if (fromStep > 0 && toStep > 0 && !isIgnoredStep(currentHash) && !isRedirecting && !isButtonClick) {
+        // Track navigation without setting explicit next
+        trackNavigation(fromStep, toStep, null);
       }
 
-    // Check consistency for manual URL changes (not caused by button clicks)
-    // But only if we're not redirecting and not in the login flow
-    if (!isRedirecting && !isButtonClick) {
-      // Don't check consistency if we're on login screen without a nav state
-      // (this means we just arrived at login from start screen)
-      const navState = getNavState();
-      if (navState && navState.next && currentHash !== '#login') {
-        // Special case: if we're on login-progress, don't check until login is complete
-        if (currentHash === '#login-progress' && !isLoginComplete) {
-          // Wait for login to complete before checking
-          return;
-        }
-        // Small delay to ensure hash change has completed
-        setTimeout(() => {
-          checkNavigationConsistency();
-        }, 100);
-      }
-    }
+      // DON'T check consistency on hash change - only on button clicks
+      // This prevents auto-redirecting when user manually navigates
 
       // Reset button click flag
       isButtonClick = false;
       lastHash = currentHash;
     });
 
-    // Track button clicks - ONLY check consistency on button clicks
+    // Track button clicks - track navigation but DON'T enforce consistency
     document.addEventListener('click', (e) => {
       const target = e.target;
       
       // Check if it's a navigation button
       const isNextButton = target.closest('[id*="Next"], [id*="next"], .onboarding-start-btn, .button-group-item, [data-action="next"], [data-action="continue"]');
+      const isBackButton = target.closest('#backBtn, [id*="Back"], [id*="back"]');
       const isLoginButton = target.closest('.button-group-item[data-login-type]');
       
-      if (isNextButton || isLoginButton) {
+      if (isNextButton || isLoginButton || isBackButton) {
         // Set flag to indicate this hash change was caused by a button click
         isButtonClick = true;
         const currentHash = window.location.hash || '';
         const currentStep = getCurrentStep();
         
-        // Determine next step based on button
-        let nextStep = currentStep + 1;
-        
-        // Special cases
-        if (currentHash === '' || currentHash === '#') {
-          // From start screen, next is login
-          // Track navigation but don't set next - we'll only set it when login button is clicked
-          trackNavigation(1, 2, null); // explicitNext = null means no next step yet
-          // Don't check consistency here - we just arrived at login, wait for user to click login button
+        // For back button, DON'T track navigation (allow free backward navigation)
+        if (isBackButton) {
+          console.log('[OnboardingSafeCheck] Back button clicked, allowing free navigation');
           return;
-        } else if (currentHash === '#login') {
-          // From login, next depends on which button was clicked
-          // ONLY set nextStep to 3 if login button was clicked
-          if (isLoginButton) {
-            nextStep = 3; // login-progress
-            // Reset login complete flag when starting new login
-            isLoginComplete = false;
-          } else {
-            // If we're on login but didn't click login button, don't track navigation
-            // This prevents the consistency check from expecting step 3
-            return;
-          }
-        } else if (currentHash === '#login-progress') {
-          // Don't check consistency on login-progress until login is complete
-          if (!isLoginComplete) {
-            return;
-          }
-          // After login is complete, next step is looks (4)
-          nextStep = 4;
-        } else if (currentHash === '#name') {
-          nextStep = 6; // preferences1
-        } else if (currentHash === '#preferences1') {
-          nextStep = 7; // preferences2
-        } else if (currentHash === '#preferences2') {
-          nextStep = 8; // legal-terms
-        } else if (currentHash === '#legal-terms') {
-          nextStep = 9; // last-things
-        } else if (currentHash === '#last-things') {
-          nextStep = -1; // finished (ignored)
         }
-
-        // Only check consistency if:
-        // 1. It's a valid step transition (nextStep > 0 && currentStep > 0)
-        // 2. If we're on login screen, only check if login button was clicked
-        if (nextStep > 0 && currentStep > 0) {
-          // Save navigation state BEFORE the hash changes
-          trackNavigation(currentStep, nextStep);
+        
+        // For forward navigation, track with next step calculation
+        if (currentStep > 0 && !isIgnoredStep(currentHash)) {
+          // Special case: Reset login complete flag when starting new login
+          if (currentHash === '#login' && isLoginButton) {
+            isLoginComplete = false;
+            console.log('[OnboardingSafeCheck] Starting login, reset isLoginComplete flag');
+          }
           
-          // Check consistency ONLY when button is clicked, AFTER hash has changed
-          // Wait a bit longer to ensure hash change has completed
-          setTimeout(() => {
-            checkNavigationConsistency();
-          }, 200);
+          // Determine next step based on current step
+          let nextStep = currentStep + 1;
+          
+          // Special cases for step transitions
+          if (currentHash === '' || currentHash === '#') {
+            // From start screen, next is login
+            trackNavigation(1, 2, null); // explicitNext = null means no next step yet
+            return;
+          } else if (currentHash === '#login') {
+            // From login, next depends on which button was clicked
+            if (isLoginButton) {
+              nextStep = 3; // login-progress
+            } else {
+              return; // Don't track if not login button
+            }
+          } else if (currentHash === '#login-progress') {
+            // Don't track on login-progress until login is complete
+            if (!isLoginComplete) {
+              return;
+            }
+            // After login is complete, next step is looks (4)
+            nextStep = 4;
+          } else if (currentHash === '#name') {
+            nextStep = 6; // preferences1
+          } else if (currentHash === '#preferences1') {
+            nextStep = 7; // preferences2
+          } else if (currentHash === '#preferences2') {
+            nextStep = 8; // legal-terms
+          } else if (currentHash === '#legal-terms') {
+            nextStep = 9; // last-things
+          } else if (currentHash === '#last-things') {
+            nextStep = -1; // finished (ignored)
+          }
+          
+          // Track navigation with calculated next step (but don't enforce it)
+          if (nextStep > 0 && currentStep > 0) {
+            trackNavigation(currentStep, nextStep);
+          }
         }
       }
     }, true); // Use capture phase to catch events early
