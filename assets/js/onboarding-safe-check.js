@@ -262,7 +262,46 @@
       const fromStep = getStepIndex(lastHash);
       const toStep = getStepIndex(currentHash);
 
-      // Track navigation if it's a valid step transition and not caused by button click
+      // FIRST: Check consistency BEFORE tracking (so navState isn't overwritten)
+      // But only if we're not redirecting and not in the login flow
+      if (!isRedirecting && !isButtonClick) {
+        const navState = getNavState();
+        if (navState && navState.next && currentHash !== '#login') {
+          // Special case: if we're on login-progress, don't check until login is complete
+          if (currentHash === '#login-progress' && !isLoginComplete) {
+            // Wait for login to complete before checking
+            lastHash = currentHash;
+            isButtonClick = false;
+            return;
+          }
+          
+          // Check consistency IMMEDIATELY to prevent step skipping
+          const currentStep = toStep;
+          if (currentStep > navState.next && currentStep > 0) {
+            console.warn('[OnboardingSafeCheck] Step skipping detected:', {
+              expected: navState.next,
+              actual: currentStep,
+              currentHash
+            });
+            
+            // Redirect to expected step
+            const expectedHash = Object.keys(STEP_MAP).find(key => STEP_MAP[key] === navState.next);
+            if (expectedHash !== undefined) {
+              console.log('[OnboardingSafeCheck] Redirecting to expected step:', navState.next, expectedHash);
+              isRedirecting = true;
+              window.location.hash = expectedHash;
+              setTimeout(() => {
+                isRedirecting = false;
+              }, 500);
+              isButtonClick = false;
+              lastHash = currentHash;
+              return; // Don't track navigation if we're redirecting
+            }
+          }
+        }
+      }
+
+      // SECOND: Track navigation AFTER consistency check
       if (fromStep > 0 && toStep > 0 && !isIgnoredStep(currentHash) && !isRedirecting && !isButtonClick) {
         // Calculate next step for tracking
         let nextStep = toStep + 1;
@@ -280,25 +319,6 @@
         }
         // Track navigation with calculated next step
         trackNavigation(fromStep, toStep, nextStep > 0 ? nextStep : null);
-      }
-
-      // Check consistency on hash change to prevent step skipping
-      // But only if we're not redirecting and not in the login flow
-      if (!isRedirecting && !isButtonClick) {
-        const navState = getNavState();
-        if (navState && navState.next && currentHash !== '#login') {
-          // Special case: if we're on login-progress, don't check until login is complete
-          if (currentHash === '#login-progress' && !isLoginComplete) {
-            // Wait for login to complete before checking
-            lastHash = currentHash;
-            isButtonClick = false;
-            return;
-          }
-          // Small delay to ensure hash change has completed
-          setTimeout(() => {
-            checkNavigationConsistency();
-          }, 100);
-        }
       }
 
       // Reset button click flag
