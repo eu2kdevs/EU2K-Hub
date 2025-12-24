@@ -142,12 +142,12 @@
   }
 
   /**
-   * Initialize keyboard shortcut (Ctrl+Shift+D or Cmd+Shift+D)
+   * Initialize keyboard shortcut (Alt+H)
    */
   function initKeyboardShortcut() {
     document.addEventListener('keydown', (e) => {
-      // Ctrl+Shift+D (Windows/Linux) or Cmd+Shift+D (Mac)
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
+      // Alt+H to open developer mode popup
+      if (e.altKey && e.key === 'h') {
         e.preventDefault();
         showDevModePopup();
       }
@@ -202,6 +202,6 @@
   window.checkDevModePassword = checkDevModePassword;
 
   console.log('[DevMode] Developer mode system initialized');
-  console.log('[DevMode] Press Ctrl+Shift+D (or Cmd+Shift+D on Mac) to open developer mode');
+  console.log('[DevMode] Press Alt+H to open developer mode');
 })();
 
