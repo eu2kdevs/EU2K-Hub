@@ -141,12 +141,70 @@
 
   /**
    * Check for navigation inconsistencies
-   * DISABLED: No longer redirects automatically - allows free navigation (including back button)
-   * This function is kept for debugging purposes only
+   * Only redirects if user skipped steps (e.g., going from 4 to 6 when next was 5)
+   * Allows backward navigation and normal forward navigation
    */
   function checkNavigationConsistency() {
-    // DISABLED: Don't redirect automatically - allow free navigation
-    // The next step is still tracked for reference, but we don't enforce it
+    // Prevent infinite loops
+    if (isRedirecting) {
+      return true;
+    }
+
+    const currentHash = window.location.hash || '';
+    const currentStep = getCurrentStep();
+    const navState = getNavState();
+
+    // If we're on an ignored step, don't check
+    if (isIgnoredStep(currentHash)) {
+      return true;
+    }
+
+    // If no nav state, this is the first step or after refresh - allow it
+    if (!navState) {
+      return true;
+    }
+
+    // Only check if we skipped steps forward (not backward)
+    // If currentStep is greater than expected next, we skipped steps
+    if (navState.next && currentStep > navState.next && currentStep > 0) {
+      // Special case: if we're on login-progress, don't redirect until login is complete
+      if (currentHash === '#login-progress' && !isLoginComplete) {
+        console.log('[OnboardingSafeCheck] On login-progress, waiting for login to complete...');
+        return true; // Allow staying on login-progress
+      }
+      
+      // Inconsistency detected - user skipped steps
+      console.warn('[OnboardingSafeCheck] Navigation inconsistency detected - skipped steps:', {
+        expected: navState.next,
+        actual: currentStep,
+        currentHash
+      });
+
+      // If we're on an ignored step, allow it
+      if (isIgnoredStep(currentHash)) {
+        return true;
+      }
+
+      // If we're on finished, allow it
+      if (currentHash === '#finished') {
+        return true;
+      }
+
+      // Redirect to expected step (the next valid step)
+      const expectedHash = Object.keys(STEP_MAP).find(key => STEP_MAP[key] === navState.next);
+      if (expectedHash !== undefined) {
+        console.log('[OnboardingSafeCheck] Redirecting to expected step (prevented step skipping):', navState.next, expectedHash);
+        isRedirecting = true;
+        window.location.hash = expectedHash;
+        // Reset flag after a short delay to allow the redirect to complete
+        setTimeout(() => {
+          isRedirecting = false;
+        }, 500);
+        return false;
+      }
+    }
+
+    // Allow backward navigation (currentStep < navState.next) and normal forward navigation (currentStep === navState.next)
     return true;
   }
 
@@ -224,8 +282,24 @@
         trackNavigation(fromStep, toStep, nextStep > 0 ? nextStep : null);
       }
 
-      // DON'T check consistency on hash change - only on button clicks
-      // This prevents auto-redirecting when user manually navigates
+      // Check consistency on hash change to prevent step skipping
+      // But only if we're not redirecting and not in the login flow
+      if (!isRedirecting && !isButtonClick) {
+        const navState = getNavState();
+        if (navState && navState.next && currentHash !== '#login') {
+          // Special case: if we're on login-progress, don't check until login is complete
+          if (currentHash === '#login-progress' && !isLoginComplete) {
+            // Wait for login to complete before checking
+            lastHash = currentHash;
+            isButtonClick = false;
+            return;
+          }
+          // Small delay to ensure hash change has completed
+          setTimeout(() => {
+            checkNavigationConsistency();
+          }, 100);
+        }
+      }
 
       // Reset button click flag
       isButtonClick = false;
@@ -249,7 +323,10 @@
         
         // For back button, go to previous step from nav state
         if (isBackButton) {
-          console.log('[OnboardingSafeCheck] Back button clicked');
+          e.preventDefault(); // Prevent default behavior
+          e.stopPropagation(); // Stop event propagation
+          
+          console.log('[OnboardingSafeCheck] Back button clicked, current step:', currentStep);
           const navState = getNavState();
           
           if (navState && navState.previous && navState.previous > 0) {
@@ -259,9 +336,10 @@
               console.log('[OnboardingSafeCheck] Going back to previous step:', navState.previous, previousHash);
               // Track backward navigation: from current to previous
               const previousStep = navState.previous;
-              const currentStep = navState.now;
+              const currentStepFromNav = navState.now;
               // Update nav state: previous becomes now, now becomes previous
-              trackNavigation(currentStep, previousStep, currentStep); // Set next to current step (where we came from)
+              // Set next to current step (where we came from) so we can go back again
+              trackNavigation(currentStepFromNav, previousStep, currentStepFromNav);
               isButtonClick = true; // Prevent double tracking
               window.location.hash = previousHash;
               return;
