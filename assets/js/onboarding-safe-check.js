@@ -230,16 +230,16 @@
       saveCurrentStepBeforeUnload();
     });
 
-    // Track hash changes - only track, NEVER check consistency here!
-    // Checking consistency on hashchange causes infinite loops when redirecting
+    // Track hash changes - track navigation and check consistency for manual URL changes
     let lastHash = window.location.hash || '';
+    let isButtonClick = false; // Flag to track if hash change was caused by button click
+    
     window.addEventListener('hashchange', () => {
       const currentHash = window.location.hash || '';
       const fromStep = getStepIndex(lastHash);
       const toStep = getStepIndex(currentHash);
 
       // Only track navigation if it's a valid step transition
-      // But NEVER check consistency here - that's only for button clicks!
       // Special case: don't track navigation from start (step 1) to login (step 2) here
       // This is handled by the button click handler to prevent setting next: 3
       if (fromStep > 0 && toStep > 0 && !isIgnoredStep(currentHash) && !isRedirecting) {
@@ -247,11 +247,33 @@
         if (fromStep === 1 && toStep === 2) {
           // Skip tracking here - button click handler will handle it
           lastHash = currentHash;
+          // Reset button click flag
+          isButtonClick = false;
           return;
         }
-        trackNavigation(fromStep, toStep);
+        // Only track navigation if it wasn't caused by a button click
+        // (button clicks handle their own tracking)
+        if (!isButtonClick) {
+          trackNavigation(fromStep, toStep);
+        }
       }
 
+      // Check consistency for manual URL changes (not caused by button clicks)
+      // But only if we're not redirecting and not in the login flow
+      if (!isRedirecting && !isButtonClick) {
+        // Don't check consistency if we're on login screen without a nav state
+        // (this means we just arrived at login from start screen)
+        const navState = getNavState();
+        if (navState && navState.next && currentHash !== '#login') {
+          // Small delay to ensure hash change has completed
+          setTimeout(() => {
+            checkNavigationConsistency();
+          }, 100);
+        }
+      }
+
+      // Reset button click flag
+      isButtonClick = false;
       lastHash = currentHash;
     });
 
@@ -264,6 +286,8 @@
       const isLoginButton = target.closest('.button-group-item[data-login-type]');
       
       if (isNextButton || isLoginButton) {
+        // Set flag to indicate this hash change was caused by a button click
+        isButtonClick = true;
         const currentHash = window.location.hash || '';
         const currentStep = getCurrentStep();
         
