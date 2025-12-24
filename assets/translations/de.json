@@ -41,6 +41,18 @@
     "finish": "Fertig",
     "go_to_home": "Zur Startseite gehen",
     "finished_title": "Wir sind fertig!",
+    "login_student": "Schüler",
+    "login_teacher": "Lehrer",
+    "login_parent": "Elternteil",
+    "login_guest": "Gast",
+    "last_things": {
+      "day_greetings_title": "Tageszeitabhängige Begrüßungen",
+      "day_greetings_desc": "Guten Morgen am Morgen, Guten Tag am Mittag, Guten Abend am Abend. Wenn du den Hub schnell wieder öffnest, dann Auf Wiedersehen.",
+      "reduced_motion_title": "Animationen reduzieren",
+      "reduced_motion_desc": "Es hilft sehr, wenn du zu Reisekrankheit neigst oder sehr empfindlich auf Epilepsie reagierst.",
+      "light_mode_title": "Heller Modus",
+      "light_mode_desc": "Ähm, ich weiß nicht, warum du ihn verwenden würdest, aber hier ist die Gelegenheit."
+    },
     "languages": {
       "hu": "Ungarisch",
       "en": "Englisch",

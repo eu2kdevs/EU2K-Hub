@@ -41,6 +41,18 @@
     "finish": "Befejezés",
     "go_to_home": "Menj a főoldalra",
     "finished_title": "Megvagyunk!",
+    "login_student": "Diák",
+    "login_teacher": "Tanár",
+    "login_parent": "Szülő",
+    "login_guest": "Vendég",
+    "last_things": {
+      "day_greetings_title": "Napszaktól függő köszöntések",
+      "day_greetings_desc": "Reggel Jó reggelt, Napközben Jó napot, Este Jó estét. Ha gyorsan nyitod meg a Hubot megint, akkor meg Jó viszontlátni.",
+      "reduced_motion_title": "Animációk csökkentése",
+      "reduced_motion_desc": "Sokat segít ha hajlamos vagy mozgásbetegségre, vagy nagyon érzékeny epilepsziára.",
+      "light_mode_title": "Világos mód",
+      "light_mode_desc": "Ömm, nem tudom miért használnád, de itt az esély."
+    },
     "languages": {
       "hu": "Magyar",
       "en": "English",

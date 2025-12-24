@@ -41,6 +41,18 @@
     "finish": "Finalizar",
     "go_to_home": "Ir a la página principal",
     "finished_title": "¡Terminamos!",
+    "login_student": "Estudiante",
+    "login_teacher": "Profesor",
+    "login_parent": "Padre",
+    "login_guest": "Invitado",
+    "last_things": {
+      "day_greetings_title": "Saludos según la hora del día",
+      "day_greetings_desc": "Buenos días por la mañana, Buen día al mediodía, Buenas tardes por la tarde. Si abres rápidamente el Hub de nuevo, entonces Hasta pronto.",
+      "reduced_motion_title": "Reducir animaciones",
+      "reduced_motion_desc": "Ayuda mucho si eres propenso al mareo o muy sensible a la epilepsia.",
+      "light_mode_title": "Modo claro",
+      "light_mode_desc": "Um, no sé por qué lo usarías, pero aquí está la oportunidad."
+    },
     "languages": {
       "hu": "Húngaro",
       "en": "Inglés",

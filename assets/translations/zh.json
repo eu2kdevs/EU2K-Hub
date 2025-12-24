@@ -41,6 +41,18 @@
     "finish": "完成",
     "go_to_home": "前往主页",
     "finished_title": "完成了！",
+    "login_student": "学生",
+    "login_teacher": "教师",
+    "login_parent": "家长",
+    "login_guest": "访客",
+    "last_things": {
+      "day_greetings_title": "基于时间的问候",
+      "day_greetings_desc": "早上说早上好，中午说中午好，晚上说晚上好。如果你快速再次打开Hub，那么再见。",
+      "reduced_motion_title": "减少动画",
+      "reduced_motion_desc": "如果你容易晕车或对癫痫非常敏感，这会很有帮助。",
+      "light_mode_title": "浅色模式",
+      "light_mode_desc": "嗯，我不知道你为什么要使用它，但这里有机会。"
+    },
     "languages": {
       "hu": "匈牙利语",
       "en": "英语",

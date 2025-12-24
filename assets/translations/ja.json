@@ -41,6 +41,18 @@
     "finish": "完了",
     "go_to_home": "ホームページに移動",
     "finished_title": "完了しました！",
+    "login_student": "学生",
+    "login_teacher": "教師",
+    "login_parent": "保護者",
+    "login_guest": "ゲスト",
+    "last_things": {
+      "day_greetings_title": "時間帯による挨拶",
+      "day_greetings_desc": "朝はおはようございます、昼はこんにちは、夜はこんばんは。Hubをすぐに再度開くと、また会いましょう。",
+      "reduced_motion_title": "アニメーションを減らす",
+      "reduced_motion_desc": "乗り物酔いしやすい、またはてんかんに非常に敏感な場合に非常に役立ちます。",
+      "light_mode_title": "ライトモード",
+      "light_mode_desc": "うーん、なぜ使うのか分からないけど、ここに機会がある。"
+    },
     "languages": {
       "hu": "ハンガリー語",
       "en": "英語",

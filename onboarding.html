@@ -238,7 +238,7 @@
                 <div class="looks-color-grid" id="looksColorGrid"></div>
                 <!-- Alapértelmezett Tovább gomb (ha nincs grid) -->
                 <div class="looks-default-continue" id="looksDefaultContinue" style="display: none;">
-                  <button class="looks-continue-btn" id="looksDefaultContinueBtn">Tovább</button>
+                  <button class="looks-continue-btn" id="looksDefaultContinueBtn" data-translate="onboarding.continue" data-translate-fallback="Tovább">Tovább</button>
                 </div>
               </div>
             </div>
@@ -651,8 +651,8 @@
                 <div class="settings-item">
                   <div class="settings-card-content">
                     <div class="settings-card-text">
-                      <h2>Napszaktól függő köszöntések</h2>
-                      <p>Reggel Jó reggelt, Napközben Jó napot, Este Jó estét. Ha gyorsan nyitod meg a Hubot megint, akkor meg Jó viszontlátni.</p>
+                      <h2 data-translate="onboarding.last_things.day_greetings_title" data-translate-fallback="Napszaktól függő köszöntések">Napszaktól függő köszöntések</h2>
+                      <p data-translate="onboarding.last_things.day_greetings_desc" data-translate-fallback="Reggel Jó reggelt, Napközben Jó napot, Este Jó estét. Ha gyorsan nyitod meg a Hubot megint, akkor meg Jó viszontlátni.">Reggel Jó reggelt, Napközben Jó napot, Este Jó estét. Ha gyorsan nyitod meg a Hubot megint, akkor meg Jó viszontlátni.</p>
                     </div>
                     <div class="settings-card-control">
                       <md-switch class="settings-switch" icons selected id="lastThingsDayGreetingSwitch" aria-label="Napszaktól függő köszöntések"></md-switch>
@@ -664,8 +664,8 @@
                 <div class="settings-item">
                   <div class="settings-card-content">
                     <div class="settings-card-text">
-                      <h2>Animációk csökkentése</h2>
-                      <p>Sokat segít ha hajlamos vagy mozgásbetegségre, vagy nagyon érzékeny epilepsziára.</p>
+                      <h2 data-translate="onboarding.last_things.reduced_motion_title" data-translate-fallback="Animációk csökkentése">Animációk csökkentése</h2>
+                      <p data-translate="onboarding.last_things.reduced_motion_desc" data-translate-fallback="Sokat segít ha hajlamos vagy mozgásbetegségre, vagy nagyon érzékeny epilepsziára.">Sokat segít ha hajlamos vagy mozgásbetegségre, vagy nagyon érzékeny epilepsziára.</p>
                     </div>
                     <div class="settings-card-control">
                       <md-switch class="settings-switch" icons id="lastThingsReducedMotionSwitch" aria-label="Animációk csökkentése" disabled></md-switch>
@@ -677,8 +677,8 @@
                 <div class="settings-item">
                   <div class="settings-card-content">
                     <div class="settings-card-text">
-                      <h2>Világos mód</h2>
-                      <p>Ömm, nem tudom miért használnád, de itt az esély.</p>
+                      <h2 data-translate="onboarding.last_things.light_mode_title" data-translate-fallback="Világos mód">Világos mód</h2>
+                      <p data-translate="onboarding.last_things.light_mode_desc" data-translate-fallback="Ömm, nem tudom miért használnád, de itt az esély.">Ömm, nem tudom miért használnád, de itt az esély.</p>
                     </div>
                     <div class="settings-card-control">
                       <md-switch class="settings-switch" icons id="lastThingsLightModeSwitch" aria-label="Világos mód" disabled></md-switch>
@@ -2026,31 +2026,43 @@
       // Initialize button group
       const buttonGroupContainer = document.getElementById('buttonGroupContainer');
       if (buttonGroupContainer) {
+        // Get translations for login buttons
+        const getLoginButtonText = (key) => {
+          if (window.translationManager) {
+            return window.translationManager.getTranslation(key) || key;
+          }
+          return key;
+        };
+        
         const buttonGroup = new ButtonGroup(buttonGroupContainer, {
           buttons: [
             {
               id: 'student',
-              text: 'Diák',
+              text: getLoginButtonText('onboarding.login_student'),
               icon: 'assets/onboarding/accountTypes/student.svg',
-              type: 'green'
+              type: 'green',
+              'data-login-type': 'student'
             },
             {
               id: 'teacher',
-              text: 'Tanár',
+              text: getLoginButtonText('onboarding.login_teacher'),
               icon: 'assets/onboarding/accountTypes/teacher.svg',
-              type: 'green'
+              type: 'green',
+              'data-login-type': 'teacher'
             },
             {
               id: 'parent',
-              text: 'Szülő',
+              text: getLoginButtonText('onboarding.login_parent'),
               icon: 'assets/onboarding/accountTypes/parent.svg',
-              type: 'green'
+              type: 'green',
+              'data-login-type': 'parent'
             },
             {
               id: 'guest',
-              text: 'Vendég',
+              text: getLoginButtonText('onboarding.login_guest'),
               type: 'blue',
-              isGuest: true
+              isGuest: true,
+              'data-login-type': 'guest'
             }
           ],
           onButtonClick: (button, index) => {
@@ -2121,7 +2133,33 @@
           }
         };
         
-        // Add hover events to buttons
+        // Add hover events to buttons and update translations when language changes
+        const updateLoginButtonTexts = () => {
+          if (buttonGroup && buttonGroup.buttonElements && window.translationManager) {
+            buttonGroup.buttonElements.forEach((btn, index) => {
+              const buttonId = buttonGroup.buttons[index].id;
+              const textKey = `onboarding.login_${buttonId}`;
+              const translatedText = window.translationManager.getTranslation(textKey);
+              if (translatedText) {
+                const textElement = btn.querySelector('.button-group-item-text');
+                if (textElement) {
+                  textElement.textContent = translatedText;
+                }
+              }
+            });
+          }
+        };
+        
+        // Update button texts initially
+        updateLoginButtonTexts();
+        
+        // Update button texts when language changes
+        window.addEventListener('storage', (e) => {
+          if (e.key === 'eu2k_language') {
+            setTimeout(updateLoginButtonTexts, 100);
+          }
+        });
+        
         if (buttonGroup && buttonGroup.buttonElements) {
           buttonGroup.buttonElements.forEach((btn, index) => {
             const buttonId = buttonGroup.buttons[index].id;
@@ -2180,6 +2218,11 @@
           
           console.log('✅ Firebase sign-in with Microsoft successful');
           console.log('User:', result.user);
+          
+          // Notify safe check that login is complete
+          if (window.onboardingSafeCheck && window.onboardingSafeCheck.setLoginComplete) {
+            window.onboardingSafeCheck.setLoginComplete();
+          }
           
           // 2️⃣ Graph access token kinyerése a Firebase response-ból
           console.log('🔑 Extracting Microsoft Graph access token from Firebase credential...');

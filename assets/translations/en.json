@@ -41,6 +41,18 @@
     "finish": "Finish",
     "go_to_home": "Go to home page",
     "finished_title": "We're done!",
+    "login_student": "Student",
+    "login_teacher": "Teacher",
+    "login_parent": "Parent",
+    "login_guest": "Guest",
+    "last_things": {
+      "day_greetings_title": "Time-based greetings",
+      "day_greetings_desc": "Good morning in the morning, Good day at noon, Good evening in the evening. If you quickly open the Hub again, then Good to see you again.",
+      "reduced_motion_title": "Reduce animations",
+      "reduced_motion_desc": "It helps a lot if you are prone to motion sickness or very sensitive to epilepsy.",
+      "light_mode_title": "Light mode",
+      "light_mode_desc": "Um, I don't know why you would use it, but here's the chance."
+    },
     "languages": {
       "hu": "Hungarian",
       "en": "English",

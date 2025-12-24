@@ -124,6 +124,20 @@
 
   // Flag to prevent infinite redirect loops
   let isRedirecting = false;
+  
+  // Flag to track if login is complete (Firebase sign-in successful)
+  let isLoginComplete = false;
+  
+  // Listen for login completion message in console
+  const originalLog = console.log;
+  console.log = function(...args) {
+    originalLog.apply(console, args);
+    // Check if login is complete
+    if (args.some(arg => typeof arg === 'string' && arg.includes('Firebase sign-in with Microsoft successful'))) {
+      isLoginComplete = true;
+      console.log('[OnboardingSafeCheck] Login complete flag set');
+    }
+  };
 
   /**
    * Check for navigation inconsistencies
@@ -151,6 +165,12 @@
 
     // Check if we're on the expected step
     if (navState.next && currentStep !== navState.next && currentStep > 0) {
+      // Special case: if we're on login-progress, don't redirect until login is complete
+      if (currentHash === '#login-progress' && !isLoginComplete) {
+        console.log('[OnboardingSafeCheck] On login-progress, waiting for login to complete...');
+        return true; // Allow staying on login-progress
+      }
+      
       // Inconsistency detected
       console.warn('[OnboardingSafeCheck] Navigation inconsistency detected:', {
         expected: navState.next,
@@ -258,19 +278,24 @@
         }
       }
 
-      // Check consistency for manual URL changes (not caused by button clicks)
-      // But only if we're not redirecting and not in the login flow
-      if (!isRedirecting && !isButtonClick) {
-        // Don't check consistency if we're on login screen without a nav state
-        // (this means we just arrived at login from start screen)
-        const navState = getNavState();
-        if (navState && navState.next && currentHash !== '#login') {
-          // Small delay to ensure hash change has completed
-          setTimeout(() => {
-            checkNavigationConsistency();
-          }, 100);
+    // Check consistency for manual URL changes (not caused by button clicks)
+    // But only if we're not redirecting and not in the login flow
+    if (!isRedirecting && !isButtonClick) {
+      // Don't check consistency if we're on login screen without a nav state
+      // (this means we just arrived at login from start screen)
+      const navState = getNavState();
+      if (navState && navState.next && currentHash !== '#login') {
+        // Special case: if we're on login-progress, don't check until login is complete
+        if (currentHash === '#login-progress' && !isLoginComplete) {
+          // Wait for login to complete before checking
+          return;
         }
+        // Small delay to ensure hash change has completed
+        setTimeout(() => {
+          checkNavigationConsistency();
+        }, 100);
       }
+    }
 
       // Reset button click flag
       isButtonClick = false;
@@ -306,11 +331,22 @@
           // ONLY set nextStep to 3 if login button was clicked
           if (isLoginButton) {
             nextStep = 3; // login-progress
+            // Reset login complete flag when starting new login
+            isLoginComplete = false;
           } else {
             // If we're on login but didn't click login button, don't track navigation
             // This prevents the consistency check from expecting step 3
             return;
           }
+        } else if (currentHash === '#login-progress') {
+          // Don't check consistency on login-progress until login is complete
+          if (!isLoginComplete) {
+            return;
+          }
+          // After login is complete, next step is looks (4)
+          nextStep = 4;
+        } else if (currentHash === '#name') {
+          nextStep = 6; // preferences1
         } else if (currentHash === '#preferences1') {
           nextStep = 7; // preferences2
         } else if (currentHash === '#preferences2') {
@@ -341,11 +377,18 @@
   // Initialize
   initSafeCheck();
 
+  // Function to set login complete flag
+  function setLoginComplete() {
+    isLoginComplete = true;
+    console.log('[OnboardingSafeCheck] Login complete flag set via API');
+  }
+
   // Export for debugging
   window.onboardingSafeCheck = {
     getCurrentStep,
     getNavState,
     checkNavigationConsistency,
+    setLoginComplete,
     STEP_MAP
   };
 })();

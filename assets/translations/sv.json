@@ -41,6 +41,18 @@
     "finish": "Slutför",
     "go_to_home": "Gå till startsidan",
     "finished_title": "Vi är klara!",
+    "login_student": "Elev",
+    "login_teacher": "Lärare",
+    "login_parent": "Förälder",
+    "login_guest": "Gäst",
+    "last_things": {
+      "day_greetings_title": "Tidsbaserade hälsningar",
+      "day_greetings_desc": "God morgon på morgonen, God dag vid middagstid, God kväll på kvällen. Om du snabbt öppnar Hub igen, då Vi ses igen.",
+      "reduced_motion_title": "Minska animationer",
+      "reduced_motion_desc": "Det hjälper mycket om du är benägen för åksjuka eller mycket känslig för epilepsi.",
+      "light_mode_title": "Ljust läge",
+      "light_mode_desc": "Öh, jag vet inte varför du skulle använda det, men här är chansen."
+    },
     "languages": {
       "hu": "Ungerska",
       "en": "Engelska",
