@@ -726,6 +726,7 @@
   },
   "account": {
     "tooltip": {
+      "class": "クラス",
       "no_class": "クラスなし"
     }
   }

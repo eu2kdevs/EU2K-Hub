@@ -726,6 +726,7 @@
   },
   "account": {
     "tooltip": {
+      "class": "班级",
       "no_class": "无班级"
     }
   }

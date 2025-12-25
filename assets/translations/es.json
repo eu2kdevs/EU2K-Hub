@@ -710,6 +710,7 @@
   },
   "account": {
     "tooltip": {
+      "class": "Clase",
       "no_class": "Sin clase"
     }
   },

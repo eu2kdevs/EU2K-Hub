@@ -709,6 +709,7 @@
   },
   "account": {
     "tooltip": {
+      "class": "Class",
       "no_class": "No class"
     }
   },

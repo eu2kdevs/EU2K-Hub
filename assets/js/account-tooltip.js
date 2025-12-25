@@ -206,17 +206,42 @@
       let profilePictureURL = null;
       
       // Try to load from Firebase Storage (school profile picture)
-      try {
-        const storageRef = ref(storage, `profilePhotos/${uid}`);
-        profilePictureURL = await getDownloadURL(storageRef);
-        console.log('[AccountTooltip] Loaded profile picture from Storage');
-      } catch (error) {
-        // If not found, try to load avatar from assets/avatars
-        if (userData.avatarColor) {
-          // Avatar color format: e.g., "pink", "blue", etc.
-          profilePictureURL = `assets/avatars/${userData.avatarColor}.svg`;
-          console.log('[AccountTooltip] Using avatar from assets/avatars:', userData.avatarColor);
+      // Try with .jpg extension first, then without
+      const storagePaths = [
+        `profilePhotos/${uid}.jpg`,
+        `profilePhotos/${uid}`
+      ];
+      
+      let storageError = null;
+      for (const path of storagePaths) {
+        try {
+          const storageRef = ref(storage, path);
+          profilePictureURL = await getDownloadURL(storageRef);
+          console.log('[AccountTooltip] Loaded profile picture from Storage:', path);
+          break; // Success, exit loop
+        } catch (error) {
+          storageError = error;
+          // Check if it's a 404/not found error
+          const isNotFound = error.code === 'storage/object-not-found' || 
+                            error.code === '404' || 
+                            (error.message && (error.message.includes('404') || error.message.includes('not found')));
+          
+          if (!isNotFound) {
+            // Other error (permission, network, etc.) - log and break
+            console.warn('[AccountTooltip] Error loading profile picture from Storage:', error.code || error.message);
+            break;
+          }
+          // 404 error - try next path silently
         }
+      }
+      
+      // If no profile picture found in Storage, use avatar fallback
+      if (!profilePictureURL && userData.avatarColor) {
+        profilePictureURL = `assets/avatars/${userData.avatarColor}.png`;
+        console.log('[AccountTooltip] Using avatar from assets/avatars:', userData.avatarColor);
+      } else if (!profilePictureURL) {
+        // No profile picture and no avatar - leave as null (will be handled in updateTooltipContent)
+        console.log('[AccountTooltip] No profile picture found, using placeholder');
       }
 
       userDataCache = {
@@ -229,25 +254,51 @@
         const idTokenResult = await auth.currentUser.getIdTokenResult();
         const customClaims = idTokenResult.claims;
         
+        let classId = null;
+        
         if (customClaims.class) {
           // Custom claim has class ID
-          const classId = customClaims.class;
-          
+          classId = customClaims.class;
+          console.log('[AccountTooltip] Found class in custom claim:', classId);
+        } else {
+          // Fallback: try to load from users/{uid}/groups/ownclass
+          try {
+            const ownClassRef = doc(window.db, 'users', uid, 'groups', 'ownclass');
+            const ownClassSnap = await getDoc(ownClassRef);
+            
+            if (ownClassSnap.exists()) {
+              const ownClassData = ownClassSnap.data();
+              const classFinishes = ownClassData.classFinishes || '';
+              const classType = ownClassData.classType || '';
+              
+              if (classFinishes && classType) {
+                classId = classFinishes + classType; // e.g., "2030e"
+                console.log('[AccountTooltip] Found class from ownclass document:', classId);
+              }
+            }
+          } catch (ownClassError) {
+            console.warn('[AccountTooltip] Error loading ownclass document:', ownClassError);
+          }
+        }
+        
+        if (classId) {
           // Load class document to get class name
           const classRef = doc(window.db, 'classes', classId);
           const classSnap = await getDoc(classRef);
           
           if (classSnap.exists()) {
-            classDataCache = classSnap.data();
-            console.log('[AccountTooltip] Loaded class data from custom claim:', classId);
+            classDataCache = {
+              ...classSnap.data(),
+              classId: classId
+            };
+            console.log('[AccountTooltip] Loaded class data:', classId, classDataCache);
           } else {
             // Fallback: use classId as name
             classDataCache = { name: classId, classId: classId };
+            console.log('[AccountTooltip] Class document not found, using classId as name:', classId);
           }
         } else {
-          // Fallback: try to find class from classes/{classId}/users/{userId}
-          // This is more complex, so we'll skip for now
-          console.warn('[AccountTooltip] No class custom claim found');
+          console.warn('[AccountTooltip] No class found in custom claim or ownclass document');
         }
       } catch (error) {
         console.error('[AccountTooltip] Error loading class data:', error);
@@ -298,30 +349,58 @@
     nameSpan.textContent = displayName;
 
     // Set class name with proper formatting based on language
-    if (classDataCache?.name) {
-      const className = classDataCache.name;
+    if (classDataCache?.name || classDataCache?.classId) {
       const currentLang = getCurrentLanguage();
+      const classWord = getTranslation('account.tooltip.class', 'Osztály');
+      
+      // Class name in database is always in format "2030e" or "2029g" (year + letter)
+      const className = classDataCache.name || classDataCache.classId;
+      let displayClassName = null;
+      
+      // Extract year and letter from class name (e.g., "2030e" -> year: 2030, letter: "e")
+      const classMatch = className.match(/^(\d{4})(.+)$/);
+      
+      if (classMatch) {
+        const graduationYear = parseInt(classMatch[1], 10);
+        const classLetter = classMatch[2]; // e.g., "e", "g"
+        
+        // Calculate current grade from graduation year
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth() + 1; // 1-12
+        
+        // Years remaining = graduationYear - currentYear
+        // Grade = 12 - yearsRemaining
+        // If we're in September-December (month >= 9), new school year started, so grade + 1
+        const yearsRemaining = graduationYear - currentYear;
+        let gradeNumber = 12 - yearsRemaining;
+        
+        if (currentMonth >= 9) {
+          // New school year started (September-December), so we're one grade higher
+          gradeNumber += 1;
+        }
+        
+        // Format: {grade}.{letter uppercase} (e.g., "8.E")
+        if (gradeNumber >= 7 && gradeNumber <= 12) {
+          const letterUpper = classLetter.charAt(0).toUpperCase();
+          displayClassName = `${gradeNumber}.${letterUpper}`;
+        } else {
+          // Invalid grade, use classId as fallback
+          displayClassName = className;
+        }
+      } else {
+        // No year pattern found, use classId as-is
+        displayClassName = className;
+      }
       
       // Format class name based on language
       // English: "Class 8.E", Hungarian: "8.E Osztály"
-      const classWord = getTranslation('account.tooltip.class', 'Osztály');
-      
       if (currentLang === 'en') {
         // English: Class comes first
-        classSpan.textContent = `${classWord} ${className}`;
+        classSpan.textContent = `${classWord} ${displayClassName}`;
       } else {
         // Hungarian and other languages: Class name comes first
-        classSpan.textContent = `${className} ${classWord}`;
-      }
-    } else if (classDataCache?.classId) {
-      const classId = classDataCache.classId;
-      const currentLang = getCurrentLanguage();
-      const classWord = getTranslation('account.tooltip.class', 'Osztály');
-      
-      if (currentLang === 'en') {
-        classSpan.textContent = `${classWord} ${classId}`;
-      } else {
-        classSpan.textContent = `${classId} ${classWord}`;
+        classSpan.textContent = `${displayClassName} ${classWord}`;
       }
     } else {
       classSpan.textContent = getTranslation('account.tooltip.no_class', 'Nincs osztály');

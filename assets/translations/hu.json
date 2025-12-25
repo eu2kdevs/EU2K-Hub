@@ -750,6 +750,7 @@
   },
   "account": {
     "tooltip": {
+      "class": "Osztály",
       "no_class": "Nincs osztály"
     }
   }
