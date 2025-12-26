@@ -550,17 +550,20 @@
     };
 
     const scrollArea = document.querySelector('.main-scroll-area') || document.body;
+    const isBodyTarget = scrollArea === document.body;
     
     // Disable scroll
     if (scrollArea) {
-      scrollArea.scrollTo({ top: 0, behavior: 'instant' });
+      if (!isBodyTarget) {
+        scrollArea.scrollTo({ top: 0, behavior: 'instant' });
+      }
       scrollArea.classList.add('no-scroll');
       scrollArea.classList.add('popup-active');
     }
 
-    // Create popup HTML
+    // Create popup HTML with fixed positioning if on body
     const popupHTML = `
-      <div id="staffSessionTransferPopupGlobal" class="permission-overlay-scroll-area" style="display: none;">
+      <div id="staffSessionTransferPopupGlobal" class="permission-overlay-scroll-area" style="display: none; ${isBodyTarget ? 'position: fixed;' : ''}">
         <div class="permission-container">
           <button class="permission-close-btn" id="staffSessionTransferCloseBtn">
             <img src="assets/general/close.svg" alt="Bezárás">

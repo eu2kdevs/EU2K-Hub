@@ -408,6 +408,31 @@ body {
   animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
 }
 
+/* Input field for staff transfer popup */
+.dev-mode-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: #2A3521;
+  border: 2px solid #445A2D;
+  border-radius: 12px;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-family: inherit;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.dev-mode-input:focus {
+  outline: none;
+  border-color: #D3FFA1;
+  background: #344025;
+}
+
+.dev-mode-input::placeholder {
+  color: #8FA274;
+}
+
 .main-content {
   position: relative; /* for absolute positioned overlays */
   display: flex;
