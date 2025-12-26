@@ -232,7 +232,21 @@
           "start_message": "Geben Sie das Admin-Passwort ein, um die Sitzung zu starten. Die Sitzung ist 15 Minuten lang aktiv.",
           "end_title": "Sitzung beenden",
           "end_message": "Möchten Sie die Sitzung wirklich beenden? Sie müssen sich erneut anmelden, um Änderungen vorzunehmen.",
+          "transfer_title": "Workflow auf ein anderes Gerät übertragen",
+          "transfer_message": "Geben Sie Ihr Passwort ein, um die Sitzung zu übertragen. Ihre Sitzung auf dem alten Gerät wird beendet und setzt sich auf dem anderen Gerät von derselben Stelle fort.",
+          "transfer_confirm": "Übertragen",
+          "end_all_title": "Möchten Sie wirklich alle Sitzungen beenden?",
+          "end_all_message": "Dies beendet alle aktiven Sitzungen auf allen Geräten.",
+          "end_all_confirm": "Alle Sitzungen beenden",
+          "waiting_title": "Warten auf Antwort vom Host-Gerät",
+          "waiting_message": "Warten darauf, dass das andere Gerät die Übertragung bestätigt.",
+          "password_placeholder": "Passwort",
           "error": "Ungültiges Passwort oder Zugriff verweigert."
+        },
+        "end_all": {
+          "title": "Alle Sitzungen beenden",
+          "description": "Beendet alle aktiven Sitzungen auf allen Geräten.",
+          "button": "Alle Sitzungen beenden"
         }
       }
     },
@@ -777,6 +791,16 @@
   "staff_timer": {
     "expired_title": "Sitzung abgelaufen",
     "expired": "Die Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
-    "expired_description": "Die Sitzung ist abgelaufen. Bitte melden Sie sich in den Einstellungen erneut an."
+    "expired_description": "Die Sitzung ist abgelaufen. Bitte melden Sie sich in den Einstellungen erneut an.",
+    "replaced_title": "Sitzung übertragen",
+    "replaced_message": "Ihre Sitzung wurde auf ein anderes Gerät übertragen. Bitte melden Sie sich erneut an, um Ihre Sitzung fortzusetzen.",
+    "replaced_warning_title": "Sitzungsübertragung",
+    "replaced_warning_message": "Jemand hat versucht, einen Workflow in Ihrem Namen auf einem anderen Gerät zu starten. Ihre aktuelle Sitzung ist noch aktiv, läuft aber ab.",
+    "replaced_other_title": "Sitzungsübertragung",
+    "replaced_other_message": "Jemand hat versucht, einen Workflow in Ihrem Namen auf einem anderen Gerät zu starten. Ihre alte Sitzung ist noch aktiv, läuft aber ab.",
+    "transfer_available_title": "Sitzung auf anderem Gerät aktiv",
+    "transfer_available_message": "Ihre Sitzung ist auf einem anderen Gerät aktiv. Sie können sie hierher übertragen, oder Ihr Zugriff wird in 5 Sekunden widerrufen.",
+    "transfer_requested_title": "Sitzungsübertragungsanfrage",
+    "transfer_requested_message": "Ein anderes Gerät hat versucht, Ihre Sitzung zu übernehmen. Klicken Sie auf die Schaltfläche Übertragen, um sie hier zu beenden und dort fortzusetzen."
   }
 }

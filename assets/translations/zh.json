@@ -229,7 +229,21 @@
           "start_message": "输入管理员密码以开始会话。会话将活动15分钟。",
           "end_title": "结束会话",
           "end_message": "您确定要结束会话吗？您需要重新登录才能进行更改。",
+          "transfer_title": "将工作流程转移到另一台设备",
+          "transfer_message": "输入您的密码以转移会话。您在旧设备上的会话将结束，并在另一台设备上从同一点继续。",
+          "transfer_confirm": "转移",
+          "end_all_title": "您确定要结束所有会话吗？",
+          "end_all_message": "这将结束所有设备上的所有活动会话。",
+          "end_all_confirm": "结束所有会话",
+          "waiting_title": "等待主机设备响应",
+          "waiting_message": "等待另一台设备确认转移。",
+          "password_placeholder": "密码",
           "error": "密码无效或访问被拒绝。"
+        },
+        "end_all": {
+          "title": "结束所有会话",
+          "description": "结束所有设备上的所有活动会话。",
+          "button": "结束所有会话"
         }
       }
     },
@@ -760,6 +774,16 @@
   "staff_timer": {
     "expired_title": "会话已过期",
     "expired": "会话已过期。请重新登录。",
-    "expired_description": "会话已过期。请在设置中重新登录。"
+    "expired_description": "会话已过期。请在设置中重新登录。",
+    "replaced_title": "会话已转移",
+    "replaced_message": "您的会话已转移到另一台设备。请重新登录以继续您的会话。",
+    "replaced_warning_title": "会话转移",
+    "replaced_warning_message": "有人尝试在另一台设备上以您的名义启动工作流程。您当前的会话仍然有效，但将过期。",
+    "replaced_other_title": "会话转移",
+    "replaced_other_message": "有人尝试在另一台设备上以您的名义启动工作流程。您的旧会话仍然有效，但将过期。",
+    "transfer_available_title": "会话在另一台设备上活动",
+    "transfer_available_message": "您的会话在另一台设备上活动。您可以将其转移到这里，或者您的访问权限将在5秒后被撤销。",
+    "transfer_requested_title": "会话转移请求",
+    "transfer_requested_message": "另一台设备试图接管您的会话。点击转移按钮以在此处结束并在那里继续。"
   }
 }

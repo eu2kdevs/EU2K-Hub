@@ -11,12 +11,35 @@
   let sessionEndTime = null;
   let syncInterval = null;
   let syncCounter = 0;
+  let deviceId = null;
+  let sessionReplaced = false;
+
+  /**
+   * Get or create device ID
+   */
+  function getDeviceId() {
+    if (!deviceId) {
+      // Try to get from localStorage
+      deviceId = localStorage.getItem('eu2k_device_id');
+      if (!deviceId) {
+        // Generate new device ID
+        deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('eu2k_device_id', deviceId);
+        console.log('[StaffTimer] Generated new device ID:', deviceId);
+      } else {
+        console.log('[StaffTimer] Using existing device ID:', deviceId);
+      }
+    }
+    return deviceId;
+  }
 
   /**
    * Initialize timer
    */
   function initTimer() {
     console.log('[StaffTimer] 🚀 Initializing timer...');
+    // Get device ID
+    getDeviceId();
     // Create timer element immediately (even if session is not active)
     if (!timerElement || !document.getElementById('staffSessionTimer')) {
       console.log('[StaffTimer] Creating timer element...');
@@ -69,8 +92,30 @@
       const functions = getFunctions(window.firebaseApp, 'europe-west1');
       const checkSession = httpsCallable(functions, 'staffSessionCheck');
 
-      const result = await checkSession();
-      console.log('[StaffTimer] Session check result:', result.data);
+      const result = await checkSession({ deviceId: getDeviceId() });
+      console.log('[StaffTimer] 🔄 Session check result:', result.data);
+      console.log('[StaffTimer] 📊 Device ID:', getDeviceId());
+      console.log('[StaffTimer] ⏰ Current time:', new Date().toISOString());
+      
+      // Check if transfer is available (new device, session active on other device)
+      if (result.data.transferAvailable && !result.data.active) {
+        console.log('[StaffTimer] ⚠️ Session active on another device, showing transfer notification');
+        handleTransferAvailable(result.data);
+        return;
+      }
+      
+      // Check if transfer was requested (new device requested transfer)
+      if (result.data.transferRequested && !result.data.active) {
+        console.log('[StaffTimer] ⚠️ Transfer requested, waiting for approval');
+        handleTransferRequested(result.data);
+        return;
+      }
+      
+      // Check if current device has active session and transfer was requested
+      if (result.data.transferRequested && result.data.active) {
+        console.log('[StaffTimer] ⚠️ Another device requested transfer');
+        handleTransferRequestedOnActiveDevice(result.data);
+      }
       
       if (result.data.active) {
         console.log('[StaffTimer] ✅ Session is active, starting timer with endTime:', result.data.endTime);
@@ -147,7 +192,7 @@
       clearInterval(syncInterval);
     }
     
-    syncInterval = setInterval(syncWithServer, 60000); // Every minute
+    syncInterval = setInterval(syncWithServer, 30000); // Every 30 seconds
   }
 
   /**
@@ -305,13 +350,13 @@
   }
 
   /**
-   * Sync with server every minute
+   * Sync with server every 30 seconds
    */
   async function syncWithServer() {
     syncCounter++;
     
-    // Sync 15 times (every minute for 15 minutes)
-    if (syncCounter > 15) {
+    // Sync 30 times (every 30 seconds for 15 minutes)
+    if (syncCounter > 30) {
       return;
     }
 
@@ -324,10 +369,20 @@
       const functions = getFunctions(window.firebaseApp, 'europe-west1');
       const checkSession = httpsCallable(functions, 'staffSessionCheck');
 
-      const result = await checkSession();
+      const result = await checkSession({ deviceId: getDeviceId() });
+      console.log('[StaffTimer] 🔄 Sync check result:', result.data);
+      
+      // Check if session was replaced
+      if (result.data.replaced && !result.data.active) {
+        console.log('[StaffTimer] ⚠️ Session was replaced by another device during sync');
+        stopTimer();
+        handleSessionReplaced();
+        return;
+      }
       
       if (!result.data.active) {
         // Session ended on server
+        console.log('[StaffTimer] ❌ Session ended on server');
         stopTimer();
         handleSessionExpired();
         return;
@@ -339,12 +394,236 @@
 
       // If difference > 2 seconds, sync with server
       if (diff > 2000) {
-        console.log('[StaffTimer] Syncing with server. Diff:', diff, 'ms');
+        console.log('[StaffTimer] 🔄 Syncing with server. Diff:', diff, 'ms');
+        console.log('[StaffTimer] 📊 Server endTime:', new Date(serverEndTime).toISOString());
+        console.log('[StaffTimer] 📊 Client endTime:', new Date(clientEndTime).toISOString());
         sessionEndTime = serverEndTime;
         updateTimer();
+      } else {
+        console.log('[StaffTimer] ✅ Timer in sync (diff:', diff, 'ms)');
+      }
+      
+      // Check if transfer is available or requested
+      if (result.data.transferAvailable && !result.data.active) {
+        console.log('[StaffTimer] ⚠️ Transfer available during sync');
+        stopTimer();
+        handleTransferAvailable(result.data);
+        return;
+      }
+      
+      if (result.data.transferRequested && !result.data.active) {
+        console.log('[StaffTimer] ⚠️ Transfer requested during sync');
+        stopTimer();
+        handleTransferRequested(result.data);
+        return;
+      }
+      
+      if (result.data.transferRequested && result.data.active) {
+        console.log('[StaffTimer] ⚠️ Transfer requested on active device during sync');
+        handleTransferRequestedOnActiveDevice(result.data);
       }
     } catch (error) {
       console.error('[StaffTimer] Error syncing with server:', error);
+    }
+  }
+
+  /**
+   * Handle transfer available (new device, session active on other device)
+   */
+  let transferTimeout = null;
+  function handleTransferAvailable(data) {
+    // Stop timer and hide nav items
+    stopTimer();
+    if (window.staffNavItems && window.staffNavItems.hide) {
+      window.staffNavItems.hide();
+    }
+
+    const getTranslation = (key, fallback) => {
+      try {
+        return window.translationManager?.getTranslation(key) || fallback;
+      } catch {
+        return fallback;
+      }
+    };
+
+    const title = getTranslation('staff_timer.transfer_available_title', 'Munkamenet aktív másik eszközön');
+    const message = getTranslation('staff_timer.transfer_available_message', 'A munkameneted egy másik eszközön aktív. Átviheted ide, vagy 5 másodperc múlva megszakad a hozzáférésed.');
+    const buttonLabel = getTranslation('pages.settings.staff.popup.transfer_confirm', 'Átvitel');
+
+    // Show warning notification with transfer button
+    if (window.showToastDirectly) {
+      window.showToastDirectly(
+        title,
+        message,
+        'warning',
+        'info',
+        buttonLabel,
+        () => {
+          // Open session transfer popup
+          if (window.staffAccess && window.staffAccess.showSessionTransferPopup) {
+            window.staffAccess.showSessionTransferPopup();
+          } else {
+            window.location.href = 'settings.html#general';
+            setTimeout(() => {
+              if (window.staffAccess && window.staffAccess.showSessionTransferPopup) {
+                window.staffAccess.showSessionTransferPopup();
+              }
+            }, 500);
+          }
+        }
+      );
+    }
+
+    // After 5 seconds, revoke staff access (hide nav items, stop timer)
+    if (transferTimeout) {
+      clearTimeout(transferTimeout);
+    }
+    transferTimeout = setTimeout(() => {
+      console.log('[StaffTimer] ⏰ 5 seconds passed, revoking staff access');
+      stopTimer();
+      if (window.staffNavItems && window.staffNavItems.hide) {
+        window.staffNavItems.hide();
+      }
+    }, 5000);
+  }
+
+  /**
+   * Handle transfer requested (new device requested transfer)
+   */
+  function handleTransferRequested(data) {
+    // Same as handleTransferAvailable, but different message
+    handleTransferAvailable(data);
+  }
+
+  /**
+   * Handle transfer requested on active device (host device)
+   */
+  function handleTransferRequestedOnActiveDevice(data) {
+    const getTranslation = (key, fallback) => {
+      try {
+        return window.translationManager?.getTranslation(key) || fallback;
+      } catch {
+        return fallback;
+      }
+    };
+
+    const title = getTranslation('staff_timer.transfer_requested_title', 'Munkamenet átvitel kérése');
+    const message = getTranslation('staff_timer.transfer_requested_message', 'Egy másik eszköz megpróbálta átvenni a munkameneted. Kattints az Átvitel gombra, hogy itt megszakítsd és ott folytasd.');
+    const buttonLabel = getTranslation('pages.settings.staff.popup.transfer_confirm', 'Átvitel');
+
+    // Show warning notification with transfer button
+    if (window.showToastDirectly) {
+      window.showToastDirectly(
+        title,
+        message,
+        'warning',
+        'info',
+        buttonLabel,
+        () => {
+          // Open session transfer popup
+          if (window.staffAccess && window.staffAccess.showSessionTransferPopup) {
+            window.staffAccess.showSessionTransferPopup();
+          } else {
+            window.location.href = 'settings.html#general';
+            setTimeout(() => {
+              if (window.staffAccess && window.staffAccess.showSessionTransferPopup) {
+                window.staffAccess.showSessionTransferPopup();
+              }
+            }, 500);
+          }
+        }
+      );
+    }
+  }
+
+  /**
+   * Handle session replaced by another device
+   */
+  function handleSessionReplaced() {
+    // Hide staff nav items
+    if (window.staffNavItems && window.staffNavItems.hide) {
+      window.staffNavItems.hide();
+    }
+
+    // Get translations
+    const getTranslation = (key, fallback) => {
+      try {
+        return window.translationManager?.getTranslation(key) || fallback;
+      } catch {
+        return fallback;
+      }
+    };
+
+    const title = getTranslation('staff_timer.replaced_title', 'Munkamenet átvitele');
+    const message = getTranslation('staff_timer.replaced_message', 'A munkameneted egy másik eszközre lett átvitele. Jelentkezz be újra a munkamenet folytatásához.');
+    const buttonLabel = getTranslation('pages.settings.staff.button_login', 'Belépés');
+
+    // Show warning notification with button
+    if (window.showToastDirectly) {
+      window.showToastDirectly(
+        title,
+        message,
+        'warning',
+        'info',
+        buttonLabel,
+        () => {
+          // Open session transfer popup (if on settings page) or navigate to settings
+          const currentPage = window.location.pathname.split('/').pop();
+          if (currentPage === 'settings.html' && window.staffAccess && window.staffAccess.showSessionTransferPopup) {
+            // Open popup directly
+            window.staffAccess.showSessionTransferPopup();
+          } else {
+            // Navigate to settings.html#general and scroll to staff card
+            window.location.href = 'settings.html#general';
+            
+            // Wait for page load, then open popup
+            const checkAndOpen = () => {
+              if (window.staffAccess && window.staffAccess.showSessionTransferPopup) {
+                window.staffAccess.showSessionTransferPopup();
+              } else {
+                setTimeout(checkAndOpen, 100);
+              }
+            };
+            setTimeout(checkAndOpen, 500);
+          }
+        }
+      );
+    }
+
+    // Redirect to index ONLY if we're on dashboard.html or students.html
+    const currentPage = window.location.pathname.split('/').pop();
+    if (currentPage === 'dashboard.html' || currentPage === 'students.html') {
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 500);
+    }
+  }
+
+  /**
+   * Show notification that session was replaced (but still active)
+   */
+  function showSessionReplacedNotification() {
+    const getTranslation = (key, fallback) => {
+      try {
+        return window.translationManager?.getTranslation(key) || fallback;
+      } catch {
+        return fallback;
+      }
+    };
+
+    const title = getTranslation('staff_timer.replaced_warning_title', 'Munkamenet átvitele');
+    const message = getTranslation('staff_timer.replaced_warning_message', 'Valaki megpróbált egy munkafolyamatot indítani a neved alatt egy másik eszközön. A jelenlegi munkameneted továbbra is aktív, de le fog járni.');
+
+    // Show warning notification
+    if (window.showToastDirectly) {
+      window.showToastDirectly(
+        title,
+        message,
+        'warning',
+        'info',
+        null,
+        null
+      );
     }
   }
 
@@ -438,5 +717,18 @@
     stopTimer,
     isActive: () => sessionEndTime !== null
   };
+  
+  // Console commands for testing
+  if (typeof window !== 'undefined') {
+    window.testStaffSessionReplaced = () => {
+      console.log('[StaffTimer] Testing session replaced notification...');
+      handleSessionReplaced();
+    };
+    
+    window.testStaffSessionReplacedWarning = () => {
+      console.log('[StaffTimer] Testing session replaced warning notification...');
+      showSessionReplacedNotification();
+    };
+  }
 })();
 

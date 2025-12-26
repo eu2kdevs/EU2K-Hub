@@ -229,7 +229,21 @@
           "start_message": "Ingrese la contraseña de administrador para iniciar la sesión. La sesión estará activa durante 15 minutos.",
           "end_title": "Finalizar sesión",
           "end_message": "¿Estás seguro de que quieres finalizar la sesión? Deberás iniciar sesión nuevamente para realizar cambios.",
+          "transfer_title": "Transferir flujo de trabajo a otro dispositivo",
+          "transfer_message": "Ingresa tu contraseña para transferir la sesión. Tu sesión en el dispositivo antiguo terminará y continuará en el otro dispositivo desde el mismo punto.",
+          "transfer_confirm": "Transferir",
+          "end_all_title": "¿Estás seguro de que quieres finalizar todas las sesiones?",
+          "end_all_message": "Esto finalizará todas las sesiones activas en todos los dispositivos.",
+          "end_all_confirm": "Finalizar todas las sesiones",
+          "waiting_title": "Esperando respuesta del dispositivo host",
+          "waiting_message": "Esperando que el otro dispositivo confirme la transferencia.",
+          "password_placeholder": "Contraseña",
           "error": "Contraseña incorrecta o acceso denegado."
+        },
+        "end_all": {
+          "title": "Finalizar todas las sesiones",
+          "description": "Finaliza todas las sesiones activas en todos los dispositivos.",
+          "button": "Finalizar todas las sesiones"
         }
       }
     },
@@ -774,6 +788,16 @@
   "staff_timer": {
     "expired_title": "Sesión expirada",
     "expired": "La sesión ha expirado. Por favor, inicie sesión nuevamente.",
-    "expired_description": "La sesión ha expirado. Por favor, inicie sesión nuevamente en la configuración."
+    "expired_description": "La sesión ha expirado. Por favor, inicie sesión nuevamente en la configuración.",
+    "replaced_title": "Sesión transferida",
+    "replaced_message": "Tu sesión ha sido transferida a otro dispositivo. Por favor, inicia sesión nuevamente para continuar tu sesión.",
+    "replaced_warning_title": "Transferencia de sesión",
+    "replaced_warning_message": "Alguien intentó iniciar un flujo de trabajo en tu nombre en otro dispositivo. Tu sesión actual sigue activa pero expirará.",
+    "replaced_other_title": "Transferencia de sesión",
+    "replaced_other_message": "Alguien intentó iniciar un flujo de trabajo en tu nombre en otro dispositivo. Tu sesión antigua sigue activa pero expirará.",
+    "transfer_available_title": "Sesión activa en otro dispositivo",
+    "transfer_available_message": "Tu sesión está activa en otro dispositivo. Puedes transferirla aquí, o tu acceso será revocado en 5 segundos.",
+    "transfer_requested_title": "Solicitud de transferencia de sesión",
+    "transfer_requested_message": "Otro dispositivo intentó tomar el control de tu sesión. Haz clic en el botón Transferir para finalizarla aquí y continuarla allí."
   }
 }

@@ -15,6 +15,19 @@
 
   let isSessionActive = false;
   let sessionEndTime = null;
+  
+  /**
+   * Get or create device ID
+   */
+  function getDeviceId() {
+    let deviceId = localStorage.getItem('eu2k_device_id');
+    if (!deviceId) {
+      deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('eu2k_device_id', deviceId);
+      console.log('[StaffAccess] Generated new device ID:', deviceId);
+    }
+    return deviceId;
+  }
 
   /**
    * Initialize staff access card
@@ -160,11 +173,18 @@
           });
         }
 
+        // Show "End All Sessions" card
+        const endAllCard = document.getElementById('staffEndAllCard');
+        if (endAllCard) {
+          endAllCard.style.display = '';
+        }
+
         // Check if session is active
         await checkActiveSession();
 
-        // Setup button click handler
+        // Setup button click handlers
         setupStaffButton();
+        setupEndAllButton();
         console.log('[StaffAccess] ✅ Button handler setup complete');
       } else {
         console.log('[StaffAccess] ❌ User does NOT have staff privileges');
@@ -186,7 +206,7 @@
       const { httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
       const checkSession = httpsCallable(window.functions, 'staffSessionCheck');
 
-      const result = await checkSession();
+      const result = await checkSession({ deviceId: getDeviceId() });
       
       if (result.data.active) {
         isSessionActive = true;
@@ -196,6 +216,20 @@
         // Start timer if session is active
         if (window.staffTimer) {
           window.staffTimer.startTimer(sessionEndTime);
+        }
+      }
+      
+      // Check if transfer was requested (host device) - show popup automatically
+      if (result.data.transferRequested && result.data.active) {
+        // Store transfer request data
+        window.eu2k_transferRequestedByDeviceId = result.data.transferRequestedByDeviceId;
+        
+        // Check if popup is already shown
+        if (!document.getElementById('staffSessionTransferPopup')) {
+          console.log('[StaffAccess] 🔔 Transfer requested, showing popup automatically on host device');
+          console.log('[StaffAccess] 📱 Transfer requested by device:', result.data.transferRequestedByDeviceId);
+          // Show popup automatically on host device
+          showSessionTransferPopup();
         }
       }
     } catch (error) {
@@ -305,14 +339,23 @@
               const { httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
               const startSession = httpsCallable(window.functions, 'staffSessionStart');
 
-              console.log('[StaffAccess] Calling staffSessionStart with password...');
-              const result = await startSession({ password });
-              console.log('[StaffAccess] staffSessionStart result:', result);
+              console.log('[StaffAccess] 🔐 Calling staffSessionStart with password...');
+              console.log('[StaffAccess] 📱 Device ID:', getDeviceId());
+              const result = await startSession({ password, deviceId: getDeviceId() });
+              console.log('[StaffAccess] ✅ staffSessionStart result:', result);
+              console.log('[StaffAccess] 📊 Session endTime:', result.data.endTime ? new Date(result.data.endTime).toISOString() : 'N/A');
               
               if (result.data.success) {
                 isSessionActive = true;
                 sessionEndTime = result.data.endTime;
                 updateButtonState(true);
+                
+                // Check if we replaced an existing session
+                if (result.data.replacedExisting) {
+                  console.log('[StaffAccess] ⚠️ Replaced existing session from device:', result.data.existingDeviceId);
+                  // Show notification that old device session will expire
+                  showSessionReplacedOnOtherDeviceNotification();
+                }
                 
                 // Start timer
                 if (window.staffTimer) {
@@ -344,6 +387,14 @@
               console.error('[StaffAccess] Error code:', error.code);
               console.error('[StaffAccess] Error message:', error.message);
               console.error('[StaffAccess] Error details:', error.details);
+              
+              // Check if error is about existing session on another device
+              if (error.code === 'functions/failed-precondition' && error.details && error.details.existingDeviceId) {
+                // Close start popup and show loading indicator
+                closePopup();
+                showTransferWaitingIndicator();
+                return;
+              }
               
               let errorMessage = getTranslation('pages.settings.staff.popup.error', 'Hibás jelszó vagy hozzáférés megtagadva.');
               
@@ -552,9 +603,376 @@
     initStaffAccess();
   }
 
+  /**
+   * Show notification that session was replaced on other device
+   */
+  function showSessionReplacedOnOtherDeviceNotification() {
+    const getTranslation = (key, fallback) => {
+      try {
+        return window.translationManager?.getTranslation(key) || fallback;
+      } catch {
+        return fallback;
+      }
+    };
+
+    const title = getTranslation('staff_timer.replaced_other_title', 'Munkamenet átvitele');
+    const message = getTranslation('staff_timer.replaced_other_message', 'Valaki megpróbált egy munkafolyamatot indítani a neved alatt egy másik eszközön. A régi munkameneted továbbra is aktív, de le fog járni.');
+
+    // Show warning notification
+    if (window.showToastDirectly) {
+      window.showToastDirectly(
+        title,
+        message,
+        'warning',
+        'info',
+        null,
+        null
+      );
+    }
+  }
+
+  /**
+   * Show transfer waiting indicator (new device waiting for host device response)
+   */
+  let transferWaitingInterval = null;
+  let transferWaitingIndicator = null;
+  
+  function showTransferWaitingIndicator() {
+    const getTranslation = (key, fallback) => {
+      try {
+        return window.translationManager?.getTranslation(key) || fallback;
+      } catch {
+        return fallback;
+      }
+    };
+
+    const scrollArea = document.querySelector('.main-scroll-area');
+    if (scrollArea) {
+      scrollArea.scrollTo({ top: 0, behavior: 'instant' });
+      scrollArea.classList.add('no-scroll');
+      scrollArea.classList.add('popup-active');
+    }
+
+    // Create loading indicator HTML
+    const indicatorHTML = `
+      <div id="staffTransferWaitingIndicator" class="permission-overlay-scroll-area" style="display: flex;">
+        <div class="permission-container">
+          <div class="permission-content">
+            <div class="eu2k-loader" style="margin: 0 auto 24px;"></div>
+            <h2 class="permission-title" data-translate="pages.settings.staff.popup.waiting_title" data-translate-fallback="Várunk a gazdagép válaszára">Várunk a gazdagép válaszára</h2>
+            <p class="permission-text" data-translate="pages.settings.staff.popup.waiting_message" data-translate-fallback="A munkamenet átviteléhez várjuk, hogy a másik eszközön megerősítsék az átvitelt.">A munkamenet átviteléhez várjuk, hogy a másik eszközön megerősítsék az átvitelt.</p>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Add loader CSS if not exists
+    if (!document.getElementById('staff-transfer-loader-styles')) {
+      const style = document.createElement('style');
+      style.id = 'staff-transfer-loader-styles';
+      style.textContent = `
+        .eu2k-loader {
+          width: 80px;
+          aspect-ratio: 1;
+          border: 10px solid #0000;
+          padding: 5px;
+          box-sizing: border-box;
+          background: 
+            radial-gradient(farthest-side,#fff 98%,#0000 ) 0 0/20px 20px no-repeat,
+            conic-gradient(from 90deg at 10px 10px,#0000 90deg,#fff 0) content-box,
+            conic-gradient(from -90deg at 40px 40px,#0000 90deg,#fff 0) content-box,
+            #000;
+          filter: blur(4px) contrast(10);
+          animation: eu2k-l11 2s infinite;
+          position: relative;
+          z-index: 1;
+        }
+        @keyframes eu2k-l11 {
+          0%   {background-position:0 0}
+          25%  {background-position:100% 0}
+          50%  {background-position:100% 100%}
+          75%  {background-position:0% 100%}
+          100% {background-position:0% 0}
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // Add indicator to body
+    if (scrollArea) {
+      scrollArea.insertAdjacentHTML('beforeend', indicatorHTML);
+      transferWaitingIndicator = document.getElementById('staffTransferWaitingIndicator');
+    }
+
+    // Start polling for transfer completion
+    transferWaitingInterval = setInterval(async () => {
+      try {
+        const { httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+        const checkSession = httpsCallable(window.functions, 'staffSessionCheck');
+        const result = await checkSession({ deviceId: getDeviceId() });
+        
+        // Check if transfer completed (session is now active on this device)
+        if (result.data.active && result.data.endTime) {
+          console.log('[StaffAccess] ✅ Transfer completed! Session active on this device');
+          
+          // Stop polling
+          if (transferWaitingInterval) {
+            clearInterval(transferWaitingInterval);
+            transferWaitingInterval = null;
+          }
+          
+          // Hide indicator
+          if (transferWaitingIndicator) {
+            if (scrollArea) {
+              scrollArea.classList.remove('no-scroll');
+              scrollArea.classList.remove('popup-active');
+            }
+            transferWaitingIndicator.remove();
+            transferWaitingIndicator = null;
+          }
+          
+          // Start session on this device
+          isSessionActive = true;
+          sessionEndTime = result.data.endTime;
+          updateButtonState(true);
+          
+          // Start timer
+          if (window.staffTimer) {
+            window.staffTimer.startTimer(sessionEndTime);
+          }
+          
+          // Check if we need to redirect
+          const redirectPath = sessionStorage.getItem('eu2k_staff_redirect_after_login');
+          if (redirectPath) {
+            sessionStorage.removeItem('eu2k_staff_redirect_after_login');
+            const targetPath = redirectPath.startsWith('/') ? redirectPath : '/' + redirectPath;
+            setTimeout(() => {
+              window.location.href = targetPath;
+            }, 500);
+          } else {
+            // Refresh page to show new nav items
+            setTimeout(() => {
+              window.location.reload();
+            }, 500);
+          }
+        }
+      } catch (error) {
+        console.error('[StaffAccess] Error checking transfer status:', error);
+      }
+    }, 2000); // Check every 2 seconds
+  }
+
+  /**
+   * Show session transfer popup
+   * This is called when user wants to transfer session from old device to new device
+   */
+  function showSessionTransferPopup() {
+    const getTranslation = (key, fallback) => {
+      try {
+        return window.translationManager?.getTranslation(key) || fallback;
+      } catch {
+        return fallback;
+      }
+    };
+
+    const openPopup = () => {
+      const scrollArea = document.querySelector('.main-scroll-area');
+      if (scrollArea) {
+        scrollArea.scrollTo({ top: 0, behavior: 'instant' });
+        scrollArea.classList.add('no-scroll');
+        scrollArea.classList.add('popup-active');
+      }
+
+      // Create popup HTML (same as start session popup but with different text)
+      const popupHTML = `
+        <div id="staffSessionTransferPopup" class="permission-overlay-scroll-area" style="display: none;">
+          <div class="permission-container">
+            <button class="permission-close-btn" id="staffSessionTransferCloseBtn">
+              <img src="assets/general/close.svg" alt="Bezárás">
+            </button>
+            <div class="permission-content">
+              <img src="assets/qr-code/hand.svg" class="permission-hand-icon" alt="Munkafolyamat átvitele">
+              <h2 class="permission-title" data-translate="pages.settings.staff.popup.transfer_title" data-translate-fallback="Munkafolyamat átvitele a másik eszközre">Munkafolyamat átvitele a másik eszközre</h2>
+              <p class="permission-text" data-translate="pages.settings.staff.popup.transfer_message" data-translate-fallback="Add meg a jelszavad a munkamenet átviteléhez. A régi gépen megszakad a munkameneted, és ugyanonnan folytatódik a másik gépen.">Add meg a jelszavad a munkamenet átviteléhez. A régi gépen megszakad a munkameneted, és ugyanonnan folytatódik a másik gépen.</p>
+              <input type="password" id="staffSessionTransferPassword" class="dev-mode-input" data-translate-placeholder="pages.settings.staff.popup.password_placeholder" placeholder="Jelszó">
+              <button class="permission-ok-btn" id="staffSessionTransferConfirmBtn" data-translate="pages.settings.staff.popup.transfer_confirm" data-translate-fallback="Átvitel">Átvitel</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Add popup to body
+      if (scrollArea) {
+        scrollArea.insertAdjacentHTML('beforeend', popupHTML);
+      }
+
+      setTimeout(() => {
+        const popup = document.getElementById('staffSessionTransferPopup');
+        if (popup) {
+          popup.style.display = 'flex';
+        }
+
+        const input = document.getElementById('staffSessionTransferPassword');
+        const closeBtn = document.getElementById('staffSessionTransferCloseBtn');
+        const confirmBtn = document.getElementById('staffSessionTransferConfirmBtn');
+
+        // Focus input
+        if (input) {
+          setTimeout(() => input.focus(), 100);
+        }
+
+        // Close handler
+        const closePopup = () => {
+          if (scrollArea) {
+            scrollArea.classList.remove('no-scroll');
+            scrollArea.classList.remove('popup-active');
+          }
+          if (popup) {
+            popup.remove();
+          }
+        };
+
+        if (closeBtn) {
+          closeBtn.addEventListener('click', closePopup);
+        }
+
+        // Confirm handler
+        if (confirmBtn) {
+          confirmBtn.addEventListener('click', async () => {
+            if (!input) return;
+            const password = input.value;
+            if (!password) return;
+            
+            try {
+              const { httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+              const transferSession = httpsCallable(window.functions, 'staffSessionTransfer');
+
+              // Get the device ID that requested the transfer (new device)
+              const newDeviceId = window.eu2k_transferRequestedByDeviceId || getDeviceId();
+              
+              console.log('[StaffAccess] 🔄 Calling staffSessionTransfer with password...');
+              console.log('[StaffAccess] 📱 Current Device ID (host):', getDeviceId());
+              console.log('[StaffAccess] 📱 New Device ID (target):', newDeviceId);
+              const result = await transferSession({ password, newDeviceId: newDeviceId });
+              console.log('[StaffAccess] ✅ staffSessionTransfer result:', result);
+              
+              if (result.data.success) {
+                // On host device: end session, hide nav items, redirect to index
+                console.log('[StaffAccess] ✅ Transfer successful on host device, ending session...');
+                
+                isSessionActive = false;
+                sessionEndTime = null;
+                updateButtonState(false);
+                
+                // Stop timer
+                if (window.staffTimer) {
+                  window.staffTimer.stopTimer();
+                }
+                
+                // Hide nav items
+                if (window.staffNavItems && window.staffNavItems.hide) {
+                  window.staffNavItems.hide();
+                }
+                
+                closePopup();
+                
+                // Redirect to index.html
+                setTimeout(() => {
+                  window.location.href = '/index.html';
+                }, 500);
+              } else {
+                alert(getTranslation('pages.settings.staff.popup.error', 'Hibás jelszó vagy hozzáférés megtagadva.'));
+              }
+            } catch (error) {
+              console.error('[StaffAccess] Error transferring session:', error);
+              console.error('[StaffAccess] Error code:', error.code);
+              console.error('[StaffAccess] Error message:', error.message);
+              console.error('[StaffAccess] Error details:', error.details);
+              
+              let errorMessage = getTranslation('pages.settings.staff.popup.error', 'Hibás jelszó vagy hozzáférés megtagadva.');
+              
+              if (error.code === 'unauthenticated') {
+                errorMessage = 'Nincs bejelentkezve. Jelentkezz be újra!';
+              } else if (error.code === 'permission-denied') {
+                errorMessage = 'Hibás jelszó!';
+              } else if (error.code === 'failed-precondition') {
+                errorMessage = error.message || 'Nincs aktív munkamenet az átvitelhez.';
+              }
+              
+              alert(errorMessage);
+            }
+          });
+        }
+
+        // Enter key handler
+        if (input) {
+          input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && confirmBtn) {
+              confirmBtn.click();
+            }
+          });
+        }
+      }, 50);
+    };
+
+    if (window.tryOpenPopup) {
+      window.tryOpenPopup(openPopup);
+    } else {
+      openPopup();
+    }
+  }
+
   // Export for global access
   window.staffAccess = {
     checkActiveSession,
-    isSessionActive: () => isSessionActive
+    isSessionActive: () => isSessionActive,
+    showSessionTransferPopup
   };
+  
+  // Console commands for testing
+  if (typeof window !== 'undefined') {
+    window.testStaffSessionTransfer = () => {
+      console.log('[StaffAccess] Testing session transfer popup...');
+      showSessionTransferPopup();
+    };
+    
+    window.testStaffSessionReplaced = () => {
+      console.log('[StaffAccess] Testing session replaced notification...');
+      showSessionReplacedOnOtherDeviceNotification();
+    };
+    
+    window.testStaffEndAllSessions = () => {
+      console.log('[StaffAccess] Testing end all sessions...');
+      const endAllBtn = document.getElementById('staffEndAllBtn');
+      if (endAllBtn) {
+        endAllBtn.click();
+      } else {
+        showEndAllSessionsPopup();
+      }
+    };
+    
+    // Console command to end all sessions directly (without popup)
+    window.endAllStaffSessions = async () => {
+      console.log('[StaffAccess] Ending all sessions directly...');
+      try {
+        const { httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+        const endAllSessions = httpsCallable(window.functions, 'staffSessionEndAll');
+        const result = await endAllSessions();
+        console.log('[StaffAccess] ✅ All sessions ended:', result.data);
+        
+        // Stop timer and hide nav items
+        if (window.staffTimer) {
+          window.staffTimer.stopTimer();
+        }
+        if (window.staffNavItems && window.staffNavItems.hide) {
+          window.staffNavItems.hide();
+        }
+        
+        // Reload page
+        window.location.reload();
+      } catch (error) {
+        console.error('[StaffAccess] Error ending all sessions:', error);
+      }
+    };
+  }
 })();

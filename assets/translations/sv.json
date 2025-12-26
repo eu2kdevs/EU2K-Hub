@@ -229,7 +229,21 @@
           "start_message": "Ange adminlösenordet för att starta sessionen. Sessionen kommer att vara aktiv i 15 minuter.",
           "end_title": "Avsluta session",
           "end_message": "Är du säker på att du vill avsluta sessionen? Du måste logga in igen för att göra ändringar.",
+          "transfer_title": "Överför arbetsflöde till en annan enhet",
+          "transfer_message": "Ange ditt lösenord för att överföra sessionen. Din session på den gamla enheten kommer att avslutas och fortsätter på den andra enheten från samma punkt.",
+          "transfer_confirm": "Överför",
+          "end_all_title": "Är du säker på att du vill avsluta alla sessioner?",
+          "end_all_message": "Detta kommer att avsluta alla aktiva sessioner på alla enheter.",
+          "end_all_confirm": "Avsluta alla sessioner",
+          "waiting_title": "Väntar på svar från värd-enheten",
+          "waiting_message": "Väntar på att den andra enheten bekräftar överföringen.",
+          "password_placeholder": "Lösenord",
           "error": "Ogiltigt lösenord eller åtkomst nekad."
+        },
+        "end_all": {
+          "title": "Avsluta alla sessioner",
+          "description": "Avslutar alla aktiva sessioner på alla enheter.",
+          "button": "Avsluta alla sessioner"
         }
       }
     },
@@ -760,6 +774,16 @@
   "staff_timer": {
     "expired_title": "Sessionen har löpt ut",
     "expired": "Sessionen har löpt ut. Vänligen logga in igen.",
-    "expired_description": "Sessionen har löpt ut. Vänligen logga in igen i inställningarna."
+    "expired_description": "Sessionen har löpt ut. Vänligen logga in igen i inställningarna.",
+    "replaced_title": "Sessionen har överförts",
+    "replaced_message": "Din session har överförts till en annan enhet. Vänligen logga in igen för att fortsätta din session.",
+    "replaced_warning_title": "Sessionöverföring",
+    "replaced_warning_message": "Någon försökte starta ett arbetsflöde i ditt namn på en annan enhet. Din nuvarande session är fortfarande aktiv men kommer att löpa ut.",
+    "replaced_other_title": "Sessionöverföring",
+    "replaced_other_message": "Någon försökte starta ett arbetsflöde i ditt namn på en annan enhet. Din gamla session är fortfarande aktiv men kommer att löpa ut.",
+    "transfer_available_title": "Session aktiv på annan enhet",
+    "transfer_available_message": "Din session är aktiv på en annan enhet. Du kan överföra den hit, eller din åtkomst kommer att återkallas om 5 sekunder.",
+    "transfer_requested_title": "Sessionöverföringsbegäran",
+    "transfer_requested_message": "En annan enhet försökte ta över din session. Klicka på knappen Överför för att avsluta den här och fortsätta där."
   }
 }

@@ -118,16 +118,39 @@
       const { httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
       const checkSession = httpsCallable(window.functions, 'staffSessionCheck');
 
-      const result = await checkSession();
+      // Get device ID for session check
+      let deviceId = localStorage.getItem('eu2k_device_id');
+      if (!deviceId) {
+        deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('eu2k_device_id', deviceId);
+        console.log('[GlobalStaffCheck] Generated new device ID:', deviceId);
+      }
+
+      const result = await checkSession({ deviceId: deviceId });
+      console.log('[GlobalStaffCheck] Session check result:', result.data);
 
       if (!result.data.active) {
         console.warn('[GlobalStaffCheck] ❌ No active session');
         console.warn('[GlobalStaffCheck] ❌ Reason: staffSessionCheck returned active = false');
         console.warn('[GlobalStaffCheck] ❌ Session result:', result.data);
-        return; // Don't redirect, just log
+        
+        // If session expired, notify client and redirect
+        if (result.data.expired) {
+          console.log('[GlobalStaffCheck] 🔔 Session expired, notifying client and redirecting...');
+          
+          // Notify client that session expired (this will trigger notification on index.html)
+          sessionStorage.setItem('eu2k_staff_session_expired', 'true');
+          
+          // Redirect to index.html
+          setTimeout(() => {
+            window.location.href = '/index.html';
+          }, 500);
+        }
+        return;
       }
 
       console.log('[GlobalStaffCheck] ✅ Access granted');
+      console.log('[GlobalStaffCheck] ✅ Session active, endTime:', result.data.endTime);
       console.log('[GlobalStaffCheck] ===== INIT END =====');
       // Access granted, page will load normally
     } catch (error) {

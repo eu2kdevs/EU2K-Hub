@@ -26,6 +26,7 @@ const region = 'europe-west1';
 /**
  * Start a staff session
  * Verifies password and creates a 15-minute session
+ * If there's an existing active session, it will be marked as replaced
  */
 exports.staffSessionStart = onCall({ region }, async (request) => {
   try {
@@ -35,7 +36,7 @@ exports.staffSessionStart = onCall({ region }, async (request) => {
     }
 
     const uid = request.auth.uid;
-    const { password } = request.data;
+    const { password, deviceId } = request.data;
 
     if (!password) {
       throw new HttpsError('invalid-argument', 'Password is required');
@@ -57,16 +58,54 @@ exports.staffSessionStart = onCall({ region }, async (request) => {
       throw new HttpsError('permission-denied', 'Invalid password');
     }
 
+    // Check for existing active session on different device
+    const existingSessionDoc = await db.collection('staffSessions').doc(uid).get();
+    let hasExistingSession = false;
+    let existingDeviceId = null;
+    let existingEndTime = null;
+
+    if (existingSessionDoc.exists) {
+      const existingData = existingSessionDoc.data();
+      const now = Date.now();
+      const existingEndTimeMs = existingData.endTime ? existingData.endTime.toMillis() : 0;
+      const existingDeviceIdFromSession = existingData.deviceId || null;
+      
+      if (existingData.active && existingEndTimeMs > now) {
+        // Check if it's a different device
+        if (existingDeviceIdFromSession && existingDeviceIdFromSession !== deviceId) {
+          hasExistingSession = true;
+          existingDeviceId = existingDeviceIdFromSession;
+          existingEndTime = existingEndTimeMs;
+          
+          // Mark that a new device tried to start a session
+          await db.collection('staffSessions').doc(uid).update({
+            transferRequested: true,
+            transferRequestedByDeviceId: deviceId || 'unknown',
+            transferRequestedAt: admin.firestore.FieldValue.serverTimestamp()
+          });
+          
+          // Don't create new session, return error
+          throw new HttpsError('failed-precondition', 'Active session exists on another device', {
+            existingDeviceId: existingDeviceId,
+            existingEndTime: existingEndTime
+          });
+        }
+      }
+    }
+
     // Calculate session end time
     const now = Date.now();
     const endTime = now + SESSION_DURATION_MS;
 
-    // Create session document in Firestore
+    // Create new session document in Firestore
     await db.collection('staffSessions').doc(uid).set({
       userId: uid,
+      deviceId: deviceId || 'unknown',
       startTime: admin.firestore.Timestamp.fromMillis(now),
       endTime: admin.firestore.Timestamp.fromMillis(endTime),
       active: true,
+      replaced: false,
+      transferRequested: false,
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
@@ -83,6 +122,7 @@ exports.staffSessionStart = onCall({ region }, async (request) => {
 
 /**
  * Check if a staff session is active
+ * Also checks if session was replaced by another device
  */
 exports.staffSessionCheck = onCall({ region }, async (request) => {
   try {
@@ -92,6 +132,7 @@ exports.staffSessionCheck = onCall({ region }, async (request) => {
     }
 
     const uid = request.auth.uid;
+    const { deviceId } = request.data || {};
 
     // Get session document
     const sessionDoc = await db.collection('staffSessions').doc(uid).get();
@@ -102,21 +143,72 @@ exports.staffSessionCheck = onCall({ region }, async (request) => {
 
     const sessionData = sessionDoc.data();
     const now = Date.now();
-    const endTime = sessionData.endTime.toMillis();
+    const endTime = sessionData.endTime ? sessionData.endTime.toMillis() : 0;
+
+    // Check if transfer was requested
+    if (sessionData.transferRequested && sessionData.active && endTime > now) {
+      const transferRequestedBy = sessionData.transferRequestedByDeviceId || null;
+      const sessionDeviceId = sessionData.deviceId || null;
+      
+      // If current device is the one that requested transfer, notify it
+      if (deviceId && deviceId === transferRequestedBy) {
+        return {
+          active: false,
+          transferRequested: true,
+          existingDeviceId: sessionDeviceId,
+          existingEndTime: endTime,
+          message: 'Session transfer requested'
+        };
+      }
+      
+      // If current device is the one with active session, notify it about transfer request
+      if (deviceId && deviceId === sessionDeviceId) {
+        return {
+          active: true,
+          endTime: endTime,
+          remainingTime: endTime - now,
+          transferRequested: true,
+          transferRequestedByDeviceId: transferRequestedBy,
+          message: 'Another device requested session transfer'
+        };
+      }
+    }
+
+    // Check if current device matches session device
+    const sessionDeviceId = sessionData.deviceId || null;
+    if (deviceId && sessionDeviceId && deviceId !== sessionDeviceId && sessionData.active && endTime > now) {
+      // Different device trying to use session - notify client
+      return {
+        active: false,
+        transferAvailable: true,
+        existingDeviceId: sessionDeviceId,
+        existingEndTime: endTime,
+        message: 'Session is active on another device'
+      };
+    }
 
     // Check if session is still active
     if (sessionData.active && endTime > now) {
       return {
         active: true,
         endTime: endTime,
-        remainingTime: endTime - now
+        remainingTime: endTime - now,
+        replaced: false
       };
     } else {
       // Session expired, update document
       await db.collection('staffSessions').doc(uid).update({
         active: false
       });
-      return { active: false };
+      
+      // Log session expiration
+      console.log('[staffSessionCheck] Session expired for user:', uid, 'Device:', deviceId || 'unknown');
+      
+      return { 
+        active: false,
+        expired: true,
+        message: 'Session has expired'
+      };
     }
   } catch (error) {
     console.error('[staffSessionCheck] Error:', error);
@@ -157,6 +249,101 @@ exports.staffSessionEnd = onCall({ region }, async (request) => {
     return { success: true };
   } catch (error) {
     console.error('[staffSessionEnd] Error:', error);
+    throw error;
+  }
+});
+
+/**
+ * End all staff sessions for a user
+ * This is called when user wants to end all sessions
+ */
+exports.staffSessionEndAll = onCall({ region }, async (request) => {
+  try {
+    // Check if user is authenticated
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'User must be authenticated');
+    }
+
+    const uid = request.auth.uid;
+
+    // End all sessions
+    await db.collection('staffSessions').doc(uid).update({
+      active: false,
+      endedAt: admin.firestore.FieldValue.serverTimestamp(),
+      endedAll: true
+    });
+
+    console.log('[staffSessionEndAll] All sessions ended for user:', uid);
+
+    return { success: true };
+  } catch (error) {
+    console.error('[staffSessionEndAll] Error:', error);
+    throw error;
+  }
+});
+
+/**
+ * Transfer session to another device
+ * This is called when user wants to transfer their session from old device to new device
+ */
+exports.staffSessionTransfer = onCall({ region }, async (request) => {
+  try {
+    // Check if user is authenticated
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'User must be authenticated');
+    }
+
+    const uid = request.auth.uid;
+    const { password, newDeviceId } = request.data;
+
+    if (!password) {
+      throw new HttpsError('invalid-argument', 'Password is required');
+    }
+
+    if (!newDeviceId) {
+      throw new HttpsError('invalid-argument', 'New device ID is required');
+    }
+
+    // Verify password
+    const verifyResult = await verifyAdminConsolePasswordInternal({ password }, { auth: request.auth });
+    
+    if (!verifyResult.success) {
+      throw new HttpsError('permission-denied', 'Invalid password');
+    }
+
+    // Get current session
+    const sessionDoc = await db.collection('staffSessions').doc(uid).get();
+    
+    if (!sessionDoc.exists) {
+      throw new HttpsError('failed-precondition', 'No active session found');
+    }
+
+    const sessionData = sessionDoc.data();
+    const now = Date.now();
+    const endTime = sessionData.endTime ? sessionData.endTime.toMillis() : 0;
+
+    if (!sessionData.active || endTime <= now) {
+      throw new HttpsError('failed-precondition', 'Session is not active');
+    }
+
+    // Transfer session to new device (keep same endTime)
+    await db.collection('staffSessions').doc(uid).update({
+      deviceId: newDeviceId,
+      replaced: false,
+      transferRequested: false,
+      transferredAt: admin.firestore.FieldValue.serverTimestamp(),
+      transferredFromDeviceId: sessionData.deviceId || null
+    });
+
+    console.log('[staffSessionTransfer] Session transferred from', sessionData.deviceId, 'to', newDeviceId);
+
+    return {
+      success: true,
+      endTime: endTime,
+      remainingTime: endTime - now
+    };
+  } catch (error) {
+    console.error('[staffSessionTransfer] Error:', error);
     throw error;
   }
 });

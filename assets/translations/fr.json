@@ -229,7 +229,21 @@
           "start_message": "Entrez le mot de passe administrateur pour démarrer la session. La session sera active pendant 15 minutes.",
           "end_title": "Terminer la session",
           "end_message": "Êtes-vous sûr de vouloir terminer la session ? Vous devrez vous reconnecter pour apporter des modifications.",
+          "transfer_title": "Transférer le flux de travail vers un autre appareil",
+          "transfer_message": "Entrez votre mot de passe pour transférer la session. Votre session sur l'ancien appareil se terminera et continuera sur l'autre appareil au même point.",
+          "transfer_confirm": "Transférer",
+          "end_all_title": "Êtes-vous sûr de vouloir terminer toutes les sessions?",
+          "end_all_message": "Cela terminera toutes les sessions actives sur tous les appareils.",
+          "end_all_confirm": "Terminer toutes les sessions",
+          "waiting_title": "En attente de la réponse du périphérique hôte",
+          "waiting_message": "En attente que l'autre périphérique confirme le transfert.",
+          "password_placeholder": "Mot de passe",
           "error": "Mot de passe invalide ou accès refusé."
+        },
+        "end_all": {
+          "title": "Terminer toutes les sessions",
+          "description": "Termine toutes les sessions actives sur tous les appareils.",
+          "button": "Terminer toutes les sessions"
         }
       }
     },
@@ -760,6 +774,16 @@
   "staff_timer": {
     "expired_title": "Session expirée",
     "expired": "La session a expiré. Veuillez vous reconnecter.",
-    "expired_description": "La session a expiré. Veuillez vous reconnecter dans les paramètres."
+    "expired_description": "La session a expiré. Veuillez vous reconnecter dans les paramètres.",
+    "replaced_title": "Session transférée",
+    "replaced_message": "Votre session a été transférée vers un autre appareil. Veuillez vous reconnecter pour continuer votre session.",
+    "replaced_warning_title": "Transfert de session",
+    "replaced_warning_message": "Quelqu'un a essayé de démarrer un flux de travail en votre nom sur un autre appareil. Votre session actuelle est toujours active mais expirera.",
+    "replaced_other_title": "Transfert de session",
+    "replaced_other_message": "Quelqu'un a essayé de démarrer un flux de travail en votre nom sur un autre appareil. Votre ancienne session est toujours active mais expirera.",
+    "transfer_available_title": "Session active sur un autre appareil",
+    "transfer_available_message": "Votre session est active sur un autre appareil. Vous pouvez la transférer ici, ou votre accès sera révoqué dans 5 secondes.",
+    "transfer_requested_title": "Demande de transfert de session",
+    "transfer_requested_message": "Un autre appareil a essayé de prendre le contrôle de votre session. Cliquez sur le bouton Transférer pour la terminer ici et la continuer là-bas."
   }
 }

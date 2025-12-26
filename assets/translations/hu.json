@@ -237,11 +237,25 @@
         "description": "Hozzáférés a haladó funkciókhoz és az adminisztrációs felülethez.",
         "button_login": "Belépés",
         "button_end": "Munkamenet megszakítása",
+        "end_all": {
+          "title": "Minden munkamenet megszakítása",
+          "description": "Minden aktív munkamenetet megszakít minden eszközön.",
+          "button": "Minden munkamenet megszakítása"
+        },
         "popup": {
           "start_title": "Munkamenet indítása",
           "start_message": "Add meg az admin jelszót a munkamenet indításához. A munkamenet 15 percig lesz aktív.",
           "end_title": "Munkamenet megszakítása",
           "end_message": "Biztosan megszakítod a munkamenetet? Vissza kell jelentkezned, ha ismét módosítani szeretnél.",
+          "transfer_title": "Munkafolyamat átvitele a másik eszközre",
+          "transfer_message": "Add meg a jelszavad a munkamenet átviteléhez. A régi gépen megszakad a munkameneted, és ugyanonnan folytatódik a másik gépen.",
+          "transfer_confirm": "Átvitel",
+          "end_all_title": "Biztos meg akarsz minden munkamenetet megszakítani?",
+          "end_all_message": "Ez minden aktív munkamenetet megszakít minden eszközön.",
+          "end_all_confirm": "Minden munkamenet megszakítása",
+          "waiting_title": "Várunk a gazdagép válaszára",
+          "waiting_message": "A munkamenet átviteléhez várjuk, hogy a másik eszközön megerősítsék az átvitelt.",
+          "password_placeholder": "Jelszó",
           "error": "Hibás jelszó vagy hozzáférés megtagadva."
         }
       }
@@ -791,6 +805,16 @@
   "staff_timer": {
     "expired_title": "Munkamenet lejárt",
     "expired": "A munkamenet lejárt. Kérlek jelentkezz be újra.",
-    "expired_description": "A munkamenet lejárt. Kérlek jelentkezz be újra a beállításokban."
+    "expired_description": "A munkamenet lejárt. Kérlek jelentkezz be újra a beállításokban.",
+    "replaced_title": "Munkamenet átvitele",
+    "replaced_message": "A munkameneted egy másik eszközre lett átvitele. Jelentkezz be újra a munkamenet folytatásához.",
+    "replaced_warning_title": "Munkamenet átvitele",
+    "replaced_warning_message": "Valaki megpróbált egy munkafolyamatot indítani a neved alatt egy másik eszközön. A jelenlegi munkameneted továbbra is aktív, de le fog járni.",
+    "replaced_other_title": "Munkamenet átvitele",
+    "replaced_other_message": "Valaki megpróbált egy munkafolyamatot indítani a neved alatt egy másik eszközön. A régi munkameneted továbbra is aktív, de le fog járni.",
+    "transfer_available_title": "Munkamenet aktív másik eszközön",
+    "transfer_available_message": "A munkameneted egy másik eszközön aktív. Átviheted ide, vagy 5 másodperc múlva megszakad a hozzáférésed.",
+    "transfer_requested_title": "Munkamenet átvitel kérése",
+    "transfer_requested_message": "Egy másik eszköz megpróbálta átvenni a munkameneted. Kattints az Átvitel gombra, hogy itt megszakítsd és ott folytasd."
   }
 }

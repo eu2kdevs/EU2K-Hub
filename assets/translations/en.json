@@ -224,11 +224,25 @@
         "description": "Access to advanced functions and administrative interface.",
         "button_login": "Login",
         "button_end": "End Session",
+        "end_all": {
+          "title": "End All Sessions",
+          "description": "Ends all active sessions on all devices.",
+          "button": "End All Sessions"
+        },
         "popup": {
           "start_title": "Start Session",
           "start_message": "Enter the admin password to start the session. The session will be active for 15 minutes.",
           "end_title": "End Session",
           "end_message": "Are you sure you want to end the session? You will need to log in again to make changes.",
+          "transfer_title": "Transfer workflow to another device",
+          "transfer_message": "Enter your password to transfer the session. Your session on the old device will end, and it will continue on the other device from the same point.",
+          "transfer_confirm": "Transfer",
+          "end_all_title": "Are you sure you want to end all sessions?",
+          "end_all_message": "This will end all active sessions on all devices.",
+          "end_all_confirm": "End All Sessions",
+          "waiting_title": "Waiting for host device response",
+          "waiting_message": "Waiting for the other device to confirm the transfer.",
+          "password_placeholder": "Password",
           "error": "Invalid password or access denied."
         }
       }
@@ -773,6 +787,16 @@
   "staff_timer": {
     "expired_title": "Session expired",
     "expired": "The session has expired. Please log in again.",
-    "expired_description": "The session has expired. Please log in again in the settings."
+    "expired_description": "The session has expired. Please log in again in the settings.",
+    "replaced_title": "Session transferred",
+    "replaced_message": "Your session has been transferred to another device. Please log in again to continue your session.",
+    "replaced_warning_title": "Session transfer",
+    "replaced_warning_message": "Someone tried to start a workflow in your name on another device. Your current session is still active but will expire.",
+    "replaced_other_title": "Session transfer",
+    "replaced_other_message": "Someone tried to start a workflow in your name on another device. Your old session is still active but will expire.",
+    "transfer_available_title": "Session active on another device",
+    "transfer_available_message": "Your session is active on another device. You can transfer it here, or your access will be revoked in 5 seconds.",
+    "transfer_requested_title": "Session transfer request",
+    "transfer_requested_message": "Another device tried to take over your session. Click the Transfer button to end it here and continue there."
   }
 }

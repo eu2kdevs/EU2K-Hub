@@ -1123,6 +1123,62 @@
   <script src="assets/js/consent-banner.js"></script>
   <script src="assets/js/staff-timer.js"></script>
   <script src="assets/js/staff-nav-items.js"></script>
+  <script>
+    // Check if session expired flag is set (from global-staff-check.js redirect)
+    document.addEventListener('DOMContentLoaded', () => {
+      const sessionExpired = sessionStorage.getItem('eu2k_staff_session_expired');
+      if (sessionExpired === 'true') {
+        sessionStorage.removeItem('eu2k_staff_session_expired');
+        
+        // Wait for translation system to be ready
+        const checkTranslations = () => {
+          if (window.translationManager && window.showToastDirectly) {
+            const getTranslation = (key, fallback) => {
+              try {
+                return window.translationManager?.getTranslation(key) || fallback;
+              } catch {
+                return fallback;
+              }
+            };
+
+            const title = getTranslation('staff_timer.expired_title', 'Munkamenet lejárt');
+            const message = getTranslation('staff_timer.expired_description', 'A munkamenet lejárt. Kérlek jelentkezz be újra a beállításokban.');
+            const buttonLabel = getTranslation('pages.settings.staff.button_login', 'Belépés');
+
+            window.showToastDirectly(
+              title,
+              message,
+              'danger',
+              'info',
+              buttonLabel,
+              () => {
+                window.location.href = 'settings.html#general';
+                
+                const checkAndScroll = () => {
+                  const staffCard = document.getElementById('staffAccessCard');
+                  if (staffCard) {
+                    const scrollArea = document.querySelector('.main-scroll-area') || document.body;
+                    const cardTop = staffCard.getBoundingClientRect().top + scrollArea.scrollTop;
+                    const scrollPosition = cardTop - (window.innerHeight / 2) + (staffCard.offsetHeight / 2);
+                    scrollArea.scrollTo({
+                      top: Math.max(0, scrollPosition),
+                      behavior: 'smooth'
+                    });
+                  } else {
+                    setTimeout(checkAndScroll, 100);
+                  }
+                };
+                setTimeout(checkAndScroll, 500);
+              }
+            );
+          } else {
+            setTimeout(checkTranslations, 100);
+          }
+        };
+        checkTranslations();
+      }
+    });
+  </script>
 </body>
 
 </html>
