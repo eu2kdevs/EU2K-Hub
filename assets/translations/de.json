@@ -69,7 +69,9 @@
     "home": "Startseite",
     "qr": "QR-Code",
     "youhub": "YouHub",
-    "event_hub": "Event Hub"
+    "event_hub": "Event Hub",
+    "dashboard": "Dashboard",
+    "students": "Meine Schüler"
   },
   "pages": {
     "index": {
@@ -177,6 +179,8 @@
       "back_to_est": "EST",
       "back": "Zurück zu",
       "back_to_onboarding": "Einführung",
+      "back_to_dashboard": "Dashboard",
+      "back_to_students": "Meine Schüler",
       "functions_options": {
         "descriptive_texts_title": "Beschreibende Texte",
         "descriptive_texts_default": "Standard",
@@ -217,7 +221,30 @@
         "fohc_version_label": "Food Hub-Komponentenversion:",
         "ehc_version_label": "Event Hub-Komponentenversion:",
         "eu2k_suite_label": "EU2K Suite"
+      },
+      "staff": {
+        "title": "Für Kollegen",
+        "description": "Zugriff auf erweiterte Funktionen und Verwaltungsoberfläche.",
+        "button_login": "Anmelden",
+        "button_end": "Sitzung beenden",
+        "popup": {
+          "start_title": "Sitzung starten",
+          "start_message": "Geben Sie das Admin-Passwort ein, um die Sitzung zu starten. Die Sitzung ist 15 Minuten lang aktiv.",
+          "end_title": "Sitzung beenden",
+          "end_message": "Möchten Sie die Sitzung wirklich beenden? Sie müssen sich erneut anmelden, um Änderungen vorzunehmen.",
+          "error": "Ungültiges Passwort oder Zugriff verweigert."
+        }
       }
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "heading": "Dashboard",
+      "description": "Diese Seite befindet sich in der Entwicklung."
+    },
+    "students": {
+      "title": "Meine Schüler",
+      "heading": "Meine Schüler",
+      "description": "Diese Seite befindet sich in der Entwicklung."
     },
     "privacy_policy": {
       "title": "Datenschutzerklärung",
@@ -746,5 +773,10 @@
     "youhub_description": "Melde dich an, um unbegrenzte Möglichkeiten mit YouHub zu entdecken.",
     "settings_title": "Du kannst diesen Bereich als Gast nicht aufrufen.",
     "settings_description": "Melde dich an für noch mehr Anpassung und Komfort!."
+  },
+  "staff_timer": {
+    "expired_title": "Sitzung abgelaufen",
+    "expired": "Die Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+    "expired_description": "Die Sitzung ist abgelaufen. Bitte melden Sie sich in den Einstellungen erneut an."
   }
 }

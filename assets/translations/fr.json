@@ -69,7 +69,9 @@
     "home": "Accueil",
     "qr": "Code QR",
     "youhub": "YouHub",
-    "event_hub": "Event Hub"
+    "event_hub": "Event Hub",
+    "dashboard": "Tableau de bord",
+    "students": "Mes Élèves"
   },
   "pages": {
     "index": {
@@ -174,6 +176,8 @@
       "back_to_est": "EST",
       "back": "Retour à",
       "back_to_onboarding": "Introduction",
+      "back_to_dashboard": "Tableau de Bord",
+      "back_to_students": "Mes Étudiants",
       "functions_options": {
         "descriptive_texts_title": "Textes Descriptifs",
         "descriptive_texts_default": "Par défaut",
@@ -214,7 +218,30 @@
         "fohc_version_label": "Version du composant Food Hub:",
         "ehc_version_label": "Version du composant Event Hub:",
         "eu2k_suite_label": "EU2K Suite"
+      },
+      "staff": {
+        "title": "Pour les Collègues",
+        "description": "Accès aux fonctions avancées et à l'interface administrative.",
+        "button_login": "Connexion",
+        "button_end": "Terminer la session",
+        "popup": {
+          "start_title": "Démarrer la session",
+          "start_message": "Entrez le mot de passe administrateur pour démarrer la session. La session sera active pendant 15 minutes.",
+          "end_title": "Terminer la session",
+          "end_message": "Êtes-vous sûr de vouloir terminer la session ? Vous devrez vous reconnecter pour apporter des modifications.",
+          "error": "Mot de passe invalide ou accès refusé."
+        }
       }
+    },
+    "dashboard": {
+      "title": "Tableau de bord",
+      "heading": "Tableau de bord",
+      "description": "Cette page est en cours de développement."
+    },
+    "students": {
+      "title": "Mes Élèves",
+      "heading": "Mes Élèves",
+      "description": "Cette page est en cours de développement."
     },
     "privacy_policy": {
       "title": "Politique de confidentialité",
@@ -729,5 +756,10 @@
       "class": "Classe",
       "no_class": "Pas de classe"
     }
+  },
+  "staff_timer": {
+    "expired_title": "Session expirée",
+    "expired": "La session a expiré. Veuillez vous reconnecter.",
+    "expired_description": "La session a expiré. Veuillez vous reconnecter dans les paramètres."
   }
 }

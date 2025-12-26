@@ -69,7 +69,9 @@
     "home": "Inicio",
     "qr": "Código QR",
     "youhub": "YouHub",
-    "event_hub": "Event Hub"
+    "event_hub": "Event Hub",
+    "dashboard": "Panel",
+    "students": "Mis Estudiantes"
   },
   "pages": {
     "index": {
@@ -174,6 +176,8 @@
       "back_to_est": "EST",
       "back": "Volver a",
       "back_to_onboarding": "Introducción",
+      "back_to_dashboard": "Panel de Control",
+      "back_to_students": "Mis Estudiantes",
       "functions_options": {
         "descriptive_texts_title": "Textos Descriptivos",
         "descriptive_texts_default": "Predeterminado",
@@ -214,7 +218,30 @@
         "fohc_version_label": "Versión del componente Food Hub:",
         "ehc_version_label": "Versión del componente Event Hub:",
         "eu2k_suite_label": "EU2K Suite"
+      },
+      "staff": {
+        "title": "Para Colegas",
+        "description": "Acceso a funciones avanzadas e interfaz administrativa.",
+        "button_login": "Iniciar sesión",
+        "button_end": "Finalizar sesión",
+        "popup": {
+          "start_title": "Iniciar sesión",
+          "start_message": "Ingrese la contraseña de administrador para iniciar la sesión. La sesión estará activa durante 15 minutos.",
+          "end_title": "Finalizar sesión",
+          "end_message": "¿Estás seguro de que quieres finalizar la sesión? Deberás iniciar sesión nuevamente para realizar cambios.",
+          "error": "Contraseña incorrecta o acceso denegado."
+        }
       }
+    },
+    "dashboard": {
+      "title": "Panel",
+      "heading": "Panel",
+      "description": "Esta página está en desarrollo."
+    },
+    "students": {
+      "title": "Mis Estudiantes",
+      "heading": "Mis Estudiantes",
+      "description": "Esta página está en desarrollo."
     },
     "privacy_policy": {
       "title": "Política de privacidad",
@@ -743,5 +770,10 @@
     "youhub_description": "Inicia sesión para desbloquear infinitas posibilidades con YouHub.",
     "settings_title": "No puedes acceder a esta sección como invitado.",
     "settings_description": "Inicia sesión para disfrutar de más personalización y comodidad!."
+  },
+  "staff_timer": {
+    "expired_title": "Sesión expirada",
+    "expired": "La sesión ha expirado. Por favor, inicie sesión nuevamente.",
+    "expired_description": "La sesión ha expirado. Por favor, inicie sesión nuevamente en la configuración."
   }
 }

@@ -62,6 +62,10 @@
   <script src="assets/js/permissions.js"></script>
   <script src="assets/js/translations.js"></script>
   <script src="assets/js/account-tooltip.js"></script>
+  <link rel="stylesheet" href="assets/css/staff-access.css">
+  <script src="assets/js/staff-access.js"></script>
+  <script src="assets/js/staff-timer.js"></script>
+  <script src="assets/js/staff-nav-items.js"></script>
   <script>
     // Globális init, hogy minden render után biztosan legyen fordítás
     document.addEventListener('DOMContentLoaded', async () => {
@@ -149,6 +153,8 @@
     const storage = getStorage(app);
     const functions = getFunctions(app, 'europe-west1');
 
+    // Make Firebase app globally available
+    window.firebaseApp = app;
     window.db = db;
     window.functions = functions;
     window.createHttpsCallable = (name) => httpsCallable(functions, name);
@@ -447,6 +453,21 @@
                       </div>
                     </div>
                   </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Kollégáknak kártya (csak admin/owner/teacher számára) -->
+                <div class="settings-item staff-card" id="staffAccessCard" style="display: none;">
+                  <div class="settings-card-content">
+                    <div class="settings-card-text">
+                      <h2 data-translate="pages.settings.staff.title">Kollégáknak</h2>
+                      <p data-translate="pages.settings.staff.description">Hozzáférés a haladó funkciókhoz és az adminisztrációs felülethez.</p>
+                    </div>
+                    <div class="settings-card-control">
+                      <button class="youhub-revert-btn" id="staffAccessBtn" type="button">
+                        <span class="youhub-revert-text" data-translate="pages.settings.staff.button_login" data-translate-fallback="Belépés">Belépés</span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1305,7 +1326,15 @@
           '/onboarding.html': { nameKey: 'pages.settings.back_to_onboarding', path: 'onboarding.html' },
           '/onboarding': { nameKey: 'pages.settings.back_to_onboarding', path: 'onboarding.html' },
           '/EU2K-Hub/onboarding.html': { nameKey: 'pages.settings.back_to_onboarding', path: 'onboarding.html' },
-          '/EU2K-Hub/onboarding': { nameKey: 'pages.settings.back_to_onboarding', path: 'onboarding.html' }
+          '/EU2K-Hub/onboarding': { nameKey: 'pages.settings.back_to_onboarding', path: 'onboarding.html' },
+          '/dashboard.html': { nameKey: 'pages.settings.back_to_dashboard', path: 'dashboard.html' },
+          '/dashboard': { nameKey: 'pages.settings.back_to_dashboard', path: 'dashboard.html' },
+          '/EU2K-Hub/dashboard.html': { nameKey: 'pages.settings.back_to_dashboard', path: 'dashboard.html' },
+          '/EU2K-Hub/dashboard': { nameKey: 'pages.settings.back_to_dashboard', path: 'dashboard.html' },
+          '/students.html': { nameKey: 'pages.settings.back_to_students', path: 'students.html' },
+          '/students': { nameKey: 'pages.settings.back_to_students', path: 'students.html' },
+          '/EU2K-Hub/students.html': { nameKey: 'pages.settings.back_to_students', path: 'students.html' },
+          '/EU2K-Hub/students': { nameKey: 'pages.settings.back_to_students', path: 'students.html' }
         };
         
         console.log('[Settings] 🔍 Looking for referrerPath in pageMap:', referrerPath);
@@ -1391,7 +1420,48 @@
           const initBackButton = () => {
             if (window.translationManager && window.translationManager.translations) {
               updateBackButtonText();
-              backBtn.onclick = () => window.location.href = found.path;
+              backBtn.onclick = async () => {
+                // Check if target is dashboard or students, and if session is active
+                if (found.path === 'dashboard.html' || found.path === 'students.html') {
+                  try {
+                    // Check session
+                    const { httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+                    const checkSession = httpsCallable(window.functions, 'staffSessionCheck');
+                    const result = await checkSession();
+                    
+                    if (!result.data.active) {
+                      // Session expired - show popup instead of navigating
+                      console.log('[Settings] Session expired, showing popup instead of navigating to', found.path);
+                      // Store target path for after login
+                      sessionStorage.setItem('eu2k_staff_redirect_after_login', found.path);
+                      // Trigger staff access popup
+                      const staffBtn = document.getElementById('staffAccessBtn');
+                      if (staffBtn) {
+                        staffBtn.click();
+                      } else {
+                        // Fallback: navigate to settings and show popup
+                        window.location.href = 'settings.html#general';
+                      }
+                      return;
+                    }
+                  } catch (error) {
+                    console.error('[Settings] Error checking session:', error);
+                    // On error, show popup to be safe
+                    sessionStorage.setItem('eu2k_staff_redirect_after_login', found.path);
+                    const staffBtn = document.getElementById('staffAccessBtn');
+                    if (staffBtn) {
+                      staffBtn.click();
+                    } else {
+                      window.location.href = 'settings.html#general';
+                    }
+                    return;
+                  }
+                }
+                // Normal navigation for other pages
+                // Ensure path starts with /
+                const targetPath = found.path.startsWith('/') ? found.path : '/' + found.path;
+                window.location.href = targetPath;
+              };
             } else {
               setTimeout(initBackButton, 100);
             }

@@ -42,8 +42,8 @@
         console.log('[NavigationState] Defaulting to index.html');
       }
       
-      // Normalizáljuk a path-ot
-      fromPath = fromPath.replace(/^\/+/, '/').replace(/\/+$/, '');
+      // Normalizáljuk a path-ot - eltávolítjuk az /EU2K-Hub/ prefixet ha van
+      fromPath = fromPath.replace(/^\/EU2K-Hub/, '').replace(/^\/+/, '/').replace(/\/+$/, '');
       if (fromPath === '/' || fromPath === '') {
         fromPath = '/index.html';
       }

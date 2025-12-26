@@ -190,7 +190,8 @@
     const storage = getStorage(app);
     const functions = getFunctions(app, 'europe-west1');
 
-    // Make db and functions globally available
+    // Make Firebase app and services globally available
+    window.firebaseApp = app;
     window.db = db;
     window.functions = functions;
     window.createHttpsCallable = (name) => httpsCallable(functions, name);
@@ -769,52 +770,33 @@
       <div class="nav-frame">
         <div class="nav-shell">
           <nav class="nav-rail">
+            <a class="rail-item nav-btn is-active" href="index.html" aria-current="page">
+              <div class="rail-icon">
+                <img src="assets/navbar/home.svg" alt="Otthon" />
+              </div>
+              <span class="rail-label" data-translate="navigation.home">Otthon</span>
+            </a>
 
-          <a class="rail-item nav-btn is-active" href="index.html" aria-current="page">
-          <div class="rail-icon">
-              <img src="assets/navbar/home.svg" alt="Otthon" />
-          </div>
-          <span class="rail-label" data-translate="navigation.home">Otthon</span>
-        </a>
+            <a class="rail-item nav-btn" href="qr-code.html">
+              <div class="rail-icon">
+                <img src="assets/navbar/qr_code.svg" alt="QR-Kód" />
+              </div>
+              <span class="rail-label" data-translate="navigation.qr" data-translate-fallback="QR-Kód">QR-Kód</span>
+            </a>
 
-          <a class="rail-item nav-btn" href="qr-code.html">
-          <div class="rail-icon">
-              <img src="assets/navbar/qr_code.svg" alt="QR-Kód" />
-          </div>
-          <span class="rail-label" data-translate="navigation.qr" data-translate-fallback="QR-Kód">QR-Kód</span>
-        </a>
+            <a class="rail-item nav-btn" href="youhub.html">
+              <div class="rail-icon">
+                <img src="assets/navbar/youhub.svg" alt="YouHub" />
+              </div>
+              <span class="rail-label" data-translate="navigation.youhub">YouHub</span>
+            </a>
 
-          <a class="rail-item nav-btn" href="youhub.html">
-          <div class="rail-icon">
-              <img src="assets/navbar/youhub.svg" alt="YouHub" />
-          </div>
-          <span class="rail-label" data-translate="navigation.youhub">YouHub</span>
-        </a>
+            <!-- Class Hub (YouHub és Event Hub közé) -->
 
-          <!-- Class Hub (YouHub és Event Hub közé) -->
-          <!-- <a class="rail-item nav-btn" href="teachers/index.html">
-            <div class="rail-icon">
-              <img src="assets/navbar/class_hub.svg" alt="Class Hub" />
-          </div>
-            <span class="rail-label">Class Hub</span>
-          </a> -->
+            <!-- Event Hub Hub (Class Hub és Food Hub közé) -->
 
-          <!-- <a class="rail-item nav-btn" href="event_hub.html">
-          <div class="rail-icon">
-              <img src="assets/navbar/event_hub.svg" alt="Event Hub" />
-          </div>
-          <span class="rail-label" data-translate="navigation.event_hub">Event Hub</span>
-          </a> -->
-
-          <!-- Food Hub -->
-          <!-- <a class="rail-item nav-btn" href="youhub.html#food-hub">
-            <div class="rail-icon">
-              <img src="assets/navbar/food_hub.svg" alt="Food Hub" />
-            </div>
-            <span class="rail-label">Food Hub</span>
-          </a> -->
-
-      </nav>
+            <!-- Food Hub (Event Hub után)-->
+          </nav>
         </div>
       </div>
     </aside>
@@ -824,10 +806,10 @@
           <!-- Header -->
           <header class="header">
             <div class="header-content">
-            <div class="welcome-container">
+              <div class="welcome-container">
                 <img src="assets/home/welcome_hand_icon.svg" class="welcome-icon" alt="Welcome">
                 <span class="welcome-text" data-translate="pages.index.welcome" data-translate-fallback="Üdvözöllek a Hub-ban!">Üdvözöllek a Hub-ban!</span>
-            </div>
+              </div>
               <div class="header-icon-container">
                 <div class="header-icon-gradient">
                   <div class="header-icon-wrapper" id="headerSettingsWrapper">
@@ -839,13 +821,13 @@
                     <button class="header-icon-btn" id="headerAccountBtn">
                       <img src="assets/general/account.svg" alt="Account">
                     </button>
-            </div>
+                  </div>
                   <button class="header-login-btn" id="headerLoginBtn" data-translate="pages.general.login" style="display: none;">
                     Bejelentkezés
                   </button>
-            </div>
                 </div>
-                    </div>
+              </div>
+            </div>
             <!-- Notification / Info Banner -->
             <section class="info-banner" aria-label="Információ">
               <!-- TODO(Figma): Replace icon if specified in banner design -->
@@ -1139,6 +1121,8 @@
   <script src="assets/js/account-tooltip.js"></script>
   <script src="assets/js/footer.js"></script>
   <script src="assets/js/consent-banner.js"></script>
+  <script src="assets/js/staff-timer.js"></script>
+  <script src="assets/js/staff-nav-items.js"></script>
 </body>
 
 </html>

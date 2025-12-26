@@ -215,6 +215,10 @@ body {
 }
 
 /* Permission / warning popup a settings oldalon is (YouHub stílus alapján) */
+.main-scroll-area.no-scroll {
+  overflow: hidden;
+}
+
 .main-scroll-area.popup-active {
   pointer-events: none;
   overflow-y: hidden; /* Popup alatt ne lehessen görgetni */
@@ -224,6 +228,7 @@ body {
   pointer-events: auto;
 }
 
+/* Permission Popup Styles */
 .permission-overlay-scroll-area {
   position: absolute;
   top: 0;
@@ -239,38 +244,52 @@ body {
 }
 
 .permission-overlay-scroll-area .permission-container {
-  pointer-events: auto;
+  pointer-events: auto; /* Re-enable clicks on the popup itself */
 }
 
 .permission-container {
   position: relative;
-  background: #261906; /* Warning banner háttérszín */
+  background: #16210B;
   border-radius: var(--card-radius);
-  padding: 32px;
+  padding: 32px 32px 32px 32px;
   max-width: 420px;
   width: 100%;
   max-height: 100%;
   height: fit-content;
-  overflow: hidden;
+  overflow: hidden; /* Border-radius clips the scrollbar */
   box-sizing: border-box;
-  border: 1px solid #FFF1C2; /* Warning banner keret */
 }
 
 .permission-content {
   text-align: left;
-  max-height: calc(100vh - 96px);
+  max-height: calc(100vh - 96px); /* Account for padding and margins */
   height: fit-content;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #445A2D #261906;
-  margin-right: -32px;
-  padding-right: 32px;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #445A2D #16210B; /* Firefox */
+  margin-right: -32px; /* Compensate for container padding */
+  padding-right: 32px; /* Re-add padding for content */
   padding-bottom: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
+/* Webkit browsers scrollbar */
+.permission-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.permission-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.permission-content::-webkit-scrollbar-thumb {
+  background: #445A2D;
+  border-radius: 4px;
+}
+
+/* Permission close button - using header icon button style */
 .permission-close-btn {
   position: absolute;
   top: 20px;
@@ -278,9 +297,8 @@ body {
   width: 52px;
   height: 52px;
   border-radius: 999px;
-  /* warning primary gomb színei */
-  background: #FFDFAF;
-  border: 1px solid #FFF1C2;
+  background: #D3FFA1;
+  border: 1px solid #57703B;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -293,73 +311,117 @@ body {
   width: 18px;
   height: 18px;
   display: block;
-  /* próbáljuk #231602 színre színezni az ikont */
-  filter: brightness(0) saturate(100%) invert(12%) sepia(41%) saturate(776%) hue-rotate(57deg) brightness(40%) contrast(90%);
 }
 
 .permission-close-btn:hover {
   width: 68px;
   border-radius: 16px;
-  /* warning gomb hover színei */
-  background: #EACF85;
-  border-color: #3A4F29;
+  background: #DEFFBA;
 }
 
-.permission-icon-large {
-  width: 40px;
-  height: 40px;
+.permission-hand-icon {
+  width: 48px;
+  height: 48px;
   margin-bottom: 16px;
 }
 
 .permission-title {
-  margin: 0 0 8px 0;
-  color: #FFDFAF; /* warning-banner-title */
-  font-weight: var(--font-weight-semibold);
-  font-size: 20px;
+  color: #C1EE8D;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.permission-icon-large {
+  margin: 0 0 12px 0;
 }
 
 .permission-text {
-  margin: 0 0 20px 0;
-  color: #E9CE85; /* warning-banner-desc */
-  font-weight: var(--font-weight-regular);
-  font-size: 14px;
-  white-space: pre-line; /* sortörések megtartása */
+  color: #E5FDA9;
+  text-align: left;
+  margin: 0 0 18px 0;
+  line-height: 1.6;
 }
 
+.permission-list {
+  color: #E5FDA9;
+  text-align: left;
+  margin: 0 0 32px 0;
+  padding-left: 20px;
+  margin-left: 0;
+  list-style-position: outside;
+  line-height: 1.6;
+}
+
+.permission-list li {
+  margin-bottom: 8px;
+}
+
+/* Permission OK button - using login button style */
 .permission-ok-btn {
-  /* ugyanaz a viselkedés, mint a .banner-btn primary gombnál */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 16px;
-  border-radius: 12px;
-  /* warning-banner .banner-btn.primary színei */
-  border: 1px solid #FFF1C2;
-  background: #FFDFAF;
-  color: #211806;
-  font-weight: var(--font-weight-semibold);
+  min-width: 140px;
+  height: 52px;
+  background: #84B3FF;
+  border: 1px solid #282F3A;
+  border-radius: 16px;
+  color: #08152C;
+  font-weight: 600;
   font-size: 14px;
   cursor: pointer;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+  padding: 0 20px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
   position: relative;
-  z-index: 0;
-  transition: background .15s ease, color .15s ease, transform .15s ease;
-  transform-origin: center;
-  transform: translateZ(0);
-  overflow: hidden;
+  z-index: 1;
+  box-sizing: border-box;
+  overflow: visible;
   will-change: transform;
   backface-visibility: hidden;
+  transform: translateZ(0); /* Force GPU acceleration */
+  margin-bottom: 0;
+}
+
+/* Keep 6px margin-bottom in admin panel and popups */
+.permission-overlay-scroll-area .permission-ok-btn,
+#adminConsole .permission-ok-btn,
+#adminConsolePopup .permission-ok-btn,
+#adminAssignClassPopup1 .permission-ok-btn,
+#adminAssignClassPopup2 .permission-ok-btn,
+#staffSessionPopup .permission-ok-btn {
+  margin-bottom: 6px; /* Space for scaleY(1.12) growth */
 }
 
 .permission-ok-btn:hover {
-  /* warning gomb hover színei + ugyanaz a nyúlás */
-  background: #EACF85;
-  color: #211806;
-  border: 1px solid #3A4F29;
-  transform: scaleY(1.08);
+  background: #42587B;
+  color: #DBE8FF;
+  transform: scaleY(1.12);
+  transform-origin: center;
 }
 
 .permission-ok-btn:active {
   animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+}
+
+/* Developer Mode Input */
+.dev-mode-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: #273617;
+  border: 1px solid #4B6231;
+  border-radius: 8px;
+  color: #C1EE8D;
+  font-size: 16px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+.dev-mode-input:focus {
+  outline: none;
+  border-color: #C1EE8D;
 }
 
 /* Zöld scrollbar */

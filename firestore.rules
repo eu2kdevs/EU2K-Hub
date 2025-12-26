@@ -2,6 +2,9 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    /* -----------------------------
+       AUTH HELPERS
+    ----------------------------- */
     function isSignedIn() {
       return request.auth != null;
     }
@@ -31,63 +34,102 @@ service cloud.firestore {
       classId = classFinishes + classType (pl. 2030e)
     */
     function userBelongsToClass(classId) {
-      let ownClassRef =
-        /databases/$(database)/documents/users/$(request.auth.uid)/groups/ownclass;
-
       return isSignedIn()
-        && exists(ownClassRef)
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid)/groups/ownclass)
         && (
-          get(ownClassRef).data.classFinishes +
-          get(ownClassRef).data.classType
+          get(/databases/$(database)/documents/users/$(request.auth.uid)/groups/ownclass)
+            .data.classFinishes +
+          get(/databases/$(database)/documents/users/$(request.auth.uid)/groups/ownclass)
+            .data.classType
         ) == classId;
     }
 
-    // -----------------------------
-    // CLASSES
-    // -----------------------------
+    /*
+      Active staff session check
+    */
+    function hasActiveStaffSession() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/staffSessions/$(request.auth.uid))
+        && get(/databases/$(database)/documents/staffSessions/$(request.auth.uid)).data.active == true
+        && get(/databases/$(database)/documents/staffSessions/$(request.auth.uid)).data.endTime > request.time;
+    }
+
+    /* -----------------------------
+       CLASSES
+    ----------------------------- */
     match /classes/{classId} {
       allow read: if isClassStaff() || userBelongsToClass(classId);
-      allow write: if isClassStaff();
+      allow write: if isClassStaff() && hasActiveStaffSession();
 
       match /grades/{gradeId} {
         allow read: if isClassStaff() || userBelongsToClass(classId);
-        allow write: if isClassStaff();
+        allow write: if isClassStaff() && hasActiveStaffSession();
       }
 
+      // jövőbeli alkollekciók engedélyezve
       match /{document=**} {
-        allow read, write: if isClassStaff();
+        allow read: if isClassStaff() || userBelongsToClass(classId);
+        allow write: if isClassStaff() && hasActiveStaffSession();
       }
     }
 
-    // -----------------------------
-    // VERSION
-    // -----------------------------
+    /* -----------------------------
+       STAFF SESSIONS
+    ----------------------------- */
+    match /staffSessions/{userId} {
+      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    /* -----------------------------
+       CLASS WRITE ATTEMPTS
+    ----------------------------- */
+    match /classWriteAttempts/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isPrivileged());
+      allow write: if false;
+    }
+
+    /* -----------------------------
+       CLASS WRITE ACCESS LOGS
+    ----------------------------- */
+    match /classWriteAccessLogs/{logId} {
+      allow read: if isPrivileged();
+      allow write: if false;
+    }
+
+    /* -----------------------------
+       VERSION
+    ----------------------------- */
     match /version/{document=**} {
       allow read: if true;
       allow write: if isPrivileged();
     }
 
-    // -----------------------------
-    // FEEDBACK
-    // -----------------------------
+    /* -----------------------------
+       FEEDBACK
+    ----------------------------- */
     match /homePageData/feedback/{subcollection}/{document=**} {
-      allow write: if true;
+      allow write: if isSignedIn();
       allow read: if isClassStaff();
     }
 
-    // -----------------------------
-    // EVENTS / NEWS / NEW-THINGS
-    // -----------------------------
+    /* -----------------------------
+       EVENTS / NEWS / NEW-THINGS
+    ----------------------------- */
     match /homePageData/{docId}/{document=**} {
       allow read: if docId in ['events', 'news', 'new-things'];
       allow write: if isClassStaff();
     }
 
-    // -----------------------------
-    // USERS
-    // -----------------------------
+    /* -----------------------------
+       USERS (PRIVATE)
+    ----------------------------- */
     match /users/{userId} {
-      allow read: if true;
+      // read: saját user VAGY staff
+      allow read: if isSignedIn() && (
+        request.auth.uid == userId ||
+        isClassStaff()
+      );
 
       match /{document=**} {
         allow read, write: if isSignedIn() && (
@@ -97,17 +139,17 @@ service cloud.firestore {
       }
     }
 
-    // -----------------------------
-    // PUBLIC USER CARDS
-    // -----------------------------
+    /* -----------------------------
+       PUBLIC USER CARDS
+    ----------------------------- */
     match /public/users/{collection}/{userId} {
       allow read: if true;
       allow write: if isSignedIn() && request.auth.uid == userId;
     }
 
-    // -----------------------------
-    // SUGGESTIONS
-    // -----------------------------
+    /* -----------------------------
+       SUGGESTIONS
+    ----------------------------- */
     match /suggestions/{suggestionId} {
       allow read: if true;
       allow write: if isSignedIn()
@@ -121,65 +163,64 @@ service cloud.firestore {
         && request.resource.data.ownerId == request.auth.uid;
     }
 
-    // -----------------------------
-    // EVENT HUB
-    // -----------------------------
+    /* -----------------------------
+       EVENT HUB
+    ----------------------------- */
     match /event_hub/{document=**} {
       allow read: if true;
       allow write: if isClassStaff();
     }
 
-    // -----------------------------
-    // EVENTS
-    // -----------------------------
+    /* -----------------------------
+       EVENTS
+    ----------------------------- */
     match /events/{document=**} {
       allow read: if true;
-      allow write: if isSignedIn();
+      allow write: if isClassStaff();
     }
 
-    // -----------------------------
-    // GROUPS
-    // -----------------------------
+    /* -----------------------------
+       GROUPS
+    ----------------------------- */
     match /groups/{document=**} {
       allow read: if true;
       allow write: if isSignedIn();
     }
 
-    // -----------------------------
-    // SETTINGS
-    // -----------------------------
+    /* -----------------------------
+       SETTINGS
+    ----------------------------- */
     match /settings/{userId}/{document=**} {
       allow read, write: if isSignedIn() && request.auth.uid == userId;
     }
 
-    // -----------------------------
-    // ADMIN
-    // -----------------------------
+    /* -----------------------------
+       ADMIN
+    ----------------------------- */
     match /admin/{document=**} {
       allow read, write: if isAdmin();
     }
 
-    // -----------------------------
-    // ANNOUNCEMENTS
-    // -----------------------------
+    /* -----------------------------
+       ANNOUNCEMENTS
+    ----------------------------- */
     match /announcements/{document=**} {
       allow read: if isSignedIn();
       allow write: if isTeacher() || isAdmin();
     }
 
-    // -----------------------------
-    // GRAPH TOKENS
-    // -----------------------------
+    /* -----------------------------
+       GRAPH TOKENS
+    ----------------------------- */
     match /graphTokens/{userId} {
       allow read, write: if isSignedIn() && request.auth.uid == userId;
     }
 
-    // -----------------------------
-    // FALLBACK
-    // -----------------------------
+    /* -----------------------------
+       FALLBACK (LOCKED)
+    ----------------------------- */
     match /{document=**} {
-      allow read: if isPrivileged();
-      allow write: if isSignedIn();
+      allow read, write: if false;
     }
   }
 }

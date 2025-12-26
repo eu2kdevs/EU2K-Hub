@@ -1,0 +1,220 @@
+{
+  "FORDÍTÁSOK - Kollégáknak funkció":  "A következő kulcsokat kell hozzáadni minden nyelvhez",
+  
+  "pages.settings.staff.title": {
+    "hu": "Kollégáknak",
+    "en": "For Colleagues",
+    "de": "Für Kollegen",
+    "es": "Para Colegas",
+    "fr": "Pour les Collègues",
+    "ru": "Для Коллег",
+    "ja": "同僚向け",
+    "zh": "面向同事",
+    "sv": "För Kollegor"
+  },
+  
+  "pages.settings.staff.description": {
+    "hu": "Hozzáférés a haladó funkciókhoz és az adminisztrációs felülethez.",
+    "en": "Access to advanced functions and administrative interface.",
+    "de": "Zugriff auf erweiterte Funktionen und Verwaltungsoberfläche.",
+    "es": "Acceso a funciones avanzadas e interfaz administrativa.",
+    "fr": "Accès aux fonctions avancées et à l'interface administrative.",
+    "ru": "Доступ к расширенным функциям и административному интерфейсу.",
+    "ja": "高度な機能と管理インターフェースへのアクセス。",
+    "zh": "访问高级功能和管理界面。",
+    "sv": "Åtkomst till avancerade funktioner och administrativt gränssnitt."
+  },
+  
+  "pages.settings.staff.button_login": {
+    "hu": "Belépés",
+    "en": "Login",
+    "de": "Anmelden",
+    "es": "Iniciar sesión",
+    "fr": "Connexion",
+    "ru": "Войти",
+    "ja": "ログイン",
+    "zh": "登录",
+    "sv": "Logga in"
+  },
+  
+  "pages.settings.staff.button_end": {
+    "hu": "Munkamenet megszakítása",
+    "en": "End Session",
+    "de": "Sitzung beenden",
+    "es": "Finalizar sesión",
+    "fr": "Terminer la session",
+    "ru": "Завершить сеанс",
+    "ja": "セッションを終了",
+    "zh": "结束会话",
+    "sv": "Avsluta session"
+  },
+  
+  "pages.settings.staff.popup.start_title": {
+    "hu": "Munkamenet indítása",
+    "en": "Start Session",
+    "de": "Sitzung starten",
+    "es": "Iniciar sesión",
+    "fr": "Démarrer la session",
+    "ru": "Начать сеанс",
+    "ja": "セッションを開始",
+    "zh": "开始会话",
+    "sv": "Starta session"
+  },
+  
+  "pages.settings.staff.popup.start_message": {
+    "hu": "Add meg az admin jelszót a munkamenet indításához. A munkamenet 15 percig lesz aktív.",
+    "en": "Enter the admin password to start the session. The session will be active for 15 minutes.",
+    "de": "Geben Sie das Admin-Passwort ein, um die Sitzung zu starten. Die Sitzung ist 15 Minuten lang aktiv.",
+    "es": "Ingrese la contraseña de administrador para iniciar la sesión. La sesión estará activa durante 15 minutos.",
+    "fr": "Entrez le mot de passe administrateur pour démarrer la session. La session sera active pendant 15 minutes.",
+    "ru": "Введите пароль администратора для начала сеанса. Сеанс будет активен в течение 15 минут.",
+    "ja": "セッションを開始するには、管理者パスワードを入力してください。セッションは15分間アクティブになります。",
+    "zh": "输入管理员密码以开始会话。会话将活动15分钟。",
+    "sv": "Ange adminlösenordet för att starta sessionen. Sessionen kommer att vara aktiv i 15 minuter."
+  },
+  
+  "pages.settings.staff.popup.end_title": {
+    "hu": "Munkamenet megszakítása",
+    "en": "End Session",
+    "de": "Sitzung beenden",
+    "es": "Finalizar sesión",
+    "fr": "Terminer la session",
+    "ru": "Завершить сеанс",
+    "ja": "セッションを終了",
+    "zh": "结束会话",
+    "sv": "Avsluta session"
+  },
+  
+  "pages.settings.staff.popup.end_message": {
+    "hu": "Biztosan megszakítod a munkamenetet? Vissza kell jelentkezned, ha ismét módosítani szeretnél.",
+    "en": "Are you sure you want to end the session? You will need to log in again to make changes.",
+    "de": "Möchten Sie die Sitzung wirklich beenden? Sie müssen sich erneut anmelden, um Änderungen vorzunehmen.",
+    "es": "¿Estás seguro de que quieres finalizar la sesión? Deberás iniciar sesión nuevamente para realizar cambios.",
+    "fr": "Êtes-vous sûr de vouloir terminer la session ? Vous devrez vous reconnecter pour apporter des modifications.",
+    "ru": "Вы уверены, что хотите завершить сеанс? Вам придется снова войти в систему, чтобы внести изменения.",
+    "ja": "本当にセッションを終了しますか？変更を加えるには再度ログインする必要があります。",
+    "zh": "您确定要结束会话吗？您需要重新登录才能进行更改。",
+    "sv": "Är du säker på att du vill avsluta sessionen? Du måste logga in igen för att göra ändringar."
+  },
+  
+  "pages.settings.staff.popup.error": {
+    "hu": "Hibás jelszó vagy hozzáférés megtagadva.",
+    "en": "Invalid password or access denied.",
+    "de": "Ungültiges Passwort oder Zugriff verweigert.",
+    "es": "Contraseña incorrecta o acceso denegado.",
+    "fr": "Mot de passe invalide ou accès refusé.",
+    "ru": "Неверный пароль или доступ запрещен.",
+    "ja": "無効なパスワードまたはアクセスが拒否されました。",
+    "zh": "密码无效或访问被拒绝。",
+    "sv": "Ogiltigt lösenord eller åtkomst nekad."
+  },
+  
+  "navigation.dashboard": {
+    "hu": "Dashboard",
+    "en": "Dashboard",
+    "de": "Dashboard",
+    "es": "Panel",
+    "fr": "Tableau de bord",
+    "ru": "Панель",
+    "ja": "ダッシュボード",
+    "zh": "仪表板",
+    "sv": "Instrumentpanel"
+  },
+  
+  "navigation.students": {
+    "hu": "Diákjaim",
+    "en": "My Students",
+    "de": "Meine Schüler",
+    "es": "Mis Estudiantes",
+    "fr": "Mes Élèves",
+    "ru": "Мои Студенты",
+    "ja": "私の生徒",
+    "zh": "我的学生",
+    "sv": "Mina Elever"
+  },
+  
+  "pages.dashboard.title": {
+    "hu": "Dashboard",
+    "en": "Dashboard",
+    "de": "Dashboard",
+    "es": "Panel",
+    "fr": "Tableau de bord",
+    "ru": "Панель",
+    "ja": "ダッシュボード",
+    "zh": "仪表板",
+    "sv": "Instrumentpanel"
+  },
+  
+  "pages.dashboard.heading": {
+    "hu": "Dashboard",
+    "en": "Dashboard",
+    "de": "Dashboard",
+    "es": "Panel",
+    "fr": "Tableau de bord",
+    "ru": "Панель",
+    "ja": "ダッシュボード",
+    "zh": "仪表板",
+    "sv": "Instrumentpanel"
+  },
+  
+  "pages.dashboard.description": {
+    "hu": "Ez az oldal fejlesztés alatt áll.",
+    "en": "This page is under development.",
+    "de": "Diese Seite befindet sich in der Entwicklung.",
+    "es": "Esta página está en desarrollo.",
+    "fr": "Cette page est en cours de développement.",
+    "ru": "Эта страница находится в разработке.",
+    "ja": "このページは開発中です。",
+    "zh": "此页面正在开发中。",
+    "sv": "Denna sida är under utveckling."
+  },
+  
+  "pages.students.title": {
+    "hu": "Diákjaim",
+    "en": "My Students",
+    "de": "Meine Schüler",
+    "es": "Mis Estudiantes",
+    "fr": "Mes Élèves",
+    "ru": "Мои Студенты",
+    "ja": "私の生徒",
+    "zh": "我的学生",
+    "sv": "Mina Elever"
+  },
+  
+  "pages.students.heading": {
+    "hu": "Diákjaim",
+    "en": "My Students",
+    "de": "Meine Schüler",
+    "es": "Mis Estudiantes",
+    "fr": "Mes Élèves",
+    "ru": "Мои Студенты",
+    "ja": "私の生徒",
+    "zh": "我的学生",
+    "sv": "Mina Elever"
+  },
+  
+  "pages.students.description": {
+    "hu": "Ez az oldal fejlesztés alatt áll.",
+    "en": "This page is under development.",
+    "de": "Diese Seite befindet sich in der Entwicklung.",
+    "es": "Esta página está en desarrollo.",
+    "fr": "Cette page est en cours de développement.",
+    "ru": "Эта страница находится в разработке.",
+    "ja": "このページは開発中です。",
+    "zh": "此页面正在开发中。",
+    "sv": "Denna sida är under utveckling."
+  },
+  
+  "staff_timer.expired": {
+    "hu": "A munkamenet lejárt. Kérlek jelentkezz be újra.",
+    "en": "The session has expired. Please log in again.",
+    "de": "Die Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+    "es": "La sesión ha expirado. Por favor, inicie sesión nuevamente.",
+    "fr": "La session a expiré. Veuillez vous reconnecter.",
+    "ru": "Сеанс истек. Пожалуйста, войдите снова.",
+    "ja": "セッションが期限切れです。再度ログインしてください。",
+    "zh": "会话已过期。请重新登录。",
+    "sv": "Sessionen har löpt ut. Vänligen logga in igen."
+  }
+}
+

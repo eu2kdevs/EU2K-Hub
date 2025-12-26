@@ -1,7 +1,7 @@
 /**
- * Account Button Tooltip Handler
- * Displays user profile picture, name, and class name on hover/click
- * Developer mode: keeps tooltip open on click until clicked again
+ * Account Button Transform Handler
+ * Transforms the account button itself on hover/click to show user info
+ * Developer mode: keeps expanded on click until double-clicked
  */
 
 (function() {
@@ -9,7 +9,8 @@
 
   let userDataCache = null;
   let classDataCache = null;
-  let tooltipPinned = false; // For developer mode
+  let isExpanded = false; // For developer mode
+  let lastClickTime = 0; // For double-click detection
 
   /**
    * Check if developer mode is enabled
@@ -23,14 +24,25 @@
   }
 
   /**
-   * Initialize account tooltip for all account buttons
+   * Initialize account button transformation for all account buttons
    */
-  function initAccountTooltip() {
+  async function initAccountTooltip() {
     if (!document.body) {
       // Wait for body to be available
       setTimeout(initAccountTooltip, 100);
       return;
     }
+
+    console.log('[AccountTooltip] Initializing...');
+
+    // Pre-load user data before initializing buttons
+    try {
+      await loadUserData();
+      console.log('[AccountTooltip] User data pre-loaded');
+    } catch (error) {
+      console.warn('[AccountTooltip] Error pre-loading user data:', error);
+    }
+
     const accountButtons = document.querySelectorAll('#headerAccountBtn, .header-icon-btn[href*="account"]');
     
     accountButtons.forEach(btn => {
@@ -45,90 +57,188 @@
         });
       }
 
-      // Create tooltip element - inheriting permission popup styling (border-radius, etc.)
-      const tooltip = document.createElement('div');
-      tooltip.className = 'account-tooltip';
-      tooltip.style.cssText = `
-        position: absolute;
-        top: 100%;
-        right: 0;
-        margin-top: 8px;
-        background: var(--card-bg, #16210B);
-        border-radius: 32px;
-        padding: 16px 20px;
-        min-width: 240px;
-        max-width: 320px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-        z-index: 10000;
+      // Store original button state
+      const originalImg = btn.querySelector('img');
+      if (!originalImg) return;
+
+      // Store original button styles
+      const originalStyles = {
+        background: btn.style.background || getComputedStyle(btn).background,
+        borderRadius: btn.style.borderRadius || getComputedStyle(btn).borderRadius,
+        padding: btn.style.padding || getComputedStyle(btn).padding,
+        minWidth: btn.style.minWidth || getComputedStyle(btn).minWidth,
+        maxWidth: btn.style.maxWidth || getComputedStyle(btn).maxWidth,
+        zIndex: btn.style.zIndex || getComputedStyle(btn).zIndex,
+        pointerEvents: btn.style.pointerEvents || getComputedStyle(btn).pointerEvents
+      };
+
+      // Create expanded content structure (initially hidden)
+      const expandedContent = document.createElement('div');
+      expandedContent.className = 'account-expanded-content';
+      expandedContent.style.cssText = `
         display: none;
         flex-direction: row;
         align-items: center;
         gap: 12px;
-        pointer-events: auto;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        width: 100%;
+        height: 100%;
       `;
 
-      // Tooltip content structure
-      tooltip.innerHTML = `
-        <img class="account-tooltip-avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0;" src="" alt="Profile">
-        <div class="account-tooltip-content" style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
-          <span class="account-tooltip-name" style="font-weight: 600; font-size: 14px; color: var(--text-primary, #fff); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></span>
-          <span class="account-tooltip-class" style="font-size: 12px; color: var(--text-secondary, #aaa); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></span>
+      expandedContent.innerHTML = `
+        <img class="account-expanded-avatar" style="width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex-shrink: 0;" src="" alt="Profile">
+        <div class="account-expanded-text" style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; text-align: left;">
+          <span class="account-expanded-name" style="font-weight: 600; font-size: 14px; color: #182C0E; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left;"></span>
+          <span class="account-expanded-class" style="font-size: 11px; color: #32451D; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left;"></span>
         </div>
       `;
 
-      // Append tooltip to button wrapper
-      const wrapper = btn.closest('.header-icon-wrapper');
-      if (wrapper) {
-        wrapper.style.position = 'relative';
-        wrapper.appendChild(tooltip);
-      }
+      // Pre-populate expanded content with loaded data
+      updateExpandedContent(expandedContent);
 
-      // Show/hide tooltip on hover
+      // Insert expanded content after the original image
+      originalImg.insertAdjacentElement('afterend', expandedContent);
+
+      // Add CSS transition for smooth animation
+      btn.style.transition = '0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      btn.style.overflow = 'hidden';
+
+      // Store original styles in button dataset for later use
+      btn.dataset.originalStyles = JSON.stringify(originalStyles);
+
+      // Show/hide expanded state on hover
       let hoverTimeout;
       btn.addEventListener('mouseenter', () => {
-        if (tooltipPinned && isDevModeEnabled()) return; // Don't show on hover if pinned
+        if (isExpanded && isDevModeEnabled()) return; // Don't show on hover if pinned
         clearTimeout(hoverTimeout);
-        loadUserData().then(() => {
-          updateTooltipContent(tooltip);
-          tooltip.style.display = 'flex';
-        });
+        expandButton(btn, originalImg, expandedContent);
       });
 
       btn.addEventListener('mouseleave', () => {
-        if (tooltipPinned && isDevModeEnabled()) return; // Don't hide if pinned
+        if (isExpanded && isDevModeEnabled()) return; // Don't hide if pinned
         hoverTimeout = setTimeout(() => {
-          tooltip.style.display = 'none';
+          collapseButton(btn, originalImg, expandedContent);
         }, 100);
       });
 
-      tooltip.addEventListener('mouseenter', () => {
-        clearTimeout(hoverTimeout);
-      });
+      // Store references for use in expand/collapse functions
+      btn.dataset.originalImg = 'true'; // Mark that we have originalImg
+      btn._originalImg = originalImg;
+      btn._expandedContent = expandedContent;
 
-      tooltip.addEventListener('mouseleave', () => {
-        if (tooltipPinned && isDevModeEnabled()) return; // Don't hide if pinned
-        tooltip.style.display = 'none';
-      });
-
-      // Developer mode: click to pin/unpin tooltip
-      btn.addEventListener('click', () => {
+      // Developer mode: click to pin/unpin
+      btn.addEventListener('click', (e) => {
         if (!isDevModeEnabled()) return;
 
-        if (tooltipPinned) {
-          // Unpin: hide tooltip
-          tooltipPinned = false;
-          tooltip.style.display = 'none';
+        const currentTime = Date.now();
+        const timeSinceLastClick = currentTime - lastClickTime;
+        lastClickTime = currentTime;
+
+        // Double-click detection (within 300ms)
+        if (timeSinceLastClick < 300 && isExpanded) {
+          // Double-click: unpin and collapse
+          isExpanded = false;
+          collapseButton(btn, btn._originalImg, btn._expandedContent);
+          return;
+        }
+
+        // Single click: toggle pin
+        if (isExpanded) {
+          // Unpin: collapse
+          isExpanded = false;
+          collapseButton(btn, btn._originalImg, btn._expandedContent);
         } else {
-          // Pin: show tooltip and keep it open
-          tooltipPinned = true;
+          // Pin: expand
+          isExpanded = true;
           loadUserData().then(() => {
-            updateTooltipContent(tooltip);
-            tooltip.style.display = 'flex';
+            if (btn._expandedContent) {
+              updateExpandedContent(btn._expandedContent);
+            }
+            expandButton(btn, btn._originalImg, btn._expandedContent);
           });
         }
       });
     });
+
+    console.log('[AccountTooltip] Initialization complete');
+
+    // Notify page loader that account tooltip is ready
+    if (window.pageOverlayLoader && typeof window.pageOverlayLoader.accountTooltipReady === 'function') {
+      window.pageOverlayLoader.accountTooltipReady();
+    }
+  }
+
+  /**
+   * Expand button to show user info
+   */
+  function expandButton(btn, originalImg, expandedContent) {
+    // Use stored references if not provided
+    if (!originalImg && btn._originalImg) {
+      originalImg = btn._originalImg;
+    }
+    if (!expandedContent && btn._expandedContent) {
+      expandedContent = btn._expandedContent;
+    }
+    
+    loadUserData().then(() => {
+      if (expandedContent) {
+        updateExpandedContent(expandedContent);
+      }
+      
+      // Hide original image
+      if (originalImg) {
+        originalImg.style.display = 'none';
+      }
+      
+      // Show expanded content
+      if (expandedContent) {
+        expandedContent.style.display = 'flex';
+      }
+      
+      // Transform button styles
+      btn.style.background = 'rgb(211, 255, 161)';
+      btn.style.borderRadius = '16px';
+      btn.style.padding = '6px 12px';
+      btn.style.minWidth = '160px';
+      btn.style.maxWidth = '220px';
+      btn.style.zIndex = '400';
+      btn.style.pointerEvents = 'auto';
+    });
+  }
+
+  /**
+   * Collapse button back to original state
+   */
+  function collapseButton(btn, originalImg, expandedContent) {
+    // Show original image
+    if (originalImg) {
+      originalImg.style.display = '';
+    }
+    
+    // Hide expanded content
+    if (expandedContent) {
+      expandedContent.style.display = 'none';
+    }
+    
+    // Reset button styles to original
+    try {
+      const originalStyles = JSON.parse(btn.dataset.originalStyles || '{}');
+      btn.style.background = originalStyles.background || '';
+      btn.style.borderRadius = originalStyles.borderRadius || '';
+      btn.style.padding = originalStyles.padding || '';
+      btn.style.minWidth = originalStyles.minWidth || '';
+      btn.style.maxWidth = originalStyles.maxWidth || '';
+      btn.style.zIndex = originalStyles.zIndex || '';
+      btn.style.pointerEvents = originalStyles.pointerEvents || '';
+    } catch (e) {
+      // Fallback: remove inline styles
+      btn.style.background = '';
+      btn.style.borderRadius = '';
+      btn.style.padding = '';
+      btn.style.minWidth = '';
+      btn.style.maxWidth = '';
+      btn.style.zIndex = '';
+      btn.style.pointerEvents = '';
+    }
   }
 
   /**
@@ -240,7 +350,7 @@
         profilePictureURL = `assets/avatars/${userData.avatarColor}.png`;
         console.log('[AccountTooltip] Using avatar from assets/avatars:', userData.avatarColor);
       } else if (!profilePictureURL) {
-        // No profile picture and no avatar - leave as null (will be handled in updateTooltipContent)
+        // No profile picture and no avatar - leave as null (will be handled in updateExpandedContent)
         console.log('[AccountTooltip] No profile picture found, using placeholder');
       }
 
@@ -309,12 +419,12 @@
   }
 
   /**
-   * Update tooltip content with user data
+   * Update expanded content with user data
    */
-  function updateTooltipContent(tooltip) {
-    const avatarImg = tooltip.querySelector('.account-tooltip-avatar');
-    const nameSpan = tooltip.querySelector('.account-tooltip-name');
-    const classSpan = tooltip.querySelector('.account-tooltip-class');
+  function updateExpandedContent(expandedContent) {
+    const avatarImg = expandedContent.querySelector('.account-expanded-avatar');
+    const nameSpan = expandedContent.querySelector('.account-expanded-name');
+    const classSpan = expandedContent.querySelector('.account-expanded-class');
 
     // Get translations
     const getTranslation = (key, fallback) => {

@@ -44,6 +44,13 @@ class WelcomeScreenManager {
             return;
         }
 
+        // Ne futtassuk a welcome screen-t dashboard vagy students oldalakon
+        const currentPage = window.location.pathname.split('/').pop();
+        if (currentPage === 'dashboard.html' || currentPage === 'students.html') {
+            console.log('On dashboard/students page, skipping welcome screen redirect');
+            return;
+        }
+
         // Debug információk
         console.log('WelcomeScreenManager init - Welcome screen enabled:', this.isWelcomeScreenEnabled());
         console.log('WelcomeScreenManager init - Is first visit:', this.isFirstVisit());

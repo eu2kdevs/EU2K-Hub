@@ -69,7 +69,9 @@
     "home": "Home",
     "qr": "QR Code",
     "youhub": "YouHub",
-    "event_hub": "Event Hub"
+    "event_hub": "Event Hub",
+    "dashboard": "Dashboard",
+    "students": "My Students"
   },
   "pages": {
     "index": {
@@ -174,6 +176,8 @@
       "back_to_est": "EST",
       "back": "Back to",
       "back_to_onboarding": "Onboarding",
+      "back_to_dashboard": "Dashboard",
+      "back_to_students": "My Students",
       "functions_options": {
         "descriptive_texts_title": "Descriptive Texts",
         "descriptive_texts_default": "Default",
@@ -214,7 +218,30 @@
         "fohc_version_label": "Food Hub component version:",
         "ehc_version_label": "Event Hub component version:",
         "eu2k_suite_label": "EU2K Suite"
+      },
+      "staff": {
+        "title": "For Colleagues",
+        "description": "Access to advanced functions and administrative interface.",
+        "button_login": "Login",
+        "button_end": "End Session",
+        "popup": {
+          "start_title": "Start Session",
+          "start_message": "Enter the admin password to start the session. The session will be active for 15 minutes.",
+          "end_title": "End Session",
+          "end_message": "Are you sure you want to end the session? You will need to log in again to make changes.",
+          "error": "Invalid password or access denied."
+        }
       }
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "heading": "Dashboard",
+      "description": "This page is under development."
+    },
+    "students": {
+      "title": "My Students",
+      "heading": "My Students",
+      "description": "This page is under development."
     },
     "privacy_policy": {
       "title": "Privacy Policy",
@@ -742,5 +769,10 @@
     "youhub_description": "Sign in to unlock endless possibilities with YouHub.",
     "settings_title": "You cannot access this section as a guest.",
     "settings_description": "Sign in for more customization and convenience!."
+  },
+  "staff_timer": {
+    "expired_title": "Session expired",
+    "expired": "The session has expired. Please log in again.",
+    "expired_description": "The session has expired. Please log in again in the settings."
   }
 }

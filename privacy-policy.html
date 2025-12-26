@@ -162,7 +162,8 @@
     const storage = getStorage(app);
     const functions = getFunctions(app, 'europe-west1');
 
-    // Make db and functions globally available
+    // Make Firebase app and services globally available
+    window.firebaseApp = app;
     window.db = db;
     window.functions = functions;
     window.createHttpsCallable = (name) => httpsCallable(functions, name);
@@ -752,6 +753,8 @@
   </script> -->
   <script src="assets/js/footer.js"></script>
   <script src="assets/js/consent-banner.js"></script>
+  <script src="assets/js/staff-timer.js"></script>
+  <script src="assets/js/staff-nav-items.js"></script>
 </body>
 
 </html>

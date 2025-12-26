@@ -69,7 +69,9 @@
     "home": "Hem",
     "qr": "QR-kod",
     "youhub": "YouHub",
-    "event_hub": "Event Hub"
+    "event_hub": "Event Hub",
+    "dashboard": "Instrumentpanel",
+    "students": "Mina Elever"
   },
   "pages": {
     "index": {
@@ -173,6 +175,8 @@
       "back_to_terms": "Användarvillkor",
       "back_to_est": "EST",
       "back_to_onboarding": "Introduktion",
+      "back_to_dashboard": "Instrumentpanel",
+      "back_to_students": "Mina elever",
       "back": "Tillbaka till",
       "functions_options": {
         "descriptive_texts_title": "Beskrivande Texter",
@@ -214,7 +218,30 @@
         "fohc_version_label": "Food Hub-komponentversion:",
         "ehc_version_label": "Event Hub-komponentversion:",
         "eu2k_suite_label": "EU2K Suite"
+      },
+      "staff": {
+        "title": "För Kollegor",
+        "description": "Åtkomst till avancerade funktioner och administrativt gränssnitt.",
+        "button_login": "Logga in",
+        "button_end": "Avsluta session",
+        "popup": {
+          "start_title": "Starta session",
+          "start_message": "Ange adminlösenordet för att starta sessionen. Sessionen kommer att vara aktiv i 15 minuter.",
+          "end_title": "Avsluta session",
+          "end_message": "Är du säker på att du vill avsluta sessionen? Du måste logga in igen för att göra ändringar.",
+          "error": "Ogiltigt lösenord eller åtkomst nekad."
+        }
       }
+    },
+    "dashboard": {
+      "title": "Instrumentpanel",
+      "heading": "Instrumentpanel",
+      "description": "Denna sida är under utveckling."
+    },
+    "students": {
+      "title": "Mina Elever",
+      "heading": "Mina Elever",
+      "description": "Denna sida är under utveckling."
     },
     "privacy_policy": {
       "title": "Integritetspolicy",
@@ -729,5 +756,10 @@
       "class": "Klass",
       "no_class": "Ingen klass"
     }
+  },
+  "staff_timer": {
+    "expired_title": "Sessionen har löpt ut",
+    "expired": "Sessionen har löpt ut. Vänligen logga in igen.",
+    "expired_description": "Sessionen har löpt ut. Vänligen logga in igen i inställningarna."
   }
 }

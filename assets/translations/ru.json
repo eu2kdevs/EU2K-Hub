@@ -69,7 +69,9 @@
     "home": "Главная",
     "qr": "QR-код",
     "youhub": "YouHub",
-    "event_hub": "Event Hub"
+    "event_hub": "Event Hub",
+    "dashboard": "Панель",
+    "students": "Мои Студенты"
   },
   "pages": {
     "index": {
@@ -181,6 +183,8 @@
       "back_to_terms": "Условиям Использования",
       "back_to_est": "EST",
       "back_to_onboarding": "Введение",
+      "back_to_dashboard": "Панель управления",
+      "back_to_students": "Мои ученики",
       "back": "Вернуться к",
       "functions": {
         "descriptive_texts_title": "Описательные Тексты",
@@ -222,7 +226,30 @@
         "fohc_version_label": "Версия компонента Food Hub:",
         "ehc_version_label": "Версия компонента Event Hub:",
         "eu2k_suite_label": "EU2K Suite"
+      },
+      "staff": {
+        "title": "Для Коллег",
+        "description": "Доступ к расширенным функциям и административному интерфейсу.",
+        "button_login": "Войти",
+        "button_end": "Завершить сеанс",
+        "popup": {
+          "start_title": "Начать сеанс",
+          "start_message": "Введите пароль администратора для начала сеанса. Сеанс будет активен в течение 15 минут.",
+          "end_title": "Завершить сеанс",
+          "end_message": "Вы уверены, что хотите завершить сеанс? Вам придется снова войти в систему, чтобы внести изменения.",
+          "error": "Неверный пароль или доступ запрещен."
+        }
       }
+    },
+    "dashboard": {
+      "title": "Панель",
+      "heading": "Панель",
+      "description": "Эта страница находится в разработке."
+    },
+    "students": {
+      "title": "Мои Студенты",
+      "heading": "Мои Студенты",
+      "description": "Эта страница находится в разработке."
     },
     "privacy_policy": {
       "title": "Политика конфиденциальности",
@@ -737,5 +764,10 @@
     "youhub_description": "Войдите, чтобы открыть бесконечные возможности YouHub.",
     "settings_title": "Этот раздел недоступен для гостей.",
     "settings_description": "Войдите, чтобы получить больше возможностей настройки и удобства!."
+  },
+  "staff_timer": {
+    "expired_title": "Сеанс истек",
+    "expired": "Сеанс истек. Пожалуйста, войдите снова.",
+    "expired_description": "Сеанс истек. Пожалуйста, войдите снова в настройках."
   }
 }

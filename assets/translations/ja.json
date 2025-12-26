@@ -69,7 +69,9 @@
     "home": "ホーム",
     "qr": "QRコード",
     "youhub": "YouHub",
-    "event_hub": "Event Hub"
+    "event_hub": "Event Hub",
+    "dashboard": "ダッシュボード",
+    "students": "私の生徒"
   },
   "pages": {
     "index": {
@@ -172,6 +174,8 @@
       "back_to_privacy": "プライバシーポリシー",
       "back_to_terms": "利用規約",
       "back_to_onboarding": "はじめに",
+      "back_to_dashboard": "ダッシュボード",
+      "back_to_students": "私の生徒",
       "back_to_est": "EST",
       "back": "に戻る",
       "functions_options": {
@@ -214,7 +218,30 @@
         "fohc_version_label": "Food Hubコンポーネントバージョン:",
         "ehc_version_label": "Event Hubコンポーネントバージョン:",
         "eu2k_suite_label": "EU2K Suite"
+      },
+      "staff": {
+        "title": "同僚向け",
+        "description": "高度な機能と管理インターフェースへのアクセス。",
+        "button_login": "ログイン",
+        "button_end": "セッションを終了",
+        "popup": {
+          "start_title": "セッションを開始",
+          "start_message": "セッションを開始するには、管理者パスワードを入力してください。セッションは15分間アクティブになります。",
+          "end_title": "セッションを終了",
+          "end_message": "本当にセッションを終了しますか？変更を加えるには再度ログインする必要があります。",
+          "error": "無効なパスワードまたはアクセスが拒否されました。"
+        }
       }
+    },
+    "dashboard": {
+      "title": "ダッシュボード",
+      "heading": "ダッシュボード",
+      "description": "このページは開発中です。"
+    },
+    "students": {
+      "title": "私の生徒",
+      "heading": "私の生徒",
+      "description": "このページは開発中です。"
     },
     "privacy_policy": {
       "title": "プライバシーポリシー",
@@ -729,5 +756,10 @@
       "class": "クラス",
       "no_class": "クラスなし"
     }
+  },
+  "staff_timer": {
+    "expired_title": "セッション期限切れ",
+    "expired": "セッションが期限切れです。再度ログインしてください。",
+    "expired_description": "セッションが期限切れです。設定で再度ログインしてください。"
   }
 }

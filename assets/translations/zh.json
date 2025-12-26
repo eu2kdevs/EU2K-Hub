@@ -69,7 +69,9 @@
     "home": "首页",
     "qr": "二维码",
     "youhub": "YouHub",
-    "event_hub": "Event Hub"
+    "event_hub": "Event Hub",
+    "dashboard": "仪表板",
+    "students": "我的学生"
   },
   "pages": {
     "index": {
@@ -173,6 +175,8 @@
       "back_to_terms": "服务条款",
       "back_to_est": "EST",
       "back_to_onboarding": "入门",
+      "back_to_dashboard": "仪表板",
+      "back_to_students": "我的学生",
       "back": "返回",
       "functions_options": {
         "descriptive_texts_title": "描述性文本",
@@ -214,7 +218,30 @@
         "fohc_version_label": "Food Hub组件版本:",
         "ehc_version_label": "Event Hub组件版本:",
         "eu2k_suite_label": "EU2K Suite"
+      },
+      "staff": {
+        "title": "面向同事",
+        "description": "访问高级功能和管理界面。",
+        "button_login": "登录",
+        "button_end": "结束会话",
+        "popup": {
+          "start_title": "开始会话",
+          "start_message": "输入管理员密码以开始会话。会话将活动15分钟。",
+          "end_title": "结束会话",
+          "end_message": "您确定要结束会话吗？您需要重新登录才能进行更改。",
+          "error": "密码无效或访问被拒绝。"
+        }
       }
+    },
+    "dashboard": {
+      "title": "仪表板",
+      "heading": "仪表板",
+      "description": "此页面正在开发中。"
+    },
+    "students": {
+      "title": "我的学生",
+      "heading": "我的学生",
+      "description": "此页面正在开发中。"
     },
     "privacy_policy": {
       "title": "隐私政策",
@@ -729,5 +756,10 @@
       "class": "班级",
       "no_class": "无班级"
     }
+  },
+  "staff_timer": {
+    "expired_title": "会话已过期",
+    "expired": "会话已过期。请重新登录。",
+    "expired_description": "会话已过期。请在设置中重新登录。"
   }
 }

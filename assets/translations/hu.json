@@ -69,7 +69,9 @@
     "home": "Otthon",
     "qr": "QR-Kód",
     "youhub": "YouHub",
-    "event_hub": "Event Hub"
+    "event_hub": "Event Hub",
+    "dashboard": "Kezelőpult",
+    "students": "Diákjaim"
   },
   "pages": {
     "index": {
@@ -186,6 +188,8 @@
       "back_to_privacy": "az Adatvédelmi Tájékoztatóra",
       "back_to_terms": "a Használati Feltételekre",
       "back_to_onboarding": "az EST-re",
+      "back_to_dashboard": "a kezelőpulthoz",
+      "back_to_students": "a diákjaimhoz",
       "functions_options": {
         "descriptive_texts_title": "Leíró szövegek",
         "descriptive_texts_default": "Alapértelmezett",
@@ -227,7 +231,30 @@
         "fohc_version_label": "Food Hub komponens verziója:",
         "ehc_version_label": "Event Hub komponens verziója:",
         "eu2k_suite_label": "EU2K Suite"
+      },
+      "staff": {
+        "title": "Kollégáknak",
+        "description": "Hozzáférés a haladó funkciókhoz és az adminisztrációs felülethez.",
+        "button_login": "Belépés",
+        "button_end": "Munkamenet megszakítása",
+        "popup": {
+          "start_title": "Munkamenet indítása",
+          "start_message": "Add meg az admin jelszót a munkamenet indításához. A munkamenet 15 percig lesz aktív.",
+          "end_title": "Munkamenet megszakítása",
+          "end_message": "Biztosan megszakítod a munkamenetet? Vissza kell jelentkezned, ha ismét módosítani szeretnél.",
+          "error": "Hibás jelszó vagy hozzáférés megtagadva."
+        }
       }
+    },
+    "dashboard": {
+      "title": "Kezelőpult",
+      "heading": "Kezelőpult",
+      "description": "Ez az oldal fejlesztés alatt áll."
+    },
+    "students": {
+      "title": "Diákjaim",
+      "heading": "Diákjaim",
+      "description": "Ez az oldal fejlesztés alatt áll."
     },
     "privacy_policy": {
       "title": "Adatvédelmi tájékoztató",
@@ -760,5 +787,10 @@
     "youhub_description": "Jelentkezz be hogy elérhess végtelen lehetőségeket a YouHubbal.",
     "settings_title": "Ezt a részt vendégként nem érheted el.",
     "settings_description": "Jelentkezz be a további testreszabásért, és kényelemért!."
+  },
+  "staff_timer": {
+    "expired_title": "Munkamenet lejárt",
+    "expired": "A munkamenet lejárt. Kérlek jelentkezz be újra.",
+    "expired_description": "A munkamenet lejárt. Kérlek jelentkezz be újra a beállításokban."
   }
 }
