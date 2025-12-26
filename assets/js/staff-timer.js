@@ -461,14 +461,13 @@
         () => {
           // Open session transfer popup
           if (window.staffAccess && window.staffAccess.showSessionTransferPopup) {
+            console.log('[StaffTimer] 🔄 Opening transfer popup directly...');
             window.staffAccess.showSessionTransferPopup();
           } else {
+            console.log('[StaffTimer] ⚠️ staffAccess not available, navigating to settings...');
+            // Save that we want to open the transfer popup
+            sessionStorage.setItem('eu2k_open_transfer_popup_on_load', 'true');
             window.location.href = 'settings.html#general';
-            setTimeout(() => {
-              if (window.staffAccess && window.staffAccess.showSessionTransferPopup) {
-                window.staffAccess.showSessionTransferPopup();
-              }
-            }, 500);
           }
         }
       );
@@ -507,33 +506,179 @@
       }
     };
 
-    const title = getTranslation('staff_timer.transfer_requested_title', 'Munkamenet átvitel kérése');
-    const message = getTranslation('staff_timer.transfer_requested_message', 'Egy másik eszköz megpróbálta átvenni a munkameneted. Kattints az Átvitel gombra, hogy itt megszakítsd és ott folytasd.');
-    const buttonLabel = getTranslation('pages.settings.staff.popup.transfer_confirm', 'Átvitel');
-
-    // Show warning notification with transfer button
-    if (window.showToastDirectly) {
-      window.showToastDirectly(
-        title,
-        message,
-        'warning',
-        'info',
-        buttonLabel,
-        () => {
-          // Open session transfer popup
-          if (window.staffAccess && window.staffAccess.showSessionTransferPopup) {
-            window.staffAccess.showSessionTransferPopup();
-          } else {
-            window.location.href = 'settings.html#general';
-            setTimeout(() => {
-              if (window.staffAccess && window.staffAccess.showSessionTransferPopup) {
-                window.staffAccess.showSessionTransferPopup();
-              }
-            }, 500);
-          }
-        }
-      );
+    // Store transfer request data globally so the popup can access it
+    if (data.transferRequestedByDeviceId) {
+      window.eu2k_transferRequestedByDeviceId = data.transferRequestedByDeviceId;
+      console.log('[StaffTimer] 📱 Stored transfer requested by device:', data.transferRequestedByDeviceId);
     }
+
+    // Check if popup already shown
+    if (document.getElementById('staffSessionTransferPopupGlobal')) {
+      console.log('[StaffTimer] 🔔 Transfer popup already shown');
+      return;
+    }
+
+    // Show transfer popup directly (works on any page)
+    console.log('[StaffTimer] 🔔 Showing transfer popup on host device');
+    showTransferPopupGlobal(data.transferRequestedByDeviceId);
+  }
+
+  /**
+   * Show session transfer popup (global version that works on any page)
+   */
+  function showTransferPopupGlobal(newDeviceId) {
+    const getTranslation = (key, fallback) => {
+      try {
+        return window.translationManager?.getTranslation(key) || fallback;
+      } catch {
+        return fallback;
+      }
+    };
+
+    const scrollArea = document.querySelector('.main-scroll-area') || document.body;
+    
+    // Disable scroll
+    if (scrollArea) {
+      scrollArea.scrollTo({ top: 0, behavior: 'instant' });
+      scrollArea.classList.add('no-scroll');
+      scrollArea.classList.add('popup-active');
+    }
+
+    // Create popup HTML
+    const popupHTML = `
+      <div id="staffSessionTransferPopupGlobal" class="permission-overlay-scroll-area" style="display: none;">
+        <div class="permission-container">
+          <button class="permission-close-btn" id="staffSessionTransferCloseBtn">
+            <img src="assets/general/close.svg" alt="Bezárás">
+          </button>
+          <div class="permission-content">
+            <img src="assets/qr-code/hand.svg" class="permission-hand-icon" alt="Munkafolyamat átvitele">
+            <h2 class="permission-title" data-translate="pages.settings.staff.popup.transfer_title" data-translate-fallback="Munkafolyamat átvitele a másik eszközre">Munkafolyamat átvitele a másik eszközre</h2>
+            <p class="permission-text" data-translate="pages.settings.staff.popup.transfer_message" data-translate-fallback="Add meg a jelszavad a munkamenet átviteléhez. A régi gépen megszakad a munkameneted, és ugyanonnan folytatódik a másik gépen.">Add meg a jelszavad a munkamenet átviteléhez. A régi gépen megszakad a munkameneted, és ugyanonnan folytatódik a másik gépen.</p>
+            <input type="password" id="staffSessionTransferPasswordGlobal" class="dev-mode-input" data-translate-placeholder="pages.settings.staff.popup.password_placeholder" placeholder="Jelszó">
+            <button class="permission-ok-btn" id="staffSessionTransferConfirmBtn" data-translate="pages.settings.staff.popup.transfer_confirm" data-translate-fallback="Átvitel">Átvitel</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Add popup to body
+    if (scrollArea) {
+      scrollArea.insertAdjacentHTML('beforeend', popupHTML);
+    }
+
+    setTimeout(() => {
+      const popup = document.getElementById('staffSessionTransferPopupGlobal');
+      if (popup) {
+        popup.style.display = 'flex';
+      }
+
+      const input = document.getElementById('staffSessionTransferPasswordGlobal');
+      const closeBtn = document.getElementById('staffSessionTransferCloseBtn');
+      const confirmBtn = document.getElementById('staffSessionTransferConfirmBtn');
+
+      // Focus input
+      if (input) {
+        setTimeout(() => input.focus(), 100);
+      }
+
+      // Close handler
+      const closePopup = () => {
+        if (scrollArea) {
+          scrollArea.classList.remove('no-scroll');
+          scrollArea.classList.remove('popup-active');
+        }
+        if (popup) {
+          popup.remove();
+        }
+      };
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closePopup);
+      }
+
+      // Confirm handler
+      if (confirmBtn) {
+        confirmBtn.addEventListener('click', async () => {
+          if (!input) return;
+          const password = input.value;
+          if (!password) return;
+          
+          try {
+            const { getFunctions, httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+            const functions = getFunctions(window.firebaseApp, 'europe-west1');
+            const transferSession = httpsCallable(functions, 'staffSessionTransfer');
+
+            // Get the device ID that requested the transfer (new device)
+            const targetDeviceId = newDeviceId || window.eu2k_transferRequestedByDeviceId || getDeviceId();
+            
+            console.log('[StaffTimer] 🔄 Calling staffSessionTransfer with password...');
+            console.log('[StaffTimer] 📱 Current Device ID (host):', getDeviceId());
+            console.log('[StaffTimer] 📱 New Device ID (target):', targetDeviceId);
+            const result = await transferSession({ password, newDeviceId: targetDeviceId });
+            console.log('[StaffTimer] ✅ staffSessionTransfer result:', result);
+            
+            if (result.data.success) {
+              // On host device: end session, hide nav items, redirect to index
+              console.log('[StaffTimer] ✅ Transfer successful on host device, ending session...');
+              
+              // Stop timer
+              stopTimer();
+              
+              // Hide nav items
+              if (window.staffNavItems && window.staffNavItems.hide) {
+                window.staffNavItems.hide();
+              }
+              
+              closePopup();
+              
+              // Show success message
+              if (window.showToastDirectly) {
+                window.showToastDirectly(
+                  getTranslation('staff_timer.transfer_success_title', 'Átvitel sikeres'),
+                  getTranslation('staff_timer.transfer_success_message', 'A munkamenet sikeresen át lett adva a másik eszköznek.'),
+                  'positive',
+                  'info'
+                );
+              }
+              
+              // Redirect to index.html after 1 second
+              setTimeout(() => {
+                window.location.href = '/index.html';
+              }, 1000);
+            } else {
+              alert(getTranslation('pages.settings.staff.popup.error', 'Hibás jelszó vagy hozzáférés megtagadva.'));
+            }
+          } catch (error) {
+            console.error('[StaffTimer] Error transferring session:', error);
+            console.error('[StaffTimer] Error code:', error.code);
+            console.error('[StaffTimer] Error message:', error.message);
+            console.error('[StaffTimer] Error details:', error.details);
+            
+            let errorMessage = getTranslation('pages.settings.staff.popup.error', 'Hibás jelszó vagy hozzáférés megtagadva.');
+            
+            if (error.code === 'unauthenticated') {
+              errorMessage = 'Nincs bejelentkezve. Jelentkezz be újra!';
+            } else if (error.code === 'permission-denied') {
+              errorMessage = 'Hibás jelszó!';
+            } else if (error.code === 'failed-precondition') {
+              errorMessage = error.message || 'Nincs aktív munkamenet az átvitelhez.';
+            }
+            
+            alert(errorMessage);
+          }
+        });
+      }
+
+      // Enter key handler
+      if (input) {
+        input.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter' && confirmBtn) {
+            confirmBtn.click();
+          }
+        });
+      }
+    }, 50);
   }
 
   /**
@@ -715,7 +860,8 @@
   window.staffTimer = {
     startTimer,
     stopTimer,
-    isActive: () => sessionEndTime !== null
+    isActive: () => sessionEndTime !== null,
+    showTransferPopup: showTransferPopupGlobal
   };
   
   // Console commands for testing
@@ -728,6 +874,11 @@
     window.testStaffSessionReplacedWarning = () => {
       console.log('[StaffTimer] Testing session replaced warning notification...');
       showSessionReplacedNotification();
+    };
+    
+    window.testStaffTransferPopup = () => {
+      console.log('[StaffTimer] Testing transfer popup...');
+      showTransferPopupGlobal('test_device_12345');
     };
   }
 })();

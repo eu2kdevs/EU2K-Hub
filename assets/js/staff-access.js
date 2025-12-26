@@ -181,11 +181,24 @@
 
         // Check if session is active
         await checkActiveSession();
+        
+        // Start periodic session check (every 5 seconds)
+        startPeriodicSessionCheck();
 
         // Setup button click handlers
         setupStaffButton();
         setupEndAllButton();
         console.log('[StaffAccess] ✅ Button handler setup complete');
+        
+        // Check if we need to open transfer popup (from toast notification)
+        if (sessionStorage.getItem('eu2k_open_transfer_popup_on_load') === 'true') {
+          console.log('[StaffAccess] 🔔 Opening transfer popup from sessionStorage flag...');
+          sessionStorage.removeItem('eu2k_open_transfer_popup_on_load');
+          // Wait a bit for everything to be ready
+          setTimeout(() => {
+            showSessionTransferPopup();
+          }, 500);
+        }
       } else {
         console.log('[StaffAccess] ❌ User does NOT have staff privileges');
         console.log('[StaffAccess] ❌ Card will NOT be shown');
@@ -207,6 +220,7 @@
       const checkSession = httpsCallable(window.functions, 'staffSessionCheck');
 
       const result = await checkSession({ deviceId: getDeviceId() });
+      console.log('[StaffAccess] 🔄 Session check result:', result.data);
       
       if (result.data.active) {
         isSessionActive = true;
@@ -217,6 +231,11 @@
         if (window.staffTimer) {
           window.staffTimer.startTimer(sessionEndTime);
         }
+      } else {
+        // Session not active
+        isSessionActive = false;
+        sessionEndTime = null;
+        updateButtonState(false);
       }
       
       // Check if transfer was requested (host device) - show popup automatically
@@ -235,6 +254,25 @@
     } catch (error) {
       console.error('[StaffAccess] Error checking session:', error);
     }
+  }
+  
+  /**
+   * Start periodic session check (every 5 seconds)
+   */
+  let sessionCheckInterval = null;
+  function startPeriodicSessionCheck() {
+    // Clear existing interval if any
+    if (sessionCheckInterval) {
+      clearInterval(sessionCheckInterval);
+    }
+    
+    // Check every 5 seconds
+    sessionCheckInterval = setInterval(() => {
+      console.log('[StaffAccess] 🔄 Periodic session check...');
+      checkActiveSession();
+    }, 5000);
+    
+    console.log('[StaffAccess] ✅ Periodic session check started (every 5 seconds)');
   }
 
   /**
