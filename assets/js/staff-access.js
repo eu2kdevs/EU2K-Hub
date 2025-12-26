@@ -634,6 +634,174 @@
     }
   }
 
+  /**
+   * Setup end all sessions button click handler
+   */
+  function setupEndAllButton() {
+    const btn = document.getElementById('staffEndAllBtn');
+    if (!btn) return;
+
+    btn.addEventListener('click', () => {
+      showEndAllSessionsPopup();
+    });
+  }
+
+  /**
+   * Show end all sessions popup
+   */
+  function showEndAllSessionsPopup() {
+    const getTranslation = (key, fallback) => {
+      try {
+        return window.translationManager?.getTranslation(key) || fallback;
+      } catch {
+        return fallback;
+      }
+    };
+
+    const openPopup = () => {
+      const scrollArea = document.querySelector('.main-scroll-area');
+      if (scrollArea) {
+        scrollArea.scrollTo({ top: 0, behavior: 'instant' });
+        scrollArea.classList.add('no-scroll');
+        scrollArea.classList.add('popup-active');
+      }
+
+      // Create popup HTML
+      const popupHTML = `
+        <div id="staffEndAllSessionsPopup" class="permission-overlay-scroll-area" style="display: none;">
+          <div class="permission-container">
+            <button class="permission-close-btn" id="staffEndAllCloseBtn">
+              <img src="assets/general/close.svg" alt="Bezárás">
+            </button>
+            <div class="permission-content">
+              <img src="assets/qr-code/hand.svg" class="permission-hand-icon" alt="Figyelmeztetés">
+              <h2 class="permission-title" data-translate="pages.settings.staff.popup.end_all_title" data-translate-fallback="Minden munkamenet megszakítása">Minden munkamenet megszakítása</h2>
+              <p class="permission-text" data-translate="pages.settings.staff.popup.end_all_message" data-translate-fallback="Biztosan megszakítasz MINDEN munkamenetet minden eszközön? Ez minden aktív staff sessiont le fog állítani.">Biztosan megszakítasz MINDEN munkamenetet minden eszközön? Ez minden aktív staff sessiont le fog állítani.</p>
+              <input type="password" id="staffEndAllPassword" class="dev-mode-input" data-translate-placeholder="pages.settings.staff.popup.password_placeholder" placeholder="Jelszó">
+              <button class="permission-ok-btn" id="staffEndAllConfirmBtn" data-translate="pages.settings.staff.popup.end_all_confirm" data-translate-fallback="Minden megszakítása">Minden megszakítása</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Add popup to body
+      if (scrollArea) {
+        scrollArea.insertAdjacentHTML('beforeend', popupHTML);
+      }
+
+      setTimeout(() => {
+        const popup = document.getElementById('staffEndAllSessionsPopup');
+        if (popup) {
+          popup.style.display = 'flex';
+        }
+
+        const input = document.getElementById('staffEndAllPassword');
+        const closeBtn = document.getElementById('staffEndAllCloseBtn');
+        const confirmBtn = document.getElementById('staffEndAllConfirmBtn');
+
+        // Focus input
+        if (input) {
+          setTimeout(() => input.focus(), 100);
+        }
+
+        // Close handler
+        const closePopup = () => {
+          if (scrollArea) {
+            scrollArea.classList.remove('no-scroll');
+            scrollArea.classList.remove('popup-active');
+          }
+          if (popup) {
+            popup.remove();
+          }
+        };
+
+        if (closeBtn) {
+          closeBtn.addEventListener('click', closePopup);
+        }
+
+        // Confirm handler
+        if (confirmBtn) {
+          confirmBtn.addEventListener('click', async () => {
+            if (!input) return;
+            const password = input.value;
+            if (!password) return;
+            
+            try {
+              const { httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+              const endAllSessions = httpsCallable(window.functions, 'staffSessionEndAll');
+
+              console.log('[StaffAccess] 🔴 Calling staffSessionEndAll...');
+              const result = await endAllSessions({ password });
+              console.log('[StaffAccess] ✅ staffSessionEndAll result:', result);
+              
+              if (result.data.success) {
+                isSessionActive = false;
+                sessionEndTime = null;
+                updateButtonState(false);
+                
+                // Stop timer
+                if (window.staffTimer) {
+                  window.staffTimer.stopTimer();
+                }
+                
+                // Hide nav items
+                if (window.staffNavItems && window.staffNavItems.hide) {
+                  window.staffNavItems.hide();
+                }
+                
+                closePopup();
+                
+                // Show success message
+                if (window.showToastDirectly) {
+                  window.showToastDirectly(
+                    getTranslation('staff.end_all_success_title', 'Minden munkamenet megszakítva'),
+                    getTranslation('staff.end_all_success_message', 'Minden aktív munkamenet sikeresen megszakításra került minden eszközön.'),
+                    'positive',
+                    'info'
+                  );
+                }
+                
+                // Refresh page to hide nav items
+                setTimeout(() => {
+                  window.location.reload();
+                }, 1000);
+              } else {
+                alert(getTranslation('pages.settings.staff.popup.error', 'Hibás jelszó vagy hozzáférés megtagadva.'));
+              }
+            } catch (error) {
+              console.error('[StaffAccess] Error ending all sessions:', error);
+              
+              let errorMessage = getTranslation('pages.settings.staff.popup.error', 'Hibás jelszó vagy hozzáférés megtagadva.');
+              
+              if (error.code === 'unauthenticated') {
+                errorMessage = 'Nincs bejelentkezve. Jelentkezz be újra!';
+              } else if (error.code === 'permission-denied') {
+                errorMessage = 'Hibás jelszó!';
+              }
+              
+              alert(errorMessage);
+            }
+          });
+        }
+
+        // Enter key handler
+        if (input) {
+          input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && confirmBtn) {
+              confirmBtn.click();
+            }
+          });
+        }
+      }, 50);
+    };
+
+    if (window.tryOpenPopup) {
+      window.tryOpenPopup(openPopup);
+    } else {
+      openPopup();
+    }
+  }
+
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initStaffAccess);
@@ -749,9 +917,15 @@
         const checkSession = httpsCallable(window.functions, 'staffSessionCheck');
         const result = await checkSession({ deviceId: getDeviceId() });
         
+        console.log('[StaffAccess] 🔄 Polling result:', result.data);
+        console.log('[StaffAccess] 📊 Current time:', Date.now());
+        console.log('[StaffAccess] 📊 Server endTime:', result.data.endTime);
+        
         // Check if transfer completed (session is now active on this device)
         if (result.data.active && result.data.endTime) {
           console.log('[StaffAccess] ✅ Transfer completed! Session active on this device');
+          console.log('[StaffAccess] ⏰ Session will end at:', new Date(result.data.endTime).toISOString());
+          console.log('[StaffAccess] ⏰ Remaining time:', Math.floor((result.data.endTime - Date.now()) / 1000), 'seconds');
           
           // Stop polling
           if (transferWaitingInterval) {
@@ -769,14 +943,15 @@
             transferWaitingIndicator = null;
           }
           
-          // Start session on this device
+          // Start session on this device with EXACT endTime from server
           isSessionActive = true;
           sessionEndTime = result.data.endTime;
           updateButtonState(true);
           
-          // Start timer
+          // Start timer with server's exact endTime
           if (window.staffTimer) {
-            window.staffTimer.startTimer(sessionEndTime);
+            console.log('[StaffAccess] 🚀 Starting timer with endTime:', result.data.endTime);
+            window.staffTimer.startTimer(result.data.endTime);
           }
           
           // Check if we need to redirect
@@ -964,7 +1139,8 @@
   window.staffAccess = {
     checkActiveSession,
     isSessionActive: () => isSessionActive,
-    showSessionTransferPopup
+    showSessionTransferPopup,
+    showEndAllSessionsPopup
   };
   
   // Console commands for testing
@@ -989,13 +1165,21 @@
       }
     };
     
-    // Console command to end all sessions directly (without popup)
-    window.endAllStaffSessions = async () => {
-      console.log('[StaffAccess] Ending all sessions directly...');
+    // Console command to end all sessions directly (with password prompt)
+    window.endAllStaffSessions = async (password) => {
+      if (!password) {
+        password = prompt('Add meg az admin jelszót:');
+        if (!password) {
+          console.log('[StaffAccess] ❌ No password provided');
+          return;
+        }
+      }
+      
+      console.log('[StaffAccess] Ending all sessions with password...');
       try {
         const { httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
         const endAllSessions = httpsCallable(window.functions, 'staffSessionEndAll');
-        const result = await endAllSessions();
+        const result = await endAllSessions({ password });
         console.log('[StaffAccess] ✅ All sessions ended:', result.data);
         
         // Stop timer and hide nav items
@@ -1010,6 +1194,7 @@
         window.location.reload();
       } catch (error) {
         console.error('[StaffAccess] Error ending all sessions:', error);
+        alert('Hiba: ' + (error.message || 'Hibás jelszó vagy hozzáférés megtagadva.'));
       }
     };
   }

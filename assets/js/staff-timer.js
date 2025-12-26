@@ -119,6 +119,10 @@
       
       if (result.data.active) {
         console.log('[StaffTimer] ✅ Session is active, starting timer with endTime:', result.data.endTime);
+        console.log('[StaffTimer] ⏰ EndTime as date:', new Date(result.data.endTime).toISOString());
+        console.log('[StaffTimer] ⏰ Current time (ms):', Date.now());
+        console.log('[StaffTimer] ⏰ EndTime (ms):', result.data.endTime);
+        console.log('[StaffTimer] ⏰ Remaining seconds:', Math.floor((result.data.endTime - Date.now()) / 1000));
         startTimer(result.data.endTime);
       } else {
         console.log('[StaffTimer] ❌ Session is not active');
@@ -148,6 +152,11 @@
    * Start timer with given end time
    */
   function startTimer(endTime) {
+    console.log('[StaffTimer] 🚀 startTimer called with endTime:', endTime);
+    console.log('[StaffTimer] ⏰ EndTime as date:', new Date(endTime).toISOString());
+    console.log('[StaffTimer] ⏰ Current sessionEndTime:', sessionEndTime);
+    console.log('[StaffTimer] ⏰ Difference (seconds):', Math.floor((endTime - Date.now()) / 1000));
+    
     sessionEndTime = endTime;
     
     // Create timer element if not exists
@@ -318,6 +327,11 @@
 
     const now = Date.now();
     const remaining = sessionEndTime - now;
+    
+    // Log occasionally (every 10 seconds)
+    if (Math.floor(remaining / 1000) % 10 === 0) {
+      console.log('[StaffTimer] ⏰ Timer update - Remaining:', Math.floor(remaining / 1000), 'seconds');
+    }
 
     if (remaining <= 0) {
       // Session expired

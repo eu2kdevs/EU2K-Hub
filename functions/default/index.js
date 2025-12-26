@@ -255,7 +255,7 @@ exports.staffSessionEnd = onCall({ region }, async (request) => {
 
 /**
  * End all staff sessions for a user
- * This is called when user wants to end all sessions
+ * This is called when user wants to end all sessions on all devices
  */
 exports.staffSessionEndAll = onCall({ region }, async (request) => {
   try {
@@ -265,12 +265,26 @@ exports.staffSessionEndAll = onCall({ region }, async (request) => {
     }
 
     const uid = request.auth.uid;
+    const { password } = request.data;
 
-    // End all sessions
+    if (!password) {
+      throw new HttpsError('invalid-argument', 'Password is required');
+    }
+
+    // Verify password
+    const verifyResult = await verifyAdminConsolePasswordInternal({ password }, { auth: request.auth });
+    
+    if (!verifyResult.success) {
+      throw new HttpsError('permission-denied', 'Invalid password');
+    }
+
+    // End all sessions by setting active to false
     await db.collection('staffSessions').doc(uid).update({
       active: false,
       endedAt: admin.firestore.FieldValue.serverTimestamp(),
-      endedAll: true
+      endedAll: true,
+      deviceId: null, // Clear device ID
+      transferRequested: false
     });
 
     console.log('[staffSessionEndAll] All sessions ended for user:', uid);
