@@ -227,8 +227,10 @@
         "popup": {
           "start_title": "セッションを開始",
           "start_message": "セッションを開始するには、管理者パスワードを入力してください。セッションは15分間アクティブになります。",
+          "confirm": "ログイン",
           "end_title": "セッションを終了",
           "end_message": "本当にセッションを終了しますか？変更を加えるには再度ログインする必要があります。",
+          "end_confirm": "終了",
           "transfer_title": "ワークフローを別のデバイスに転送",
           "transfer_message": "セッションを転送するには、パスワードを入力してください。古いデバイス上のセッションは終了し、別のデバイスで同じポイントから続行されます。",
           "transfer_confirm": "転送",
@@ -255,7 +257,16 @@
     "students": {
       "title": "私の生徒",
       "heading": "私の生徒",
-      "description": "このページは開発中です。"
+      "description": "このページは開発中です。",
+      "students_in_class": "クラスの生徒",
+      "remove_from_class": "クラスから削除",
+      "change_roles": "役割を変更",
+      "details": "詳細",
+      "select": "選択",
+      "add_student": "クラスに生徒を追加",
+      "delete_class": "クラスを削除",
+      "profile_details": "プロフィール詳細",
+      "select_profile": "プロフィールを選択"
     },
     "privacy_policy": {
       "title": "プライバシーポリシー",

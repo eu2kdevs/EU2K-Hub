@@ -227,8 +227,10 @@
         "popup": {
           "start_title": "Démarrer la session",
           "start_message": "Entrez le mot de passe administrateur pour démarrer la session. La session sera active pendant 15 minutes.",
+          "confirm": "Connexion",
           "end_title": "Terminer la session",
           "end_message": "Êtes-vous sûr de vouloir terminer la session ? Vous devrez vous reconnecter pour apporter des modifications.",
+          "end_confirm": "Terminer",
           "transfer_title": "Transférer le flux de travail vers un autre appareil",
           "transfer_message": "Entrez votre mot de passe pour transférer la session. Votre session sur l'ancien appareil se terminera et continuera sur l'autre appareil au même point.",
           "transfer_confirm": "Transférer",
@@ -255,7 +257,16 @@
     "students": {
       "title": "Mes Élèves",
       "heading": "Mes Élèves",
-      "description": "Cette page est en cours de développement."
+      "description": "Cette page est en cours de développement.",
+      "students_in_class": "Élèves dans la classe",
+      "remove_from_class": "Retirer de la classe",
+      "change_roles": "Changer le Rôle",
+      "details": "Détails",
+      "select": "Sélectionner",
+      "add_student": "Ajouter un élève à la classe",
+      "delete_class": "Supprimer la Classe",
+      "profile_details": "Détails du Profil",
+      "select_profile": "Sélectionner un profil"
     },
     "privacy_policy": {
       "title": "Politique de confidentialité",

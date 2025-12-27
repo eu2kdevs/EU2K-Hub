@@ -317,31 +317,655 @@
             </section>
           </header>
 
+        <!-- Revert Popup (overlays main-scroll-area) -->
+        <div id="revertPopup" class="permission-overlay-scroll-area" style="display: none;">
+          <div class="permission-container">
+            <button class="permission-close-btn" onclick="closeRevertPopup()">
+              <img src="assets/general/close.svg" alt="Bezárás">
+            </button>
+            <div class="permission-content">
+              <img src="assets/youhub/calendar/nothing_seems_to_be_here.svg" class="permission-icon-large" alt="Visszaállítás">
+              <h2 class="permission-title" data-translate="youhub.revert.title" data-translate-fallback="Biztos visszaállítod a sorrendet?">Biztos visszaállítod a sorrendet?</h2>
+              <p class="permission-text" data-translate="youhub.revert.text" data-translate-fallback="Ezzel a mostani elrendezésed elveszik, vissza kell állítanod manuálisan!">Ezzel a mostani elrendezésed elveszik, vissza kell állítanod manuálisan!</p>
+              <button class="permission-ok-btn" onclick="confirmRevert()" data-translate="youhub.revert.button" data-translate-fallback="Visszaállítás">Visszaállítás</button>
+            </div>
+          </div>
+        </div>
+
         <div class="main-content">
-          <!-- Event Container: 3 cards (60% / 30% / 10%) with 32px gaps -->
-          <section class="events-container" aria-label="Események">
-            <div class="event-card event-card--lg">
-              <img class="event-card-bg" src="assets/general/image_placeholder_blue.svg" alt="Kép helyőrző" />
-              <div class="event-card-overlay event-card-overlay--lg">
-                <div class="event-card-title">Title</div>
-                <div class="event-card-desc">Body</div>
-                <div class="event-card-date" data-translate="pages.index.event_date_place" data-translate-fallback="Dátum és Hely">Dátum és Hely</div>
+          <div class="students-grid-controls">
+            <button class="youhub-revert-btn" id="studentsRevertBtn" style="display: none;">
+              <img class="youhub-revert-icon" src="assets/youhub/notifications/history.svg" alt="Visszaállítás">
+              <span class="youhub-revert-text" data-translate="youhub.revert.button" data-translate-fallback="Visszaállítás">Visszaállítás</span>
+            </button>
+          </div>
+          <div class="students-grid">
+            <div class="youhub-card" data-card-id="students" draggable="false">
+              <div class="youhub-card-content students-card-content">
+                <!-- Card content is now row layout -->
+                <!-- Left container: fills available space -->
+                <div class="students-top-middle-container">
+                  <div class="students-top-section">
+                    <img src="assets/navbar/students.svg" alt="Diákok az osztályban" class="students-icon">
+                    <h2 class="students-title" data-translate="pages.students.students_in_class" data-translate-fallback="Diákok az osztályban">Diákok az osztályban</h2>
+                  </div>
+                  <div class="students-middle-section">
+                    <!-- Top blur gradient -->
+                    <div class="students-middle-section-fade students-middle-section-fade--top"></div>
+                    <!-- Top buttons container -->
+                    <div class="students-middle-section-top-buttons">
+                      <div class="students-action-buttons-container">
+                        <button class="students-action-btn students-action-btn--remove" type="button" data-needs-expansion="true">
+                          <img src="assets/students/remove_from_class.svg" alt="Kirúgása az osztályból" class="students-action-btn-icon">
+                          <span class="students-action-btn-text" data-translate="pages.students.remove_from_class" data-translate-fallback="Kirúgása az osztályból">Kirúgása az osztályból</span>
+                        </button>
+                        <button class="students-action-btn students-action-btn--change-roles" type="button" data-needs-expansion="true">
+                          <img src="assets/students/change_roles.svg" alt="Szerepkör Megváltoztatása" class="students-action-btn-icon">
+                          <span class="students-action-btn-text" data-translate="pages.students.change_roles" data-translate-fallback="Szerepkör Megváltoztatása">Szerepkör Megváltoztatása</span>
+                        </button>
+                        <button class="students-action-btn students-action-btn--details" type="button" data-needs-expansion="true">
+                          <img src="assets/students/details.svg" alt="Részletek" class="students-action-btn-icon">
+                          <span class="students-action-btn-text" data-translate="pages.students.details" data-translate-fallback="Részletek">Részletek</span>
+                        </button>
+                      </div>
+                      <button class="students-select-btn" type="button">
+                        <img src="assets/students/edit.svg" alt="Kiválasztás" class="students-select-btn-icon">
+                        <span class="students-select-btn-text" data-translate="pages.students.select" data-translate-fallback="Kiválasztás">Kiválasztás</span>
+                      </button>
+                    </div>
+                    <!-- Left column: will be filled with available space -->
+                    <div class="students-column students-column--left">
+                      <div class="students-cards-container">
+                        <!-- Student cards will be added here by JavaScript -->
+                      </div>
+                    </div>
+                    <!-- Bottom buttons container -->
+                    <div class="students-middle-section-bottom-buttons">
+                      <button class="students-add-student-btn" type="button">
+                        <img src="assets/students/add_student.svg" alt="Diák felvétele az osztályba" class="students-add-student-btn-icon">
+                        <span class="students-add-student-btn-text" data-translate="pages.students.add_student" data-translate-fallback="Diák felvétele az osztályba">Diák felvétele az osztályba</span>
+                      </button>
+                      <button class="students-delete-class-btn" type="button">
+                        <img src="assets/students/delete_class.svg" alt="Osztály Törlése" class="students-delete-class-btn-icon">
+                        <span class="students-delete-class-btn-text" data-translate="pages.students.delete_class" data-translate-fallback="Osztály Törlése">Osztály Törlése</span>
+                      </button>
+                    </div>
+                    <!-- Bottom blur gradient -->
+                    <div class="students-middle-section-fade students-middle-section-fade--bottom"></div>
+                  </div>
+                </div>
+                <!-- Right container: fixed 450px width -->
+                <div class="students-top-middle-container students-top-middle-container--duplicate">
+                  <div class="students-column students-column--right">
+                    <!-- Always show "no notification selected" state -->
+                    <div class="notifications-empty-state" id="studentsRightEmptyState">
+                      <img src="assets/students/unknown.svg" alt="Profil részletei" class="notifications-empty-icon notifications-empty-icon--right">
+                      <div class="notifications-empty-text-container">
+                        <p class="notifications-empty-title" data-translate="pages.students.profile_details" data-translate-fallback="Profil részletei">Profil részletei</p>
+                        <p class="notifications-empty-subtitle" data-translate="pages.students.select_profile" data-translate-fallback="Válassz ki egy profilt">Válassz ki egy profilt</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
+              <div class="youhub-card-handle"></div>
             </div>
+          </div>
 
-            <div class="event-card event-card--md">
-              <img class="event-card-bg" src="assets/general/image_placeholder_blue.svg" alt="Kép helyőrző" />
-              <div class="event-card-overlay event-card-overlay--md">
-                <div class="event-card-title">Title</div>
-                <div class="event-card-desc">Body</div>
-                <div class="event-card-date" data-translate="pages.index.event_date_place" data-translate-fallback="Dátum és Hely">Dátum és Hely</div>
-              </div>
-            </div>
-
-            <div class="event-card event-card--sm">
-              <img class="event-card-bg" src="assets/general/image_placeholder_blue.svg" alt="Kép helyőrző" />
-            </div>
-          </section>
+          <!-- Students Drag and Drop System -->
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const STORAGE_KEY = 'students-card-order';
+              const DEFAULT_ORDER = ['students'];
+              
+              let isEditMode = false;
+              let draggedCard = null;
+              let draggedIndex = -1;
+              let cardOrder = [];
+              let hoverStartTime = null;
+              let hoveredCard = null;
+              let shiftTimeout = null;
+              let currentTargetIndex = null;
+              let targetStartTime = null;
+              let moveTimeout = null;
+              
+              // Note: Edit mode button will be added later if needed
+              const grid = document.querySelector('.students-grid');
+              if (!grid) {
+                console.error('students-grid not found');
+                return;
+              }
+              const cards = Array.from(document.querySelectorAll('.youhub-card'));
+              
+              // Load saved order from localStorage
+              function loadCardOrder() {
+                try {
+                  const saved = localStorage.getItem(STORAGE_KEY);
+                  if (saved) {
+                    cardOrder = JSON.parse(saved);
+                    if (cardOrder.length > 0) {
+                      reorderCards(cardOrder);
+                      return;
+                    }
+                  }
+                } catch (e) {
+                  console.warn('Failed to load card order:', e);
+                }
+                cardOrder = DEFAULT_ORDER.slice();
+              }
+              
+              // Save order to localStorage
+              function saveCardOrder() {
+                try {
+                  localStorage.setItem(STORAGE_KEY, JSON.stringify(cardOrder));
+                } catch (e) {
+                  console.warn('Failed to save card order:', e);
+                }
+              }
+              
+              // Reorder cards based on order array
+              function reorderCards(order) {
+                order.forEach((cardId, index) => {
+                  const card = document.querySelector(`[data-card-id="${cardId}"]`);
+                  if (card) {
+                    grid.appendChild(card);
+                  }
+                });
+                cardOrder = order.slice();
+              }
+              
+              // Get card index in grid
+              function getCardIndex(card) {
+                return Array.from(grid.children).indexOf(card);
+              }
+              
+              // Get card position (row, col) - for 1 column layout, row = index, col = 0
+              function getCardPosition(index) {
+                return {
+                  row: index,
+                  col: 0
+                };
+              }
+              
+              // Add bounce animation to card
+              function bounceCard(card) {
+                if (!card) return;
+                card.classList.add('bounce');
+                setTimeout(() => {
+                  card.classList.remove('bounce');
+                }, 500);
+              }
+              
+              // Update card order array
+              function updateCardOrder() {
+                cardOrder = Array.from(grid.children)
+                  .filter(card => card.getAttribute('data-card-id'))
+                  .map(card => card.getAttribute('data-card-id'));
+              }
+              
+              // Shift cards when drag starts - fill the gap by moving all cards after dragged one up with FLIP animation
+              function shiftCardsOnDragStart(fromIndex) {
+                // Get all cards except draggedCard
+                const allChildren = Array.from(grid.children).filter(c => c !== draggedCard);
+                
+                // FLIP Step 1: FIRST - Store initial positions
+                const first = new Map();
+                allChildren.forEach(item => {
+                  first.set(item, item.getBoundingClientRect());
+                });
+                
+                // FLIP Step 2: Move cards (this changes the layout)
+                const cardsToShift = [];
+                for (let i = fromIndex; i < allChildren.length; i++) {
+                  if (allChildren[i]) {
+                    cardsToShift.push(allChildren[i]);
+                  }
+                }
+                
+                cardsToShift.forEach((card, idx) => {
+                  if (!card) return;
+                  const targetPosition = fromIndex + idx;
+                  const currentChildren = Array.from(grid.children).filter(c => c !== draggedCard);
+                  
+                  if (targetPosition < currentChildren.length) {
+                    const targetCard = currentChildren[targetPosition];
+                    if (targetCard && targetCard !== card) {
+                      grid.insertBefore(card, targetCard);
+                    }
+                  }
+                });
+                
+                // FLIP Step 3: LAST - Get new positions after layout change
+                const last = new Map();
+                allChildren.forEach(item => {
+                  last.set(item, item.getBoundingClientRect());
+                });
+                
+                // FLIP Step 4: INVERT & PLAY - Animate the difference
+                allChildren.forEach(item => {
+                  const firstRect = first.get(item);
+                  const lastRect = last.get(item);
+                  
+                  if (firstRect && lastRect) {
+                    const dx = firstRect.left - lastRect.left;
+                    const dy = firstRect.top - lastRect.top;
+                    
+                    // Only animate if position actually changed
+                    if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+                      // INVERT: Set transform to the difference
+                      item.style.transition = 'none';
+                      item.style.transform = `translate(${dx}px, ${dy}px)`;
+                      
+                      // Force reflow
+                      item.offsetHeight;
+                      
+                      // PLAY: Animate back to final position
+                      requestAnimationFrame(() => {
+                        item.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)';
+                        item.style.transform = '';
+                      });
+                    }
+                  }
+                });
+              }
+              
+              // Start drag
+              function startDrag(e) {
+                e.preventDefault();
+                draggedCard = e.target.closest('.youhub-card');
+                if (!draggedCard) return;
+                
+                // Add dragging-active class to grid
+                grid.classList.add('dragging-active');
+                
+                // Initialize target tracking variables
+                currentTargetIndex = null;
+                targetStartTime = Date.now();
+                if (moveTimeout) {
+                  clearTimeout(moveTimeout);
+                  moveTimeout = null;
+                }
+                
+                draggedIndex = getCardIndex(draggedCard);
+                const rect = draggedCard.getBoundingClientRect();
+                
+                // Store initial position and offset
+                draggedCard._dragOffset = {
+                  x: e.clientX - rect.left,
+                  y: e.clientY - rect.top
+                };
+                
+                // Remove card from grid first
+                draggedCard.classList.add('dragging');
+                draggedCard.style.position = 'fixed';
+                draggedCard.style.width = rect.width + 'px';
+                draggedCard.style.height = rect.height + 'px';
+                draggedCard.style.left = e.clientX - draggedCard._dragOffset.x + 'px';
+                draggedCard.style.top = e.clientY - draggedCard._dragOffset.y + 'px';
+                draggedCard.style.margin = '0';
+                
+                // Shift cards to fill the gap
+                shiftCardsOnDragStart(draggedIndex);
+                
+                // Create placeholder at the end
+                const placeholder = document.createElement('div');
+                placeholder.className = 'youhub-card-placeholder';
+                placeholder.style.width = rect.width + 'px';
+                placeholder.style.height = rect.height + 'px';
+                placeholder.style.visibility = 'hidden';
+                draggedCard._placeholder = placeholder;
+                grid.appendChild(placeholder);
+                
+                document.addEventListener('mousemove', onDrag);
+                document.addEventListener('mouseup', endDrag);
+              }
+              
+              // Auto-scroll when near edges
+              function handleAutoScroll(e) {
+                const scrollArea = document.querySelector('.main-scroll-area');
+                if (!scrollArea) return;
+                
+                const scrollSpeed = 15;
+                const threshold = 32;
+                
+                // Vertical scroll only
+                if (e.clientY < threshold) {
+                  scrollArea.scrollTop -= scrollSpeed;
+                } else if (e.clientY > window.innerHeight - threshold) {
+                  scrollArea.scrollTop += scrollSpeed;
+                }
+              }
+              
+              // Get target index based on cursor position (for 1 column layout)
+              function getTargetIndexFromCursor(cursorX, cursorY) {
+                const placeholderIndex = getCardIndex(draggedCard._placeholder);
+                const cardElements = Array.from(grid.children).filter(c => c !== draggedCard && c !== draggedCard._placeholder && c.classList.contains('youhub-card'));
+                
+                // Get placeholder position
+                const placeholderRect = draggedCard._placeholder.getBoundingClientRect();
+                const placeholderDist = Math.abs(cursorY - (placeholderRect.top + placeholderRect.height / 2));
+                
+                // Find closest target
+                let minDist = placeholderDist;
+                let targetIndex = placeholderIndex;
+                
+                // Check each card's center
+                cardElements.forEach(card => {
+                  const rect = card.getBoundingClientRect();
+                  const cardIndex = getCardIndex(card);
+                  const centerY = rect.top + rect.height / 2;
+                  const dist = Math.abs(cursorY - centerY);
+                  
+                  if (dist < minDist) {
+                    minDist = dist;
+                    targetIndex = cardIndex;
+                  }
+                });
+                
+                // Clamp target index
+                targetIndex = Math.max(0, Math.min(cardElements.length, targetIndex));
+                
+                return targetIndex;
+              }
+              
+              // FLIP animation: Move placeholder with smooth animation for cards
+              function movePlaceholderWithAnimation(targetIndex) {
+                const placeholderIndex = getCardIndex(draggedCard._placeholder);
+                if (targetIndex === placeholderIndex) return;
+                
+                // Get all cards (including placeholder for position tracking)
+                const allItems = Array.from(grid.children).filter(c => c !== draggedCard);
+                
+                // FLIP Step 1: FIRST - Store initial positions
+                const first = new Map();
+                allItems.forEach(item => {
+                  first.set(item, item.getBoundingClientRect());
+                });
+                
+                // FLIP Step 2: Move placeholder (this changes the layout)
+                const allChildren = Array.from(grid.children);
+                const targetElement = allChildren[targetIndex];
+                if (targetElement && targetElement !== draggedCard._placeholder) {
+                  grid.insertBefore(draggedCard._placeholder, targetElement);
+                } else if (targetIndex >= allChildren.length - 1) {
+                  grid.appendChild(draggedCard._placeholder);
+                }
+                
+                // FLIP Step 3: LAST - Get new positions after layout change
+                const last = new Map();
+                allItems.forEach(item => {
+                  last.set(item, item.getBoundingClientRect());
+                });
+                
+                // FLIP Step 4: INVERT & PLAY - Animate the difference
+                allItems.forEach(item => {
+                  const firstRect = first.get(item);
+                  const lastRect = last.get(item);
+                  
+                  if (firstRect && lastRect) {
+                    const dx = firstRect.left - lastRect.left;
+                    const dy = firstRect.top - lastRect.top;
+                    
+                    // Only animate if position actually changed
+                    if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+                      // INVERT: Set transform to the difference
+                      item.style.transition = 'none';
+                      item.style.transform = `translate(${dx}px, ${dy}px)`;
+                      
+                      // Force reflow
+                      item.offsetHeight;
+                      
+                      // PLAY: Animate back to final position
+                      requestAnimationFrame(() => {
+                        item.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)';
+                        item.style.transform = '';
+                      });
+                    }
+                  }
+                });
+                
+                // Update visual feedback
+                const cardElements = Array.from(grid.children).filter(c => c !== draggedCard && c !== draggedCard._placeholder && c.classList.contains('youhub-card'));
+                cardElements.forEach(card => {
+                  card.classList.remove('drag-over');
+                  const cardIndex = getCardIndex(card);
+                  const placeholderNewIndex = getCardIndex(draggedCard._placeholder);
+                  if (Math.abs(cardIndex - placeholderNewIndex) === 1) {
+                    card.classList.add('drag-over');
+                  }
+                });
+              }
+              
+              // On drag
+              function onDrag(e) {
+                if (!draggedCard) return;
+                
+                // Update card position to follow cursor
+                draggedCard.style.left = e.clientX - draggedCard._dragOffset.x + 'px';
+                draggedCard.style.top = e.clientY - draggedCard._dragOffset.y + 'px';
+                
+                // Auto-scroll when near edges
+                handleAutoScroll(e);
+                
+                const placeholderIndex = getCardIndex(draggedCard._placeholder);
+                const targetIndex = getTargetIndexFromCursor(e.clientX, e.clientY);
+                
+                // Check if target changed
+                if (targetIndex !== currentTargetIndex) {
+                  // Target changed - reset timer
+                  currentTargetIndex = targetIndex;
+                  targetStartTime = Date.now();
+                  
+                  // Clear any existing timeout
+                  if (moveTimeout) {
+                    clearTimeout(moveTimeout);
+                    moveTimeout = null;
+                  }
+                }
+                
+                // Only move placeholder if target is different from placeholder
+                const cardElements = Array.from(grid.children).filter(c => c !== draggedCard && c !== draggedCard._placeholder && c.classList.contains('youhub-card'));
+                if (targetIndex !== placeholderIndex && targetIndex >= 0 && targetIndex <= cardElements.length) {
+                  const timeOnTarget = Date.now() - targetStartTime;
+                  const delayMs = 1500; // 1.5 seconds delay
+                  
+                  if (timeOnTarget >= delayMs && !moveTimeout) {
+                    // Time has passed - move placeholder with animation
+                    movePlaceholderWithAnimation(targetIndex);
+                  } else if (timeOnTarget < delayMs && !moveTimeout) {
+                    // Set timeout to move after delay
+                    moveTimeout = setTimeout(() => {
+                      if (currentTargetIndex === targetIndex && draggedCard && draggedCard._placeholder) {
+                        movePlaceholderWithAnimation(targetIndex);
+                      }
+                      moveTimeout = null;
+                    }, delayMs - timeOnTarget);
+                  }
+                } else {
+                  // Target is same as placeholder or invalid - clear timeout
+                  if (moveTimeout) {
+                    clearTimeout(moveTimeout);
+                    moveTimeout = null;
+                  }
+                }
+              }
+              
+              // End drag
+              function endDrag(e) {
+                if (!draggedCard) return;
+                
+                // Get target index from cursor position
+                const targetIndex = getTargetIndexFromCursor(e.clientX, e.clientY);
+                const placeholderIndex = draggedCard._placeholder ? getCardIndex(draggedCard._placeholder) : -1;
+                
+                // Remove placeholder
+                if (draggedCard._placeholder) {
+                  draggedCard._placeholder.remove();
+                  draggedCard._placeholder = null;
+                }
+                
+                // Insert card at target position
+                const finalCardElements = Array.from(grid.children).filter(c => c !== draggedCard);
+                if (targetIndex >= 0 && targetIndex < finalCardElements.length) {
+                  grid.insertBefore(draggedCard, finalCardElements[targetIndex]);
+                } else {
+                  grid.appendChild(draggedCard);
+                }
+                
+                // Reset card styles
+                draggedCard.style.position = '';
+                draggedCard.style.width = '';
+                draggedCard.style.height = '';
+                draggedCard.style.left = '';
+                draggedCard.style.top = '';
+                draggedCard.style.margin = '';
+                delete draggedCard._dragOffset;
+                
+                // Cleanup - remove transform and transition from all cards
+                const allCards = Array.from(document.querySelectorAll('.youhub-card'));
+                allCards.forEach(card => {
+                  card.style.transform = '';
+                  card.style.transition = '';
+                  card.classList.remove('drag-over');
+                });
+                draggedCard.classList.remove('dragging');
+                grid.classList.remove('dragging-active');
+                draggedCard = null;
+                draggedIndex = -1;
+                hoveredCard = null;
+                hoverStartTime = null;
+                currentTargetIndex = null;
+                targetStartTime = null;
+                if (shiftTimeout) {
+                  clearTimeout(shiftTimeout);
+                  shiftTimeout = null;
+                }
+                if (moveTimeout) {
+                  clearTimeout(moveTimeout);
+                  moveTimeout = null;
+                }
+                
+                document.removeEventListener('mousemove', onDrag);
+                document.removeEventListener('mouseup', endDrag);
+                
+                updateCardOrder();
+                saveCardOrder();
+              }
+              
+              // Close revert popup - make it global
+              window.closeRevertPopup = function() {
+                const popup = document.getElementById('revertPopup');
+                if (popup) {
+                  popup.style.display = 'none';
+                }
+                const scrollArea = document.querySelector('.main-scroll-area');
+                if (scrollArea) {
+                  scrollArea.classList.remove('no-scroll');
+                  scrollArea.classList.remove('popup-active');
+                }
+              }
+              
+              // Confirm revert - reset to default order - make it global
+              window.confirmRevert = function() {
+                // Reset to default order
+                const defaultOrder = ['students'];
+                
+                // FLIP animation for revert
+                const allCards = Array.from(grid.children).filter(c => c.classList.contains('youhub-card'));
+                
+                // FLIP Step 1: FIRST - Store initial positions
+                const first = new Map();
+                allCards.forEach(card => {
+                  first.set(card, card.getBoundingClientRect());
+                });
+                
+                // FLIP Step 2: Reorder cards
+                reorderCards(defaultOrder);
+                
+                // FLIP Step 3: LAST - Get new positions
+                const last = new Map();
+                allCards.forEach(card => {
+                  last.set(card, card.getBoundingClientRect());
+                });
+                
+                // FLIP Step 4: INVERT & PLAY - Animate the difference
+                allCards.forEach(card => {
+                  const firstRect = first.get(card);
+                  const lastRect = last.get(card);
+                  
+                  if (firstRect && lastRect) {
+                    const dx = firstRect.left - lastRect.left;
+                    const dy = firstRect.top - lastRect.top;
+                    
+                    // Only animate if position actually changed
+                    if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+                      // INVERT: Set transform to the difference
+                      card.style.transition = 'none';
+                      card.style.transform = `translate(${dx}px, ${dy}px)`;
+                      
+                      // Force reflow
+                      card.offsetHeight;
+                      
+                      // PLAY: Animate back to final position
+                      requestAnimationFrame(() => {
+                        card.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)';
+                        card.style.transform = '';
+                      });
+                    }
+                  }
+                });
+                
+                // Save to localStorage
+                cardOrder = defaultOrder.slice();
+                saveCardOrder();
+                
+                // Close popup
+                closeRevertPopup();
+              }
+              
+              // Initialize
+              const revertBtn = document.getElementById('studentsRevertBtn');
+              if (revertBtn) {
+                revertBtn.addEventListener('click', () => {
+                  const openPopup = () => {
+                    const scrollArea = document.querySelector('.main-scroll-area');
+                    if (scrollArea) {
+                      scrollArea.scrollTop = 0;
+                      scrollArea.classList.add('no-scroll');
+                      scrollArea.classList.add('popup-active');
+                    }
+                    setTimeout(() => {
+                      document.getElementById('revertPopup').style.display = 'flex';
+                    }, 50);
+                  };
+                  
+                  if (window.tryOpenPopup) {
+                    window.tryOpenPopup(openPopup);
+                  } else {
+                    openPopup();
+                  }
+                });
+              }
+              loadCardOrder();
+              
+              // Enable dragging for cards (if edit mode is added later)
+              // For now, cards are draggable by default if there's more than one
+              if (cards.length > 1) {
+                cards.forEach(card => {
+                  const handle = card.querySelector('.youhub-card-handle');
+                  if (handle) {
+                    handle.addEventListener('mousedown', startDrag);
+                    // Add hover listeners for bounce animation
+                    handle.addEventListener('mouseenter', () => {
+                      if (!draggedCard) {
+                        bounceCard(card);
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          </script>
 
           <script type="module">
             import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
@@ -559,6 +1183,349 @@
       checkSessionAndUpdateBlur();
       // Check periodically
       setInterval(checkSessionAndUpdateBlur, 5000);
+    });
+
+    // Dynamically adjust button text size to fit within 125px max-width
+    function adjustButtonTextSizes() {
+      const actionButtons = document.querySelectorAll('.students-action-btn');
+      actionButtons.forEach(button => {
+        const textElement = button.querySelector('.students-action-btn-text');
+        if (!textElement) return;
+        
+        const iconElement = button.querySelector('.students-action-btn-icon');
+        const iconWidth = iconElement ? 18 : 0; // icon width
+        const padding = 32; // 16px left + 16px right
+        const gap = 8; // gap between icon and text
+        const maxTextWidth = 125 - padding - iconWidth - gap;
+        
+        // Store original text for hover
+        const originalText = textElement.textContent;
+        button._originalText = originalText;
+        
+        // Reset font size
+        textElement.style.fontSize = '14px';
+        textElement.style.whiteSpace = 'nowrap';
+        textElement.style.overflow = 'visible';
+        textElement.style.textOverflow = '';
+        textElement.style.maxWidth = '';
+        button.style.maxWidth = '125px';
+        button.style.width = '';
+        
+        // Check if text overflows
+        if (textElement.scrollWidth > maxTextWidth) {
+          // Try reducing font size until it fits
+          let fontSize = 14;
+          while (fontSize > 10 && textElement.scrollWidth > maxTextWidth) {
+            fontSize -= 0.5;
+            textElement.style.fontSize = fontSize + 'px';
+          }
+          
+          // Store the reduced font size
+          button._reducedFontSize = fontSize;
+          
+          // If still doesn't fit, use ellipsis
+          if (textElement.scrollWidth > maxTextWidth) {
+            textElement.style.overflow = 'hidden';
+            textElement.style.textOverflow = 'ellipsis';
+            textElement.style.whiteSpace = 'nowrap';
+            textElement.style.maxWidth = maxTextWidth + 'px';
+          }
+          
+          // Calculate width needed for full text at 12px font size (forced)
+          const tempSpan = document.createElement('span');
+          tempSpan.style.visibility = 'hidden';
+          tempSpan.style.position = 'absolute';
+          tempSpan.style.fontSize = '12px';
+          tempSpan.style.fontWeight = '600';
+          tempSpan.style.whiteSpace = 'nowrap';
+          tempSpan.style.fontFamily = getComputedStyle(textElement).fontFamily;
+          tempSpan.textContent = originalText;
+          document.body.appendChild(tempSpan);
+          const textWidthAt12px = tempSpan.offsetWidth;
+          document.body.removeChild(tempSpan);
+          
+          // Store the required width for hover (12px font size)
+          const hoverWidth = padding + iconWidth + gap + textWidthAt12px;
+          button._hoverWidth = hoverWidth;
+          
+          // Only need expansion if hover width is greater than 125px
+          button._needsHoverExpansion = hoverWidth > 125;
+        } else {
+          button._needsHoverExpansion = false;
+        }
+      });
+    }
+
+    // Setup hover handlers for buttons that need expansion
+    function setupButtonHovers() {
+      const actionButtons = document.querySelectorAll('.students-action-btn[data-needs-expansion="true"]');
+      const middleSection = document.querySelector('.students-middle-section');
+      
+      actionButtons.forEach(button => {
+        // Store expansion data in data attributes to survive cloning
+        if (button._needsHoverExpansion && button._hoverWidth) {
+          button.setAttribute('data-hover-width', button._hoverWidth);
+          button.setAttribute('data-reduced-font-size', button._reducedFontSize);
+        }
+      });
+      
+      // Re-query after potential DOM changes
+      const buttons = document.querySelectorAll('.students-action-btn[data-needs-expansion="true"]');
+      
+      buttons.forEach(button => {
+        const hoverWidth = parseFloat(button.getAttribute('data-hover-width'));
+        const reducedFontSize = button.getAttribute('data-reduced-font-size');
+        
+        if (hoverWidth && hoverWidth > 125) {
+          button.addEventListener('mouseenter', function() {
+            const textElement = this.querySelector('.students-action-btn-text');
+            if (textElement) {
+              // Add separate expanding class
+              this.classList.add('students-action-btn-expanding');
+              
+              // Force 12px font size - no ellipsis, no truncation, no size reduction
+              textElement.setAttribute('style', 
+                'font-size: 12px !important; ' +
+                'overflow: visible !important; ' +
+                'text-overflow: "" !important; ' +
+                'max-width: none !important; ' +
+                'white-space: nowrap !important;'
+              );
+              
+              // Expand button width to the right - use inline style with !important
+              const storedWidth = parseFloat(this.getAttribute('data-hover-width'));
+              if (storedWidth) {
+                this.setAttribute('style', 
+                  'transform: none !important; ' +
+                  'max-width: ' + storedWidth + 'px !important; ' +
+                  'width: ' + storedWidth + 'px !important; ' +
+                  'transition: width 0.2s ease, max-width 0.2s ease !important;'
+                );
+                
+                // Expand middle section if needed to accommodate the expanded button
+                if (middleSection) {
+                  setTimeout(() => {
+                    const buttonRect = this.getBoundingClientRect();
+                    const sectionRect = middleSection.getBoundingClientRect();
+                    const buttonRight = buttonRect.right;
+                    const sectionRight = sectionRect.right;
+                    const neededWidth = buttonRight - sectionRight + 8; // 8px padding
+                    
+                    if (neededWidth > 0) {
+                      const currentWidth = middleSection.offsetWidth;
+                      middleSection.setAttribute('style', 
+                        'min-width: ' + (currentWidth + neededWidth) + 'px !important; ' +
+                        'transition: min-width 0.2s ease !important;'
+                      );
+                    }
+                  }, 10);
+                }
+              }
+            }
+          });
+          
+          button.addEventListener('mouseleave', function() {
+            const textElement = this.querySelector('.students-action-btn-text');
+            if (textElement) {
+              // Remove expanding class
+              this.classList.remove('students-action-btn-expanding');
+              
+              // Remove all inline styles completely
+              this.removeAttribute('style');
+              textElement.removeAttribute('style');
+              
+              // Set normal styles back without !important
+              const storedFontSize = this.getAttribute('data-reduced-font-size');
+              if (storedFontSize) {
+                textElement.style.fontSize = storedFontSize + 'px';
+              }
+              textElement.style.overflow = 'hidden';
+              textElement.style.textOverflow = 'ellipsis';
+              const iconElement = this.querySelector('.students-action-btn-icon');
+              const iconWidth = iconElement ? 18 : 0;
+              const padding = 32;
+              const gap = 8;
+              textElement.style.maxWidth = (125 - padding - iconWidth - gap) + 'px';
+              
+              // Reset middle section width - remove all inline styles
+              if (middleSection) {
+                middleSection.removeAttribute('style');
+              }
+            }
+          });
+        }
+      });
+    }
+
+    // Check if translation system is initialized and apply/remove hover animations
+    function updateHoverAnimations() {
+      // Check if translation system is initialized
+      const translationInitialized = window.translationManager && window.translationManager.isInitialized;
+      
+      if (!translationInitialized) {
+        // If not initialized, wait a bit and try again
+        setTimeout(updateHoverAnimations, 100);
+        return;
+      }
+      
+      // Re-run adjustButtonTextSizes to get updated values after translation
+      adjustButtonTextSizes();
+      
+      // Get all top buttons (3 action buttons + 1 select button)
+      const actionButtons = document.querySelectorAll('.students-action-btn[data-needs-expansion="true"]');
+      const selectButton = document.querySelector('.students-select-btn');
+      const allTopButtons = [...actionButtons];
+      if (selectButton) allTopButtons.push(selectButton);
+      
+      allTopButtons.forEach(button => {
+        // Check if button needs expansion (text doesn't fit)
+        // For action buttons, check _needsHoverExpansion or data-hover-width
+        // For select button, check if it needs to be icon-only (responsive breakpoint)
+        let needsExpansion = false;
+        
+        if (button.classList.contains('students-action-btn')) {
+          // Action button - check if text doesn't fit
+          needsExpansion = button._needsHoverExpansion === true || 
+                          (button.hasAttribute('data-hover-width') && parseFloat(button.getAttribute('data-hover-width')) > 125);
+        } else if (button.classList.contains('students-select-btn')) {
+          // Select button - check if it's in responsive mode (icon-only)
+          // This is handled by CSS media query, but we can check window width
+          needsExpansion = window.innerWidth <= 1200;
+        }
+        
+        if (needsExpansion) {
+          // Text doesn't fit - remove hover animations
+          button.classList.add('no-hover-animation');
+        } else {
+          // Text fits - keep hover animations
+          button.classList.remove('no-hover-animation');
+        }
+      });
+    }
+
+    // Run on load and resize
+    document.addEventListener('DOMContentLoaded', () => {
+      adjustButtonTextSizes();
+      setupButtonHovers();
+      
+      // Wait for translation system to initialize, then update hover animations
+      if (window.translationManager) {
+        if (window.translationManager.isInitialized) {
+          updateHoverAnimations();
+        } else {
+          // Wait for initialization
+          const checkTranslation = setInterval(() => {
+            if (window.translationManager.isInitialized) {
+              clearInterval(checkTranslation);
+              adjustButtonTextSizes();
+              setupButtonHovers();
+              updateHoverAnimations();
+            }
+          }, 100);
+        }
+      } else {
+        // If translation manager doesn't exist, update after a delay
+        setTimeout(() => {
+          adjustButtonTextSizes();
+          setupButtonHovers();
+          updateHoverAnimations();
+        }, 500);
+      }
+    });
+    
+    window.addEventListener('resize', () => {
+      adjustButtonTextSizes();
+      setupButtonHovers();
+      updateHoverAnimations();
+    });
+
+    // Create student cards
+    function createStudentCards() {
+      const cardsContainer = document.querySelector('.students-cards-container');
+      if (!cardsContainer) {
+        console.log('[Students] Cards container not found');
+        return;
+      }
+
+      // Check if in developer mode
+      const isDeveloperMode = localStorage.getItem('eu2k_dev_mode') === 'true' || 
+                             window.location.search.includes('dev=true') ||
+                             window.location.hostname === 'localhost' ||
+                             true; // Always show for testing
+
+      // Number of cards to show (15 in dev mode, otherwise 0 for now)
+      const cardCount = isDeveloperMode ? 15 : 0;
+      
+      console.log('[Students] Creating cards, count:', cardCount, 'isDeveloperMode:', isDeveloperMode);
+
+      // Clear existing cards
+      cardsContainer.innerHTML = '';
+
+      // Create cards
+      for (let i = 0; i < cardCount; i++) {
+        const card = document.createElement('div');
+        card.className = 'students-student-card';
+        
+        // Random test data
+        const names = ['Kovács János', 'Nagy Mária', 'Szabó Péter', 'Tóth Anna', 'Horváth Gábor'];
+        const emails = ['kovacs.janos@eu2k.hu', 'nagy.maria@eu2k.hu', 'szabo.peter@eu2k.hu', 'toth.anna@eu2k.hu', 'horvath.gabor@eu2k.hu'];
+        const birthdates = ['2008.03.15', '2007.11.22', '2008.07.08', '2007.09.30', '2008.01.14'];
+        const loginMethods = ['Microsoft', 'Google'];
+        const accountTypes = ['Diák', 'Tanár'];
+        
+        const name = names[i % names.length];
+        const email = emails[i % emails.length];
+        const birthdate = birthdates[i % birthdates.length];
+        const loginMethod = loginMethods[i % loginMethods.length];
+        const accountType = accountTypes[i % accountTypes.length];
+        const displayName = name.split(' ')[0]; // First name for notifications
+
+        card.innerHTML = `
+          <button class="students-student-card-checkbox" type="button" aria-pressed="false">
+            <img src="assets/youhub/suggestions/check_dark.svg" alt="" aria-hidden="true">
+          </button>
+          <div class="students-student-card-content">
+            <div class="students-student-card-left">
+              <div class="students-student-card-avatar"></div>
+              <div class="students-student-card-info">
+                <p class="students-student-card-name">${name}</p>
+                <p class="students-student-card-email">${email}</p>
+                <p class="students-student-card-birthdate">${birthdate}</p>
+              </div>
+            </div>
+            <div class="students-student-card-right">
+              <div class="students-student-card-right-item students-student-card-right-item--account-type">
+                <span class="students-student-card-right-item-text">${accountType}</span>
+                <img src="assets/navbar/students.svg" alt="" class="students-student-card-right-item-icon students-student-card-right-item-icon--account-type" aria-hidden="true">
+              </div>
+              <div class="students-student-card-right-item">
+                <img src="assets/general/microsoft.png" alt="" class="students-student-card-right-item-icon" aria-hidden="true">
+                <span class="students-student-card-right-item-text">Bejelentkezett: ${loginMethod}-kal</span>
+              </div>
+              <div class="students-student-card-right-item">
+                <img src="assets/youhub/notifications/bell.svg" alt="" class="students-student-card-right-item-icon" aria-hidden="true">
+                <span class="students-student-card-right-item-text">Az értesítések hangjai ${displayName}-nak hallhatóak.</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Add checkbox click handler
+        const checkbox = card.querySelector('.students-student-card-checkbox');
+        if (checkbox) {
+          checkbox.addEventListener('click', function() {
+            this.classList.toggle('is-checked');
+            this.setAttribute('aria-pressed', this.classList.contains('is-checked') ? 'true' : 'false');
+          });
+        }
+
+        cardsContainer.appendChild(card);
+      }
+    }
+
+    // Run on load
+    document.addEventListener('DOMContentLoaded', () => {
+      createStudentCards();
     });
   </script>
 </body>

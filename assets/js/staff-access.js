@@ -340,6 +340,11 @@
         const popup = document.getElementById('staffSessionPopup');
         if (popup) {
           popup.style.display = 'flex';
+          
+          // Apply translations to dynamically created popup
+          if (window.translationManager && window.translationManager.applyTranslationsToElement) {
+            window.translationManager.applyTranslationsToElement(popup);
+          }
         }
 
         const input = document.getElementById('staffSessionPassword');
@@ -516,6 +521,11 @@
         const popup = document.getElementById('staffSessionPopup');
         if (popup) {
           popup.style.display = 'flex';
+          
+          // Apply translations to dynamically created popup
+          if (window.translationManager && window.translationManager.applyTranslationsToElement) {
+            window.translationManager.applyTranslationsToElement(popup);
+          }
         }
 
         const input = document.getElementById('staffSessionPassword');
@@ -693,6 +703,11 @@
         const popup = document.getElementById('staffEndAllSessionsPopup');
         if (popup) {
           popup.style.display = 'flex';
+          
+          // Apply translations to dynamically created popup
+          if (window.translationManager && window.translationManager.applyTranslationsToElement) {
+            window.translationManager.applyTranslationsToElement(popup);
+          }
         }
 
         const input = document.getElementById('staffEndAllPassword');
@@ -1023,6 +1038,11 @@
         const popup = document.getElementById('staffSessionTransferPopup');
         if (popup) {
           popup.style.display = 'flex';
+          
+          // Apply translations to dynamically created popup
+          if (window.translationManager && window.translationManager.applyTranslationsToElement) {
+            window.translationManager.applyTranslationsToElement(popup);
+          }
         }
 
         const input = document.getElementById('staffSessionTransferPassword');

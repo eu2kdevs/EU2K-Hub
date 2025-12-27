@@ -227,8 +227,10 @@
         "popup": {
           "start_title": "Starta session",
           "start_message": "Ange adminlösenordet för att starta sessionen. Sessionen kommer att vara aktiv i 15 minuter.",
+          "confirm": "Logga in",
           "end_title": "Avsluta session",
           "end_message": "Är du säker på att du vill avsluta sessionen? Du måste logga in igen för att göra ändringar.",
+          "end_confirm": "Avsluta",
           "transfer_title": "Överför arbetsflöde till en annan enhet",
           "transfer_message": "Ange ditt lösenord för att överföra sessionen. Din session på den gamla enheten kommer att avslutas och fortsätter på den andra enheten från samma punkt.",
           "transfer_confirm": "Överför",
@@ -255,7 +257,16 @@
     "students": {
       "title": "Mina Elever",
       "heading": "Mina Elever",
-      "description": "Denna sida är under utveckling."
+      "description": "Denna sida är under utveckling.",
+      "students_in_class": "Elever i klassen",
+      "remove_from_class": "Ta bort från klassen",
+      "change_roles": "Ändra Roll",
+      "details": "Detaljer",
+      "select": "Välj",
+      "add_student": "Lägg till elev i klassen",
+      "delete_class": "Ta bort Klass",
+      "profile_details": "Profildetaljer",
+      "select_profile": "Välj en profil"
     },
     "privacy_policy": {
       "title": "Integritetspolicy",

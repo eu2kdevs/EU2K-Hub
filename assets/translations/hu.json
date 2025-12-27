@@ -245,8 +245,10 @@
         "popup": {
           "start_title": "Munkamenet indítása",
           "start_message": "Add meg az admin jelszót a munkamenet indításához. A munkamenet 15 percig lesz aktív.",
+          "confirm": "Belépés",
           "end_title": "Munkamenet megszakítása",
           "end_message": "Biztosan megszakítod a munkamenetet? Vissza kell jelentkezned, ha ismét módosítani szeretnél.",
+          "end_confirm": "Megszakítás",
           "transfer_title": "Munkafolyamat átvitele a másik eszközre",
           "transfer_message": "Add meg a jelszavad a munkamenet átviteléhez. A régi gépen megszakad a munkameneted, és ugyanonnan folytatódik a másik gépen.",
           "transfer_confirm": "Átvitel",
@@ -268,7 +270,16 @@
     "students": {
       "title": "Diákjaim",
       "heading": "Diákjaim",
-      "description": "Ez az oldal fejlesztés alatt áll."
+      "description": "Ez az oldal fejlesztés alatt áll.",
+      "students_in_class": "Diákok az osztályban",
+      "remove_from_class": "Kirúgása az osztályból",
+      "change_roles": "Szerepkör Megváltoztatása",
+      "details": "Részletek",
+      "select": "Kiválasztás",
+      "add_student": "Diák felvétele az osztályba",
+      "delete_class": "Osztály Törlése",
+      "profile_details": "Profil részletei",
+      "select_profile": "Válassz ki egy profilt"
     },
     "privacy_policy": {
       "title": "Adatvédelmi tájékoztató",

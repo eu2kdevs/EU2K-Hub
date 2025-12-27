@@ -230,8 +230,10 @@
         "popup": {
           "start_title": "Sitzung starten",
           "start_message": "Geben Sie das Admin-Passwort ein, um die Sitzung zu starten. Die Sitzung ist 15 Minuten lang aktiv.",
+          "confirm": "Anmelden",
           "end_title": "Sitzung beenden",
           "end_message": "Möchten Sie die Sitzung wirklich beenden? Sie müssen sich erneut anmelden, um Änderungen vorzunehmen.",
+          "end_confirm": "Beenden",
           "transfer_title": "Workflow auf ein anderes Gerät übertragen",
           "transfer_message": "Geben Sie Ihr Passwort ein, um die Sitzung zu übertragen. Ihre Sitzung auf dem alten Gerät wird beendet und setzt sich auf dem anderen Gerät von derselben Stelle fort.",
           "transfer_confirm": "Übertragen",
@@ -258,7 +260,16 @@
     "students": {
       "title": "Meine Schüler",
       "heading": "Meine Schüler",
-      "description": "Diese Seite befindet sich in der Entwicklung."
+      "description": "Diese Seite befindet sich in der Entwicklung.",
+      "students_in_class": "Schüler in der Klasse",
+      "remove_from_class": "Aus der Klasse entfernen",
+      "change_roles": "Rolle ändern",
+      "details": "Details",
+      "select": "Auswählen",
+      "add_student": "Schüler zur Klasse hinzufügen",
+      "delete_class": "Klasse löschen",
+      "profile_details": "Profildetails",
+      "select_profile": "Profil auswählen"
     },
     "privacy_policy": {
       "title": "Datenschutzerklärung",

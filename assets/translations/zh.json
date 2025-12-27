@@ -227,8 +227,10 @@
         "popup": {
           "start_title": "开始会话",
           "start_message": "输入管理员密码以开始会话。会话将活动15分钟。",
+          "confirm": "登录",
           "end_title": "结束会话",
           "end_message": "您确定要结束会话吗？您需要重新登录才能进行更改。",
+          "end_confirm": "结束",
           "transfer_title": "将工作流程转移到另一台设备",
           "transfer_message": "输入您的密码以转移会话。您在旧设备上的会话将结束，并在另一台设备上从同一点继续。",
           "transfer_confirm": "转移",
@@ -255,7 +257,16 @@
     "students": {
       "title": "我的学生",
       "heading": "我的学生",
-      "description": "此页面正在开发中。"
+      "description": "此页面正在开发中。",
+      "students_in_class": "班级中的学生",
+      "remove_from_class": "从班级中移除",
+      "change_roles": "更改角色",
+      "details": "详细信息",
+      "select": "选择",
+      "add_student": "将学生添加到班级",
+      "delete_class": "删除班级",
+      "profile_details": "个人资料详情",
+      "select_profile": "选择一个个人资料"
     },
     "privacy_policy": {
       "title": "隐私政策",

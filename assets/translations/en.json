@@ -232,8 +232,10 @@
         "popup": {
           "start_title": "Start Session",
           "start_message": "Enter the admin password to start the session. The session will be active for 15 minutes.",
+          "confirm": "Login",
           "end_title": "End Session",
           "end_message": "Are you sure you want to end the session? You will need to log in again to make changes.",
+          "end_confirm": "End",
           "transfer_title": "Transfer workflow to another device",
           "transfer_message": "Enter your password to transfer the session. Your session on the old device will end, and it will continue on the other device from the same point.",
           "transfer_confirm": "Transfer",
@@ -255,7 +257,16 @@
     "students": {
       "title": "My Students",
       "heading": "My Students",
-      "description": "This page is under development."
+      "description": "This page is under development.",
+      "students_in_class": "Students in class",
+      "remove_from_class": "Remove from class",
+      "change_roles": "Change Role",
+      "details": "Details",
+      "select": "Select",
+      "add_student": "Add student to class",
+      "delete_class": "Delete Class",
+      "profile_details": "Profile Details",
+      "select_profile": "Select a profile"
     },
     "privacy_policy": {
       "title": "Privacy Policy",

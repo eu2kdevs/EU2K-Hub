@@ -227,8 +227,10 @@
         "popup": {
           "start_title": "Iniciar sesión",
           "start_message": "Ingrese la contraseña de administrador para iniciar la sesión. La sesión estará activa durante 15 minutos.",
+          "confirm": "Iniciar sesión",
           "end_title": "Finalizar sesión",
           "end_message": "¿Estás seguro de que quieres finalizar la sesión? Deberás iniciar sesión nuevamente para realizar cambios.",
+          "end_confirm": "Finalizar",
           "transfer_title": "Transferir flujo de trabajo a otro dispositivo",
           "transfer_message": "Ingresa tu contraseña para transferir la sesión. Tu sesión en el dispositivo antiguo terminará y continuará en el otro dispositivo desde el mismo punto.",
           "transfer_confirm": "Transferir",
@@ -255,7 +257,16 @@
     "students": {
       "title": "Mis Estudiantes",
       "heading": "Mis Estudiantes",
-      "description": "Esta página está en desarrollo."
+      "description": "Esta página está en desarrollo.",
+      "students_in_class": "Estudiantes en la clase",
+      "remove_from_class": "Expulsar de la clase",
+      "change_roles": "Cambiar Rol",
+      "details": "Detalles",
+      "select": "Seleccionar",
+      "add_student": "Añadir estudiante a la clase",
+      "delete_class": "Eliminar Clase",
+      "profile_details": "Detalles del Perfil",
+      "select_profile": "Selecciona un perfil"
     },
     "privacy_policy": {
       "title": "Política de privacidad",
