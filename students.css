@@ -662,6 +662,183 @@ body {
 ::-webkit-scrollbar-thumb { background: #232823; border-radius: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 
+/* Permission Popup Overlay - for full screen overlays (game, auth popups) */
+.permission-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(11, 15, 11, 0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Permission Popup Overlay - for main-scroll-area */
+.permission-overlay-scroll-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(11, 15, 11, 0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* High z-index to overlay everything in main-scroll-area */
+  pointer-events: auto; /* Prevent interaction with elements behind popup */
+}
+
+.permission-overlay-scroll-area .permission-container {
+  pointer-events: auto; /* Re-enable clicks on the popup itself */
+}
+
+.permission-container {
+  position: relative;
+  background: #16210B;
+  border-radius: var(--card-radius);
+  padding: 32px 32px 32px 32px;
+  max-width: 420px;
+  width: 100%;
+  max-height: 100%;
+  height: fit-content;
+  overflow: hidden; /* Border-radius clips the scrollbar */
+  box-sizing: border-box;
+}
+
+.permission-content {
+  text-align: left;
+  max-height: calc(100vh - 96px); /* Account for padding and margins */
+  height: fit-content;
+  overflow-y: auto;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #445A2D #16210B; /* Firefox */
+  margin-right: -32px; /* Compensate for container padding */
+  padding-right: 32px; /* Re-add padding for content */
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Webkit browsers scrollbar */
+.permission-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.permission-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.permission-content::-webkit-scrollbar-thumb {
+  background: #445A2D;
+  border-radius: 4px;
+}
+
+/* Permission close button - using header icon button style */
+.permission-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: #D3FFA1;
+  border: 1px solid #57703B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width .12s cubic-bezier(.2,.0,.2,1), border-radius .12s cubic-bezier(.2,.0,.2,1), background .12s ease;
+  cursor: pointer;
+  padding: 0;
+}
+
+.permission-close-btn img {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.permission-close-btn:hover {
+  width: 68px;
+  border-radius: 16px;
+  background: #DEFFBA;
+}
+
+.permission-hand-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+}
+
+.permission-title {
+  color: #C1EE8D;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.permission-icon-large {
+  margin: 0 0 8px 0;
+}
+
+.permission-text {
+  color: #E5FDA9;
+  text-align: left;
+  margin: 0 0 18px 0;
+  line-height: 1.6;
+}
+
+.permission-list {
+  color: #E5FDA9;
+  text-align: left;
+  margin: 0 0 32px 0;
+  padding-left: 20px;
+  margin-left: 0;
+  list-style-position: outside;
+  line-height: 1.6;
+}
+
+.permission-list li {
+  margin-bottom: 8px;
+}
+
+/* Permission OK button - using login button style */
+.permission-ok-btn {
+  min-width: 140px;
+  height: 52px;
+  background: #84B3FF;
+  border: 1px solid #282F3A;
+  border-radius: 16px;
+  color: #08152C;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+  padding: 0 20px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 24px;
+  align-self: flex-start;
+  flex-shrink: 0;
+}
+
+.permission-ok-btn:hover {
+  background: #42587B;
+  color: #DBE8FF;
+  transform: scaleY(1.12);
+}
+
+.permission-ok-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+}
+
+
 /* Permission Popup Overlay */
 .warning-overlay {
   position: fixed;
