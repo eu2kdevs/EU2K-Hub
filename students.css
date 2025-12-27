@@ -1232,7 +1232,6 @@ body {
   min-height: 0;
   background: #43562D;
   position: relative;
-  isolation: isolate; /* Új stacking context a blur-oknak */
 }
 
 /* Students Middle Section Fade (blur gradients) */
@@ -1247,13 +1246,13 @@ body {
 }
 
 .students-middle-section-fade--top {
-  top: 0; /* Feljebb: 0px helyett -40px */
-  background: linear-gradient(to bottom, #43562D 0%, rgba(67, 86, 45, 0.95) 20%, rgba(67, 86, 45, 0.7) 50%, rgba(67, 86, 45, 0.3) 80%, rgba(67, 86, 45, 0) 100%);
+  top: -40px; /* Vissza az eredeti értékhez */
+  background: linear-gradient(to bottom, #465A2F 0%, rgba(70, 90, 47, 0.95) 20%, rgba(70, 90, 47, 0.7) 50%, rgba(70, 90, 47, 0.3) 80%, rgba(70, 90, 47, 0) 100%);
 }
 
 .students-middle-section-fade--bottom {
-  bottom: 0; /* Feljebb: 0px helyett -40px */
-  background: linear-gradient(to top, #43562D 0%, rgba(67, 86, 45, 0.95) 20%, rgba(67, 86, 45, 0.7) 50%, rgba(67, 86, 45, 0.3) 80%, rgba(67, 86, 45, 0) 100%);
+  bottom: -40px; /* Vissza az eredeti értékhez */
+  background: linear-gradient(to top, #465A2F 0%, rgba(70, 90, 47, 0.95) 20%, rgba(70, 90, 47, 0.7) 50%, rgba(70, 90, 47, 0.3) 80%, rgba(70, 90, 47, 0) 100%);
 }
 
 /* Students Middle Section Top Buttons */
@@ -1810,8 +1809,8 @@ button.students-action-btn[data-needs-expansion="true"].students-action-btn-expa
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-top: 120px; /* 120px blur magassága */
-  padding-bottom: 120px; /* 120px blur magassága */
+  padding-top: 80px; /* Vissza az eredeti értékhez */
+  padding-bottom: 80px; /* Vissza az eredeti értékhez */
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
