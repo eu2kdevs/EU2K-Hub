@@ -1441,9 +1441,13 @@
 
     // Create student cards
     function createStudentCards() {
+      console.log('[Students] createStudentCards function called');
+      
       const cardsContainer = document.querySelector('.students-cards-container');
+      console.log('[Students] cardsContainer:', cardsContainer);
+      
       if (!cardsContainer) {
-        console.log('[Students] Cards container not found');
+        console.error('[Students] Cards container not found!');
         return;
       }
 
@@ -1624,7 +1628,10 @@
         }
 
         cardsContainer.appendChild(card);
+        console.log(`[Students] Card ${i + 1}/${cardCount} added to container`);
       }
+      
+      console.log('[Students] All cards created successfully! Total:', cardsContainer.children.length);
     }
 
     // Run on load

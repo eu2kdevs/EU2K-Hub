@@ -1246,21 +1246,23 @@ body {
 }
 
 .students-middle-section-fade--top {
-  top: -40px; /* Vissza az eredeti értékhez */
+  top: 0;
   background: linear-gradient(to bottom, #465A2F 0%, rgba(70, 90, 47, 0.95) 20%, rgba(70, 90, 47, 0.7) 50%, rgba(70, 90, 47, 0.3) 80%, rgba(70, 90, 47, 0) 100%);
+  border-radius: 16px;
 }
 
 .students-middle-section-fade--bottom {
-  bottom: -40px; /* Vissza az eredeti értékhez */
+  bottom: 0;
   background: linear-gradient(to top, #465A2F 0%, rgba(70, 90, 47, 0.95) 20%, rgba(70, 90, 47, 0.7) 50%, rgba(70, 90, 47, 0.3) 80%, rgba(70, 90, 47, 0) 100%);
+  border-radius: 16px;
 }
 
 /* Students Middle Section Top Buttons */
 .students-middle-section-top-buttons {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 8px;
+  top: 12px;
+  left: 12px;
+  right: 12px;
   display: flex;
   flex-direction: row;
   gap: auto;
@@ -1493,9 +1495,9 @@ button.students-action-btn[data-needs-expansion="true"].students-action-btn-expa
 /* Students Middle Section Bottom Buttons */
 .students-middle-section-bottom-buttons {
   position: absolute;
-  bottom: 8px;
-  left: 8px;
-  right: 8px;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
   display: flex;
   flex-direction: row;
   gap: auto;
@@ -1614,7 +1616,7 @@ button.students-action-btn[data-needs-expansion="true"].students-action-btn-expa
 
 /* Students Columns */
 .students-column {
-  background: #273617;
+  background: #43562D;
   border-radius: 12px;
   min-height: 0;
   flex: 1;
