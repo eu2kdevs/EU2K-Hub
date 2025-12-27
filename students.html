@@ -1468,7 +1468,7 @@
       // Helper function: Get suffix based on vowel harmony (for all 9 languages)
       function getNameSuffix(name, language) {
         // Get current language from translationManager or default to 'hu'
-        const currentLang = language || (window.translationManager && window.translationManager.getCurrentLanguage()) || 'hu';
+        const currentLang = language || (window.translationManager && window.translationManager.currentLanguage) || localStorage.getItem('eu2k_language') || 'hu';
         
         switch (currentLang) {
           case 'hu': // Magyar - hangrendű végződés
@@ -1519,7 +1519,7 @@
       
       // Helper function: Get notification text template for current language
       function getNotificationText(displayName, language) {
-        const currentLang = language || (window.translationManager && window.translationManager.getCurrentLanguage()) || 'hu';
+        const currentLang = language || (window.translationManager && window.translationManager.currentLanguage) || localStorage.getItem('eu2k_language') || 'hu';
         const suffix = getNameSuffix(displayName, currentLang);
         
         switch (currentLang) {
