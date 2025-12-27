@@ -1460,6 +1460,107 @@
 
       // Clear existing cards
       cardsContainer.innerHTML = '';
+      
+      // Helper function: Get suffix based on vowel harmony (for all 9 languages)
+      function getNameSuffix(name, language) {
+        // Get current language from translationManager or default to 'hu'
+        const currentLang = language || (window.translationManager && window.translationManager.getCurrentLanguage()) || 'hu';
+        
+        switch (currentLang) {
+          case 'hu': // Magyar - hangrendű végződés
+            {
+              const frontVowels = ['e', 'é', 'i', 'í', 'ö', 'ő', 'ü', 'ű'];
+              const backVowels = ['a', 'á', 'o', 'ó', 'u', 'ú'];
+              
+              const lowerName = name.toLowerCase();
+              let lastVowel = null;
+              for (let i = lowerName.length - 1; i >= 0; i--) {
+                if (frontVowels.includes(lowerName[i]) || backVowels.includes(lowerName[i])) {
+                  lastVowel = lowerName[i];
+                  break;
+                }
+              }
+              
+              return frontVowels.includes(lastVowel) ? 'nek' : 'nak';
+            }
+          
+          case 'en': // English - possessive 's
+            return name.endsWith('s') ? "'" : "'s";
+          
+          case 'de': // German - possessive 's
+            return 's';
+          
+          case 'es': // Spanish - de + name
+            return ''; // Handled in template: "de ${name}"
+          
+          case 'fr': // French - de + name
+            return ''; // Handled in template: "de ${name}"
+          
+          case 'ru': // Russian - genitive case approximation
+            return 'а'; // Common genitive ending
+          
+          case 'ja': // Japanese - の particle
+            return 'の';
+          
+          case 'zh': // Chinese - 的 particle
+            return '的';
+          
+          case 'sv': // Swedish - possessive 's
+            return 's';
+          
+          default:
+            return 'nak'; // Default to Hungarian back vowel
+        }
+      }
+      
+      // Helper function: Get notification text template for current language
+      function getNotificationText(displayName, language) {
+        const currentLang = language || (window.translationManager && window.translationManager.getCurrentLanguage()) || 'hu';
+        const suffix = getNameSuffix(displayName, currentLang);
+        
+        switch (currentLang) {
+          case 'hu':
+            return `Az értesítések hangjai ${displayName}${suffix} hallhatóak.`;
+          case 'en':
+            return `Notification sounds are audible to ${displayName}${suffix} device.`;
+          case 'de':
+            return `Benachrichtigungstöne sind auf ${displayName}${suffix} Gerät hörbar.`;
+          case 'es':
+            return `Los sonidos de notificación son audibles para el dispositivo de ${displayName}.`;
+          case 'fr':
+            return `Les sons de notification sont audibles sur l'appareil de ${displayName}.`;
+          case 'ru':
+            return `Звуки уведомлений слышны на устройстве ${displayName}${suffix}.`;
+          case 'ja':
+            return `通知音は${displayName}${suffix}デバイスで聞こえます。`;
+          case 'zh':
+            return `通知声音在${displayName}${suffix}设备上可听见。`;
+          case 'sv':
+            return `Aviseringsljud hörs på ${displayName}${suffix} enhet.`;
+          default:
+            return `Az értesítések hangjai ${displayName}${suffix} hallhatóak.`;
+        }
+      }
+      
+      // Helper function: Get login method text with proper suffix
+      function getLoginMethodText(method) {
+        if (method === 'Microsoft') {
+          return 'Microsoft fiókkal';
+        } else if (method === 'Google') {
+          return 'Google fiókkal';
+        }
+        return method;
+      }
+      
+      // Helper function: Get login method icon
+      function getLoginMethodIcon(method) {
+        if (method === 'Microsoft') {
+          return 'assets/onboarding/accountTypes/microsoft.png';
+        } else if (method === 'Google') {
+          return 'assets/onboarding/accountTypes/google-logo.png';
+        }
+        return 'assets/general/microsoft.png';
+      }
 
       // Create cards
       for (let i = 0; i < cardCount; i++) {
@@ -1479,6 +1580,9 @@
         const loginMethod = loginMethods[i % loginMethods.length];
         const accountType = accountTypes[i % accountTypes.length];
         const displayName = name.split(' ')[0]; // First name for notifications
+        const loginMethodText = getLoginMethodText(loginMethod);
+        const loginMethodIcon = getLoginMethodIcon(loginMethod);
+        const notificationText = getNotificationText(displayName); // Használjuk az új függvényt
 
         card.innerHTML = `
           <button class="students-student-card-checkbox" type="button" aria-pressed="false">
@@ -1499,12 +1603,12 @@
                 <img src="assets/navbar/students.svg" alt="" class="students-student-card-right-item-icon students-student-card-right-item-icon--account-type" aria-hidden="true">
               </div>
               <div class="students-student-card-right-item">
-                <img src="assets/general/microsoft.png" alt="" class="students-student-card-right-item-icon" aria-hidden="true">
-                <span class="students-student-card-right-item-text">Bejelentkezett: ${loginMethod}-kal</span>
+                <img src="${loginMethodIcon}" alt="" class="students-student-card-right-item-icon" aria-hidden="true">
+                <span class="students-student-card-right-item-text">Bejelentkezett: ${loginMethodText}</span>
               </div>
               <div class="students-student-card-right-item">
                 <img src="assets/youhub/notifications/bell.svg" alt="" class="students-student-card-right-item-icon" aria-hidden="true">
-                <span class="students-student-card-right-item-text">Az értesítések hangjai ${displayName}-nak hallhatóak.</span>
+                <span class="students-student-card-right-item-text">${notificationText}</span>
               </div>
             </div>
           </div>

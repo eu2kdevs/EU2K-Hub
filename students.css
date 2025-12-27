@@ -1232,6 +1232,7 @@ body {
   min-height: 0;
   background: #43562D;
   position: relative;
+  isolation: isolate; /* Új stacking context a blur-oknak */
 }
 
 /* Students Middle Section Fade (blur gradients) */
@@ -1246,13 +1247,13 @@ body {
 }
 
 .students-middle-section-fade--top {
-  top: -40px;
-  background: linear-gradient(to bottom, #465A2F 0%, rgba(70, 90, 47, 0.95) 20%, rgba(70, 90, 47, 0.7) 50%, rgba(70, 90, 47, 0.3) 80%, rgba(70, 90, 47, 0) 100%);
+  top: 0; /* Feljebb: 0px helyett -40px */
+  background: linear-gradient(to bottom, #43562D 0%, rgba(67, 86, 45, 0.95) 20%, rgba(67, 86, 45, 0.7) 50%, rgba(67, 86, 45, 0.3) 80%, rgba(67, 86, 45, 0) 100%);
 }
 
 .students-middle-section-fade--bottom {
-  bottom: -40px;
-  background: linear-gradient(to top, #465A2F 0%, rgba(70, 90, 47, 0.95) 20%, rgba(70, 90, 47, 0.7) 50%, rgba(70, 90, 47, 0.3) 80%, rgba(70, 90, 47, 0) 100%);
+  bottom: 0; /* Feljebb: 0px helyett -40px */
+  background: linear-gradient(to top, #43562D 0%, rgba(67, 86, 45, 0.95) 20%, rgba(67, 86, 45, 0.7) 50%, rgba(67, 86, 45, 0.3) 80%, rgba(67, 86, 45, 0) 100%);
 }
 
 /* Students Middle Section Top Buttons */
@@ -1809,8 +1810,8 @@ button.students-action-btn[data-needs-expansion="true"].students-action-btn-expa
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-top: 80px; /* Start at bottom of top blur (120px - 40px offset) */
-  padding-bottom: 80px; /* End at top of bottom blur (120px - 40px offset) */
+  padding-top: 120px; /* 120px blur magassága */
+  padding-bottom: 120px; /* 120px blur magassága */
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
@@ -1838,22 +1839,27 @@ button.students-action-btn[data-needs-expansion="true"].students-action-btn-expa
   width: auto;
   height: calc(100% - 24px); /* Full height minus padding */
   aspect-ratio: 1;
-  border-radius: 6px;
+  border-radius: 12px; /* Nagyobb lekerekítés */
   border: 1px solid #4B6231;
   background: #D3FFA1;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 4px;
+  padding: 8px; /* Nagyobb padding */
   flex-shrink: 0;
-  align-self: stretch;
+  align-self: center; /* Középre igazítva */
   box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.students-student-card-checkbox:hover {
+  background: #BFF089;
 }
 
 .students-student-card-checkbox img {
-  width: 12px;
-  height: 12px;
+  width: 18px; /* Nagyobb pipa */
+  height: 18px;
   opacity: 0;
   transition: opacity 0.2s ease;
 }
