@@ -2,7 +2,7 @@
   "functions": [
     {
       "codebase": "default",
-      "source": "functions/default",
+      "source": "EU2K-Hub/functions/default",
       "runtime": "nodejs22",
       "predeploy": [
         "npm --prefix \"$RESOURCE_DIR\" run build"
@@ -10,7 +10,7 @@
     },
     {
       "codebase": "gemini",
-      "source": "functions/gemini",
+      "source": "EU2K-Hub/functions/gemini",
       "runtime": "nodejs22",
       "ignore": [
         "node_modules",
@@ -25,7 +25,7 @@
     },
     {
       "codebase": "generatefoodimage",
-      "source": "functions/generatefoodimage",
+      "source": "EU2K-Hub/functions/generatefoodimage",
       "runtime": "nodejs22",
       "ignore": [
         "node_modules",
@@ -40,7 +40,7 @@
     },
     {
       "codebase": "groupsclaims",
-      "source": "functions/groupsclaims",
+      "source": "EU2K-Hub/functions/groupsclaims",
       "runtime": "nodejs22",
       "ignore": [
         "node_modules",
@@ -55,7 +55,7 @@
     },
     {
       "codebase": "notifications",
-      "source": "functions/notifications",
+      "source": "EU2K-Hub/functions/notifications",
       "runtime": "nodejs22",
       "ignore": [
         "node_modules",
@@ -70,15 +70,18 @@
     }
   ],
   "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
+    "rules": "EU2K-Hub/firestore.rules",
+    "indexes": "EU2K-Hub/firestore.indexes.json"
   },
   "hosting": {
+    "site": "eu2khub",
     "public": "EU2K-Hub",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "**/firestore.rules",
+      "**/firestore.indexes.json"
     ],
     "rewrites": [
       {
