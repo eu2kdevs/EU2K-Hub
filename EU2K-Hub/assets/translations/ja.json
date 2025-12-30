@@ -1,0 +1,903 @@
+﻿{
+  "onboarding": {
+    "greeting": "こんにちは！",
+    "start": "始めましょう",
+    "restart": "再起動",
+    "language": "言語",
+    "back": "戻る",
+    "back_to_setup": "設定に戻る",
+    "who_are_you": "あなたは誰ですか？",
+    "recommended_login": "推奨ログイン方法：",
+    "school_account_required": "学校アカウントでログインする必要があります",
+    "google_account_required": "Googleアカウントでログインする必要があります",
+    "guest_info": "ゲストとして、ログインする必要はありませんが、多くの機能が制限されます",
+    "choose_login_method": "ログイン方法を選択",
+    "choose_language": "言語を選択",
+    "login_in_progress": "ログイン中",
+    "login_interrupted": "ログインが中断されました",
+    "try_again": "もう一度試す",
+    "retry": "再試行",
+    "logout": "ログアウト",
+    "restart_confirm": "本当に最初から始めますか？",
+    "restart_warning": "これまでのすべての進捗が失われます！",
+    "how_will_you_look": "どのように見えますか？",
+    "use_school_profile": "学校のプロフィール写真を使用",
+    "random": "ランダム",
+    "name_label": "あなたの名前:",
+    "name_placeholder": "ここに入力...",
+    "name_hint": "フルネームを入力する必要はありません。他の人に呼んでもらいたい名前を入力してください。教師の場合は、特に注意してください！",
+    "continue": "続ける",
+    "how_can_we_call_you": "どのように呼べばいいですか？",
+    "preferences_general_title": "一般",
+    "login_success": "ログイン成功！",
+    "preferences_title": "好みを選択",
+    "preferences_step_1": "1/2",
+    "preferences_notifications_title": "通知",
+    "preferences_notifications_desc": "後で設定で変更できます。",
+    "last_things_title": "最後のこと",
+    "last_things_desc": "本当にほぼ完了です。",
+    "legal_terms_title": "利用規約に同意",
+    "legal_terms_desc": "もうすぐ完了です！",
+    "finish": "完了",
+    "go_to_home": "ホームページに移動",
+    "finished_title": "完了しました！",
+    "login_student": "学生",
+    "login_teacher": "教師",
+    "login_parent": "保護者",
+    "login_guest": "ゲスト",
+    "last_things": {
+      "day_greetings_title": "時間帯による挨拶",
+      "day_greetings_desc": "朝はおはようございます、昼はこんにちは、夜はこんばんは。Hubをすぐに再度開くと、また会いましょう。",
+      "reduced_motion_title": "アニメーションを減らす",
+      "reduced_motion_desc": "乗り物酔いしやすい、またはてんかんに非常に敏感な場合に非常に役立ちます。",
+      "light_mode_title": "ライトモード",
+      "light_mode_desc": "うーん、なぜ使うのか分からないけど、ここに機会がある。"
+    },
+    "languages": {
+      "hu": "ハンガリー語",
+      "en": "英語",
+      "de": "ドイツ語",
+      "es": "スペイン語",
+      "fr": "フランス語",
+      "zh": "中国語",
+      "ja": "日本語",
+      "sv": "スウェーデン語",
+      "ru": "ロシア語"
+    },
+    "personal_info": {
+      "header": "個人情報",
+      "title": "生年月日を入力してください",
+      "description": "この情報は先生に必要です。あなたと先生以外は見ることができません。"
+    },
+    "contacts": {
+      "header": "保護者の情報",
+      "title": "正式な保護者の情報を入力してください。",
+      "description": "この情報はあなたと担任の先生、そして校長の許可を得た心理カウンセラーのみが閲覧できます。",
+      "input_name": "保護者のフルネーム",
+      "input_email": "保護者のメールアドレス",
+      "input_phone": "保護者の電話番号",
+      "warning": "保護者が実際に使用している連絡先を入力してください。誤った情報は修正され、警告を受ける場合があります。"
+    },
+    "assign_class": {
+      "header": "クラスに割り当て中",
+      "description": "うまくいかない場合は、担任の先生に参加コードを聞いてください。",
+      "loading_title": "すぐに終わります",
+      "loading_desc": "まもなくクラスに追加されます",
+      "manual_title": "担任の先生からの参加コードを入力してください。",
+      "manual_description": "このコードがないと先に進めません。",
+      "code_placeholder": "参加コード"
+    },
+    "teacher_actions": {
+      "title": "クラスに参加または登録",
+      "register": "登録",
+      "join": "参加"
+    },
+    "register_class": {
+      "title": "クラスを登録",
+      "desc": "クラス識別子を入力してください（例：2030e）。",
+      "placeholder": "例：2030e"
+    },
+    "join_class": {
+      "title": "クラスに参加",
+      "desc": "クラス識別子を入力してリクエストを送信してください。",
+      "placeholder": "クラス識別子",
+      "submit": "リクエストを送信"
+    },
+    "add_students": {
+      "title": "生徒を割り当て",
+      "subtitle": "生徒のフルネームを1人ずつ入力してください。システムが名前を提案したら、Tabを押して承認してください。見つからない場合でも、とにかく入力してください–Hubにログインすると、自動的にクラスに割り当てられます。Escを押して提案を取り消してください。",
+      "placeholder": "ここに入力...",
+      "finish": "完了"
+    }
+  },
+  "navigation": {
+    "home": "ホーム",
+    "qr": "QRコード",
+    "youhub": "YouHub",
+    "event_hub": "Event Hub",
+    "dashboard": "ダッシュボード",
+    "students": "私の生徒"
+  },
+  "pages": {
+    "index": {
+      "title": "EU2K Hub",
+      "welcome": "Hubへようこそ！",
+      "upcoming_events": "今後のイベント",
+      "news": "ニュース",
+      "event_name": "イベント名",
+      "event_description": "イベントの説明",
+      "event_location": "イベントの場所",
+      "event_date_place": "日付と場所",
+      "external_info": "外部情報",
+      "something_wrong": "問題が発生しました",
+      "fixing_soon": "すぐに修正します",
+      "banner": {
+        "title": "これが新しいデザインです。",
+        "description": "Europaデザインシステムを気に入っていただければ幸いです。ご質問がございましたら、こちらからでもフィードバックをお願いします。",
+        "feedback": "フィードバック",
+        "close": "閉じる"
+      }
+    },
+    "qr": {
+      "title": "QRコード",
+      "camera_in_use": "カメラが使用中です。",
+      "blocked_title": "おっと！",
+      "blocked_text": "権限が付与されていないため、カメラを使用できません。この機能を動作させるには、有効にしてください！",
+      "enable_button": "有効にする",
+      "auth": "参加確認",
+      "switch_camera": "カメラを切り替える",
+      "off_camera": "カメラをオフにする",
+      "on_camera": "カメラをオンにする",
+      "restart_camera": "カメラを再起動",
+      "game_start": "ゲームを開始",
+      "camera_switch": "カメラを切り替える",
+      "permission_title": "少し待ってください！",
+      "permission_list_1": "QRコードをスキャンするには、カメラへのアクセスを許可する必要があります。",
+      "permission_list_2": "Hubは自動的にカメラを使用することはありません。",
+      "permission_list_3": "カメラがアクティブな場合、右上隅に常に明確なインジケーターが表示されます。",
+      "permission_list_4": "今権限を付与すると、この機能が利用可能になります。",
+      "permission_list_5": "カメラを使用する他の機能も有効になります。",
+      "game_notice": "ゲーム機能はHubではまだサポートされていません。",
+      "auth_notice": "参加確認機能は間もなく利用可能になります。",
+      "banner": {
+        "title": "これが新しいデザインです。",
+        "description": "Europaデザインシステムを気に入っていただければ幸いです。ご質問がございましたら、こちらからでもフィードバックをお願いします。",
+        "feedback": "フィードバック",
+        "close": "閉じる"
+      }
+    },
+    "youhub": {
+      "title": "YouHub"
+    },
+    "general": {
+      "login": "ログイン"
+    },
+    "settings": {
+      "title": "設定",
+      "general": "一般",
+      "notifications": "通知とサウンド",
+      "functions": "機能",
+      "pages": "ページ",
+      "chat": "チャット",
+      "credits": "クレジットと法的情報",
+      "apply": "適用",
+      "edition_title": "エディション",
+      "edition_desc": "使用する Hub のエディションを選択してください！",
+      "edition_options": {
+        "general_public": "一般 - 公開",
+        "beta_public": "ベータ - 公開",
+        "beta_closed": "ベータ - クローズド"
+      },
+      "language_title": "言語",
+      "theme_title": "カラースキーム",
+      "theme_desc": "8 つの基本色から選択でき、ライトモードとダークモードも選択できます。",
+      "theme_color_scheme_label": "カラースキーム",
+      "theme_theme_label": "テーマ",
+      "theme_color_options": {
+        "green": "緑（デフォルト）",
+        "purple": "紫",
+        "red": "赤",
+        "orange": "オレンジ",
+        "light_blue": "ライトブルー",
+        "black": "黒",
+        "pink": "ピンク",
+        "dark_blue": "ダークブルー"
+      },
+      "theme_theme_options": {
+        "dark": "ダーク",
+        "light": "ライト",
+        "system": "システムテーマ"
+      },
+      "back_to_home": "ホームページ",
+      "back_to_youhub": "YouHub",
+      "back_to_event_hub": "Event Hub",
+      "back_to_food_hub": "Food Hub",
+      "back_to_fitness_hub": "Fitness Hub",
+      "back_to_class_hub": "Class Hub",
+      "back_to_qr": "QRコード",
+      "back_to_account": "アカウント",
+      "back_to_privacy": "プライバシーポリシー",
+      "back_to_terms": "利用規約",
+      "back_to_onboarding": "はじめに",
+      "back_to_dashboard": "ダッシュボード",
+      "back_to_students": "私の生徒",
+      "back_to_est": "EST",
+      "back": "に戻る",
+      "functions_options": {
+        "descriptive_texts_title": "説明テキスト",
+        "descriptive_texts_default": "デフォルト",
+        "descriptive_texts_reduced": "削減"
+      },
+      "pages_options": {
+        "home_title": "ホーム",
+        "youhub_title": "YouHub",
+        "layout_title": "レイアウト",
+        "layout_default": "デフォルト",
+        "layout_custom": "カスタム",
+        "reset_layout_title": "レイアウトをリセット",
+        "reset_button": "リセット",
+        "custom_cards_title": "カスタムカード",
+        "view_button": "表示",
+        "date_format_title": "日付形式",
+        "date_format_yyyy_mm_dd": "年年年.月月.日日",
+        "date_format_yyyy_dd_mm": "年年年.日日.月月",
+        "date_format_mm_yyyy_dd": "月月.年年年.日日",
+        "date_format_mm_dd_yyyy": "月月.日日.年年年",
+        "date_format_dd_mm_yyyy": "日日.月月.年年年"
+      },
+      "about": {
+        "title": "について",
+        "description": "ここでは、Hubのバージョン番号と、あなたのHubに関するその他の興味深い、または有用な情報を確認できます。",
+        "version_label": "バージョン:",
+        "edition_label": "エディション:",
+        "created_by_label": "作成者:",
+        "published_by_label": "発行者:",
+        "maintained_by_label": "メンテナー:",
+        "advanced_info": "詳細情報:",
+        "ui_name_label": "ユーザーインターフェース (UI):",
+        "ui_version_label": "ユーザーインターフェース (UI) バージョン:",
+        "kernel_version_label": "カーネルバージョン:",
+        "yhc_version_label": "YouHubコンポーネントバージョン:",
+        "chc_version_label": "Class Hubコンポーネントバージョン:",
+        "fihc_version_label": "Fitness Hubコンポーネントバージョン:",
+        "fohc_version_label": "Food Hubコンポーネントバージョン:",
+        "ehc_version_label": "Event Hubコンポーネントバージョン:",
+        "eu2k_suite_label": "EU2K Suite"
+      },
+      "staff": {
+        "title": "同僚向け",
+        "description": "高度な機能と管理インターフェースへのアクセス。",
+        "button_login": "ログイン",
+        "button_end": "セッションを終了",
+        "popup": {
+          "start_title": "セッションを開始",
+          "start_message": "セッションを開始するには、管理者パスワードを入力してください。セッションは15分間アクティブになります。",
+          "confirm": "ログイン",
+          "end_title": "セッションを終了",
+          "end_message": "本当にセッションを終了しますか？変更を加えるには再度ログインする必要があります。",
+          "end_confirm": "終了",
+          "transfer_title": "ワークフローを別のデバイスに転送",
+          "transfer_message": "セッションを転送するには、パスワードを入力してください。古いデバイス上のセッションは終了し、別のデバイスで同じポイントから続行されます。",
+          "transfer_confirm": "転送",
+          "end_all_title": "すべてのセッションを終了してもよろしいですか?",
+          "end_all_message": "これにより、すべてのデバイス上のすべてのアクティブなセッションが終了します。",
+          "end_all_confirm": "すべてのセッションを終了",
+          "waiting_title": "ホストデバイスの応答を待機中",
+          "waiting_message": "他のデバイスが転送を確認するのを待っています。",
+          "password_placeholder": "パスワード",
+          "error": "無効なパスワードまたはアクセスが拒否されました。",
+          "create_password_title": "パスワードを作成",
+          "create_password_message": "セッションを開始するためにパスワードを作成してください。パスワードは8文字以上である必要があります。",
+          "create_password_placeholder": "パスワード（8文字以上）",
+          "create_password_confirm": "パスワードを作成",
+          "password_too_short": "パスワードは8文字以上である必要があります！",
+          "create_error": "パスワードの作成中にエラーが発生しました。"
+        },
+        "end_all": {
+          "title": "すべてのセッションを終了",
+          "description": "すべてのデバイス上のすべてのアクティブなセッションを終了します。",
+          "button": "すべてのセッションを終了"
+        }
+      }
+    },
+    "dashboard": {
+      "title": "ダッシュボード",
+      "heading": "ダッシュボード",
+      "description": "このページは開発中です。"
+    },
+    "students": {
+      "title": "私の生徒",
+      "heading": "私の生徒",
+      "description": "このページは開発中です。",
+      "students_in_class": "クラスの生徒",
+      "remove_from_class": "クラスから削除",
+      "change_roles": "役割を変更",
+      "details": "詳細",
+      "select": "選択",
+      "cancel_selection": "キャンセル",
+      "add_student": "クラスに生徒を追加",
+      "delete_class": "クラスを削除",
+      "profile_details_view": {
+        "pending_text": "{fullName} が Hub に入るとすぐにクラスに参加します。",
+        "logged_in_with": "ログイン: {accountType} アカウント",
+        "notifications_audible": "通知音あり",
+        "still_member_of": "現在も {groups} グループのメンバーです。",
+        "not_member_of_others": "{fullName} は他のグループのメンバーではありません。",
+        "community_contributions": "コミュニティへの貢献",
+        "suggestions_count": "{count} 件の提案 ({hive} Hive, {private} 非公開)",
+        "participation_rate": "プログラム参加率: -",
+        "additional_info": "追加情報",
+        "hub_language": "Hub の表示言語: {language}",
+        "hub_language_label": "Hub の表示言語:",
+        "contact_info": "連絡先情報",
+        "student_email": "学生のメールアドレス: {email}",
+        "guardian_name": "保護者の氏名:",
+        "guardian_email": "保護者のメールアドレス:",
+        "guardian_phone": "保護者の電話番号:",
+        "click_to_show": "[クリックして表示]",
+        "quick_message_teams": "Teams でクイックメッセージ"
+      },
+      "profile_details": "プロフィール詳細",
+      "select_profile": "プロフィールを選択",
+      "no_class_title": "まだクラスがありません",
+      "no_class_subtitle": "今すぐクラスを登録してください！",
+      "register_class": "クラスを登録",
+      "verify_identity": {
+        "title": "本人確認",
+        "text": "重要な操作を実行しようとしています。本人確認をしてください。",
+        "confirm": "確認"
+      },
+      "class_selector": {
+        "title": "クラスを選択",
+        "class_name": "クラス名",
+        "graduates": "卒業:",
+        "student_count": "クラスに{{count}}人の生徒",
+        "you_are": "あなたはクラスの{{role}}です。",
+        "leader": "担任",
+        "deputy": "副担任"
+      },
+      "account_type": {
+        "student": "生徒",
+        "teacher": "教師"
+      },
+      "logged_in_with": "ログイン方法: {{method}}",
+      "sounds_audible": "{{displayName}}の通知音が聞こえます。",
+      "sounds_not_audible": "{{displayName}}の通知音は聞こえません。",
+      "class_registration": {
+        "loading_title": "クラスの登録が進行中です",
+        "loading_message": "このページを閉じないでください。それほど時間はかかりません。"
+      }
+    },
+    "privacy_policy": {
+      "title": "プライバシーポリシー",
+      "banner": {
+        "title": "これが新しいデザインです。",
+        "description": "Europaデザインシステムを気に入っていただければ幸いです。ご質問がある場合は、ここからでもフィードバックをお願いします。",
+        "feedback": "フィードバック",
+        "close": "閉じる"
+      },
+      "effective_date": "<strong>発効日:</strong> 2025年1月11日",
+      "section_1_title": "1. はじめに",
+      "section_1_text": "EU2K Hubは、Európa 2000 Gimnáziumのデジタルセンターで、学生、教師、関係者のために作成されました。私たちの目標は、データの取り扱いにおいて透明性とセキュリティを追求しながら、学校生活をより簡単で楽しいものにすることです。このプライバシーポリシーは、個人データの取り扱い方法を詳しく説明しています。",
+      "section_2_title": "2. 収集するデータ",
+      "section_2_1_title": "2.1. ログインおよびプロフィールデータ",
+      "section_2_1_1": "<strong>認証データ:</strong> Microsoft、Google、またはAppleアカウントの基本情報（名前、メールアドレス、プロフィール写真）",
+      "section_2_1_2": "<strong>ユーザープロフィール:</strong> 表示名、プロフィール写真、生年月日（オプション）、アカウントタイプ（学生、教師、保護者）",
+      "section_2_1_3": "<strong>設定:</strong> 言語設定、通知設定、メッセージ設定",
+      "section_2_2_title": "2.2. 学校データ",
+      "section_2_2_1": "<strong>クラス情報:</strong> クラス名、クラスメートと教師の名前と連絡先",
+      "section_2_2_2": "<strong>学業データ:</strong> 成績、時間割、試験、宿題（利用可能な場合）",
+      "section_2_2_3": "<strong>クラスプロフィール:</strong> クラスバナー画像、説明、クラス統計",
+      "section_2_3_title": "2.3. コミュニティコンテンツ",
+      "section_2_3_1": "<strong>投稿とコメント:</strong> YouHub、Event Hub、その他のコミュニティ機能で作成されたコンテンツ",
+      "section_2_3_2": "<strong>イベント:</strong> 作成または参加したイベント、コース、会議",
+      "section_2_3_3": "<strong>投票:</strong> 投票と世論調査への参加",
+      "section_2_4_title": "2.4. 機能固有のデータ",
+      "section_2_4_1": "<strong>YouHub:</strong> 統計、時間割、通知、提案、クラスの月次パフォーマンス",
+      "section_2_4_2": "<strong>Event Hub:</strong> イベント参加、QRコードスキャン",
+      "section_2_4_3": "<strong>Class Hub:</strong> クラス情報、学生グループ",
+      "section_2_4_4": "<strong>Food Hub:</strong> 食事の好み（利用可能な場合）",
+      "section_2_4_5": "<strong>QRコード読み取り:</strong> スキャンしたQRコードのタイムスタンプと場所",
+      "section_2_5_title": "2.5. 技術データ",
+      "section_2_5_1": "<strong>ブラウザデータ:</strong> ブラウザタイプ、オペレーティングシステム、デバイスタイプ",
+      "section_2_5_2": "<strong>使用データ:</strong> ページ訪問、クリック、セッション情報",
+      "section_2_5_3": "<strong>ローカルストレージ:</strong> ログイン状態、設定、その他の設定を保存するためのlocalStorageとsessionStorageの使用",
+      "section_3_title": "3. データの使用方法",
+      "section_3_1_title": "3.1. サービスの提供",
+      "section_3_1_1": "ユーザーアカウントの管理と認証",
+      "section_3_1_2": "学校機能の運営（時間割、成績、イベント）",
+      "section_3_1_3": "コミュニティ機能の提供（投稿、コメント、イベント）",
+      "section_3_1_4": "重要な情報に関する通知の送信",
+      "section_3_2_title": "3.2. サービスの改善",
+      "section_3_2_1": "サービス改善のための使用統計の分析",
+      "section_3_2_2": "エラーの特定と修正",
+      "section_3_2_3": "ユーザー体験の最適化",
+      "section_3_3_title": "3.3. 法的コンプライアンス",
+      "section_3_3_1": "GDPRおよびその他のデータ保護法の遵守",
+      "section_3_3_2": "権限とセキュリティ対策の検証",
+      "section_3_important": "<strong>重要:</strong> データは上記の目的にのみ使用します。外部企業に販売したり、商業目的で共有したりすることはありません。",
+      "section_4_title": "4. 第三者サービス",
+      "section_4_1_title": "4.1. Firebase (Google)",
+      "section_4_1_1": "<strong>Firebase Authentication:</strong> ユーザー認証の管理",
+      "section_4_1_2": "<strong>Cloud Firestore:</strong> データの保存と同期",
+      "section_4_1_3": "<strong>Firebase Storage:</strong> ファイルの保存（画像、ドキュメント）",
+      "section_4_1_4": "<strong>Firebase Analytics:</strong> 使用統計の収集（同意がある場合のみ）",
+      "section_4_1_5": "<strong>Firebase Functions:</strong> バックエンド機能の実行",
+      "section_4_1_text": "データはヨーロッパ（europe-west1）リージョンに保存されます。詳細情報: <a href=\"https://firebase.google.com/support/privacy\" target=\"_blank\">Firebaseプライバシー</a>",
+      "section_4_2_title": "4.2. Microsoft Clarity",
+      "section_4_2_1": "<strong>使用:</strong> ウェブサイトの使用統計とユーザー行動の分析（同意がある場合のみ）",
+      "section_4_2_2": "<strong>データ処理:</strong> Microsoftのプライバシーガイドラインに従って",
+      "section_4_2_3": "<strong>詳細情報:</strong> <a href=\"https://clarity.microsoft.com/terms\" target=\"_blank\">Microsoft Clarity利用規約</a>",
+      "section_4_3_title": "4.3. Microsoft Graph API",
+      "section_4_3_1": "<strong>使用:</strong> Microsoftアカウント情報の取得（名前、メール、プロフィール写真）",
+      "section_4_3_2": "<strong>データ処理:</strong> ログインに必要な最小限のデータのみ",
+      "section_5_title": "5. クッキーと追跡技術",
+      "section_5_1_title": "5.1. 技術的クッキー（必須）",
+      "section_5_1_1": "<strong>ログイン状態:</strong> セッションの維持",
+      "section_5_1_2": "<strong>設定:</strong> 言語設定、設定の保存",
+      "section_5_1_3": "<strong>ローカルストレージ:</strong> localStorageとsessionStorageの使用",
+      "section_5_2_title": "5.2. 分析クッキー（同意が必要）",
+      "section_5_2_1": "<strong>Firebase Analytics:</strong> 使用統計の収集",
+      "section_5_2_2": "<strong>Microsoft Clarity:</strong> ユーザー行動の分析",
+      "section_5_text": "分析クッキーの使用には事前の同意が必要です。ウェブサイトを初めて読み込む際、クッキーバナーが表示され、これらのクッキーを受け入れるか拒否できます。同意は設定でいつでも撤回できます。",
+      "section_6_title": "6. データへのアクセス権",
+      "section_6_1_title": "6.1. ユーザー権限",
+      "section_6_1_1": "<strong>学生:</strong> 自分のデータ、クラスのデータ、クラスメートの基本情報",
+      "section_6_1_2": "<strong>教師:</strong> 自分のデータ、クラスのデータ、学生の基本情報",
+      "section_6_1_3": "<strong>保護者:</strong> 自分のデータ、子供の学校データ（許可されている場合）",
+      "section_6_1_4": "<strong>管理者:</strong> システムメンテナンスのための限定アクセス",
+      "section_6_2_title": "6.2. 共同編集",
+      "section_6_2_1": "特定の機能（例：クラスプロフィール）では、コミュニティメンバーが共同でコンテンツを編集できます",
+      "section_6_2_2": "クラスプロフィールのコンテンツはクラスメンバーに表示されます",
+      "section_6_3_title": "6.3. 第三者",
+      "section_6_3_1": "データの保存と処理のためのFirebase（Google）サービス",
+      "section_6_3_2": "使用統計のためのMicrosoft Clarity（同意がある場合のみ）",
+      "section_6_3_3": "これらのプロバイダーは独自のプライバシーポリシーに従ってデータを処理します",
+      "section_7_title": "7. データの保護方法",
+      "section_7_1_title": "7.1. 技術的セキュリティ対策",
+      "section_7_1_1": "<strong>認証:</strong> すべてのログインは認証されたMicrosoft、Google、またはAppleアカウントを通じて行われます",
+      "section_7_1_2": "<strong>暗号化:</strong> データの送信と保存は暗号化された接続（HTTPS/TLS）を通じて行われます",
+      "section_7_1_3": "<strong>Firebase Security Rules:</strong> データへの厳格なアクセス制御",
+      "section_7_1_4": "<strong>定期的なセキュリティチェック:</strong> システムの定期的な監査",
+      "section_7_2_title": "7.2. 組織的対策",
+      "section_7_2_1": "データへのアクセスを厳格に制限しています",
+      "section_7_2_2": "許可された人のみがデータにアクセスできます",
+      "section_7_2_3": "データ保護に関する定期的なトレーニングを実施しています",
+      "section_7_3_title": "7.3. データ最小化",
+      "section_7_3_1": "サービスの運営に必要なデータのみを収集します",
+      "section_7_3_2": "データ収集を定期的に見直し、不要なデータを削除します",
+      "section_8_title": "8. あなたの権利",
+      "section_8_intro": "一般データ保護規則（GDPR）に従い、以下の権利があります:",
+      "section_8_1": "<strong>アクセス権:</strong> あなたのデータのコピーを要求できます",
+      "section_8_2": "<strong>訂正権:</strong> 誤ったデータの訂正を要求できます",
+      "section_8_3": "<strong>削除権:</strong> データの削除を要求できます（さらなる保存の法的根拠がない場合）",
+      "section_8_4": "<strong>制限権:</strong> データ処理の制限を要求できます",
+      "section_8_5": "<strong>データポータビリティ権:</strong> 構造化された一般的な形式でデータの転送を要求できます",
+      "section_8_6": "<strong>異議申し立て権:</strong> 分析クッキーへの同意をいつでも撤回できます",
+      "section_8_7": "<strong>苦情申し立て権:</strong> データ保護機関に苦情を申し立てることができます",
+      "section_8_contact": "権利を行使するには、以下のメールアドレスにご連絡ください: <a href=\"mailto:turoczi.adam@europa2000.hu\">turoczi.adam@europa2000.hu</a>",
+      "section_9_title": "9. データ保存期間",
+      "section_9_1": "<strong>ユーザーアカウントデータ:</strong> アカウントがアクティブな間、または削除まで",
+      "section_9_2": "<strong>コミュニティコンテンツ:</strong> ユーザーが削除するまで、またはアカウント削除まで",
+      "section_9_3": "<strong>分析データ:</strong> 最大26か月（同意がある場合）",
+      "section_9_4": "<strong>ローカルストレージ（localStorage）:</strong> ユーザーが削除するまで、またはブラウザキャッシュがクリアされるまで",
+      "section_9_text": "アカウント削除時、すべての個人データが削除されますが、法的義務（例：会計データ）または正当な利益（例：セキュリティログ）により保持が必要なデータを除きます。",
+      "section_10_title": "10. 子供のデータ保護",
+      "section_10_text1": "EU2K Hubは主に学校環境で使用され、学生は通常14歳未満です。保護者と教師がデータ処理について認識していることが重要です。プラットフォームを使用するには、学校の監督下にある学校アカウントが必要です。",
+      "section_10_text2": "14歳未満の子供のデータを処理する場合、学校と保護者の共同同意が必要です。ご質問がある場合は、学校または以下の連絡先にお問い合わせください。",
+      "section_11_title": "11. 連絡先と苦情",
+      "section_11_intro": "データ保護に関するご質問や権利の行使をご希望の場合は、以下までご連絡ください:",
+      "section_11_email": "<strong>メール:</strong> <a href=\"mailto:turoczi.adam@europa2000.hu\">turoczi.adam@europa2000.hu</a>",
+      "section_11_authority_intro": "<strong>データ保護機関:</strong> データの処理がデータ保護法に違反しているとお考えの場合は、国家データ保護・情報自由機関（NAIH）に苦情を申し立てることができます:",
+      "section_11_authority_details": "<strong>NAIH:</strong><br>住所: 1055 Budapest, Falk Miksa utca 9-11.<br>電話: +36 1 391 1400<br>メール: <a href=\"mailto:ugyfelszolgalat@naih.hu\">ugyfelszolgalat@naih.hu</a><br>ウェブ: <a href=\"https://www.naih.hu\" target=\"_blank\">www.naih.hu</a>",
+      "footer": "© 2025 EU2K Hub – 全著作権所有。"
+    },
+    "terms_of_service": {
+      "title": "利用規約",
+      "banner": {
+        "title": "これが新しいデザインです。",
+        "description": "Europaデザインシステムを気に入っていただければ幸いです。ご質問がある場合は、ここからでもフィードバックをお願いします。",
+        "feedback": "フィードバック",
+        "close": "閉じる"
+      },
+      "effective_date": "<strong>発効日:</strong> 2025年1月11日",
+      "section_1_title": "1. はじめに",
+      "section_1_text": "EU2K Hubへようこそ！EU2K Hubは、生徒、教師、興味のある方のために作成されたEurópa 2000 Gimnáziumのデジタルセンターです。プラットフォームを使用することで、これらの利用規約に同意したことになります。サービスを使用する前に、この文書を注意深くお読みください。",
+      "section_2_title": "2. アカウントと権限",
+      "section_2_1_title": "2.1. アカウント作成",
+      "section_2_1_1": "<strong>学校アカウントが必要:</strong> プラットフォームを使用するには、学校アカウント（Microsoft、Google、またはApple）が必要です",
+      "section_2_1_2": "<strong>ユーザータイプ:</strong> プラットフォームは3つのユーザータイプをサポートしています: 生徒、教師、保護者",
+      "section_2_1_3": "<strong>アカウントのセキュリティ:</strong> アカウントのセキュリティについて責任を負います。パスワードやログイン情報を他の人と共有しないでください",
+      "section_2_2_title": "2.2. アカウントタイプと権限",
+      "section_2_2_1": "<strong>生徒:</strong> 自分のデータ、クラスのデータ、YouHub、Event Hub、その他のコミュニティ機能にアクセスできます",
+      "section_2_2_2": "<strong>教師:</strong> クラスのデータ、生徒の基本情報にアクセスし、イベントを作成および管理できます",
+      "section_2_2_3": "<strong>保護者:</strong> 子供の学校データにアクセスでき（許可されている場合）、重要な情報に関する通知を受信できます",
+      "section_2_3_title": "2.3. アカウントの不正使用",
+      "section_2_3_text": "システムが不正使用を検出した場合（例: 生徒が保護者アカウントでログイン）、アカウントタイプの変更、通知の送信、または機能の制限を行う権利を留保します。システムのあらゆる形式の悪用は禁止されており、処罰の対象となります。",
+      "section_3_title": "3. 許容される使用",
+      "section_3_1_title": "3.1. 一般的な規則",
+      "section_3_1_1": "プラットフォームは合法的および学校目的でのみ使用できます",
+      "section_3_1_2": "他の人のアカウントの使用または取得は禁止されています",
+      "section_3_1_3": "システムまたはネットワークのセキュリティを回避することは禁止されています",
+      "section_3_1_4": "ウイルス、マルウェア、またはその他の有害なソフトウェアの配布は禁止されています",
+      "section_3_2_title": "3.2. コミュニティの行動",
+      "section_3_2_1": "他のユーザーに対して敬意を持って行動してください",
+      "section_3_2_2": "いかなる種類の嫌がらせ、脅迫、または虐待も禁止されています",
+      "section_3_2_3": "差別、ヘイトスピーチ、または他の人を侮辱することは禁止されています",
+      "section_3_2_4": "スパム、広告、または未承諾のコンテンツは禁止されています",
+      "section_4_title": "4. コンテンツ規則",
+      "section_4_1_title": "4.1. アップロードされたコンテンツ",
+      "section_4_1_1": "<strong>責任:</strong> プラットフォームにアップロードまたは共有するすべてのコンテンツについて責任を負います",
+      "section_4_1_2": "<strong>禁止コンテンツ:</strong> 他の人の権利を侵害する、違法な、または攻撃的なコンテンツのアップロードは禁止されています",
+      "section_4_1_3": "<strong>知的財産:</strong> 権利があるコンテンツのみをアップロードしてください",
+      "section_4_2_title": "4.2. コンテンツモデレーション",
+      "section_4_2_text": "これらの条件またはプラットフォームの規則に違反するコンテンツをいつでも削除、変更、または削除する権利を留保します。繰り返しの違反は、アカウントの停止または削除につながる可能性があります。",
+      "section_5_title": "5. 知的財産",
+      "section_5_1_title": "5.1. プラットフォームコンテンツ",
+      "section_5_1_text": "EU2K Hubプラットフォーム、デザイン、ロゴ、およびすべての関連コンテンツは、Európa 2000 GimnáziumおよびEU2K Devsの知的財産です。プラットフォームの使用は、コンテンツをコピー、配布、または変更する権利を付与するものではありません。",
+      "section_5_2_title": "5.2. ユーザーコンテンツ",
+      "section_5_2_text": "プラットフォームにアップロードされたコンテンツは、引き続きあなたの所有物です。ただし、プラットフォームを使用することで、プラットフォームの機能に必要な範囲でコンテンツを表示、保存、管理する許可を付与します。",
+      "section_6_title": "6. 責任",
+      "section_6_1_title": "6.1. サービスの可用性",
+      "section_6_1_text": "プラットフォームは「現状のまま」提供されます。継続的な可用性、エラーのない動作、またはデータ損失について責任を負いません。定期的なメンテナンスと更新により、サービスが一時的に利用できない場合があります。",
+      "section_6_2_title": "6.2. 第三者のコンテンツ",
+      "section_6_2_text": "プラットフォームには、第三者によって作成されたコンテンツ（例: イベント、コース）が含まれる場合があります。そのようなコンテンツについては、作成者のみが責任を負います。Hub、学校、およびプラットフォーム開発者は、そのようなコンテンツについて責任を負いません。",
+      "section_6_3_title": "6.3. ユーザーの責任",
+      "section_6_3_text": "プラットフォームの使用およびアカウントを通じて実行されるすべての活動について責任を負います。違反またはこれらの条件の違反について個人的に責任を負います。",
+      "section_7_title": "7. サービスの変更",
+      "section_7_text": "プラットフォームまたはその一部をいつでも変更、更新、または中止する権利を留保します。重要な変更についてはユーザーに通知しますが、以前の機能の可用性について責任を負いません。",
+      "section_7_beta": "<strong>重要:</strong> プラットフォームは現在ベータ版です。これは、機能が変更される可能性があり、エラーが発生する可能性があり、完全なサポートがまだ利用できないことを意味します。",
+      "section_8_title": "8. アカウントの終了",
+      "section_8_1_title": "8.1. 自発的な終了",
+      "section_8_1_text": "設定または連絡を通じて、いつでもアカウントの削除を要求できます。アカウント削除後、法的義務または正当な利益により保持する必要があるものを除き、すべての個人データが削除されます。",
+      "section_8_2_title": "8.2. 停止または削除",
+      "section_8_2_text": "重大な違反またはこれらの条件の違反の場合、事前通知なしにアカウントを即座に停止または削除する権利を留保します。そのような場合、ユーザーは返金または補償を受ける権利がありません。",
+      "section_9_title": "9. 条件の変更",
+      "section_9_text": "これらの利用規約をいつでも変更する権利を留保します。重要な変更については、電子メールまたはプラットフォームを通じてユーザーに通知します。変更後のサービスの継続的な使用は、変更の受け入れを意味します。",
+      "section_10_title": "10. 連絡先",
+      "section_10_intro": "利用規約に関する質問がある場合、または違反を報告したい場合は、以下までご連絡ください:",
+      "section_10_email": "<strong>メール:</strong> <a href=\"mailto:turoczi.adam@europa2000.hu\">turoczi.adam@europa2000.hu</a>",
+      "section_10_response": "すべての質問または報告に48時間以内に回答するよう努めます。",
+      "footer": "© 2025 EU2K Hub – 全著作権所有。"
+    }
+  },
+  "popup_notifications_title": "ポップアップ通知",
+  "event_hub_popup_label": "Event Hub",
+  "new_things_popup_label": "新着情報",
+  "beta_popup_label": "ベータ版",
+  "wd_popup_label": "警告と重要事項",
+  "popups_popup_label": "ポップアップウィンドウ",
+  "notifications_and_sound": "通知とサウンド",
+  "silent_mode_title": "サイレントモード",
+  "silent_mode_desc": "学校にいる間は、通知にサウンドは付随しません。",
+  "turn_on_sound": "サウンドを有効にする",
+  "sounds_title": "サウンド",
+  "notification_sound_title": "通知音",
+  "bubble1": "Bubble 1",
+  "bubble2": "Bubble 2",
+  "bubble3": "Bubble 3",
+  "push_notifications_title": "プッシュ通知",
+  "push_notifications_desc": "プッシュ通知は、画面右上に表示される、素早く圧力のように届く通知です。",
+  "sort_label": "並べ替え",
+  "categories_option": "カテゴリ",
+  "abc_order_option": "アルファベット順",
+  "news_label": "ニュース",
+  "events_label": "イベント & Event Hub",
+  "messages_label": "メッセージ",
+  "posts_label": "投稿",
+  "invites_label": "招待",
+  "new_things_label": "新着情報",
+  "location_mute_title": "状況ベースのサイレント",
+  "silent_mode_popup_title": "サイレントモード",
+  "silent_mode_popup_desc": "このボタンで、今日だけサイレントモードをオフにできます。\n\n今は授業時間のようなので、通知が邪魔になるかもしれません。\n\nそれでもオフにする場合は、授業中は端末自体をサイレントにしておくことをおすすめします。",
+  "silent_mode_popup_confirm": "今日だけサイレントモードをオフにする",
+  "youhub": {
+    "header": {
+      "edit": "編集"
+    },
+    "edit_mode": {
+      "enter": "編集",
+      "exit": "編集モードを終了"
+    },
+    "banners": {
+      "info": {
+        "title": "これが新しいデザインです。",
+        "description": "Europaデザインシステムを気に入っていただければ幸いです。ご質問がある場合は、ここからでもフィードバックをお願いします。",
+        "feedback": "フィードバック",
+        "close": "閉じる"
+      },
+      "warning": {
+        "title": "YouHubはまだベータ版です。",
+        "description": "YouHubに興味を持っていただきありがとうございますが、未完成のソフトウェアを使用していることにご注意ください。",
+        "feedback": "フィードバック",
+        "close": "閉じる"
+      }
+    },
+    "revert": {
+      "title": "順序をリセットしてもよろしいですか？",
+      "text": "現在のレイアウトが失われ、手動でリセットする必要があります！",
+      "button": "リセット"
+    },
+    "dev_mode": {
+      "title": "開発者モード",
+      "text": "パスワードを入力：",
+      "password_placeholder": "パスワード",
+      "login_button": "ログイン"
+    },
+    "myclass": {
+      "title": "私のクラス",
+      "month": "私のクラスの月",
+      "suggestions": "クラスの提案",
+      "info": "情報",
+      "states": {
+        "suggestions_summer": {
+          "title": "それほど学校を待つことはできません。",
+          "description": "学校は{days}日後に始まります。",
+          "list_item1": "Suggestions Hubの実装に取り組んでいます。",
+          "list_item2": "準備ができたら、お気に入りのアイデアがここに表示されます。"
+        },
+        "suggestions_normal": {
+          "description": "クラスのアイデアとフィードバックがまもなくここに表示されます。",
+          "list_item1": "Suggestions Hubの実装に取り組んでいます。",
+          "list_item2": "準備ができたら、お気に入りのアイデアがここに表示されます。"
+        },
+        "info1": {
+          "tag": "情報",
+          "title": "クラス連絡先カード",
+          "description": "まもなくクラスの連絡先カードをここで見ることができます。",
+          "list_item1": "クラスと教師のQRコード。",
+          "list_item2": "他の人との簡単な共有。"
+        },
+        "info2": {
+          "tag": "情報",
+          "title": "クラス基本データ",
+          "description": "クラスのサイズ、教室の割り当て、クラス担任の情報がここに表示されます。",
+          "list_item1": "教室の割り当て、選択されたデータ。",
+          "list_item2": "クラス担任の連絡先情報"
+        }
+      }
+    },
+    "notifications": {
+      "title": "通知",
+      "history": "履歴",
+      "empty": {
+        "title": "通知がありません",
+        "subtitle": "後で戻ってきてください :D"
+      },
+      "detail": {
+        "title": "通知",
+        "subtitle": "通知を選択",
+        "sent_to": "送信先：",
+        "delete": "削除",
+        "snooze": "スヌーズ",
+        "notification": "通知",
+        "notification_label": "通知"
+      }
+    },
+    "suggestions": {
+      "title": "提案",
+      "hive": "Hive",
+      "submit": "送信",
+      "hive_placeholder": {
+        "title": "ミツバチがまだHiveを建設中です！",
+        "description": "インタラクティブなフィードバックシステムは間もなく利用可能になります。"
+      },
+      "submit_steps": {
+        "step1": {
+          "heading": "基本情報",
+          "title_label": "タイトル",
+          "title_placeholder": "ここに入力...",
+          "content_label": "提案",
+          "content_placeholder": "ここに入力...",
+          "type_heading": "タイプを選択",
+          "hive_title": "Hive",
+          "hive_description": "これを選択すると、あなたの提案がHiveに追加され、リーダーシップがあなたのアイデアを検討します。"
+        },
+        "step2": {
+          "heading": "誰に表示するか",
+          "user_label": "誰に表示するか",
+          "user_placeholder": "ここに入力...",
+          "group_label": "ターゲットグループ",
+          "group_placeholder": "ここに入力...",
+          "share_heading": "共有",
+          "share_title": "外部共有",
+          "share_description": "学校があなたの提案を外部プラットフォームでも共有できるようにします。"
+        }
+      },
+      "actions": {
+        "next": "次へ",
+        "submit": "提案を送信"
+      },
+      "card": {
+        "author": "名前",
+        "type_ai_prompt": "AIプロンプト",
+        "title": "タイトル",
+        "description": "説明",
+        "placeholder_title": "提案",
+        "placeholder_description": "新しい提案がここに表示されます。",
+        "type_suggestion": "提案",
+        "type_hive": "Hive"
+      },
+      "edit_mode": {
+        "enter": "編集",
+        "exit": "編集モードを終了"
+      },
+      "prediction": "予測",
+      "default_notification_title": "通知",
+      "unknown_user": "不明なユーザー",
+      "unknown_error": "不明なエラー",
+      "tabs": {
+        "suggestions": "提案",
+        "class_suggestions": "クラスの提案"
+      },
+      "notifications": {
+        "actions": {
+          "snooze": "延期",
+          "open": "開く"
+        },
+        "types": {
+          "info": "情報",
+          "success": "送信成功",
+          "warning": "警告",
+          "error": "エラー"
+        },
+        "messages": {
+          "info": "これは情報通知です。",
+          "info_blue": "これは青い情報通知です。",
+          "success": "操作が正常に完了しました！",
+          "warning": "必須フィールドを入力してください。",
+          "error": "操作中にエラーが発生しました！",
+          "test": "これはテスト通知です。",
+          "test_shown": "テスト通知を表示",
+          "testing_all": "すべての通知タイプをテスト中..."
+        }
+      }
+    },
+    "calendar": {
+      "empty": {
+        "title": "カレンダーはまだ利用できません。",
+        "subtitle": "後で戻ってきてください！"
+      }
+    },
+    "messages": {
+      "login_required": "送信するにはログインしてください。",
+      "fill_required": "タイトルと提案のフィールドを入力してください。",
+      "submit_success": "あなたの提案が正常に送信されました！",
+      "submit_error": "提案の送信に失敗しました。後でもう一度お試しください。",
+      "wrong_password": "パスワードが間違っています！",
+      "delete_error": "削除中にエラーが発生しました。"
+    }
+  },
+  "admin": {
+    "console": {
+      "title": "管理者コンソール",
+      "password_text": "パスワードを入力：",
+      "password_placeholder": "パスワード",
+      "login_button": "ログイン",
+      "sync": {
+        "users_title": "ユーザー同期",
+        "users_description": "usersコレクションからすべてのユーザーを読み取り、適切なドキュメントを作成/更新します。",
+        "names_button": "名前を同期",
+        "pictures_button": "画像を同期",
+        "syncing": "同期中...",
+        "loading_users": "ユーザーを読み込み中...",
+        "no_users": "usersコレクションにユーザーがありません。",
+        "processing": "ユーザーを処理中...",
+        "processed": "処理済み：",
+        "success_names": "成功！ユーザー名が同期されました。",
+        "success_pictures": "成功！ユーザー画像が同期されました。",
+        "done": "完了！成功、エラー。",
+        "error": "エラー：",
+        "info_show": "情報を表示",
+        "info_hide": "情報を非表示",
+        "info_text": "名前：public/users/nevek/{userId} - nameフィールドにはdisplayName値が含まれます\n\n画像：public/users/profilePictures/{userId} - useProvidedPfp、pfpColor、profilePictureUrlフィールドが含まれます"
+      },
+      "assign_class": {
+        "title": "クラスに割り当て",
+        "description": "classes/{classId}/usersコレクションでユーザーをクラスに割り当てることができます。",
+        "button": "クラスに割り当て",
+        "popup1": {
+          "title": "クラスを選択",
+          "text": "グループ名を入力：",
+          "placeholder": "ここに入力...",
+          "checkbox_title": "値を作成",
+          "checkbox_description": "チェックすると、gradesドキュメントに値（0.00-5.00）が入力されます。",
+          "next": "次へ"
+        },
+        "popup2": {
+          "title": "ユーザーを選択",
+          "text": "ユーザー名を入力するか、自動割り当てをクリック：",
+          "placeholder": "ここに入力...",
+          "back": "戻る",
+          "finish": "完了",
+          "auto": "自動"
+        }
+      },
+      "messages": {
+        "password_required": "パスワードを入力してください！",
+        "wrong_password": "パスワードが間違っています！",
+        "password_check_error": "パスワードの確認中にエラーが発生しました。もう一度お試しください。",
+        "session_expired": "セッションが期限切れです。再度ログインしてください。",
+        "class_name_required": "クラス名を入力してください！",
+        "class_not_found": "この名前のクラスが見つかりません！",
+        "no_class_selected": "クラスが選択されていません！",
+        "login_required": "ログインする必要があります！",
+        "auto_success": "ユーザーが自動的に選択されました。",
+        "auto_error": "自動選択中にエラーが発生しました。",
+        "no_users_selected": "ユーザーが選択されていません！",
+        "assign_success": "成功！ユーザーがクラスに割り当てられました。",
+        "assign_done": "完了！成功、エラー。",
+        "assign_error": "クラスへの割り当て中にエラーが発生しました。"
+      },
+      "status": {
+        "missing_data": "データ不足",
+        "wrong_data": "間違ったデータ",
+        "error": "エラー",
+        "success": "成功",
+        "operation_complete": "操作完了",
+        "session_expired": "セッションが期限切れ"
+      }
+    }
+  },
+  "common": {
+    "ok": "了解"
+  },
+  "general": {
+    "close": "閉じる",
+    "unknown_user": "不明なユーザー"
+  },
+  "footer": {
+    "participated": "参加：",
+    "legal": {
+      "title": "法的声明",
+      "privacy": "プライバシーポリシー",
+      "terms": "利用規約",
+      "beta": "ベータソフトウェア使用通知"
+    },
+    "hubs": {
+      "title": "Hubs",
+      "soon": "近日公開"
+    },
+    "special": {
+      "title": "私たちの専門",
+      "company": "独自の EU2K 会社を作成しましょう！"
+    },
+    "copyright": "© 2025 EU2K Devs および Európa 2000 Gimnázium。全著作権所有。",
+    "beta": "BETA"
+  },
+  "maintenance": {
+    "title": "Hub はもうすぐ到着します！",
+    "description": "あまり長くは待たなくて大丈夫だよ ;)."
+  },
+  "guest": {
+    "youhub_title": "YouHub はゲストでは利用できません。",
+    "youhub_description": "YouHub で無限の可能性を開くには、ログインしてください。",
+    "settings_title": "このセクションはゲストとしては利用できません。",
+    "settings_description": "さらに快適にカスタマイズするには、ログインしてください！."
+  },
+  "account": {
+    "tooltip": {
+      "class": "クラス",
+      "no_class": "クラスなし"
+    }
+  },
+  "staff_timer": {
+    "expired_title": "セッション期限切れ",
+    "expired": "セッションが期限切れです。再度ログインしてください。",
+    "expired_description": "セッションが期限切れです。設定で再度ログインしてください。",
+    "replaced_title": "セッション転送済み",
+    "replaced_message": "セッションが別のデバイスに転送されました。セッションを続行するには、再度ログインしてください。",
+    "replaced_warning_title": "セッション転送",
+    "replaced_warning_message": "誰かが別のデバイスであなたの名前でワークフローを開始しようとしました。現在のセッションはまだアクティブですが、期限切れになります。",
+    "replaced_other_title": "セッション転送",
+    "replaced_other_message": "誰かが別のデバイスであなたの名前でワークフローを開始しようとしました。古いセッションはまだアクティブですが、期限切れになります。",
+    "transfer_available_title": "別のデバイスでセッションがアクティブ",
+    "transfer_available_message": "あなたのセッションは別のデバイスでアクティブです。ここに転送することもできますし、5秒後にアクセスが取り消されます。",
+    "transfer_requested_title": "セッション転送リクエスト",
+    "transfer_requested_message": "別のデバイスがあなたのセッションを引き継ごうとしました。転送ボタンをクリックして、ここで終了し、そこで続行してください。"
+  },
+  "staff": {
+    "password_created_title": "パスワードが作成されました",
+    "password_created_message": "新しいパスワードでログインできます。"
+  }
+}

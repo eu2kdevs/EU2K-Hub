@@ -1,0 +1,863 @@
+﻿<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Olvass be QR-Kódokat egyszerűen, és kapj egyesekért menő jutalmakat!">
+  <title data-translate="pages.qr.title">QR-Kód</title>
+  <link rel="stylesheet" href="qrcode.css">
+  <link rel="icon" href="./favicon.ico">
+   <!--
+  <style>
+  @import url('./assets/css/roboto.css');
+
+    body,
+    * {
+      font-family: "Roboto", sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 400;
+      font-style: normal;
+      font-variation-settings: "wdth" 100;
+    }
+  </style>
+
+  <script src="./assets/js/jsQR-1.4.0.js"></script>
+-->
+  <script src="./assets/js/permissions.js"></script>
+  <script src="./assets/js/translations.js"></script>
+  <script src="./assets/js/welcome-screen.js"></script>
+  <script src="./assets/js/dpad-navigation.js"></script>
+<style id="footer-common-style">
+  /* Common footer + minimal main content padding */
+  .footer { margin-top: 8px; position: relative; }
+  /* Reserve space so footer doesn't overlap content */
+  .main-area .main-content { padding-bottom: 84px; }
+  #site-footer .footer-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: #0E1512;
+  }
+  #site-footer .footer-left img,
+  #site-footer .footer-right img {
+    height: 28px;
+    object-fit: contain;
+  }
+  #site-footer .footer-center {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #site-footer .footer-privacy {
+    color: #C4C8C3;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  @media (max-width: 900px) {
+    #site-footer .footer-container {
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 12px;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <div class="app-bg">
+    <aside class="sidebar">
+      <nav class="nav-menu">
+          <button class="nav-item list-button nav-item-list" type="button" aria-label="Menü">
+            <div class="nav-icon-container">
+              <img src="../../assets/navbar/menu.svg" class="nav-icon" alt="Menü">
+            </div>
+            <span data-translate="navigation.menu">Menü</span>
+          </button>
+  <a class="nav-item" href="index.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/home_icon.svg" class="nav-icon" alt="Otthon">
+          </div>
+          <span data-translate="navigation.home">Otthon</span>
+        </a>
+  <a class="nav-item active" href="qr-code.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
+          </div>
+          <span data-translate="navigation.qr">QR-Kód</span>
+        </a>
+  <a class="nav-item" href="youhub.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
+          </div>
+          <span data-translate="navigation.youhub">YouHub</span>
+        </a>
+  <a class="nav-item" href="event_hub.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/event_hub_icon.svg" class="nav-icon" alt="Event Hub">
+          </div>
+          <span data-translate="navigation.event_hube">Event Hub</span>
+        </a>
+      </nav>
+    </aside>
+    <script>
+      (function() {
+        const sidebar = document.querySelector('.sidebar');
+        const toggleButton = document.querySelector('.list-button');
+        if (sidebar && toggleButton) {
+          toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            const icon = toggleButton.querySelector('.nav-icon');
+            if (icon) {
+              const isOpen = sidebar.classList.contains('open');
+              icon.src = isOpen ? '../../assets/navbar/menu_open.svg' : '../../assets/navbar/menu.svg';
+            }
+          });
+        }
+        function markActiveNavItem() {
+          const currentPath = window.location.pathname.replace(/\/$/, '');
+          const currentName = currentPath.split('/').pop() || 'index.html';
+          document.querySelectorAll('.nav-menu .nav-item[href]').forEach(link => {
+            try {
+              const linkPath = new URL(link.getAttribute('href'), window.location.href).pathname.replace(/\/$/, '');
+              const linkName = linkPath.split('/').pop() || 'index.html';
+              if (linkName === currentName) {
+                link.classList.add('active');
+              } else {
+                link.classList.remove('active');
+              }
+            } catch (e) {}
+          });
+        }
+        function updateNavIcons() {
+          document.querySelectorAll('.nav-item:not(.list-button) .nav-icon').forEach(img => {
+            const item = img.closest('.nav-item');
+            if (!item) return;
+            const isActive = item.classList.contains('active');
+            const src = img.getAttribute('src') || '';
+            if (src.includes('/assets/navbar/')) {
+              if (isActive && !src.includes('/assets/navbar/filled/')) {
+                img.setAttribute('src', src.replace('/assets/navbar/', '/assets/navbar/filled/'));
+              } else if (!isActive && src.includes('/assets/navbar/filled/')) {
+                img.setAttribute('src', src.replace('/assets/navbar/filled/', '/assets/navbar/'));
+              }
+            }
+          });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+          markActiveNavItem();
+          updateNavIcons();
+        });
+      })();
+    </script>
+    <main class="main-area">
+      <div class="main-content">
+        <header class="header">
+          <div class="welcome-container">
+            <img src="./assets/qr_code_icon.svg" class="welcome-icon" alt="Welcome" style="margin-bottom: 4px;">
+            <h1 class="welcome-text" data-translate="pages.qr.title" style="margin-top: 0; margin-bottom: 4px;">QR-Kód</h1>
+            <p class="qr-instruction" data-translate="pages.qr.instruction">Olvasd be a QR-Kódot a rendeléshez!</p>
+          </div>
+          <div class="header-icons">
+            <a href="./system/account.html" class="header-icon-link" tabindex="0">
+              <img src="./assets/account_icon.svg" class="header-icon" alt="Account">
+            </a>
+            <a href=".//settings" class="header-icon-link" tabindex="0">
+              <img src="./assets/settings_icon.svg" class="header-icon" alt="Settings">
+            </a>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <!-- QR-Code Scanner -->
+          <div class="qr-scanner-container" id="qrScannerContainer" style="display: none;">
+            <div class="qr-scanner">
+              <video id="qrVideo" autoplay muted playsinline></video>
+              <canvas id="qrCanvas" style="display: none;"></canvas>
+              <img src="./assets/top_left_corner.png" class="corner top-left" alt="">
+              <img src="./assets/top_right_corner.png" class="corner top-right" alt="">
+              <img src="./assets/bottom_left_corner.png" class="corner bottom-left" alt="">
+              <img src="./assets/bottom_right_corner.png" class="corner bottom-right" alt="">
+            </div>
+
+            <button class="camera-switch-btn" onclick="switchCamera()" tabindex="0">
+              <img src="./assets/camera_switch.svg" class="camera-switch-icon" alt="Kamera váltása">
+              <span data-translate="pages.qr.camera_switch">Kamera Váltása</span>
+            </button>
+
+            <div id="qrResult" class="qr-result" style="display: none;">
+              <div class="qr-result-content">
+                <img src="./assets/qr_code_icon.svg" class="qr-result-icon" alt="QR-kód">
+                <h2 class="qr-result-title" data-translate="pages.qr.scanned">QR-Kód Beolvasva</h2>
+                <p class="qr-result-text" id="qrResultText"></p>
+                <div class="qr-result-buttons">
+                  <button class="qr-result-btn-primary" onclick="openQRLink()" data-translate="pages.qr.go_to_page" tabindex="0">Tovább az oldalra</button>
+                  <button class="qr-result-btn-secondary" onclick="closeQRResult()" data-translate="pages.qr.new_scan" tabindex="0">Új szkennelés</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Blocked Camera View -->
+          <div class="camera-blocked-container" id="cameraBlockedContainer" style="display: none;">
+            <div class="camera-blocked-content">
+              <img src="./assets/block_camera.svg" class="camera-blocked-icon" alt="Blokkolva">
+              <h2 class="camera-blocked-title" data-translate="pages.qr.blocked_title">Ajjaj!</h2>
+              <p class="camera-blocked-text" data-translate="pages.qr.blocked_text">Nem tudjuk használni a kamerát, mert nem adtál rá engedélyt. Kérjük,
+                engedélyezd, hogy működhessen ez a funkció!</p>
+              <button class="camera-blocked-btn" onclick="requestCameraPermission()" data-translate="pages.qr.enable_button" tabindex="0">Engedélyezés</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="site-footer" class="footer" aria-label="Site footer">
+        <div class="footer-container">
+          <div class="footer-left">
+            <img src="./assets/eu2khub_logo.png" class="footer-logo-wide" alt="EU2K Hub Logó">
+          </div>
+          <div class="footer-center">
+            <a class="footer-privacy" data-translate="pages.index.privacy_policy" href="/EU2K-Hub/privacy_policy.html">Adatkezelési Tájékoztató</a>
+            <a class="footer-privacy" data-translate="pages.index.terms_of_service" href="/EU2K-Hub/terms_of_service.html">Használati Feltételek</a>
+          </div>
+          <div class="footer-right">
+            <img src="./assets/eu2kdevs_logo.png" class="footer-logo-wide" alt="EU2K Devs Logó">
+            <img src="./assets/eu2kdok_logo.png" class="footer-logo-wide" alt="EU2K DÖK Logó">
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Permission Popup -->
+  <div id="permissionPopup" class="permission-overlay" style="display: none;">
+    <div class="permission-container">
+      <div class="permission-close-btn" onclick="closePermissionPopup()">
+        <img src="./assets/close.svg" alt="Bezárás">
+      </div>
+      <div class="permission-content">
+        <img src="./assets/backhand.svg" class="permission-hand-icon" alt="Kéz">
+        <h2 class="permission-title" data-translate="pages.qr.permission_title">Álljunk meg egy percre!</h2>
+        <ul class="permission-list">
+          <li data-translate="pages.qr.permission_list_1">A QR-kód beolvasásához engedélyezned kell a kamera használatát.</li>
+          <li data-translate="pages.qr.permission_list_2">A Hub soha nem használja a kamerádat automatikusan.</li>
+          <li data-translate="pages.qr.permission_list_3">Minden alkalommal egyértelmű jelzést kapsz a jobb felső sarokban, amikor a kamera aktív.</li>
+          <li data-translate="pages.qr.permission_list_4">Ha most megadod az engedélyt, ez a funkció elérhetővé válik.</li>
+          <li data-translate="pages.qr.permission_list_5">További kamerát használó lehetőségek is aktiválódnak.</li>
+        </ul>
+  <button class="permission-ok-btn" onclick="acceptPermissionPopup()" data-translate="common.ok" tabindex="0">Rendben</button>
+      </div>
+    </div>
+  </div>
+
+  <!--
+  <script>
+    let isCheckingPermissions = false;
+    let currentPermissionState = null; // 'granted', 'denied', 'prompt', null
+    let permissionToastShown = false;
+
+    // Check camera permissions on page load
+    window.addEventListener('load', function () {
+      // Always check actual permissions, don't trust localStorage
+      setTimeout(checkCameraPermissions, 100);
+      setupPermissionListener();
+    });
+
+    // Also check when page becomes visible again
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden && !isCheckingPermissions) {
+        setTimeout(checkCameraPermissions, 100);
+      }
+    });
+
+    // Setup permission change listener and periodic check
+    async function setupPermissionListener() {
+      try {
+        if (navigator.permissions) {
+          const permissionStatus = await navigator.permissions.query({ name: 'camera' });
+
+          // Listen for permission changes
+          permissionStatus.addEventListener('change', function () {
+            console.log('Permission changed to:', permissionStatus.state);
+
+            if (permissionStatus.state === 'granted') {
+              console.log('Permission granted - showing QR scanner');
+              showQRScanner();
+            } else if (permissionStatus.state === 'denied') {
+              console.log('Permission denied - showing blocked view with popup');
+              showBlockedViewWithPopup();
+            }
+          });
+        }
+      } catch (error) {
+        console.log('Could not setup permission listener:', error);
+      }
+
+      // Start periodic permission check
+      startPeriodicPermissionCheck();
+    }
+
+    // Periodic permission check every 3 seconds
+    function startPeriodicPermissionCheck() {
+      setInterval(async function () {
+        try {
+          // Don't check if blocked camera view is currently displayed
+          const blockedContainer = document.getElementById('cameraBlockedContainer');
+          if (blockedContainer.style.display === 'flex') {
+            console.log('Periodic check skipped - blocked camera view is active');
+            return;
+          }
+
+          if (navigator.permissions) {
+            const permissionStatus = await navigator.permissions.query({ name: 'camera' });
+            console.log('Periodic check: Permission status:', permissionStatus.state);
+
+            const qrContainer = document.getElementById('qrScannerContainer');
+            const popup = document.getElementById('permissionPopup');
+
+            if (permissionStatus.state === 'granted') {
+              // If permission is granted but QR scanner is not showing, show it
+              if (qrContainer.style.display !== 'flex') {
+                console.log('Periodic check: Permission granted - showing QR scanner');
+                showQRScanner();
+              }
+
+              // Show permissions toast only if state changed to granted
+              if (currentPermissionState !== 'granted' && typeof showPermissionToast === 'function') {
+                showPermissionToast('./assets/qr-code/camera_permission.svg', 'Kamera Hozzáférés');
+                permissionToastShown = true;
+              }
+              currentPermissionState = 'granted';
+
+            } else if (permissionStatus.state === 'denied') {
+              // If permission is denied, show blocked view with popup
+              if (qrContainer.style.display === 'flex') {
+                console.log('Periodic check: Permission denied - showing blocked view');
+                showBlockedViewWithPopup();
+              }
+
+              // Remove mini button if permission lost
+              if (currentPermissionState === 'granted') {
+                const miniButton = document.querySelector('.permission-mini-button');
+                if (miniButton) miniButton.remove();
+              }
+              currentPermissionState = 'denied';
+
+            } else if (permissionStatus.state === 'prompt') {
+              // If permission is prompt and no popup is showing, show blocked view with popup
+              if (popup.style.display === 'none' && qrContainer.style.display === 'flex') {
+                console.log('Periodic check: Permission prompt - showing blocked view with popup');
+                showBlockedViewWithPopup();
+              }
+
+              // Remove mini button if permission lost
+              if (currentPermissionState === 'granted') {
+                const miniButton = document.querySelector('.permission-mini-button');
+                if (miniButton) miniButton.remove();
+              }
+              currentPermissionState = 'prompt';
+            }
+          }
+        } catch (error) {
+          console.log('Periodic permission check error:', error);
+        }
+      }, 3000); // Check every 3 seconds
+    }
+
+    async function checkCameraPermissions() {
+      if (isCheckingPermissions) return;
+      isCheckingPermissions = true;
+
+      try {
+        console.log('Checking camera permissions...');
+
+        // Clear localStorage to force fresh check
+        localStorage.removeItem('cameraPermissionGranted');
+
+        // First check permissions API if available
+        if (navigator.permissions) {
+          const permissionStatus = await navigator.permissions.query({ name: 'camera' });
+          console.log('Permission status:', permissionStatus.state);
+
+          if (permissionStatus.state === 'granted') {
+            // Double check by trying to access camera
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+              stream.getTracks().forEach(track => track.stop());
+              console.log('Camera access confirmed - showing QR scanner');
+              localStorage.setItem('cameraPermissionGranted', 'true');
+
+              // Show permissions toast only if state changed to granted
+              if (currentPermissionState !== 'granted' && typeof showPermissionToast === 'function') {
+                showPermissionToast('./assets/qr-code/camera_permission.svg', 'Kamera Hozzáférés');
+                permissionToastShown = true;
+              }
+              currentPermissionState = 'granted';
+
+              showQRScanner();
+              isCheckingPermissions = false;
+              return;
+            } catch (cameraError) {
+              console.log('Camera access failed despite granted permission:', cameraError);
+              showBlockedViewWithPopup();
+              isCheckingPermissions = false;
+              return;
+            }
+          } else if (permissionStatus.state === 'denied') {
+            console.log('Permission explicitly denied');
+            showBlockedViewWithPopup();
+            isCheckingPermissions = false;
+            return;
+          }
+        }
+
+        // If permission is prompt or API not available, show blocked view with popup
+        console.log('Permission is prompt or API not available');
+        showBlockedViewWithPopup();
+
+      } catch (error) {
+        console.log('Permission check error:', error);
+        showBlockedViewWithPopup();
+      }
+
+      isCheckingPermissions = false;
+    }
+
+    function showQRScanner() {
+      console.log('Showing QR Scanner');
+      hideAllSections();
+      document.getElementById('qrScannerContainer').style.display = 'flex';
+      // Initialize QR scanner
+      initializeQRScanner();
+    }
+
+    function showBlockedView() {
+      console.log('Showing Blocked View');
+      hideAllSections();
+      document.getElementById('cameraBlockedContainer').style.display = 'flex';
+
+      // Check if we should show popup
+      setTimeout(async function () {
+        try {
+          if (navigator.permissions) {
+            const permissionStatus = await navigator.permissions.query({ name: 'camera' });
+            if (permissionStatus.state === 'prompt') {
+              console.log('Permission is prompt - showing popup');
+              document.getElementById('permissionPopup').style.display = 'flex';
+            }
+          }
+        } catch (error) {
+          console.log('Error checking permission for popup:', error);
+        }
+      }, 500);
+    }
+
+    function showBlockedViewWithPopup() {
+      console.log('Showing Blocked View with Popup');
+      hideAllSections();
+      document.getElementById('cameraBlockedContainer').style.display = 'flex';
+      document.getElementById('permissionPopup').style.display = 'flex';
+    }
+
+    function hideAllSections() {
+      document.getElementById('qrScannerContainer').style.display = 'none';
+      document.getElementById('cameraBlockedContainer').style.display = 'none';
+      document.getElementById('permissionPopup').style.display = 'none';
+    }
+
+    function closePermissionPopup() {
+      console.log('Closing permission popup');
+      document.getElementById('permissionPopup').style.display = 'none';
+      // Don't store anything in localStorage, let the system check permissions naturally
+    }
+
+    async function acceptPermissionPopup() {
+      console.log('Accept permission popup clicked');
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
+        });
+        console.log('Camera access granted from popup');
+
+        // Stop the stream immediately
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+        }
+
+        // Store permission in localStorage
+        localStorage.setItem('cameraPermissionGranted', 'true');
+
+        // Show permissions toast
+        if (typeof checkAndShowPermissions === 'function') {
+          checkAndShowPermissions();
+        }
+
+        // Show QR scanner and hide popup
+        showQRScanner();
+
+      } catch (error) {
+        console.log('Camera access denied from popup:', error.name, error.message);
+
+        // Check if it's a timeout or other error
+        if (error.name === 'AbortError' || error.name === 'TimeoutError') {
+          console.log('Camera timeout - checking permissions API');
+          // Try checking permissions API as fallback
+          try {
+            const permissionStatus = await navigator.permissions.query({ name: 'camera' });
+            if (permissionStatus.state === 'granted') {
+              console.log('Permission is actually granted, showing QR scanner');
+              showQRScanner();
+              return;
+            }
+          } catch (permError) {
+            console.log('Permissions API error:', permError);
+          }
+        }
+
+        // Hide popup but keep blocked view
+        document.getElementById('permissionPopup').style.display = 'none';
+      }
+    }
+
+    async function requestCameraPermission() {
+      console.log('Request camera permission clicked');
+
+      // First show the popup
+      showBlockedViewWithPopup();
+
+      // Then try to request permission
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
+        });
+        console.log('Camera permission granted from button');
+
+        // Stop the stream immediately
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+        }
+
+        // Store permission in localStorage
+        localStorage.setItem('cameraPermissionGranted', 'true');
+
+        // Show permissions toast
+        if (typeof checkAndShowPermissions === 'function') {
+          checkAndShowPermissions();
+        }
+
+        // Show QR scanner
+        showQRScanner();
+
+      } catch (error) {
+        console.log('Camera permission denied from button:', error.name, error.message);
+
+        // Check if it's a timeout or other error
+        if (error.name === 'AbortError' || error.name === 'TimeoutError') {
+          console.log('Camera timeout from button - checking permissions API');
+          try {
+            const permissionStatus = await navigator.permissions.query({ name: 'camera' });
+            if (permissionStatus.state === 'granted') {
+              console.log('Permission is actually granted, showing QR scanner');
+              showQRScanner();
+              return;
+            }
+          } catch (permError) {
+            console.log('Permissions API error:', permError);
+          }
+        }
+
+        // Keep popup visible if permission was denied
+        console.log('Keeping popup visible due to permission denial');
+      }
+    }
+
+    function enableCamera() {
+      // Clear permission status and refresh the page
+      localStorage.removeItem('cameraPermissionGranted');
+      location.reload();
+    }
+
+    // QR Scanner variables
+    let currentStream = null;
+    let availableCameras = [];
+    let currentCameraIndex = 0;
+    let isScanning = false;
+
+    async function initializeQRScanner() {
+      try {
+        console.log('Initializing QR Scanner...');
+
+        // Get available cameras
+        await getAvailableCameras();
+
+        // Start camera with first available camera
+        await startCamera(currentCameraIndex);
+
+        // Start QR scanning
+        startQRScanning();
+
+      } catch (error) {
+        console.error('Failed to initialize QR scanner:', error);
+      }
+    }
+
+    async function getAvailableCameras() {
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        availableCameras = devices.filter(device => device.kind === 'videoinput');
+        console.log('Available cameras:', availableCameras.length);
+      } catch (error) {
+        console.error('Error getting cameras:', error);
+      }
+    }
+
+    async function startCamera(cameraIndex) {
+      try {
+        // Stop current stream if exists
+        if (currentStream) {
+          currentStream.getTracks().forEach(track => track.stop());
+          currentStream = null;
+        }
+
+        const video = document.getElementById('qrVideo');
+        const deviceId = availableCameras[cameraIndex]?.deviceId;
+
+        const constraints = {
+          video: {
+            deviceId: deviceId ? { exact: deviceId } : undefined,
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            facingMode: deviceId ? undefined : 'environment'
+          }
+        };
+
+        // Add timeout wrapper
+        const streamPromise = navigator.mediaDevices.getUserMedia(constraints);
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Camera timeout')), 5000)
+        );
+
+        currentStream = await Promise.race([streamPromise, timeoutPromise]);
+        video.srcObject = currentStream;
+
+        // Wait for video to be ready
+        await new Promise((resolve) => {
+          video.onloadedmetadata = resolve;
+        });
+
+        console.log('Camera started successfully');
+
+      } catch (error) {
+        console.error('Error starting camera:', error);
+        throw error;
+      }
+    }
+
+    function startQRScanning() {
+      if (isScanning) return;
+
+      isScanning = true;
+      const video = document.getElementById('qrVideo');
+      const canvas = document.getElementById('qrCanvas');
+      const context = canvas.getContext('2d');
+
+      function scanFrame() {
+        if (!isScanning) return;
+
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+          const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+          const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+          if (code) {
+            console.log('QR Code detected:', code.data);
+            handleQRCodeDetected(code.data);
+            return; // Stop scanning after detection
+          }
+        }
+
+        requestAnimationFrame(scanFrame);
+      }
+
+      scanFrame();
+    }
+
+    function handleQRCodeDetected(qrData) {
+      // Stop scanning
+      isScanning = false;
+
+      // Show result using the same function as simulation
+      showQRResult(qrData);
+
+      // Optional: Stop camera after successful scan
+      setTimeout(() => {
+        if (currentStream) {
+          currentStream.getTracks().forEach(track => track.stop());
+        }
+      }, 3000);
+    }
+
+    async function switchCamera() {
+      try {
+        console.log('Switching camera...');
+
+        if (availableCameras.length <= 1) {
+          console.log('Only one camera available');
+          return;
+        }
+
+        const originalIndex = currentCameraIndex;
+
+        // Stop current stream completely
+        if (currentStream) {
+          console.log('Stopping current stream...');
+          currentStream.getTracks().forEach(track => {
+            track.stop();
+            console.log('Track stopped:', track.kind);
+          });
+          currentStream = null;
+        }
+
+        // Wait longer for the camera to be released
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Move to next camera
+        currentCameraIndex = (currentCameraIndex + 1) % availableCameras.length;
+        console.log('Switching to camera index:', currentCameraIndex);
+
+        // Try to start new camera with fallback
+        try {
+          await startCamera(currentCameraIndex);
+          console.log('Camera switched successfully to index:', currentCameraIndex);
+        } catch (startError) {
+          console.log('Failed to start new camera, trying fallback...');
+
+          // Try with less strict constraints
+          const video = document.getElementById('qrVideo');
+          const constraints = {
+            video: {
+              facingMode: currentCameraIndex === 0 ? 'user' : 'environment',
+              width: { ideal: 640 },
+              height: { ideal: 480 }
+            }
+          };
+
+          currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+          video.srcObject = currentStream;
+          console.log('Fallback camera started');
+        }
+
+      } catch (error) {
+        console.error('Error switching camera:', error);
+
+        // Try to restart with original camera if switch failed
+        try {
+          currentCameraIndex = originalIndex;
+          await startCamera(currentCameraIndex);
+          console.log('Reverted to previous camera');
+        } catch (revertError) {
+          console.error('Failed to revert camera:', revertError);
+          // Last resort - try basic camera access
+          try {
+            const video = document.getElementById('qrVideo');
+            currentStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = currentStream;
+            console.log('Basic camera fallback successful');
+          } catch (basicError) {
+            console.error('All camera attempts failed:', basicError);
+          }
+        }
+      }
+    }
+
+    function stopQRScanner() {
+      isScanning = false;
+
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+        currentStream = null;
+      }
+
+      // Hide result
+      document.getElementById('qrResult').style.display = 'none';
+    }
+
+    // Stop scanner when hiding QR scanner
+    function hideAllSections() {
+      stopQRScanner();
+      document.getElementById('qrScannerContainer').style.display = 'none';
+      document.getElementById('cameraBlockedContainer').style.display = 'none';
+      document.getElementById('permissionPopup').style.display = 'none';
+    }
+
+    // Debug function to clear localStorage and refresh
+    function clearPermissionCache() {
+      localStorage.removeItem('cameraPermissionGranted');
+      console.log('Permission cache cleared');
+      location.reload();
+    }
+
+    // Add debug info to console
+    console.log('Camera permission in localStorage:', localStorage.getItem('cameraPermissionGranted'));
+
+    // QR Result functions
+    let currentQRData = '';
+
+    function closeQRResult() {
+      document.getElementById('qrResult').style.display = 'none';
+      currentQRData = '';
+      // Continue scanning after closing popup
+    }
+
+    function openQRLink() {
+      if (currentQRData) {
+        // Check if it's a valid URL
+        try {
+          const url = new URL(currentQRData);
+          window.open(currentQRData, '_blank');
+        } catch (error) {
+          // If not a valid URL, try adding https://
+          if (currentQRData.includes('.')) {
+            window.open('https://' + currentQRData, '_blank');
+          } else {
+            // If it's not a URL, just copy to clipboard or show alert
+            navigator.clipboard.writeText(currentQRData).then(() => {
+              alert('QR-kód tartalma vágólapra másolva: ' + currentQRData);
+            }).catch(() => {
+              alert('QR-kód tartalma: ' + currentQRData);
+            });
+          }
+        }
+      }
+      closeQRResult();
+    }
+
+    // Function to show QR result (to be called when QR code is detected)
+    function showQRResult(qrData) {
+      currentQRData = qrData;
+      document.getElementById('qrResultText').textContent = qrData;
+      document.getElementById('qrResult').style.display = 'flex';
+    }
+
+    // Example function to simulate QR code detection (for testing)
+    function simulateQRDetection() {
+      showQRResult('https://google.com');
+    }
+  </script>
+-->
+</body>
+
+</html>

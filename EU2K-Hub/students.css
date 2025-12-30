@@ -1,0 +1,2833 @@
+:root {
+  color-scheme: dark;
+  --md-sys-color-primary: rgb(155 212 160);
+  --md-sys-color-surface-tint: rgb(155 212 160);
+  --md-sys-color-on-primary: rgb(0 57 21);
+  --md-sys-color-primary-container: rgb(27 81 41);
+  --md-sys-color-on-primary-container: rgb(182 241 187);
+  --md-sys-color-secondary: rgb(157 212 158);
+  --md-sys-color-on-secondary: rgb(2 57 19);
+  --md-sys-color-secondary-container: rgb(30 81 39);
+  --md-sys-color-on-secondary-container: rgb(184 241 185);
+  --md-sys-color-tertiary: rgb(154 212 162);
+  --md-sys-color-on-tertiary: rgb(0 57 23);
+  --md-sys-color-tertiary-container: rgb(25 81 42);
+  --md-sys-color-on-tertiary-container: rgb(181 241 189);
+  --md-sys-color-error: rgb(255 179 178);
+  --md-sys-color-on-error: rgb(86 29 32);
+  --md-sys-color-error-container: rgb(115 51 53);
+  --md-sys-color-on-error-container: rgb(255 218 217);
+  --md-sys-color-background: rgb(16 21 16);
+  --md-sys-color-on-background: rgb(224 228 220);
+  --md-sys-color-surface: rgb(16 21 16);
+  --md-sys-color-on-surface: rgb(224 228 220);
+  --md-sys-color-surface-variant: rgb(65 73 65);
+  --md-sys-color-on-surface-variant: rgb(193 201 190);
+  --md-sys-color-outline: rgb(139 147 137);
+  --md-sys-color-outline-variant: rgb(65 73 65);
+  --md-sys-color-shadow: rgb(0 0 0);
+  --md-sys-color-scrim: rgb(0 0 0);
+  --md-sys-color-inverse-surface: rgb(224 228 220);
+  --md-sys-color-inverse-on-surface: rgb(45 50 44);
+  --md-sys-color-inverse-primary: rgb(53 105 63);
+  --md-sys-color-primary-fixed: rgb(182 241 187);
+  --md-sys-color-on-primary-fixed: rgb(0 33 9);
+  --md-sys-color-primary-fixed-dim: rgb(155 212 160);
+  --md-sys-color-on-primary-fixed-variant: rgb(27 81 41);
+  --md-sys-color-secondary-fixed: rgb(184 241 185);
+  --md-sys-color-on-secondary-fixed: rgb(0 33 8);
+  --md-sys-color-secondary-fixed-dim: rgb(157 212 158);
+  --md-sys-color-on-secondary-fixed-variant: rgb(30 81 39);
+  --md-sys-color-tertiary-fixed: rgb(181 241 189);
+  --md-sys-color-on-tertiary-fixed: rgb(0 33 11);
+  --md-sys-color-tertiary-fixed-dim: rgb(154 212 162);
+  --md-sys-color-on-tertiary-fixed-variant: rgb(25 81 42);
+  --md-sys-color-surface-dim: rgb(16 21 16);
+  --md-sys-color-surface-bright: rgb(54 58 53);
+  --md-sys-color-surface-container-lowest: rgb(11 15 11);
+  --md-sys-color-surface-container-low: rgb(24 29 24);
+  --md-sys-color-surface-container: rgb(28 33 28);
+  --md-sys-color-surface-container-high: rgb(38 43 38);
+  --md-sys-color-surface-container-highest: rgb(49 54 49);
+  --sidebar-bg: #101510;
+  --main-bg: #0b0f0b;
+  --main-content-bg: #111B07;
+  --surface-bg: #101510;
+  --card-bg: #232823;
+  --red: #272B26;
+  --green-btn: #2d3a2d;
+  --green-btn-arrow: #b6c6b6;
+  --text-main: #e3e3e3;
+  --text-secondary: #a0a0a0;
+  --border-radius: 32px;
+  --card-radius: 32px;
+  --news-radius: 20px;
+  --sidebar-width: 76px;
+  --sidebar-width-open: 198px;
+  --transition: 0.2s cubic-bezier(.4, 0, .2, 1);
+  --font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #0D0F0A;
+  color: var(--text-main);
+  font-family: var(--font-family);
+  min-height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.app-bg {
+  position: relative;
+  min-height: 100vh;
+  min-width: 100vw;
+  width: 100%;
+  height: 100vh;
+  background: #0D0F0A;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  padding: 32px 32px 32px 12px;
+}
+
+.sidebar {
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 24px 24px 0;
+  border-radius: 32px;
+  min-width: auto;
+  width: auto;
+  height: auto;
+}
+
+/* Nav keret a 24px-es frame-ben */
+.nav-frame {
+  width: fit-content;
+  height: auto;
+  display: flex;
+  box-sizing: border-box;
+  padding: 12px;
+}
+
+.nav-shell {
+  background: #16210B;
+  border-radius: 32px;
+  padding: 0;
+  box-sizing: border-box;
+  width: fit-content;
+  height: auto;
+  display: flex;
+  align-items: stretch;
+}
+
+/* New Navigation Rail */
+.nav-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 140px;
+  padding: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  height: auto;
+  margin: 0;
+}
+
+.rail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+  width: 90%;
+  min-height: 64px;
+  height: 64px;
+  border-radius: 32px;
+  text-decoration: none;
+  color: #E5FDCB;
+  transition: background .12s ease, filter .12s ease, height .12s ease-out;
+  padding: 6px;
+  margin: 4px 0;
+  background: #273319;
+}
+
+.rail-item:hover {
+  filter: brightness(0.95);
+}
+
+.rail-item:active {
+  transform: none;
+}
+
+.rail-item.is-active {
+  background: #AFE86E;
+  color: #32451D;
+  height: 80px;
+}
+
+.rail-item.nav-btn {
+  transition: background .12s ease, filter .12s ease, height .12s ease-out;
+}
+
+.rail-item.nav-btn:active {
+  height: 72px;
+  filter: brightness(0.98);
+}
+
+.rail-item.nav-btn.is-active:active {
+  height: 88px;
+}
+
+.rail-item.rail-toggle {
+  background: #182018;
+}
+
+.rail-icon {
+  width: 40px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: transparent;
+}
+
+.rail-icon img {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.rail-item.is-active .rail-icon img {
+  width: 26px;
+  height: 26px;
+}
+
+.rail-label {
+  display: block;
+  text-align: center;
+  line-height: 1.2;
+  margin: 0;
+  padding: 0;
+}
+
+.rail-item.is-active .rail-icon img {
+  filter: brightness(0) saturate(100%) invert(12%) sepia(41%) saturate(776%) hue-rotate(57deg) brightness(95%) contrast(94%);
+}
+
+/* #142204 közelítés */
+.rail-item:not(.is-active) .rail-icon img {
+  filter: brightness(0) saturate(100%) invert(92%) sepia(17%) saturate(535%) hue-rotate(27deg) brightness(105%) contrast(101%);
+}
+
+/* #CEFF97 közelítés */
+.rail-label {
+  font-size: 12px;
+  line-height: 1;
+  font-weight: var(--font-weight-semibold);
+}
+
+.main-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.main-scroll-area {
+  flex: 1;
+  display: block;
+  /* változtatva flex-ről block-ra, hogy természetesen görgessen */
+  background: var(--main-bg);
+  border-radius: 32px;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* disable horizontal scroll in main area */
+  scroll-behavior: smooth;
+  padding: 22px;
+  background: var(--main-content-bg);
+  position: relative;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  /* min-height eltávolítva, hogy görgethető legyen */
+  overflow-x: hidden;
+  /* disable horizontal scroll */
+  overflow-y: visible;
+  /* ne legyen külön görgetés */
+}
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  min-height: 80px;
+  position: relative;
+  top: auto;
+  z-index: 10;
+  background: var(--main-content-bg);
+  /* same as main content */
+  backdrop-filter: none;
+  flex-direction: column;
+  flex: 0 0 auto;
+  /* do not let flexbox shrink the header */
+  flex-shrink: 0;
+  overflow: visible;
+  /* avoid clipping which looks like squashing */
+  overflow-x: visible;
+  /* ne legyen külön görgetés */
+}
+
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 8px;
+  gap: 4px;
+}
+
+.welcome-icon {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  max-width: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  flex-shrink: 0;
+  margin-bottom: 10px;
+  object-fit: contain;
+}
+
+.welcome-text {
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: var(--font-weight-semibold);
+  color: #E5FDCB;
+  margin-top: 4px;
+}
+
+/* Header icon container */
+.header-icon-container {
+  padding: 0 0 32px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Header icon gradient container - hug content, fills height */
+.header-icon-gradient {
+  width: fit-content;
+  min-height: 68px;
+  /* minimum magasság a gomboknak */
+  height: auto;
+  border-radius: 32px;
+  background: #62754E;
+  /* Alapértelmezett: csak zöld */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* Gradient csak ha van login gomb (nincs bejelentkezve) */
+.header-icon-gradient.has-login {
+  background: linear-gradient(90deg,
+      #62754E 0%,
+      #62754E 30%,
+      #4F6148 40%,
+      #3D4A52 55%,
+      #2F3842 70%,
+      #242B38 85%,
+      #242B38 100%);
+}
+
+/* Header icon wrapper - fills height */
+.header-icon-wrapper {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Header icon button - centered, 52x52 */
+.header-icon-btn {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  max-width: 52px;
+  min-height: 52px;
+  max-height: 52px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  border-radius: 999px;
+  background: #D3FFA1;
+  border: 1px solid #57703B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width .12s cubic-bezier(.2, .0, .2, 1), border-radius .12s cubic-bezier(.2, .0, .2, 1), background .12s ease;
+  text-decoration: none;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.header-icon-btn img {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  max-width: 22px;
+  min-height: 22px;
+  max-height: 22px;
+  flex-shrink: 0;
+  display: block;
+  object-fit: contain;
+}
+
+.header-icon-btn:hover {
+  width: 68px;
+  min-width: 68px;
+  max-width: 68px;
+  border-radius: 16px;
+  background: #DEFFBA;
+}
+
+/* Header login button - Bejelentkezés */
+.header-login-btn {
+  flex: 0 0 auto;
+  min-width: 140px;
+  /* minimum szélesség a szövegnek */
+  height: 52px;
+  /* fix magasság az ikon gombokkal egyező */
+  background: #84B3FF;
+  border: 1px solid #282F3A;
+  border-radius: 16px;
+  /* adjusted rounding */
+  border-left: none;
+  color: #08152C;
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+  padding: 0 20px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-login-btn:hover {
+  background: #42587B;
+  color: #DBE8FF;
+  transform: scaleY(1.12);
+  /* stronger vertical grow on hover */
+}
+
+/* Click pop animation same as banner buttons */
+.header-login-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+/* Event card external info button - Külsős Információk */
+.event-card-external-info-btn {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  background: #84B3FF;
+  border: 1px solid #282F3A;
+  border-radius: 12px;
+  /* kisebb lekerekítettség */
+  border-left: none;
+  color: #08152C;
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+  padding: 0 16px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-card-external-info-btn:hover {
+  background: #42587B;
+  color: #DBE8FF;
+  transform: scaleY(1.12);
+}
+
+.event-card-external-info-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+/* Horizontal scroll row for header + banner */
+.header-scroll-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+}
+
+.header-scroll-row::-webkit-scrollbar {
+  display: none;
+}
+
+.header-scroll-row {
+  scrollbar-width: none;
+}
+
+.info-banner {
+  background: #1D3823;
+  display: flex;
+  flex-direction: row;
+  padding: 18px 18px 18px 24px;
+  border-radius: 32px;
+  border: 1px solid #CFF7D3;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.info-banner-icon-container {
+  height: 100%;
+}
+
+.info-banner-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.banner-content {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  /* szövegek a tetejére igazítva */
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+}
+
+.banner-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-right: 24px;
+  /* az info-banner jobb oldali paddingját ide tesszük, actions-t nem érinti */
+}
+
+.info-banner-title {
+  color: #97FFAD;
+  font-weight: var(--font-weight-semibold);
+  text-align: left;
+  font-size: 20px;
+}
+
+.info-banner-desc {
+  color: #B9EBA2;
+  font-weight: var(--font-weight-regular);
+  font-size: 12px;
+}
+
+.banner-actions-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  align-self: stretch;
+}
+
+.banner-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  background: linear-gradient(90deg, #236932, #0C471F);
+  align-items: center;
+  padding: 8px;
+  border-radius: 16px;
+  flex: 0 0 auto;
+  height: 83%;
+}
+
+/* Közös banner gomb alapstílus és hover fix */
+.banner-btn,
+.banner-button {
+  padding: 10px 16px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  /* mutató kéz */
+  pointer-events: auto;
+  position: relative;
+  z-index: 0;
+  transition: background .15s ease, color .15s ease;
+  transform-origin: center;
+  transform: scaleY(1);
+  overflow: hidden;
+  /* pop animációnál háttér ne lógjon ki */
+}
+
+.banner-btn.primary {
+  background: #226932;
+  color: #DBFCD6;
+}
+
+.banner-btn.secondary {
+  background: #0C471F;
+  color: #CFF7D3;
+}
+
+.banner-btn.primary:hover {
+  background: #83FF8F;
+  color: #082907;
+  border: 1px solid #3A4F29;
+}
+
+.banner-btn.secondary:hover {
+  background: #93D98D;
+  color: #082907;
+  border: 1px solid #3A4F29;
+}
+
+.banner-btn {
+  height: 100%;
+  padding: 4px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  transition: background 0.2s ease;
+}
+
+.banner-btn:hover,
+.banner-button:hover {
+  transform: scaleY(1.08);
+  /* hover: subtle vertical grow only */
+}
+
+/* click: real pop animation */
+.banner-btn:active,
+.banner-button:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+@keyframes banner-btn-pop {
+  0% {
+    transform: scaleY(1.00);
+  }
+
+  70% {
+    transform: scaleY(1.32);
+  }
+
+  /* overshoot */
+  100% {
+    transform: scaleY(1.25);
+  }
+
+  /* settle */
+}
+
+.banner-btn.primary {
+  background: #97FFAD;
+  color: #082907;
+  border: 1px solid #CFF7D3;
+  width: 70px;
+}
+
+.banner-btn.secondary {
+  background: #B8EDA2;
+  color: #082907;
+  border: 1px solid #CFF7D3;
+  width: 170px;
+}
+
+/* Warning Banner */
+.warning-banner {
+  background: #261906;
+  display: flex;
+  flex-direction: row;
+  padding: 18px 18px 18px 24px;
+  border-radius: 32px;
+  border: 1px solid #FFF1C2;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.warning-banner-icon-container {
+  height: 100%;
+}
+
+.warning-banner-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.warning-banner-title {
+  color: #FFDFAF;
+  font-weight: var(--font-weight-semibold);
+  text-align: left;
+  font-size: 20px;
+}
+
+.warning-banner-desc {
+  color: #E9CE85;
+  font-weight: var(--font-weight-regular);
+  font-size: 12px;
+}
+
+.warning-banner-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  background: linear-gradient(90deg, #4E3D0D, #261906);
+  align-items: center;
+  padding: 8px;
+  border-radius: 16px;
+  flex: 0 0 auto;
+  height: 83%;
+}
+
+.warning-banner .banner-btn.primary {
+  background: #FFDFAF;
+  color: #211806;
+  border: 1px solid #FFF1C2;
+  width: 70px;
+}
+
+.warning-banner .banner-btn.secondary {
+  background: #EACF85;
+  color: #211806;
+  border: 1px solid #FFF1C2;
+  width: 170px;
+}
+
+@media (max-width: 900px) {
+  .main-content {
+    padding: 0 8px 32px 32px;
+  }
+
+  .sidebar {
+    margin-left: 8px;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main-content {
+    border-radius: 32px;
+    margin: 8px;
+    box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container);
+  }
+
+  .main-area {
+    margin-left: 0;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #232823;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Permission Popup Overlay - for full screen overlays (game, auth popups) */
+.permission-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(11, 15, 11, 0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Permission Popup Overlay - for main-scroll-area */
+.permission-overlay-scroll-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(11, 15, 11, 0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  /* High z-index to overlay everything in main-scroll-area */
+  pointer-events: auto;
+  /* Prevent interaction with elements behind popup */
+}
+
+.permission-overlay-scroll-area .permission-container {
+  pointer-events: auto;
+  /* Re-enable clicks on the popup itself */
+}
+
+.permission-container {
+  position: relative;
+  background: #16210B;
+  border-radius: var(--card-radius);
+  padding: 32px 32px 32px 32px;
+  max-width: 420px;
+  width: 100%;
+  max-height: 100%;
+  height: fit-content;
+  overflow: hidden;
+  /* Border-radius clips the scrollbar */
+  box-sizing: border-box;
+}
+
+.permission-content {
+  text-align: left;
+  max-height: calc(100vh - 96px);
+  /* Account for padding and margins */
+  height: fit-content;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: #445A2D #16210B;
+  /* Firefox */
+  margin-right: -32px;
+  /* Compensate for container padding */
+  padding-right: 32px;
+  /* Re-add padding for content */
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Webkit browsers scrollbar */
+.permission-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.permission-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.permission-content::-webkit-scrollbar-thumb {
+  background: #445A2D;
+  border-radius: 4px;
+}
+
+/* Permission close button - using header icon button style */
+.permission-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: #D3FFA1;
+  border: 1px solid #57703B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width .12s cubic-bezier(.2, .0, .2, 1), border-radius .12s cubic-bezier(.2, .0, .2, 1), background .12s ease;
+  cursor: pointer;
+  padding: 0;
+}
+
+.permission-close-btn img {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.permission-close-btn:hover {
+  width: 68px;
+  border-radius: 16px;
+  background: #DEFFBA;
+}
+
+.permission-hand-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+}
+
+.permission-title {
+  color: #C1EE8D;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.permission-icon-large {
+  margin: 0 0 8px 0;
+}
+
+.permission-text {
+  color: #E5FDA9;
+  text-align: left;
+  margin: 0 0 18px 0;
+  line-height: 1.6;
+}
+
+.permission-list {
+  color: #E5FDA9;
+  text-align: left;
+  margin: 0 0 32px 0;
+  padding-left: 20px;
+  margin-left: 0;
+  list-style-position: outside;
+  line-height: 1.6;
+}
+
+.permission-list li {
+  margin-bottom: 8px;
+}
+
+/* Input field for popups */
+.dev-mode-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: #2A3521;
+  border: 2px solid #445A2D;
+  border-radius: 12px;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-family: inherit;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.dev-mode-input:focus {
+  outline: none;
+  border-color: #D3FFA1;
+  background: #344025;
+}
+
+.dev-mode-input::placeholder {
+  color: #8FA274;
+}
+
+/* Ghost text for suggestions */
+.ghost-text {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  color: #8FA274;
+  font-size: 14px;
+  pointer-events: none;
+  opacity: 0.6;
+  display: none;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.ghost-text.is-visible {
+  display: block;
+}
+
+.ghost-text .ghost-prefix {
+  opacity: 1;
+  color: transparent;
+}
+
+/* Suggestions CTA buttons (for back button) */
+.suggestions-cta-sml {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #4B6231;
+  background: #D3FFA1;
+  color: #243114;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+  min-width: auto;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  margin-bottom: 4px;
+  height: 52px;
+  box-sizing: border-box;
+}
+
+.suggestions-cta-sml img {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
+.suggestions-cta--secondary {
+  min-width: auto;
+  padding-inline: 16px;
+  background: #C5EE96;
+}
+
+.suggestions-cta-icon--back {
+  transform: scaleX(-1);
+}
+
+.suggestions-cta-sml:hover {
+  background: #DEFFBA;
+  transform: scaleY(1.08);
+}
+
+.suggestions-cta--secondary:hover {
+  background: #B8E87A;
+  transform: scaleY(1.08);
+}
+
+.suggestions-cta-sml:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+@keyframes banner-btn-pop {
+  0% {
+    transform: scaleY(1.08);
+  }
+
+  50% {
+    transform: scaleY(0.92);
+  }
+
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+/* Permission OK button - using login button style */
+.permission-ok-btn {
+  min-width: 140px;
+  height: 52px;
+  background: #84B3FF;
+  border: 1px solid #282F3A;
+  border-radius: 16px;
+  color: #08152C;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+  padding: 0 20px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 24px;
+  align-self: flex-start;
+  flex-shrink: 0;
+}
+
+.permission-ok-btn:hover {
+  background: #42587B;
+  color: #DBE8FF;
+  transform: scaleY(1.12);
+}
+
+.permission-ok-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+
+/* Permission Popup Overlay */
+.warning-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(11, 15, 11, 0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.warning-container {
+  position: relative;
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  padding: 32px;
+  max-width: 320px;
+  width: 320px !important;
+  margin: 20px;
+  max-height: 70%;
+}
+
+.warning-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: #3D433C;
+  border-radius: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.warning-close-btn:hover {
+  border-radius: 15px;
+}
+
+.warning-content {
+  text-align: center;
+  max-height: calc(70vh - 64px);
+  /* container padding + biztonsági margó */
+  display: flex;
+  flex-direction: column;
+  align-items: center
+}
+
+.warning-hand-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 8px;
+}
+
+.warning-title {
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+}
+
+.warning-list {
+  color: #C2C3C2;
+  text-align: left;
+  margin: 0 0 32px 0;
+  line-height: 1.6;
+  border-radius: 32px;
+  overflow-y: scroll;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.warning-list-wrapper {
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.warning-list li {
+  margin-bottom: 12px;
+}
+
+.warning-item {
+  background: #3D433C;
+  padding: 12px 16px;
+  display: flex;
+}
+
+.warning-item.first {
+  border-radius: 32px 32px 16px 16px;
+}
+
+.warning-item.middle {
+  border-radius: 16px;
+}
+
+.warning-item.last {
+  border-radius: 16px 16px 32px 32px;
+}
+
+.popup-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+}
+
+/* === Events Container (new) === */
+.events-container {
+  display: grid;
+  grid-template-columns: 6fr 3fr 1fr;
+  /* 60/30/10 ratio that fits container */
+  gap: 24px;
+  width: 100%;
+  margin-top: 0;
+}
+
+.event-card {
+  position: relative;
+  border-radius: 64px;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  height: 480px;
+  /* lowered height */
+  background: #0D0F0A;
+}
+
+.event-card img.event-card-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* ensures full cover, removes black border from padding */
+}
+
+/* Ensure the large card aligns its children to bottom-right (overlay) */
+.event-card--lg {
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.event-card--lg,
+.event-card--md,
+.event-card--sm {
+  flex: initial;
+}
+
+.event-card--sm {
+  min-width: 120px;
+}
+
+.event-card-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(70, 90, 47, 0.78);
+  border-radius: 32px;
+  padding: 24px;
+  /* reduced per request */
+  color: #C1EE8E;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+}
+
+.event-card-overlay--lg {
+  bottom: 24px;
+  right: 24px;
+  /* force right alignment */
+  left: auto !important;
+  /* override base left:0 to prevent full-width stretch */
+  width: min(50%, 600px) !important;
+  max-width: min(50%, 600px) !important;
+  min-width: 280px;
+  align-items: flex-start;
+}
+
+.event-card--md {
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.event-card-overlay--md {
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  /* fill exactly between paddings without explicit width */
+  align-items: flex-start;
+  padding: 16px 24px;
+  /* slightly lower height than large */
+}
+
+.event-card-title {
+  color: #C1EE8E;
+  font-weight: var(--font-weight-bold, 700);
+  font-size: 32px;
+  /* növelt méret */
+  line-height: 1.1;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.event-card-desc {
+  color: #E5FDCB;
+  font-weight: var(--font-weight-regular, 400);
+  font-size: 16px;
+  /* növelt méret */
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.event-card--md .event-card-title {
+  font-size: 24px;
+}
+
+/* növelt méret */
+.event-card--md .event-card-desc {
+  font-size: 14px;
+}
+
+/* növelt méret */
+
+/* Event card date */
+.event-card-date {
+  color: #D5ECBC;
+  font-weight: var(--font-weight-regular, 400);
+  font-size: 14px;
+  line-height: 1.3;
+  margin-top: 8px;
+}
+
+.event-card--md .event-card-date {
+  font-size: 12px;
+}
+
+/* Event card link icon and button */
+.event-card-link-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.event-card-link-btn-container {
+  display: flex;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.event-card-link-btn {
+  background: #84B3FF;
+  border: 1px solid #282F3A;
+  border-radius: 12px;
+  /* kisebb lekerekítettség */
+  color: #08152C;
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+  padding: 10px 16px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.event-card-link-btn:hover {
+  background: #42587B;
+  color: #DBE8FF;
+  transform: scaleY(1.12);
+}
+
+.event-card-link-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+/* Blur effect when session is not active */
+.main-scroll-area.session-inactive {
+  filter: blur(8px);
+  pointer-events: none;
+  user-select: none;
+  transition: filter 0.3s ease;
+}
+
+/* Students Grid System (1 column, multiple rows) */
+.students-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(auto-fit, minmax(600px, 1fr));
+  gap: 32px;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* Students Cards - same as youhub cards */
+.students-grid .youhub-card {
+  background: #223013;
+  border: 1px solid #4B6231;
+  border-radius: 32px;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: relative;
+  transition: border-color 0.2s ease, border-width 0.2s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+  will-change: transform;
+}
+
+/* Smooth grid transitions */
+.students-grid {
+  transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1), grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* FLIP animation will handle transform transitions via JS */
+.students-grid>*:not(.dragging):not(.youhub-card-handle):not(.youhub-card-placeholder) {
+  will-change: transform;
+}
+
+/* Ensure cards have smooth transitions for non-transform properties */
+.students-grid .youhub-card:not(.dragging) {
+  transition: border-color 0.2s ease, border-width 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform;
+}
+
+/* Smooth grid item transitions for non-transform properties */
+.students-grid.edit-mode .youhub-card:not(.dragging) {
+  transition: border-color 0.2s ease, border-width 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Bounce animation for cards (like macOS notification) */
+@keyframes card-bounce {
+  0% {
+    transform: translateY(0);
+  }
+
+  30% {
+    transform: translateY(-8px);
+  }
+
+  60% {
+    transform: translateY(-4px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Apply bounce animation */
+.students-grid .youhub-card.bounce {
+  animation: card-bounce 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.students-card-content {
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  /* Same gap as notifications-middle-section */
+  height: 600px;
+  min-height: 600px;
+  max-height: 600px;
+  box-sizing: border-box;
+}
+
+/* Students Top Section (same as notifications-top-section but without history button) */
+.students-top-section {
+  min-height: 52px;
+  background: #465A2F;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.students-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.students-title {
+  color: #C1EE8D;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+}
+
+/* Students Middle Section */
+.students-middle-section {
+  flex: 1;
+  border-radius: 16px;
+  padding: 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  min-height: 0;
+  background: #43562D;
+  position: relative;
+}
+
+/* Students Middle Section Fade (blur gradients) */
+.students-middle-section-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 120px;
+  pointer-events: none;
+  z-index: 10;
+  /* Cards scroll behind blur */
+}
+
+.students-middle-section-fade--top {
+  top: 0;
+  background: linear-gradient(to bottom, #465A2F 0%, rgba(70, 90, 47, 0.95) 20%, rgba(70, 90, 47, 0.7) 50%, rgba(70, 90, 47, 0.3) 80%, rgba(70, 90, 47, 0) 100%);
+  border-radius: 16px;
+}
+
+.students-middle-section-fade--bottom {
+  bottom: 0;
+  background: linear-gradient(to top, #465A2F 0%, rgba(70, 90, 47, 0.95) 20%, rgba(70, 90, 47, 0.7) 50%, rgba(70, 90, 47, 0.3) 80%, rgba(70, 90, 47, 0) 100%);
+  border-radius: 16px;
+}
+
+/* Students Middle Section Top Buttons */
+.students-middle-section-top-buttons {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: row;
+  gap: auto;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.students-middle-section-top-buttons>* {
+  pointer-events: auto;
+}
+
+.students-action-buttons-container {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  background: transparent;
+  border-radius: 12px;
+  padding: 0;
+  align-items: center;
+}
+
+.students-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, width 0.2s ease, max-width 0.2s ease;
+  box-sizing: border-box;
+  background: transparent;
+  font-family: inherit;
+  height: 52px;
+  min-height: 52px;
+  max-height: 52px;
+  max-width: 125px;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.students-action-btn-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.students-action-btn-text {
+  color: #E5FDCB;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+/* Remove from class button - warning colors */
+.students-action-btn--remove {
+  background: #FFDFAF;
+  border: 1px solid #FFF1C2;
+}
+
+.students-action-btn--remove .students-action-btn-text {
+  color: #211806;
+}
+
+/* Hover animations for all top buttons - will be conditionally disabled by JS if text doesn't fit */
+.students-action-btn--remove:hover,
+.students-action-btn--change-roles:hover,
+.students-action-btn--details:hover {
+  max-width: 300px;
+  transform: none;
+}
+
+.students-select-btn:hover {
+  transform: scaleY(1.08);
+  transform-origin: center;
+}
+
+.students-action-btn--remove:hover {
+  background: #EACF85;
+}
+
+/* Horizontal expansion class - completely separate from hover effects */
+/* Use data attribute selector for maximum specificity */
+button.students-action-btn[data-needs-expansion="true"].students-action-btn-expanding,
+.students-action-btn-expanding {
+  transform: none !important;
+  transition: width 0.2s ease, max-width 0.2s ease !important;
+}
+
+button.students-action-btn[data-needs-expansion="true"].students-action-btn-expanding.students-action-btn--remove,
+.students-action-btn-expanding.students-action-btn--remove {
+  background: #EACF85 !important;
+}
+
+button.students-action-btn[data-needs-expansion="true"].students-action-btn-expanding.students-action-btn--change-roles,
+button.students-action-btn[data-needs-expansion="true"].students-action-btn-expanding.students-action-btn--details,
+.students-action-btn-expanding.students-action-btn--change-roles,
+.students-action-btn-expanding.students-action-btn--details {
+  background: #DEFFBA !important;
+}
+
+.students-action-btn--remove:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+/* Change roles and details buttons - default style */
+.students-action-btn--change-roles,
+.students-action-btn--details {
+  background: #D3FFA1;
+  border: 1px solid #57703B;
+}
+
+.students-action-btn--change-roles .students-action-btn-text,
+.students-action-btn--details .students-action-btn-text {
+  color: #082907;
+}
+
+.students-action-btn--change-roles:hover,
+.students-action-btn--details:hover {
+  background: #DEFFBA;
+}
+
+.students-select-btn:hover {
+  background: #DEFFBA;
+}
+
+/* Disable hover animations when text doesn't fit - applied by JS after translation system initializes */
+.students-action-btn--remove.no-hover-animation:hover,
+.students-action-btn--change-roles.no-hover-animation:hover,
+.students-action-btn--details.no-hover-animation:hover,
+.students-select-btn.no-hover-animation:hover {
+  transform: none !important;
+}
+
+/* Override scaleY when button expands horizontally - use !important to override everything */
+.students-action-btn--change-roles.expanding:hover,
+.students-action-btn--change-roles.expanding,
+.students-action-btn--details.expanding:hover,
+.students-action-btn--details.expanding {
+  transform: none !important;
+  background: #DEFFBA !important;
+}
+
+.students-action-btn--change-roles:active,
+.students-action-btn--details:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+/* Students Select Button (Kiválasztás) */
+.students-select-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #D3FFA1;
+  border: 1px solid #57703B;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: width .12s cubic-bezier(.2, .0, .2, 1), border-radius .12s cubic-bezier(.2, .0, .2, 1), background .12s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+  min-width: 140px;
+  height: 52px;
+  justify-content: center;
+}
+
+.students-select-btn-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.students-select-btn-text {
+  color: #344521;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: opacity 0.2s ease, width 0.2s ease;
+}
+
+.students-select-btn:hover {
+  background: #DEFFBA;
+}
+
+.students-select-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+/* Responsive: If button doesn't fit, hide text and make icon-only (settings button style) */
+@media (max-width: 1200px) {
+  .students-select-btn {
+    min-width: 52px;
+    max-width: 52px;
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border-radius: 999px;
+    justify-content: center;
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
+
+  .students-select-btn-text {
+    display: none;
+  }
+
+  .students-select-btn-icon {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    max-width: 22px;
+    min-height: 22px;
+    max-height: 22px;
+  }
+
+  .students-select-btn:hover {
+    width: 68px;
+    min-width: 68px;
+    max-width: 68px;
+    border-radius: 16px;
+    background: #DEFFBA;
+  }
+}
+
+/* Students Middle Section Bottom Buttons */
+.students-middle-section-bottom-buttons {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: row;
+  gap: auto;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.students-middle-section-bottom-buttons>* {
+  pointer-events: auto;
+}
+
+/* Students Add Student Button (Diák felvétele az osztályba) */
+.students-add-student-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #D3FFA1;
+  border: 1px solid #57703B;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+  min-width: 140px;
+  height: 52px;
+  justify-content: center;
+}
+
+.students-add-student-btn-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.students-add-student-btn-text {
+  color: #344521;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.students-add-student-btn:hover {
+  background: #DEFFBA;
+  transform: scaleY(1.12);
+  transform-origin: center;
+}
+
+.students-add-student-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+.students-teams-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #D3FFA1;
+  border: 1px solid #57703B;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+  min-width: 140px;
+  height: 52px;
+  justify-content: center;
+}
+
+.students-teams-btn-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.students-teams-btn-text {
+  color: #344521;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.students-teams-btn:hover {
+  background: #DEFFBA;
+  transform: scaleY(1.12);
+  transform-origin: center;
+}
+
+.students-teams-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+/* Students Delete Class Button (Osztály Törlése) - Danger */
+.students-delete-class-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #FFADB0;
+  border: 1px solid #F4776A;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+  min-width: 140px;
+  height: 52px;
+  justify-content: center;
+}
+
+.students-delete-class-btn-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.students-delete-class-btn-text {
+  color: #210A0A;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.students-delete-class-btn:hover,
+.students-delete-class-btn:active {
+  background: #FF97B4;
+  transform: scaleY(1.12);
+  transform-origin: center;
+}
+
+.students-delete-class-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+/* Students Top-Middle Container (column layout) */
+.students-top-middle-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Duplicated container (33% width) */
+.students-top-middle-container--duplicate {
+  flex: 0 0 33%;
+  width: 33%;
+  min-width: 33%;
+  max-width: 33%;
+}
+
+/* Students Columns */
+.students-column {
+  background: #43562D;
+  border-radius: 12px;
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* .students-column--left is defined later with full styles */
+
+.students-column--right {
+  flex: 1;
+  padding: 12px;
+}
+
+/* Students Grid Controls */
+.students-grid-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+/* YouHub Revert Button (reused from youhub.css) */
+.youhub-revert-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #D3FFA1;
+  border: 1px solid #57703B;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  box-sizing: border-box;
+}
+
+.youhub-revert-btn:hover {
+  background: #DEFFBA;
+  transform: scaleY(1.08);
+}
+
+.youhub-revert-btn:active {
+  animation: banner-btn-pop 0.16s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+}
+
+.youhub-revert-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.youhub-revert-text {
+  color: #082907;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Card Handle for dragging (same as youhub.css) */
+.youhub-card-handle {
+  display: none;
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 25%;
+  height: 12px;
+  background: #9FC177;
+  border-radius: 9999px;
+  cursor: grab;
+  transition: width 0.3s ease, height 0.3s ease, transform 0.16s cubic-bezier(.2, 0, .2, 1);
+  z-index: 10;
+}
+
+.youhub-card-handle:active {
+  cursor: grabbing;
+  width: 45%;
+  animation: handle-pop 0.16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+.youhub-card-handle:hover {
+  width: 35%;
+  height: 18px;
+}
+
+@keyframes handle-pop {
+  0% {
+    transform: translateX(-50%) scale(1);
+  }
+
+  70% {
+    transform: translateX(-50%) scale(1.1);
+  }
+
+  100% {
+    transform: translateX(-50%) scale(1.05);
+  }
+}
+
+/* Edit Mode Styles */
+.students-grid.edit-mode .youhub-card {
+  border: 4px solid #9EC177;
+}
+
+.students-grid.edit-mode .youhub-card-handle,
+.students-grid.dragging-active .youhub-card-handle {
+  display: block;
+}
+
+.students-grid .youhub-card.dragging {
+  z-index: 1000;
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  cursor: grabbing;
+  opacity: 0.75;
+  pointer-events: none;
+  transition: none !important;
+}
+
+.students-grid .youhub-card.drag-over {
+  border-color: #9EC177;
+  border-width: 2px;
+}
+
+.youhub-card-placeholder {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Reuse notification empty state styles */
+.students-column--right .notifications-empty-state {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  box-sizing: border-box;
+  gap: 16px;
+  min-height: 0;
+  background: #465A2F;
+  border-radius: 12px;
+}
+
+.students-column--right .notifications-empty-icon {
+  width: 80px;
+  height: 80px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.students-column--right .notifications-empty-icon--right {
+  width: 120px;
+  height: 120px;
+}
+
+.students-column--right .notifications-empty-text-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+.students-column--right .notifications-empty-title {
+  color: #BEEB8B;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.students-column--right .notifications-empty-subtitle {
+  color: #E5FDCB;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Students Column Left - Cards Container */
+.students-column--left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.students-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 80px;
+  /* Vissza az eredeti értékhez */
+  padding-bottom: 80px;
+  /* Vissza az eredeti értékhez */
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  /* Behind blur gradients */
+  /* Scrollbar stílus ugyanaz mint a popupokban */
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: #445A2D #16210B;
+  /* Firefox */
+}
+
+/* Webkit browsers scrollbar - ugyanaz mint permission-content */
+.students-cards-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.students-cards-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.students-cards-container::-webkit-scrollbar-thumb {
+  background: #445A2D;
+  border-radius: 4px;
+}
+
+/* Dropdown/autocomplete scroll support */
+.ghost-text,
+.suggestions-dropdown,
+.autocomplete-list {
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #445A2D #16210B;
+}
+
+.ghost-text::-webkit-scrollbar,
+.suggestions-dropdown::-webkit-scrollbar,
+.autocomplete-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ghost-text::-webkit-scrollbar-track,
+.suggestions-dropdown::-webkit-scrollbar-track,
+.autocomplete-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ghost-text::-webkit-scrollbar-thumb,
+.suggestions-dropdown::-webkit-scrollbar-thumb,
+.autocomplete-list::-webkit-scrollbar-thumb {
+  background: #445A2D;
+  border-radius: 3px;
+}
+
+.students-cards-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.students-cards-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.students-cards-container::-webkit-scrollbar-thumb {
+  background: #445A2D;
+  border-radius: 4px;
+}
+
+/* Students Empty State (when no class registered) */
+.students-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 16px;
+  box-sizing: border-box;
+  min-height: 400px;
+  width: 100%;
+}
+
+.students-empty-icon {
+  width: 120px;
+  height: 120px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.students-empty-text-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+.students-empty-title {
+  color: #BEEB8B;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.students-empty-subtitle {
+  color: #E5FDCB;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Students Register Class Button (same style as add student button) */
+.students-register-class-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #D3FFA1;
+  border: 1px solid #57703B;
+  border-radius: 16px;
+  color: #182C0E;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.students-register-class-btn:hover {
+  background: #BFF089;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.students-register-class-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.students-register-class-btn-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.students-register-class-btn-text {
+  white-space: nowrap;
+}
+
+/* Student Card */
+.students-student-card {
+  background: #243114;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  min-height: 80px;
+  align-items: stretch;
+  cursor: pointer;
+  /* Add pointer to show it's clickable */
+}
+
+/* Student Card Checkbox */
+.students-student-card-checkbox {
+  width: auto;
+  height: calc(100% - 24px);
+  /* Full height minus padding */
+  aspect-ratio: 1;
+  border-radius: 12px;
+  /* Nagyobb lekerekítés */
+  border: 1px solid #4B6231;
+  background: #D3FFA1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 8px;
+  /* Nagyobb padding */
+  flex-shrink: 0;
+  align-self: center;
+  /* Középre igazítva */
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.students-student-card-checkbox:hover {
+  background: #BFF089;
+}
+
+.students-student-card-checkbox img {
+  width: 18px;
+  /* Nagyobb pipa */
+  height: 18px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.students-student-card-checkbox.is-checked img {
+  opacity: 1;
+}
+
+/* Student Card Content Container */
+.students-student-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  flex-direction: row;
+  gap: 8px;
+}
+
+/* Student Card Left Info */
+.students-student-card-left {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  gap: 8px;
+  flex: 1;
+}
+
+.students-student-card-avatar {
+  width: auto;
+  height: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #666;
+  flex-shrink: 0;
+  align-self: stretch;
+  box-sizing: border-box;
+}
+
+.students-student-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  padding: 0;
+}
+
+.students-student-card-name {
+  color: #CEFF97;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.students-student-card-email,
+.students-student-card-birthdate {
+  color: #E5FDCB;
+  font-size: 12px;
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Student Card Right Info */
+.students-student-card-right {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+  text-align: right;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.students-student-card-right-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  color: #E5FDCB;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.students-student-card-right-item--account-type {
+  position: relative;
+  padding-right: 20px;
+}
+
+.students-student-card-right-item-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.students-student-card-right-item-icon--account-type {
+  position: absolute;
+  right: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.students-student-card-right-item-text {
+  margin: 0;
+}
+
+/* Main student card height */
+.students-card-content {
+  height: 600px;
+  max-height: 600px;
+}
+
+/* Class Selector Styles */
+.students-class-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 100px;
+  /* Start higher for title alignment */
+  padding-bottom: 80px;
+  /* End at top of bottom blur */
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  /* Behind blur gradients */
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: #445A2D #16210B;
+  /* Firefox */
+}
+
+.students-class-selector::-webkit-scrollbar {
+  width: 8px;
+}
+
+.students-class-selector::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.students-class-selector::-webkit-scrollbar-thumb {
+  background: #445A2D;
+  border-radius: 4px;
+}
+
+.students-class-selector-title {
+  color: #CEFF97;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+  padding: 0 12px;
+  width: 100%;
+  align-self: flex-start;
+}
+
+.students-class-cards-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 0 12px;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Class Card Styles - 280x120px */
+.students-class-card {
+  width: 280px;
+  height: 120px;
+  background: #243114;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  box-sizing: border-box;
+}
+
+.students-class-card:hover {
+  background: #2A3A1A;
+  transform: translateY(-2px);
+}
+
+.students-class-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.students-class-card-name {
+  color: #CEFF97;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.students-class-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.students-class-card-detail {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.students-class-card-detail-label {
+  color: #E5FDCB;
+  font-size: 12px;
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.students-class-card-detail-value {
+  color: #E5FDCB;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.students-class-card-student-count {
+  color: #E5FDCB;
+  font-size: 12px;
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.students-class-card-authority {
+  color: #BDEA8A;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.2;
+  text-align: left;
+  align-self: flex-start;
+}
+
+/* Profile Details View */
+@keyframes profileSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.students-profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(100vh - 200px);
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #445A2D #16210B;
+  border-radius: 12px;
+}
+
+/* Animation class - add/remove via JS */
+.students-profile-details.profile-animate-in {
+  animation: profileSlideIn 0.3s ease-out forwards;
+}
+
+.students-profile-details::-webkit-scrollbar {
+  width: 6px;
+}
+
+.students-profile-details::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.students-profile-details::-webkit-scrollbar-thumb {
+  background: #445A2D;
+  border-radius: 4px;
+}
+
+.students-profile-card {
+  background: #243114;
+  border-radius: 12px;
+  padding: 12px;
+  /* Reduced from 16px */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* Reduced from 16px */
+  width: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  /* Prevent shrinking */
+}
+
+/* Card 1: Overview */
+.students-profile-card--overview {
+  gap: 12px;
+}
+
+.students-profile-header {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: flex-start;
+  position: relative;
+}
+
+.students-profile-avatar-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.students-profile-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.students-profile-name {
+  color: #E5FDCB;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.students-profile-email {
+  color: rgba(229, 253, 203, 0.7);
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.students-profile-birthdate {
+  color: rgba(229, 253, 203, 0.5);
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.students-profile-role-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 8px;
+}
+
+.students-profile-role-text {
+  color: #E5FDCB;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.students-profile-role-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.8;
+}
+
+.students-profile-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.students-profile-detail-item {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.students-profile-detail-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.students-profile-detail-text {
+  color: #E5FDCB;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* Card 2, 3, 4 Titles */
+.students-profile-card-title {
+  color: #E5FDCB;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.students-profile-text {
+  color: rgba(229, 253, 203, 0.9);
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* Contact Info specific styles */
+.students-profile-contact-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.students-profile-label {
+  color: rgba(229, 253, 203, 0.6);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.students-profile-value {
+  color: #E5FDCB;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.students-profile-value:hover {
+  opacity: 0.8;
+}
+
+/* Pending Student State */
+.students-profile-card--pending {
+  border: 1px solid rgba(244, 119, 106, 0.3);
+  background: rgba(244, 119, 106, 0.1);
+}
+
+.students-profile-text-pending {
+  color: #F4776A;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.5;
+}

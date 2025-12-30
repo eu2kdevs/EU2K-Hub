@@ -1,0 +1,26 @@
+{
+  "name": "graphapi",
+  "description": "Firebase Function for Microsoft Graph API calls using OBO flow",
+  "scripts": {
+    "lint": "echo \"No linting configured\"",
+    "build": "echo \"No build step required\"",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions:callGraphAPI"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^13.5.0",
+    "firebase-functions": "^6.4.0",
+    "node-fetch": "^2.7.0"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+

@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="EU2K Hub Adatvédelmi tájékoztató – tudj meg mindent arról, hogyan kezeljük az adataidat.">
+  <title>EU2K Hub - Adatvédelmi Tájékoztató</title>
+  <link rel="stylesheet" href="privacy_policy.css">
+  <link rel="stylesheet" href="assets/css/consent-banner.css">
+  <link rel="icon" href="favicon.ico">
+  <script>
+    (function () {
+      if (!document.getElementById('eu2k-page-overlay')) {
+        var o = document.createElement('div');
+        o.id = 'eu2k-page-overlay';
+        o.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#000000;border-radius:32px;opacity:1;transition:opacity 300ms ease-in-out;';
+        var inner = document.createElement('div');
+        inner.style.cssText = 'position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000000;border-radius:32px;';
+        var m = document.createElement('div');
+        m.id = 'eu2k-overlay-mount';
+        m.style.cssText = 'position:relative;width:100%;height:100%';
+        inner.appendChild(m);
+        o.appendChild(inner);
+        document.documentElement.appendChild(o);
+      }
+    })();
+  </script>
+  <style>
+    /* Typography imports to match Figma */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+    body,
+    * {
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 400;
+      font-style: normal;
+      font-variation-settings: "wdth" 100;
+    }
+
+    /* Scrollbar elrejtése a news carousel-ben */
+    #newsRow {
+      scrollbar-width: none;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* Internet Explorer 10+ */
+    }
+
+    #newsRow::-webkit-scrollbar {
+      display: none;
+      /* WebKit */
+    }
+
+    /* Scrollbar elrejtése a news carousel-ben */
+    #event-frame {
+      scrollbar-width: none;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* Internet Explorer 10+ */
+    }
+
+    #event-frame::-webkit-scrollbar {
+      display: none;
+      /* WebKit */
+    }
+
+    /* Ensure events don't slide under header */
+    .events-section {
+      margin-top: 8px;
+    }
+
+    /* Horizontal news carousel behavior */
+    .news-carousel {
+      overflow: visible;
+    }
+
+    #newsRow {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      gap: 12px;
+    }
+
+    /* Footer links spacing */
+    .footer-center {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+  <script src="assets/js/page-overlay-loader.js"></script>
+  <script>
+    // Fallback: if overlay loader fails (e.g., due to path issues), ensure overlay is removed
+    window.addEventListener('load', function () {
+      try {
+        var o = document.getElementById('eu2k-page-overlay');
+        if (o) {
+          o.style.opacity = '0';
+          o.style.pointerEvents = 'none';
+          setTimeout(function () { try { o.remove(); } catch (e) { } }, 300);
+        }
+      } catch (e) { /* no-op */ }
+    });
+  </script>
+  <script src="assets/js/permissions.js"></script>
+  <script src="assets/js/translations.js"></script>
+  <script src="assets/js/account-tooltip.js"></script>
+  <!-- <script src="assets/js/welcome-screen.js"></script> -->
+  <script src="assets/js/auth-state.js"></script>
+  <script src="assets/js/test_firebase.js" type="module"></script>
+  <script src="assets/js/firebase-performance.js" type="module"></script>
+  <script src="assets/js/youhub-notification-toaster.js" type="module"></script>
+  <script src="assets/js/first-input-delay.js"></script>
+
+  <script type="text/javascript" data-gdpr-required>
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "s6n7qpfkv4");
+  </script>
+  <script type="importmap">
+    {
+      "imports": {
+        "@material/web/": "https://esm.run/@material/web/"
+      }
+    }
+  </script>
+  <script type="module">
+    import '@material/web/all.js';
+    import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
+
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
+    // Firebase Analytics GDPR szerint beleegyezést igényel
+    import { getFirestore, collection, onSnapshot, query, orderBy, limit, startAfter, getDocs } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { getStorage, ref as storageRef, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js";
+    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
+      authDomain: "eu2k-hub.firebaseapp.com",
+      projectId: "eu2k-hub",
+      storageBucket: "eu2k-hub.firebasestorage.app",
+      messagingSenderId: "560244867055",
+      appId: "1:560244867055:web:3cd51b85baead94989001a",
+      measurementId: "G-2JDPR089WD"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    // Firebase Analytics csak GDPR beleegyezés után inicializálódik
+    let analytics = null;
+    if (window.eu2kGDPR && window.eu2kGDPR.hasConsent()) {
+      analytics = getAnalytics(app);
+    } else {
+      // Várunk a GDPR beleegyezésre
+      window.addEventListener('eu2k-gdpr-scripts-loaded', () => {
+        if (!analytics) {
+          analytics = getAnalytics(app);
+        }
+      });
+    }
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+    const functions = getFunctions(app, 'europe-west1');
+
+    // Make Firebase app and services globally available
+    window.firebaseApp = app;
+    window.db = db;
+    window.functions = functions;
+    window.createHttpsCallable = (name) => httpsCallable(functions, name);
+    window.storage = storage;
+
+    // Import Firestore debug module
+    import('./assets/js/firestore-debug.js').catch(err => {
+      console.warn('Firestore debug module not loaded:', err);
+    });
+
+    // Import Firebase test module
+    import('./assets/js/test_firebase.js').catch(err => {
+      console.warn('Firebase test module not loaded:', err);
+    });
+
+    /* ---------------------- INIT ----------------------- */
+    window.addEventListener("load", () => {
+      console.log('Page loaded, initializing...');
+    });
+
+  </script>
+</head>
+
+<body>
+  <div class="app-bg">
+    <!-- Sidebar / Navigation Rail (left) -->
+    <aside class="sidebar" role="navigation" aria-label="Fő navigáció">
+      <div class="nav-frame">
+        <div class="nav-shell">
+          <nav class="nav-rail">
+
+            <a class="rail-item nav-btn" href="index.html" aria-current="page">
+              <div class="rail-icon">
+                <img src="assets/navbar/home.svg" alt="Otthon" />
+              </div>
+              <span class="rail-label" data-translate="navigation.home">Otthon</span>
+            </a>
+
+            <a class="rail-item nav-btn" href="qr-code.html">
+              <div class="rail-icon">
+                <img src="assets/navbar/qr_code.svg" alt="QR-Kód" />
+              </div>
+              <span class="rail-label" data-translate="navigation.qr" data-translate-fallback="QR-Kód">QR-Kód</span>
+            </a>
+
+            <a class="rail-item nav-btn" href="youhub.html">
+              <div class="rail-icon">
+                <img src="assets/navbar/youhub.svg" alt="YouHub" />
+              </div>
+              <span class="rail-label" data-translate="navigation.youhub">YouHub</span>
+            </a>
+
+            <!-- Class Hub (YouHub és Event Hub közé) -->
+            <!-- <a class="rail-item nav-btn" href="teachers/index.html">
+            <div class="rail-icon">
+              <img src="assets/navbar/class_hub.svg" alt="Class Hub" />
+          </div>
+            <span class="rail-label">Class Hub</span>
+          </a> -->
+
+            <!-- <a class="rail-item nav-btn" href="event_hub.html">
+          <div class="rail-icon">
+              <img src="assets/navbar/event_hub.svg" alt="Event Hub" />
+          </div>
+          <span class="rail-label" data-translate="navigation.event_hub">Event Hub</span>
+          </a> -->
+
+            <!-- Food Hub -->
+            <!-- <a class="rail-item nav-btn" href="youhub.html#food-hub">
+            <div class="rail-icon">
+              <img src="assets/navbar/food_hub.svg" alt="Food Hub" />
+            </div>
+            <span class="rail-label">Food Hub</span>
+          </a> -->
+
+          </nav>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <div class="main-scroll-area">
+        <!-- Header -->
+        <header class="header">
+          <div class="header-content">
+            <div class="welcome-container">
+              <img src="assets/privacy-policy/privacy-policy.svg" class="welcome-icon" alt="Privacy Policy">
+              <span class="welcome-text" data-translate="pages.privacy_policy.title"
+                data-translate-fallback="Adatvédelmi tájékoztató">Adatvédelmi tájékoztató</span>
+            </div>
+            <div class="header-icon-container">
+              <div class="header-icon-gradient">
+                <div class="header-icon-wrapper" id="headerSettingsWrapper">
+                  <a href="settings.html" class="header-icon-btn" id="headerSettingsBtn">
+                    <img src="assets/general/settings.svg" alt="Settings">
+                  </a>
+                </div>
+                <div class="header-icon-wrapper" id="headerAccountWrapper" style="display: none;">
+                  <button class="header-icon-btn" id="headerAccountBtn">
+                    <img src="assets/general/account.svg" alt="Account">
+                  </button>
+                </div>
+                <button class="header-login-btn" id="headerLoginBtn" data-translate="pages.general.login"
+                  style="display: none;">
+                  Bejelentkezés
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Notification / Info Banner -->
+          <section class="info-banner" aria-label="Információ">
+            <!-- TODO(Figma): Replace icon if specified in banner design -->
+            <div class="info-banner-icon-container">
+              <img class="info-banner-icon" src="assets/general/banners/info.svg" alt="Info" />
+            </div>
+            <div class="banner-content">
+              <div class="banner-texts">
+                <span class="info-banner-title" data-translate="pages.privacy_policy.banner.title"
+                  data-translate-fallback="Ez az új dizájn.">Ez az új dizájn.</span>
+                <span class="info-banner-desc" data-translate="pages.privacy_policy.banner.description"
+                  data-translate-fallback="Reméljük neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen is.">Reméljük
+                  neked is tetszik az Európa Dizájn Rendszer. Ha bármi kétséged van, jelezz vissza, akár innen
+                  is.</span>
+              </div>
+              <div class="banner-actions-wrapper">
+                <div class="banner-actions">
+                  <button class="banner-btn secondary" type="button"
+                    data-translate="pages.privacy_policy.banner.feedback"
+                    data-translate-fallback="Visszajelzés">Visszajelzés</button>
+                  <button class="banner-btn primary" type="button" data-translate="pages.privacy_policy.banner.close"
+                    data-translate-fallback="Bezárás">Bezárás</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </header>
+
+        <div class="main-content">
+          <section class="events-container" aria-label="Adatvédelmi Tájékoztató">
+            <p class="last-modified-notice" data-translate-html="pages.privacy_policy.effective_date">
+              <strong>Hatálybalépés dátuma:</strong> 2025. január 11.</p>
+
+            <div class="privacy-policy-container">
+              <div class="privacy-policy-item">
+                <h2 data-translate="pages.privacy_policy.section_1_title">1. Bevezetés</h2>
+                <p data-translate="pages.privacy_policy.section_1_text">
+                  Az EU2K Hub az Európa 2000 Gimnázium digitális központja, amelyet diákok, tanárok és érdeklődők
+                  számára hoztunk létre.
+                  Célunk, hogy egyszerűbbé és élvezetesebbé tegyük az iskolai életet, miközben átláthatóságra és
+                  biztonságra törekszünk
+                  az adatok kezelésében. Ez az adatvédelmi tájékoztató részletesen bemutatja, hogyan kezeljük az Ön
+                  személyes adatait.
+                </p>
+              </div>
+
+              <div class="privacy-policy-item">
+                <h2 data-translate="pages.privacy_policy.section_2_title">2. Milyen adatokat gyűjtünk?</h2>
+                <h3 data-translate="pages.privacy_policy.section_2_1_title">2.1. Bejelentkezési és profiladatok</h3>
+                <ul>
+                  <li data-translate-html="pages.privacy_policy.section_2_1_1"><strong>Hitelesítési adatok:</strong>
+                    Microsoft, Google vagy Apple fiók alapinformációi (név, e-mail cím, profilkép)</li>
+                  <li data-translate-html="pages.privacy_policy.section_2_1_2"><strong>Felhasználói profil:</strong>
+                    megjelenített név, profilképek, születési dátum (opcionális), fiók típusa (diák, tanár, szülő)</li>
+                  <li data-translate-html="pages.privacy_policy.section_2_1_3"><strong>Beállítások:</strong> nyelvi
+                    beállítások, értesítési beállítások, üzenetküldési beállítások</li>
+                </ul>
+                <h3 data-translate="pages.privacy_policy.section_2_2_title">2.2. Iskolai adatok</h3>
+                <ul>
+                  <li data-translate-html="pages.privacy_policy.section_2_2_1"><strong>Osztályinformációk:</strong>
+                    osztály neve, osztálytársak és tanárok nevei, elérhetőségei</li>
+                  <li data-translate-html="pages.privacy_policy.section_2_2_2"><strong>Tanulmányi adatok:</strong>
+                    jegyek, órarend, dolgozatok, házi feladatok (ha elérhető)</li>
+                  <li data-translate-html="pages.privacy_policy.section_2_2_3"><strong>Osztályprofil:</strong> osztály
+                    banner képe, leírás, osztály statisztikák</li>
+                </ul>
+                <h3 data-translate="pages.privacy_policy.section_2_3_title">2.3. Közösségi tartalmak</h3>
+                <ul>
+                  <li data-translate-html="pages.privacy_policy.section_2_3_1"><strong>Posztok és
+                      hozzászólások:</strong> YouHub, Event Hub és más közösségi funkciókban létrehozott tartalmak</li>
+                  <li data-translate-html="pages.privacy_policy.section_2_3_2"><strong>Események:</strong> létrehozott
+                    vagy részt vett események, kurzusok, találkozók</li>
+                  <li data-translate-html="pages.privacy_policy.section_2_3_3"><strong>Szavazások:</strong> részvétel
+                    szavazásokban és közvélemény-kutatásokban</li>
+                </ul>
+                <h3 data-translate="pages.privacy_policy.section_2_4_title">2.4. Funkcióspecifikus adatok</h3>
+                <ul>
+                  <li data-translate-html="pages.privacy_policy.section_2_4_1"><strong>YouHub:</strong> statisztikák,
+                    órarend, értesítések, javaslatok, osztály hónap teljesítménye</li>
+                  <li data-translate-html="pages.privacy_policy.section_2_4_2"><strong>Event Hub:</strong> esemény
+                    részvétel, QR-kód beolvasások</li>
+                  <li data-translate-html="pages.privacy_policy.section_2_4_3"><strong>Class Hub:</strong> osztály
+                    információk, tanulói csoportok</li>
+                  <li data-translate-html="pages.privacy_policy.section_2_4_4"><strong>Food Hub:</strong> étkezési
+                    preferenciák (ha elérhető)</li>
+                  <li data-translate-html="pages.privacy_policy.section_2_4_5"><strong>QR-kód olvasás:</strong>
+                    beolvasott QR-kódok időbélyegei és helyszínei</li>
+                </ul>
+                <h3 data-translate="pages.privacy_policy.section_2_5_title">2.5. Technikai adatok</h3>
+                <ul>
+                  <li data-translate-html="pages.privacy_policy.section_2_5_1"><strong>Böngésző adatok:</strong>
+                    böngésző típusa, operációs rendszer, eszköz típusa</li>
+                  <li data-translate-html="pages.privacy_policy.section_2_5_2"><strong>Használati adatok:</strong> oldal
+                    látogatások, kattintások, munkamenet információk</li>
+                  <li data-translate-html="pages.privacy_policy.section_2_5_3"><strong>Helyi tárolás:</strong>
+                    localStorage és sessionStorage használata a bejelentkezési állapot, beállítások és egyéb
+                    preferenciák tárolásához</li>
+                </ul>
+              </div>
+
+              <div class="privacy-policy-item">
+                <h2 data-translate="pages.privacy_policy.section_3_title">3. Hogyan használjuk az adatokat?</h2>
+                <h3 data-translate="pages.privacy_policy.section_3_1_title">3.1. Szolgáltatás biztosítása</h3>
+                <ul>
+                  <li data-translate="pages.privacy_policy.section_3_1_1">Felhasználói fiókok kezelése és hitelesítés
+                  </li>
+                  <li data-translate="pages.privacy_policy.section_3_1_2">Iskolai funkciók működtetése (órarend, jegyek,
+                    események)</li>
+                  <li data-translate="pages.privacy_policy.section_3_1_3">Közösségi funkciók biztosítása (posztok,
+                    hozzászólások, események)</li>
+                  <li data-translate="pages.privacy_policy.section_3_1_4">Értesítések küldése fontos információkról</li>
+                </ul>
+                <h3 data-translate="pages.privacy_policy.section_3_2_title">3.2. Szolgáltatás fejlesztése</h3>
+                <ul>
+                  <li data-translate="pages.privacy_policy.section_3_2_1">Használati statisztikák elemzése a
+                    szolgáltatás javítása érdekében</li>
+                  <li data-translate="pages.privacy_policy.section_3_2_2">Hibák azonosítása és javítása</li>
+                  <li data-translate="pages.privacy_policy.section_3_2_3">Felhasználói élmény optimalizálása</li>
+                </ul>
+                <h3 data-translate="pages.privacy_policy.section_3_3_title">3.3. Jogszabályi megfelelőség</h3>
+                <ul>
+                  <li data-translate="pages.privacy_policy.section_3_3_1">GDPR és egyéb adatvédelmi törvények betartása
+                  </li>
+                  <li data-translate="pages.privacy_policy.section_3_3_2">Jogosultságok ellenőrzése és biztonsági
+                    intézkedések</li>
+                </ul>
+                <p data-translate-html="pages.privacy_policy.section_3_important"><strong>Fontos:</strong> Az adatokat
+                  kizárólag a fent említett célokra használjuk. Nem adjuk el és nem osztjuk meg őket külső cégekkel
+                  kereskedelmi célokra.</p>
+              </div>
+
+              <div class="privacy-policy-item">
+                <h2 data-translate="pages.privacy_policy.section_4_title">4. Harmadik fél szolgáltatások</h2>
+                <h3 data-translate="pages.privacy_policy.section_4_1_title">4.1. Firebase (Google)</h3>
+                <ul>
+                  <li data-translate-html="pages.privacy_policy.section_4_1_1"><strong>Firebase Authentication:</strong>
+                    felhasználói hitelesítés kezelése</li>
+                  <li data-translate-html="pages.privacy_policy.section_4_1_2"><strong>Cloud Firestore:</strong> adatok
+                    tárolása és szinkronizálása</li>
+                  <li data-translate-html="pages.privacy_policy.section_4_1_3"><strong>Firebase Storage:</strong> fájlok
+                    (képek, dokumentumok) tárolása</li>
+                  <li data-translate-html="pages.privacy_policy.section_4_1_4"><strong>Firebase Analytics:</strong>
+                    használati statisztikák gyűjtése (csak hozzájárulás esetén)</li>
+                  <li data-translate-html="pages.privacy_policy.section_4_1_5"><strong>Firebase Functions:</strong>
+                    backend funkciók futtatása</li>
+                </ul>
+                <p data-translate-html="pages.privacy_policy.section_4_1_text">Az adatok az Európa (europe-west1)
+                  régióban tárolódnak. További információ: <a href="https://firebase.google.com/support/privacy"
+                    target="_blank">Firebase Adatvédelem</a></p>
+                <h3 data-translate="pages.privacy_policy.section_4_2_title">4.2. Microsoft Clarity</h3>
+                <ul>
+                  <li data-translate-html="pages.privacy_policy.section_4_2_1"><strong>Használat:</strong> weboldal
+                    használati statisztikák és felhasználói viselkedés elemzése (csak hozzájárulás esetén)</li>
+                  <li data-translate-html="pages.privacy_policy.section_4_2_2"><strong>Adatkezelés:</strong> Microsoft
+                    adatvédelmi irányelvei szerint</li>
+                  <li data-translate-html="pages.privacy_policy.section_4_2_3"><strong>További információ:</strong> <a
+                      href="https://clarity.microsoft.com/terms" target="_blank">Microsoft Clarity Feltételek</a></li>
+                </ul>
+                <h3 data-translate="pages.privacy_policy.section_4_3_title">4.3. Microsoft Graph API</h3>
+                <ul>
+                  <li data-translate-html="pages.privacy_policy.section_4_3_1"><strong>Használat:</strong> Microsoft
+                    fiók információk lekérése (név, e-mail, profilkép)</li>
+                  <li data-translate-html="pages.privacy_policy.section_4_3_2"><strong>Adatkezelés:</strong> csak a
+                    bejelentkezéshez szükséges minimális adatok</li>
+                </ul>
+              </div>
+
+              <div class="privacy-policy-item">
+                <h2 data-translate="pages.privacy_policy.section_5_title">5. Sütik és nyomkövetési technológiák</h2>
+                <h3 data-translate="pages.privacy_policy.section_5_1_title">5.1. Technikai sütik (szükségesek)</h3>
+                <ul>
+                  <li data-translate-html="pages.privacy_policy.section_5_1_1"><strong>Bejelentkezési állapot:</strong>
+                    munkamenet fenntartása</li>
+                  <li data-translate-html="pages.privacy_policy.section_5_1_2"><strong>Beállítások:</strong> nyelvi
+                    beállítások, preferenciák tárolása</li>
+                  <li data-translate-html="pages.privacy_policy.section_5_1_3"><strong>Helyi tárolás:</strong>
+                    localStorage és sessionStorage használata</li>
+                </ul>
+                <h3 data-translate="pages.privacy_policy.section_5_2_title">5.2. Analitikai sütik (beleegyezés
+                  szükséges)</h3>
+                <ul>
+                  <li data-translate-html="pages.privacy_policy.section_5_2_1"><strong>Firebase Analytics:</strong>
+                    használati statisztikák gyűjtése</li>
+                  <li data-translate-html="pages.privacy_policy.section_5_2_2"><strong>Microsoft Clarity:</strong>
+                    felhasználói viselkedés elemzése</li>
+                </ul>
+                <p data-translate="pages.privacy_policy.section_5_text">
+                  Az analitikai sütik használatához előzetes beleegyezés szükséges. A weboldal első betöltésekor egy
+                  cookie banner jelenik meg,
+                  ahol elfogadhatja vagy elutasíthatja ezeket a sütiket. A beleegyezés bármikor visszavonható a
+                  beállításokban.
+                </p>
+              </div>
+
+              <div class="privacy-policy-item">
+                <h2 data-translate="pages.privacy_policy.section_6_title">6. Kik férhetnek hozzá az adatokhoz?</h2>
+                <h3 data-translate="pages.privacy_policy.section_6_1_title">6.1. Felhasználói jogosultságok</h3>
+                <ul>
+                  <li data-translate-html="pages.privacy_policy.section_6_1_1"><strong>Diákok:</strong> saját adataik,
+                    osztályuk adatai, osztálytársaik alapinformációi</li>
+                  <li data-translate-html="pages.privacy_policy.section_6_1_2"><strong>Tanárok:</strong> saját adataik,
+                    osztályaik adatai, tanítványaik alapinformációi</li>
+                  <li data-translate-html="pages.privacy_policy.section_6_1_3"><strong>Szülők:</strong> saját adataik,
+                    gyermekeik iskolai adatai (ha jogosultak)</li>
+                  <li data-translate-html="pages.privacy_policy.section_6_1_4"><strong>Rendszergazdák:</strong>
+                    korlátozott hozzáférés a rendszer karbantartásához</li>
+                </ul>
+                <h3 data-translate="pages.privacy_policy.section_6_2_title">6.2. Közös szerkesztés</h3>
+                <ul>
+                  <li data-translate="pages.privacy_policy.section_6_2_1">Bizonyos funkciók (pl. osztályprofil) esetében
+                    a közösség tagjai közösen szerkeszthetik a tartalmat</li>
+                  <li data-translate="pages.privacy_policy.section_6_2_2">Az osztályprofil tartalma az osztály tagjai
+                    számára látható</li>
+                </ul>
+                <h3 data-translate="pages.privacy_policy.section_6_3_title">6.3. Harmadik felek</h3>
+                <ul>
+                  <li data-translate="pages.privacy_policy.section_6_3_1">Firebase (Google) szolgáltatások az adatok
+                    tárolásához és feldolgozásához</li>
+                  <li data-translate="pages.privacy_policy.section_6_3_2">Microsoft Clarity (csak hozzájárulás esetén) a
+                    használati statisztikákhoz</li>
+                  <li data-translate="pages.privacy_policy.section_6_3_3">Ezek a szolgáltatók saját adatvédelmi
+                    irányelveik szerint kezelik az adatokat</li>
+                </ul>
+              </div>
+
+              <div class="privacy-policy-item">
+                <h2 data-translate="pages.privacy_policy.section_7_title">7. Hogyan védjük az adataidat?</h2>
+                <h3 data-translate="pages.privacy_policy.section_7_1_title">7.1. Technikai biztonsági intézkedések</h3>
+                <ul>
+                  <li data-translate-html="pages.privacy_policy.section_7_1_1"><strong>Hitelesítés:</strong> minden
+                    bejelentkezés hitelesített Microsoft, Google vagy Apple fiókon keresztül történik</li>
+                  <li data-translate-html="pages.privacy_policy.section_7_1_2"><strong>Titkosítás:</strong> az adatok
+                    továbbítása és tárolása titkosított kapcsolaton keresztül történik (HTTPS/TLS)</li>
+                  <li data-translate-html="pages.privacy_policy.section_7_1_3"><strong>Firebase Security Rules:</strong>
+                    szigorú hozzáférés-vezérlés az adatokhoz</li>
+                  <li data-translate-html="pages.privacy_policy.section_7_1_4"><strong>Rendszeres biztonsági
+                      ellenőrzések:</strong> a rendszer rendszeres auditálása</li>
+                </ul>
+                <h3 data-translate="pages.privacy_policy.section_7_2_title">7.2. Szervezeti intézkedések</h3>
+                <ul>
+                  <li data-translate="pages.privacy_policy.section_7_2_1">Az adatokhoz való hozzáférést szigorúan
+                    korlátozzuk</li>
+                  <li data-translate="pages.privacy_policy.section_7_2_2">Csak az arra jogosult személyek férhetnek
+                    hozzá az adatokhoz</li>
+                  <li data-translate="pages.privacy_policy.section_7_2_3">Rendszeres képzéseket tartunk az
+                    adatvédelemről</li>
+                </ul>
+                <h3 data-translate="pages.privacy_policy.section_7_3_title">7.3. Adatminimalizálás</h3>
+                <ul>
+                  <li data-translate="pages.privacy_policy.section_7_3_1">Csak a szolgáltatás működéséhez szükséges
+                    adatokat gyűjtünk</li>
+                  <li data-translate="pages.privacy_policy.section_7_3_2">Rendszeresen felülvizsgáljuk az adatgyűjtést
+                    és töröljük a nem szükséges adatokat</li>
+                </ul>
+              </div>
+
+              <div class="privacy-policy-item">
+                <h2 data-translate="pages.privacy_policy.section_8_title">8. Milyen jogok illetnek meg téged?</h2>
+                <p data-translate="pages.privacy_policy.section_8_intro">Az általános adatvédelmi rendelet (GDPR)
+                  szerint a következő jogok illetnek meg Önt:</p>
+                <ul>
+                  <li data-translate-html="pages.privacy_policy.section_8_1"><strong>Hozzáférési jog:</strong> kérheti
+                    az Önre vonatkozó adatok másolatát</li>
+                  <li data-translate-html="pages.privacy_policy.section_8_2"><strong>Helyesbítési jog:</strong> kérheti
+                    helytelen adatok javítását</li>
+                  <li data-translate-html="pages.privacy_policy.section_8_3"><strong>Törléshez való jog:</strong>
+                    kérheti adatainak törlését (ha nincs jogalap a további tárolásra)</li>
+                  <li data-translate-html="pages.privacy_policy.section_8_4"><strong>Korlátozási jog:</strong> kérheti
+                    adatainak kezelésének korlátozását</li>
+                  <li data-translate-html="pages.privacy_policy.section_8_5"><strong>Adathordozhatósági jog:</strong>
+                    kérheti adatainak strukturált, széles körben használt formátumban történő átadását</li>
+                  <li data-translate-html="pages.privacy_policy.section_8_6"><strong>Visszautasítási jog:</strong>
+                    bármikor visszavonhatja a beleegyezését az analitikai sütikhez</li>
+                  <li data-translate-html="pages.privacy_policy.section_8_7"><strong>Panasz benyújtási jog:</strong>
+                    panaszt tehet az adatvédelmi hatóságnál</li>
+                </ul>
+                <p data-translate-html="pages.privacy_policy.section_8_contact">
+                  Jogainak érvényesítéséhez írjon az alábbi e-mail címre:
+                  <a href="mailto:turoczi.adam@europa2000.hu">turoczi.adam@europa2000.hu</a>
+                </p>
+              </div>
+
+              <div class="privacy-policy-item">
+                <h2 data-translate="pages.privacy_policy.section_9_title">9. Adatok tárolási ideje</h2>
+                <ul>
+                  <li data-translate-html="pages.privacy_policy.section_9_1"><strong>Felhasználói fiók adatok:</strong>
+                    amíg a fiók aktív, vagy törlésig</li>
+                  <li data-translate-html="pages.privacy_policy.section_9_2"><strong>Közösségi tartalmak:</strong> amíg
+                    a felhasználó nem törli, vagy a fiók törléséig</li>
+                  <li data-translate-html="pages.privacy_policy.section_9_3"><strong>Analitikai adatok:</strong> maximum
+                    26 hónap (ha hozzájárulás van)</li>
+                  <li data-translate-html="pages.privacy_policy.section_9_4"><strong>Helyi tárolás
+                      (localStorage):</strong> amíg a felhasználó nem törli, vagy a böngésző cache törléséig</li>
+                </ul>
+                <p data-translate="pages.privacy_policy.section_9_text">
+                  A fiók törlésekor az összes személyes adat törlésre kerül, kivéve azokat, amelyeket jogszabályi
+                  kötelezettség
+                  (pl. könyvelési adatok) vagy jogos érdek (pl. biztonsági naplók) megőrizésére kötelez.
+                </p>
+              </div>
+
+              <div class="privacy-policy-item">
+                <h2 data-translate="pages.privacy_policy.section_10_title">10. Gyermekek adatvédelme</h2>
+                <p data-translate="pages.privacy_policy.section_10_text1">
+                  Az EU2K Hub elsősorban iskolai környezetben használatos, ahol a diákok általában 14 év alattiak
+                  lehetnek.
+                  Fontos, hogy a szülők és tanárok tudatában legyenek az adatkezelésnek. A platform használatához
+                  iskolai
+                  fiók szükséges, amely az iskola felügyelete alatt áll.
+                </p>
+                <p data-translate="pages.privacy_policy.section_10_text2">
+                  Ha 14 év alatti gyermek adatait kezeljük, az iskola és a szülők együttes beleegyezése szükséges.
+                  Bármilyen kérdés esetén forduljon az iskolához vagy az alábbi kapcsolattartóhoz.
+                </p>
+              </div>
+
+              <div class="privacy-policy-item">
+                <h2 data-translate="pages.privacy_policy.section_11_title">11. Kapcsolat és panaszok</h2>
+                <p data-translate="pages.privacy_policy.section_11_intro">
+                  Ha kérdése van az adatvédelemmel kapcsolatban, vagy jogait szeretné érvényesíteni, írjon nekünk:
+                </p>
+                <p data-translate-html="pages.privacy_policy.section_11_email">
+                  <strong>E-mail:</strong> <a href="mailto:turoczi.adam@europa2000.hu">turoczi.adam@europa2000.hu</a>
+                </p>
+                <p data-translate-html="pages.privacy_policy.section_11_authority_intro">
+                  <strong>Adatvédelmi hatóság:</strong> Ha úgy érzi, hogy az adatai kezelése sérti az adatvédelmi
+                  törvényeket,
+                  panaszt tehet a Nemzeti Adatvédelmi és Információszabadság Hatóságnál (NAIH):
+                </p>
+                <p data-translate-html="pages.privacy_policy.section_11_authority_details">
+                  <strong>NAIH:</strong><br>
+                  Cím: 1055 Budapest, Falk Miksa utca 9-11.<br>
+                  Telefon: +36 1 391 1400<br>
+                  E-mail: <a href="mailto:ugyfelszolgalat@naih.hu">ugyfelszolgalat@naih.hu</a><br>
+                  Web: <a href="https://www.naih.hu" target="_blank">www.naih.hu</a>
+                </p>
+              </div>
+            </div>
+            <footer class="footer-privacy" data-translate="pages.privacy_policy.footer">
+              &copy; 2025 EU2K Hub – Minden jog fenntartva.
+            </footer>
+          </section>
+
+          <script>
+            // Inicializálja a fordítórendszert
+            document.addEventListener('DOMContentLoaded', () => {
+              if (window.translationManager) {
+                window.translationManager.init();
+              }
+            });
+          </script>
+
+          <script type="module">
+            import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+            function lsLoggedInFallback() {
+              try { return localStorage.getItem('eu2k-auth-logged-in') === 'true'; } catch { return false; }
+            }
+
+            function updateHeaderIcons(loggedIn) {
+              const settingsWrapper = document.getElementById('headerSettingsWrapper');
+              const accountWrapper = document.getElementById('headerAccountWrapper');
+              const loginBtn = document.getElementById('headerLoginBtn');
+              const gradientContainer = document.querySelector('.header-icon-gradient');
+              if (!settingsWrapper || !accountWrapper || !loginBtn || !gradientContainer) return;
+
+              if (loggedIn) {
+                settingsWrapper.style.display = 'flex';
+                accountWrapper.style.display = 'flex';
+                loginBtn.style.display = 'none';
+                gradientContainer.classList.remove('has-login'); // Csak zöld, nincs gradient
+              } else {
+                settingsWrapper.style.display = 'flex';
+                accountWrapper.style.display = 'none';
+                loginBtn.style.display = 'flex';
+                gradientContainer.classList.add('has-login'); // Van gradient, mert van kék gomb
+              }
+            }
+
+            try {
+              const auth = getAuth();
+              onAuthStateChanged(auth, (user) => {
+                updateHeaderIcons(!!user);
+              });
+            } catch (e) {
+              // Last resort: localStorage fallback
+              updateHeaderIcons(lsLoggedInFallback());
+              // Keep in sync with localStorage changes
+              window.addEventListener('storage', () => updateHeaderIcons(lsLoggedInFallback()));
+              setInterval(() => updateHeaderIcons(lsLoggedInFallback()), 1000);
+            }
+
+            // Bejelentkezés gomb kattintás
+            const loginBtnEl = document.getElementById('headerLoginBtn');
+            if (loginBtnEl) {
+              loginBtnEl.addEventListener('click', function () {
+                window.location.href = 'onboarding.html';
+              });
+            }
+          </script>
+        </div>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+          <!-- Left Column -->
+          <div class="footer-left">
+            <!-- Logo and participated section -->
+            <div class="footer-logo-container">
+              <img src="assets/general/footer/eu2k_hub.png" alt="EU2K Hub">
+              <span class="footer-participated-text">Részt vett még:</span>
+              <div class="footer-participated-logos">
+                <img src="assets/general/footer/eu2k.png" alt="EU2K">
+                <img src="assets/general/footer/eu2k_devs.png" alt="EU2K Devs">
+                <img src="assets/general/footer/eu2k_dok.png" alt="EU2K Dok">
+                <img src="assets/general/footer/eu2k_ujsag.png" alt="EU2K Újság">
+              </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="footer-copyright">
+              © 2025 EU2K Devs és Európa 2000 Gimnázium. All Rights Reserved.
+            </div>
+
+            <!-- Social icons -->
+            <div class="footer-social">
+              <img src="assets/general/footer/eu2k_ujsag.svg" alt="EU2K Újság"
+                onclick="window.open('https://sites.google.com/view/eu2k-ujsag', '_blank')">
+              <img src="assets/general/footer/x.svg" alt="X (Twitter)"
+                onclick="window.open('https://x.com/eu2kdevs', '_blank')">
+              <img src="assets/general/footer/instagram.svg" alt="Instagram"
+                onclick="window.open('https://instagram.com/eu2k.devs', '_blank')">
+              <img src="assets/general/footer/yt.svg" alt="YouTube"
+                onclick="window.open('https://youtube.com/@eu2kdevs', '_blank')">
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="footer-right">
+            <!-- Jogi Nyilatkozatok -->
+            <div class="footer-section-first">
+              <div class="footer-section-title">Jogi Nyilatkozatok</div>
+              <div class="footer-section-items">
+                <a href="/privacy-policy" class="footer-item">Adatvédelmi&nbsp;Tájékoztató</a>
+                <a href="/terms-of-service" class="footer-item">Használati&nbsp;Feltételek</a>
+              </div>
+            </div>
+
+            <!-- Hubs -->
+            <div class="footer-section">
+              <div class="footer-section-title" data-translate="footer.hubs.title">Hubs</div>
+              <div class="footer-section-items">
+                <a href="youhub.html" class="footer-item">YouHub</a>
+                <div class="footer-item">Class&nbsp;Hub<span class="beta-badge" data-translate="footer.hubs.soon"
+                    data-translate-fallback="SOON">SOON</span></div>
+                <div class="footer-item">Food&nbsp;Hub<span class="beta-badge" data-translate="footer.hubs.soon"
+                    data-translate-fallback="SOON">SOON</span></div>
+                <div class="footer-item">Event&nbsp;Hub<span class="beta-badge" data-translate="footer.hubs.soon"
+                    data-translate-fallback="SOON">SOON</span></div>
+                <div class="footer-item">Fitness&nbsp;Hub<span class="beta-badge" data-translate="footer.hubs.soon"
+                    data-translate-fallback="SOON">SOON</span></div>
+              </div>
+            </div>
+
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+
+  <!-- <script>
+    // Check if user has accepted terms of service and redirect to appropriate onboarding
+    // COMMENTED OUT: Redirect to onboarding disabled
+    /*
+    document.addEventListener('DOMContentLoaded', () => {
+      // FIRST: Check if user is already logged in and has completed onboarding
+      const isLoggedIn = localStorage.getItem('eu2k-auth-logged-in') === 'true';
+      const onboardingCompleted = localStorage.getItem('onboardingCompleted') === 'true';
+      const termsAccepted = localStorage.getItem('termsAccepted') === 'true';
+      
+      console.log('🔍 Index.html redirect check:', {
+        isLoggedIn,
+        onboardingCompleted,
+        termsAccepted
+      });
+      
+      // If user is logged in and onboarding is completed, stay on index.html
+      if (isLoggedIn && onboardingCompleted && termsAccepted) {
+        console.log('✅ User is fully set up, staying on index.html');
+        // Mark as visited to prevent welcome screen redirect
+        if (window.welcomeScreenManager) {
+          window.welcomeScreenManager.markAsVisited();
+        }
+        return;
+      }
+      
+      // Only redirect to onboarding if terms are not accepted
+      if (termsAccepted !== 'true') {
+        console.log('📋 Terms not accepted, redirecting to onboarding...');
+        
+        const userType = localStorage.getItem('eu2k-user-type');
+        
+        if (isLoggedIn && userType) {
+          // Redirect to appropriate onboarding based on user type
+          switch (userType) {
+            case 'student':
+              window.location.href = 'welcome/onboarding_student.html#student-profile';
+              break;
+            case 'parent':
+              window.location.href = 'welcome/onboarding_parent.html#parent-profile';
+              break;
+            case 'teacher':
+              window.location.href = 'welcome/onboarding_teacher.html#teacher-profile';
+              break;
+            default:
+              // Default to student onboarding if user type is unknown
+              window.location.href = 'welcome/onboarding_student.html';
+          }
+        } else {
+          // Not logged in, redirect to default student onboarding
+          window.location.href = 'welcome/onboarding_student.html';
+        }
+      }
+    });
+    */
+  </script>
+  <script type="module">
+    import { getAuth, signInWithPopup, OAuthProvider } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+    const auth = getAuth();
+
+    // Globális Microsoft bejelentkezés függvény
+    window.startMicrosoftSignIn = async () => {
+      console.log('🔐 Microsoft bejelentkezés indítása...');
+      try {
+        const provider = new OAuthProvider('microsoft.com');
+        try { provider.setCustomParameters?.({ prompt: 'select_account' }); } catch {}
+
+        const result = await signInWithPopup(auth, provider);
+        const user = result?.user;
+        console.log('✅ Microsoft bejelentkezés sikeres:', user);
+
+        localStorage.setItem('eu2k-auth-logged-in', 'true');
+
+        const termsAccepted = localStorage.getItem('termsAccepted') === 'true';
+        const userType = localStorage.getItem('eu2k-user-type') || 'student';
+        if (!termsAccepted) {
+          switch (userType) {
+            case 'student':
+              window.location.href = 'welcome/onboarding_student.html#student-profile';
+              return;
+            case 'parent':
+              window.location.href = 'welcome/onboarding_parent.html#parent-profile';
+              return;
+            case 'teacher':
+              window.location.href = 'welcome/onboarding_teacher.html#teacher-profile';
+              return;
+            default:
+              window.location.href = 'welcome/onboarding_student.html';
+              return;
+          }
+        }
+
+        window.location.href = 'index.html';
+      } catch (error) {
+        console.error('❌ Microsoft bejelentkezés hiba:', error);
+        const msg = (error && (error.message || error.code)) || 'Ismeretlen hiba';
+        alert('Microsoft bejelentkezés nem érhető el: ' + msg);
+      }
+    };
+
+    window.isMicrosoftSignInAvailable = () => {
+      try {
+        return typeof window.startMicrosoftSignIn === 'function';
+      } catch {
+        return false;
+      }
+    };
+  </script> -->
+  <script src="assets/js/footer.js"></script>
+  <script src="assets/js/consent-banner.js"></script>
+  <script src="assets/js/staff-timer.js"></script>
+  <script src="assets/js/staff-nav-items.js"></script>
+</body>
+
+</html>

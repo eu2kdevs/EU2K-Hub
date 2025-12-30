@@ -1,0 +1,1339 @@
+:root {
+  color-scheme: dark;
+  --md-sys-color-primary: rgb(155 212 160);
+  --md-sys-color-surface-tint: rgb(155 212 160);
+  --md-sys-color-on-primary: rgb(0 57 21);
+  --md-sys-color-primary-container: rgb(27 81 41);
+  --md-sys-color-on-primary-container: rgb(182 241 187);
+  --md-sys-color-secondary: rgb(157 212 158);
+  --md-sys-color-on-secondary: rgb(2 57 19);
+  --md-sys-color-secondary-container: rgb(30 81 39);
+  --md-sys-color-on-secondary-container: rgb(184 241 185);
+  --md-sys-color-tertiary: rgb(154 212 162);
+  --md-sys-color-on-tertiary: rgb(0 57 23);
+  --md-sys-color-tertiary-container: rgb(25 81 42);
+  --md-sys-color-on-tertiary-container: rgb(181 241 189);
+  --md-sys-color-error: rgb(255 179 178);
+  --md-sys-color-on-error: rgb(86 29 32);
+  --md-sys-color-error-container: rgb(115 51 53);
+  --md-sys-color-on-error-container: rgb(255 218 217);
+  --md-sys-color-background: rgb(16 21 16);
+  --md-sys-color-on-background: rgb(224 228 220);
+  --md-sys-color-surface: rgb(16 21 16);
+  --md-sys-color-on-surface: rgb(224 228 220);
+  --md-sys-color-surface-variant: rgb(65 73 65);
+  --md-sys-color-on-surface-variant: rgb(193 201 190);
+  --md-sys-color-outline: rgb(139 147 137);
+  --md-sys-color-outline-variant: rgb(65 73 65);
+  --md-sys-color-shadow: rgb(0 0 0);
+  --md-sys-color-scrim: rgb(0 0 0);
+  --md-sys-color-inverse-surface: rgb(224 228 220);
+  --md-sys-color-inverse-on-surface: rgb(45 50 44);
+  --md-sys-color-inverse-primary: rgb(53 105 63);
+  --md-sys-color-primary-fixed: rgb(182 241 187);
+  --md-sys-color-on-primary-fixed: rgb(0 33 9);
+  --md-sys-color-primary-fixed-dim: rgb(155 212 160);
+  --md-sys-color-on-primary-fixed-variant: rgb(27 81 41);
+  --md-sys-color-secondary-fixed: rgb(184 241 185);
+  --md-sys-color-on-secondary-fixed: rgb(0 33 8);
+  --md-sys-color-secondary-fixed-dim: rgb(157 212 158);
+  --md-sys-color-on-secondary-fixed-variant: rgb(30 81 39);
+  --md-sys-color-tertiary-fixed: rgb(181 241 189);
+  --md-sys-color-on-tertiary-fixed: rgb(0 33 11);
+  --md-sys-color-tertiary-fixed-dim: rgb(154 212 162);
+  --md-sys-color-on-tertiary-fixed-variant: rgb(25 81 42);
+  --md-sys-color-surface-dim: rgb(16 21 16);
+  --md-sys-color-surface-bright: rgb(54 58 53);
+  --md-sys-color-surface-container-lowest: rgb(11 15 11);
+  --md-sys-color-surface-container-low: rgb(24 29 24);
+  --md-sys-color-surface-container: rgb(28 33 28);
+  --md-sys-color-surface-container-high: rgb(38 43 38);
+  --md-sys-color-surface-container-highest: rgb(49 54 49);
+  --sidebar-bg: #101510;
+  --main-bg: #0b0f0b;
+  --main-content-bg: #111B07;
+  --surface-bg: #101510;
+  --card-bg: #232823;
+  --red: #272B26;
+  --green-btn: #2d3a2d;
+  --green-btn-arrow: #b6c6b6;
+  --text-main: #e3e3e3;
+  --text-secondary: #a0a0a0;
+  --border-radius: 32px;
+  --card-radius: 32px;
+  --news-radius: 20px;
+  --sidebar-width: 76px;
+  --sidebar-width-open: 198px;
+  --transition: 0.2s cubic-bezier(.4,0,.2,1);
+  --font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #0D0F0A;
+  color: var(--text-main);
+  font-family: var(--font-family);
+  min-height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.app-bg {
+  position: relative;
+  min-height: 100vh;
+  min-width: 100vw;
+  width: 100%;
+  height: 100vh;
+  background: #0D0F0A;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  padding: 32px 32px 32px 12px;
+}
+
+.sidebar {
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 24px 24px 0;
+  border-radius: 32px;
+  min-width: auto;
+  width: auto;
+  height: auto;
+}
+
+/* Nav keret a 24px-es frame-ben */
+.nav-frame {
+  width: fit-content;
+  height: auto;
+  display: flex;
+  box-sizing: border-box;
+  padding: 12px;
+}
+
+.nav-shell {
+  background: #16210B;
+  border-radius: 32px;
+  padding: 0;
+  box-sizing: border-box;
+  width: fit-content;
+  height: auto;
+  display: flex;
+  align-items: stretch;
+}
+
+/* New Navigation Rail */
+.nav-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 140px;
+  padding: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  height: auto;
+  margin: 0;
+}
+
+.rail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+  width: 90%;
+  min-height: 64px;
+  height: 64px;
+  border-radius: 32px;
+  text-decoration: none;
+  color: #E5FDCB;
+  transition: background .12s ease, filter .12s ease, height .12s ease-out;
+  padding: 6px;
+  margin: 4px 0; 
+  background: #273319;
+}
+.rail-item:hover { filter: brightness(0.95); }
+.rail-item:active { transform: none; }
+.rail-item.is-active {
+  background: #AFE86E;
+  color: #32451D;
+  height: 80px;
+}
+.rail-item.nav-btn { transition: background .12s ease, filter .12s ease, height .12s ease-out; }
+.rail-item.nav-btn:active { height: 72px; filter: brightness(0.98); }
+.rail-item.nav-btn.is-active:active { height: 88px; }
+.rail-item.rail-toggle { background: #182018; }
+
+.rail-icon {
+  width: 40px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: transparent;
+}
+.rail-icon img { width: 22px; height: 22px; display: block; }
+.rail-item.is-active .rail-icon img { width: 26px; height: 26px; }
+.rail-label { display: block; text-align: center; line-height: 1.2; margin: 0; padding: 0; }
+.rail-item.is-active .rail-icon img { filter: brightness(0) saturate(100%) invert(12%) sepia(41%) saturate(776%) hue-rotate(57deg) brightness(95%) contrast(94%); } /* #142204 közelítés */
+.rail-item:not(.is-active) .rail-icon img { filter: brightness(0) saturate(100%) invert(92%) sepia(17%) saturate(535%) hue-rotate(27deg) brightness(105%) contrast(101%); } /* #CEFF97 közelítés */
+.rail-label { font-size: 12px; line-height: 1; font-weight: var(--font-weight-semibold); }
+
+.main-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.main-scroll-area {
+  flex: 1;
+  display: block; /* változtatva flex-ről block-ra, hogy természetesen görgessen */
+  background: var(--main-bg);
+  border-radius: 32px;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
+  overflow-y: auto;
+  overflow-x: hidden; /* disable horizontal scroll in main area */
+  scroll-behavior: smooth;
+  padding: 22px;
+  background: var(--main-content-bg);
+  position: relative;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  /* min-height eltávolítva, hogy görgethető legyen */
+  overflow-x: hidden; /* disable horizontal scroll */
+  overflow-y: visible; /* ne legyen külön görgetés */
+}
+
+.footer {
+  margin-top: auto;
+  position: relative;
+}
+
+#site-footer .footer-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-radius: 12px;
+  background: #0E1512;
+  padding: 12px 24px;
+}
+
+#site-footer .footer-left img,
+#site-footer .footer-right img {
+  height: 65px;
+  object-fit: contain;
+}
+
+#site-footer .footer-center {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+#site-footer .footer-privacy {
+  color: #C4C8C3;
+  text-decoration: underline;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  min-height: 80px;
+  position: relative;
+  top: auto;
+  z-index: 10;
+  background: var(--main-content-bg); /* same as main content */
+  backdrop-filter: none;
+  flex-direction: column;
+  flex: 0 0 auto; /* do not let flexbox shrink the header */
+  flex-shrink: 0;
+  overflow: visible; /* avoid clipping which looks like squashing */
+  overflow-x: visible; /* ne legyen külön görgetés */
+}
+
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 8px;
+  gap: 4px;
+}
+
+.welcome-icon {
+  width: 20%;
+  height: 40%;
+  margin-bottom: 10px;
+}
+
+.welcome-text {
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: var(--font-weight-semibold);
+  color: #E5FDCB;
+  margin-top: 4px;
+}
+
+/* Header icon container */
+.header-icon-container {
+  padding: 0 0 32px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Header icon gradient container - hug content, fills height */
+.header-icon-gradient {
+  width: fit-content;
+  min-height: 68px; /* minimum magasság a gomboknak */
+  height: auto;
+  border-radius: 32px;
+  background: #62754E; /* Alapértelmezett: csak zöld */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* Gradient csak ha van login gomb (nincs bejelentkezve) */
+.header-icon-gradient.has-login {
+  background: linear-gradient(90deg,
+    #62754E 0%,
+    #62754E 30%,
+    #4F6148 40%,
+    #3D4A52 55%,
+    #2F3842 70%,
+    #242B38 85%,
+    #242B38 100%
+  );
+}
+
+/* Header icon wrapper - fills height */
+.header-icon-wrapper {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Header icon button - centered, 52x52 */
+.header-icon-btn {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  max-width: 52px;
+  min-height: 52px;
+  max-height: 52px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  border-radius: 999px;
+  background: #D3FFA1;
+  border: 1px solid #57703B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width .12s cubic-bezier(.2,.0,.2,1), border-radius .12s cubic-bezier(.2,.0,.2,1), background .12s ease;
+  text-decoration: none;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.header-icon-btn img {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  max-width: 22px;
+  min-height: 22px;
+  max-height: 22px;
+  flex-shrink: 0;
+  display: block;
+  object-fit: contain;
+}
+
+.header-icon-btn:hover {
+  width: 68px;
+  min-width: 68px;
+  max-width: 68px;
+  border-radius: 16px;
+  background: #DEFFBA;
+}
+
+/* Header login button - Bejelentkezés */
+.header-login-btn {
+  flex: 0 0 auto;
+  min-width: 140px; /* minimum szélesség a szövegnek */
+  height: 52px; /* fix magasság az ikon gombokkal egyező */
+  background: #84B3FF;
+  border: 1px solid #282F3A;
+  border-radius: 16px; /* adjusted rounding */
+  border-left: none;
+  color: #08152C;
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+  padding: 0 20px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-login-btn:hover {
+  background: #42587B;
+  color: #DBE8FF;
+  transform: scaleY(1.12); /* stronger vertical grow on hover */
+}
+
+/* Click pop animation same as banner buttons */
+.header-login-btn:active { animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards; }
+
+/* Event card external info button - Külsős Információk */
+.event-card-external-info-btn {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  background: #84B3FF;
+  border: 1px solid #282F3A;
+  border-radius: 12px; /* kisebb lekerekítettség */
+  border-left: none;
+  color: #08152C;
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+  padding: 0 16px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-card-external-info-btn:hover {
+  background: #42587B;
+  color: #DBE8FF;
+  transform: scaleY(1.12);
+}
+
+.event-card-external-info-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+/* Horizontal scroll row for header + banner */
+.header-scroll-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+}
+.header-scroll-row::-webkit-scrollbar { display: none; }
+.header-scroll-row { scrollbar-width: none; }
+
+.info-banner {
+    background: #1D3823;
+    display: flex;
+    flex-direction: row;
+    padding: 18px 18px 18px 24px; 
+    border-radius: 32px;
+    border: 1px solid #CFF7D3;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.info-banner-icon-container {
+  height: 100%;
+}
+
+.info-banner-icon{
+  width: 32px;
+  height: 32px;
+}
+
+.banner-content {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start; /* szövegek a tetejére igazítva */
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+}
+
+.banner-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-right: 24px; /* az info-banner jobb oldali paddingját ide tesszük, actions-t nem érinti */
+}
+
+.info-banner-title{
+  color: #97FFAD;
+  font-weight: var(--font-weight-semibold);
+  text-align: left;
+  font-size: 20px;
+}
+
+.info-banner-desc{
+  color: #B9EBA2;
+  font-weight: var(--font-weight-regular);
+  font-size: 12px;
+}
+
+.banner-actions-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  align-self: stretch;
+}
+
+.banner-actions{
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  background: linear-gradient(90deg, #236932, #0C471F);
+  align-items: center;
+  padding: 8px;
+  border-radius: 16px;
+  flex: 0 0 auto;
+  height: 83%;
+}
+
+/* Közös banner gomb alapstílus és hover fix */
+.banner-btn,
+.banner-button {
+  padding: 10px 16px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer; /* mutató kéz */
+  pointer-events: auto;
+  position: relative;
+  z-index: 0;
+  transition: background .15s ease, color .15s ease;
+  transform-origin: center;
+  transform: scaleY(1);
+  overflow: hidden; /* pop animációnál háttér ne lógjon ki */
+}
+
+.banner-btn.primary { 
+  background: #226932; 
+  color: #DBFCD6; 
+}
+
+.banner-btn.secondary { 
+  background: #0C471F; 
+  color: #CFF7D3; 
+}
+
+.banner-btn.primary:hover { 
+  background: #83FF8F; 
+  color: #082907;
+  border: 1px solid #3A4F29;
+}
+
+.banner-btn.secondary:hover { 
+  background: #93D98D; 
+  color: #082907;
+  border: 1px solid #3A4F29;
+}
+
+.banner-btn {
+  height: 100%;
+  padding: 4px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  transition: background 0.2s ease;
+}
+
+.banner-btn:hover,
+.banner-button:hover {
+  transform: scaleY(1.08); /* hover: subtle vertical grow only */
+}
+
+/* click: real pop animation */
+.banner-btn:active,
+.banner-button:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+}
+
+@keyframes banner-btn-pop {
+  0%   { transform: scaleY(1.00); }
+  70%  { transform: scaleY(1.32); } /* overshoot */
+  100% { transform: scaleY(1.25); } /* settle */
+}
+
+.banner-btn.primary {
+  background: #97FFAD;
+  color: #082907;
+  border: 1px solid #CFF7D3;
+  width: 70px;
+}
+
+.banner-btn.secondary {
+  background: #B8EDA2;
+  color: #082907;
+  border: 1px solid #CFF7D3;
+  width: 170px;
+}
+
+/* Warning Banner */
+.warning-banner {
+    background: #261906;
+    display: flex;
+    flex-direction: row;
+    padding: 18px 18px 18px 24px; 
+    border-radius: 32px;
+    border: 1px solid #FFF1C2;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.warning-banner-icon-container {
+  height: 100%;
+}
+
+.warning-banner-icon{
+  width: 32px;
+  height: 32px;
+}
+
+.warning-banner-title{
+  color: #FFDFAF;
+  font-weight: var(--font-weight-semibold);
+  text-align: left;
+  font-size: 20px;
+}
+
+.warning-banner-desc{
+  color: #E9CE85;
+  font-weight: var(--font-weight-regular);
+  font-size: 12px;
+}
+
+.warning-banner-actions{
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  background: linear-gradient(90deg, #4E3D0D, #261906);
+  align-items: center;
+  padding: 8px;
+  border-radius: 16px;
+  flex: 0 0 auto;
+  height: 83%;
+}
+
+.warning-banner .banner-btn.primary {
+  background: #FFDFAF;
+  color: #211806;
+  border: 1px solid #FFF1C2;
+  width: 70px;
+}
+
+.warning-banner .banner-btn.secondary {
+  background: #EACF85;
+  color: #211806;
+  border: 1px solid #FFF1C2;
+  width: 170px;
+}
+
+.top-cards-row.shrinked .red-card.large {
+  width: 480px;
+}
+
+.top-cards-row.shrinked .red-card.medium {
+  width: 96px;
+}
+
+.top-cards-row.shrinked .red-card.small {
+  width: 44px;
+}
+
+.top-cards-row.shrinked .event-label,
+.top-cards-row.shrinked .event-label-text,
+.top-cards-row.shrinked .arrow-container {
+  transform: scale(0.9);
+  transform-origin: left center;
+}
+@media (max-width: 1200px) {
+  .red-card.large { min-width: 220px; }
+}
+@media (max-width: 900px) {
+  .main-content { padding: 0 8px 32px 32px; }
+  .red-card.large { min-width: 140px; }
+  .sidebar { margin-left: 8px; }
+  .main-content { margin-left: 0; }
+}
+@media (max-width: 700px) {
+  .sidebar { display: none; }
+  .main-content { border-radius: 32px; margin: 8px; box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container); }
+  .main-area { margin-left: 0; }
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: #232823; border-radius: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Új dolgok Popup */
+.new-things-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(11, 15, 11, 0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.new-things-container {
+  position: relative;
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  padding: 32px 18px 32px 18px;
+  max-width: 400px;
+  width: 400px !important;
+  margin: 20px;
+  box-sizing: border-box;
+}
+
+.new-things-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: #3D433C;
+  border-radius: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.new-things-close-btn:hover {
+  border-radius: 15px;
+}
+
+.new-things-content {
+  text-align: center;
+}
+
+.new-things-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.new-things-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+}
+
+.new-things-icon-top {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 12px;
+}
+
+.new-things-title {
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.new-things-subtitle {
+  color: #FFFFFF;
+  opacity: 0.65;
+  font-size: 0.95rem;
+  margin: 0 0 20px 0;
+}
+
+.new-things-image-container {
+  background: #3D433C;
+  border-radius: 32px;
+  padding: 30px;
+  margin: 0 0 20px 0;
+  display: flex;
+  justify-content: center;
+  height: 220px;
+  box-sizing: border-box;
+}
+
+.new-things-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: luminosity;
+  opacity: 0.93;
+}
+
+.new-things-list {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.new-things-item {
+  color: #C2C3C2;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.new-things-footer {
+  text-align: center;
+}
+
+.new-things-link {
+  color: #B7F1B9;
+  text-decoration: underline;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.new-things-link:hover {
+  color: #FFFFFF;
+}
+
+.new-things-link strong {
+  font-weight: 700;
+}
+
+.new-things-link b {
+  font-weight: 700;
+}
+/* Permission Popup Overlay */
+.warning-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(11, 15, 11, 0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.warning-container {
+  position: relative;
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  padding: 32px;
+  max-width: 320px;
+  width: 320px !important;
+  margin: 20px;
+  max-height: 70%;
+}
+
+.warning-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: #3D433C;
+  border-radius: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.warning-close-btn:hover {
+  border-radius: 15px;
+}
+
+.warning-content {
+  text-align: center;
+  max-height: calc(70vh - 64px); /* container padding + biztonsági margó */
+  display: flex;
+  flex-direction: column;
+  align-items: center
+}
+
+.warning-hand-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 8px;
+}
+
+.warning-title {
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+}
+
+.warning-list {
+  color: #C2C3C2;
+  text-align: left;
+  margin: 0 0 32px 0;
+  line-height: 1.6;
+  border-radius: 32px;
+  overflow-y: scroll;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.warning-list-wrapper {
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.warning-list li {
+  margin-bottom: 12px;
+}
+
+.warning-item {
+  background: #3D433C;
+  padding: 12px 16px;
+  display: flex;
+}
+
+.warning-item.first {
+  border-radius: 32px 32px 16px 16px;
+}
+
+.warning-item.middle {
+  border-radius: 16px;
+}
+
+.warning-item.last {
+  border-radius: 16px 16px 32px 32px;
+}
+
+.popup-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+}
+
+/* ===================== FOOTER ===================== */
+.site-footer {
+  width: 100%;
+  border-top: 2px solid #445A2D;
+  margin-top: 32px;
+  padding: 32px 0 64px 0;
+  display: flex;
+  gap: 32px;
+}
+
+/* Footer columns */
+.footer-left,
+.footer-right {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-left {
+  align-items: flex-start;
+  gap: 12px;
+}
+
+/* Footer logo and participated section */
+.footer-logo-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer-logo-container img {
+  max-width: 200px;
+  height: auto;
+}
+
+.footer-participated-text {
+  color: #BBE789;
+  font-size: 14px;
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.footer-participated-logos {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-left: 4px;
+}
+
+.footer-participated-logos img {
+  height: 40px;
+  width: auto;
+}
+
+/* Copyright */
+.footer-copyright {
+  color: #BBE789;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  margin-left: 4px;
+}
+
+/* Social icons */
+.footer-social {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: 4px;
+}
+
+.footer-social img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.footer-social img:first-child {
+  width: 26px;
+  height: 26px;
+}
+
+.footer-social img:hover {
+  opacity: 0.7;
+}
+
+/* Footer right column */
+.footer-right {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: flex-start;
+}
+
+/* Footer sections */
+.footer-section {
+  background: #212F13;
+  border-radius: 24px;
+  padding: 16px 16px 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 0 1 auto;
+  min-width: 90px;
+  height: fit-content;
+}
+
+.footer-section-first {
+  background: #212F13;
+  border-radius: 24px;
+  padding: 16px 16px 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 0 1 auto;
+  min-width: 160px;
+  height: fit-content;
+}
+
+.footer-section-last {
+  background: #212F13;
+  border-radius: 24px;
+  padding: 16px 16px 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 0 1 auto;
+  min-width: 145px;
+  height: fit-content;
+}
+
+.footer-section-title {
+  color: #BBE789;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.footer-section-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  padding-top: 8px; /* tér az első gomb beta tagjének felül */
+}
+
+.footer-item {
+  background: #465A2F;
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: #BBE789;
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  position: relative;
+  box-sizing: border-box;
+  display: inline-block;
+  white-space: normal;
+  line-height: 1.4;
+  margin-bottom: 8px; /* gap a gombok között */
+}
+
+/* Ha van beta badge a gombban, extra tér kell */
+.footer-section:nth-child(2) .footer-item:last-child,
+.footer-section:nth-child(3) .footer-item {
+  margin-right: 10px; /* tér a beta tagnek jobbra */
+}
+
+.footer-item:hover {
+  background: #516841;
+}
+
+/* Beta badge */
+.beta-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #BDEA8A;
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: #465A2F;
+  font-size: 10px;
+  font-weight: 600;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.privacy-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.privacy-text {
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.privacy-desc {
+  font-size: 1rem;
+  color: var(--text-main);
+  margin: 2px 0 0 0;
+  text-align: left;
+}
+
+/* Privacy Policy fő konténer */
+.privacy-policy-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 24px;
+  padding: 0;
+}
+
+/* Privacy Policy pont konténerek */
+.privacy-policy-item {
+  background: #243114;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 32px;
+  transition: all 0.2s ease;
+}
+
+/* Főszöveg (címek) */
+.privacy-policy-item h2,
+.privacy-policy-item h3 {
+  color: #CEFF97;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Leíró szöveg (paragrafusok, listák) */
+.privacy-policy-item p,
+.privacy-policy-item li {
+  color: #E5FDCB;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* Linkek */
+.privacy-policy-item a {
+  color: #B4FF5E;
+  text-decoration: underline;
+}
+
+.privacy-policy-item a:hover {
+  opacity: 0.8;
+}
+
+/* Lista stílusok */
+.privacy-policy-item ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+.privacy-policy-item li {
+  margin-bottom: 8px;
+}
+
+.privacy-policy-item li:last-child {
+  margin-bottom: 0;
+}
+
+/* Strong elemek a listában */
+.privacy-policy-item li strong {
+  color: #CEFF97;
+  font-weight: 600;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.main-content:hover::-webkit-scrollbar-thumb {
+  background: #232823;
+}
+
+.main-content.scrolling::-webkit-scrollbar-thumb {
+  background: #232823;
+}
+
+
+@media (max-width: 900px) {
+  .main-content {
+    padding: 0 8px 32px 32px;
+  }
+
+  .sidebar {
+    margin-left: 8px;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main-content {
+    border-radius: 32px;
+    margin: 8px;
+    box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container);
+  }
+
+  .main-area {
+    margin-left: 0;
+  }
+}
+
+.footer-privacy { 
+  margin-top: 16px;
+  color: #E5FDCB; 
+}
+
+.footer { 
+  margin-top: 8px; 
+  position: relative; 
+}
+
+.last-modified-notice { 
+  margin-top: 8px;
+  color: #E5FDCB; 
+}
+
+#site-footer .footer-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-radius: 12px;
+  background: #0E1512;
+}
+#site-footer .footer-left img,
+#site-footer .footer-right img {
+  height: 65px;
+  object-fit: contain;
+}
+
+#site-footer .footer-right {
+  padding-right: 48px;
+}
+
+#site-footer .footer-center {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#site-footer .footer-privacy {
+  color: #C4C8C3;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+}
+@media (max-width: 900px) {
+  #site-footer .footer-container {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+}

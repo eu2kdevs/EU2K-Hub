@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Örülünk hogy ennyire érdeklődsz a Kurzusok iránt, de egyelőre még fejlesztés alatt van, és nem alkalmas a mostani állapotában a használatra. Nézz vissza később 👋">
+
+  <title data-translate="pages.event_hub.title">Event Hub</title>
+  <link rel="stylesheet" href="event_hub.css">
+  <link rel="icon" href="./favicon.ico">
+  <!--
+  <script type="importmap">
+    {
+      "imports": {
+  "@material/web/": "./assets/js/material-web-all.js"
+      }
+    }
+  </script>
+  <script type="module">
+    import './assets/js/@material/web/all.js';
+    import { styles as typescaleStyles } from './assets/js/@material/web/md-typescale-styles.js';
+
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+  <script src="./assets/js/permissions.js"></script>
+  <script src="./assets/js/translations.js"></script>
+  <script src="./assets/js/welcome-screen.js"></script>
+  <script src="./assets/js/dpad-navigation.js"></script>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+  import { initializeApp } from "./assets/js/firebase-app-11.10.0.js";
+  // Analytics removed for webOS runtime
+  // import { getAnalytics } from "./assets/js/firebase-analytics-11.10.0.js";
+  import { getFirestore } from "./assets/js/firebase-firestore-11.10.0.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
+      authDomain: "eu2k-hub.firebaseapp.com",
+      projectId: "eu2k-hub",
+      storageBucket: "eu2k-hub.firebasestorage.app",
+      messagingSenderId: "560244867055",
+      appId: "1:560244867055:web:3cd51b85baead94989001a",
+      measurementId: "G-2JDPR089WD"
+    };
+
+  // Initialize Firebase (analytics omitted)
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+    // Make db globally available
+    window.db = db;
+  </script>
+-->
+<style id="footer-common-style">
+  /* Common footer + minimal main content padding */
+  .footer { margin-top: 8px; position: relative; }
+  /* Reserve space so footer doesn't overlap content */
+  .main-area .main-content { padding-bottom: 84px; }
+  #site-footer .footer-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: #0E1512;
+  }
+  #site-footer .footer-left img,
+  #site-footer .footer-right img {
+    height: 28px;
+    object-fit: contain;
+  }
+  #site-footer .footer-center {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #site-footer .footer-privacy {
+    color: #C4C8C3;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  @media (max-width: 900px) {
+    #site-footer .footer-container {
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 12px;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <div class="app-bg">
+    <aside class="sidebar">
+      <nav class="nav-menu">
+          <button class="nav-item list-button nav-item-list" type="button" aria-label="Menü">
+            <div class="nav-icon-container">
+              <img src="../../assets/navbar/menu.svg" class="nav-icon" alt="Menü">
+            </div>
+            <span data-translate="navigation.menu">Menü</span>
+          </button>
+  <a class="nav-item" href="index.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/home_icon.svg" class="nav-icon" alt="Otthon">
+          </div>
+          <span data-translate="navigation.home">Otthon</span>
+        </a>
+  <a class="nav-item" href="qr-code.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
+          </div>
+          <span data-translate="navigation.qr">QR-Kód</span>
+        </a>
+  <a class="nav-item" href="youhub.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
+          </div>
+          <span data-translate="navigation.youhub">YouHub</span>
+        </a>
+  <a class="nav-item active" href="event_hub.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/event_hub_icon.svg" class="nav-icon" alt="Event Hub">
+          </div>
+          <span data-translate="navigation.event_hub">Event Hub</span>
+        </a>
+      </nav>
+    </aside>
+    <script>
+      (function() {
+        const sidebar = document.querySelector('.sidebar');
+        const toggleButton = document.querySelector('.list-button');
+        if (sidebar && toggleButton) {
+          toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            const icon = toggleButton.querySelector('.nav-icon');
+            if (icon) {
+              const isOpen = sidebar.classList.contains('open');
+              icon.src = isOpen ? '../../assets/navbar/menu_open.svg' : '../../assets/navbar/menu.svg';
+            }
+          });
+        }
+        function markActiveNavItem() {
+          const currentPath = window.location.pathname.replace(/\/$/, '');
+          const currentName = currentPath.split('/').pop() || 'index.html';
+          document.querySelectorAll('.nav-menu .nav-item[href]').forEach(link => {
+            try {
+              const linkPath = new URL(link.getAttribute('href'), window.location.href).pathname.replace(/\/$/, '');
+              const linkName = linkPath.split('/').pop() || 'index.html';
+              if (linkName === currentName) {
+                link.classList.add('active');
+              } else {
+                link.classList.remove('active');
+              }
+            } catch (e) {}
+          });
+        }
+        function updateNavIcons() {
+          document.querySelectorAll('.nav-item:not(.list-button) .nav-icon').forEach(img => {
+            const item = img.closest('.nav-item');
+            if (!item) return;
+            const isActive = item.classList.contains('active');
+            const src = img.getAttribute('src') || '';
+            if (src.includes('/assets/navbar/')) {
+              if (isActive && !src.includes('/assets/navbar/filled/')) {
+                img.setAttribute('src', src.replace('/assets/navbar/', '/assets/navbar/filled/'));
+              } else if (!isActive && src.includes('/assets/navbar/filled/')) {
+                img.setAttribute('src', src.replace('/assets/navbar/filled/', '/assets/navbar/'));
+              }
+            }
+          });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+          markActiveNavItem();
+          updateNavIcons();
+        });
+      })();
+    </script>
+    <main class="main-area">
+      <div class="main-content">
+        <header class="header">
+          <div class="welcome-container">
+            <img src="./assets/qr_code_icon.svg" class="event-hub-icon" alt="Event Hub" style="margin-bottom: 4px;">
+            <h1 class="event-hub-text" data-translate="pages.event-hub.title" style="margin-top: 0; margin-bottom: 4px;">Event Hub</h1>
+            <p class="event-hub-desc" data-translate="pages.event-hub.description">Kiemelt Esemény:</p>
+          </div>
+          <div class="header-icons">
+            <a href="./system/account.html" class="header-icon-link" tabindex="0">
+              <img src="./assets/account_icon.svg" class="header-icon" alt="Account">
+            </a>
+            <a href=".//settings" class="header-icon-link" tabindex="0">
+              <img src="./assets/settings_icon.svg" class="header-icon" alt="Settings">
+            </a>
+          </div>
+        </header>
+        <!-- Event Hub layout: Left column highlighted event card -->
+         <section class="event-hub-container">
+           <div class="event-columns">
+             <div class="left-column">
+               <article class="featured-event-card" aria-label="Kiemelt esemény">
+                 <div class="featured-content">
+                   <div class="featured-text">
+                     <h2 class="featured-title">Title</h2>
+                     <div class="featured-subtitle">Subtitle</div>
+                     <div class="chips-row">
+                       <button class="chip" type="button" aria-label="Add to my itinerary" tabindex="0">
+                         <img src="./assets/event_hub/calendar.svg" alt="naptár ikon" class="chip-icon" />
+                         <span>Add to my itinerary</span>
+                       </button>
+                       <div class="chip" aria-label="12 mins from hotel" tabindex="0">
+                         <img src="./assets/event_hub/walk.svg" alt="séta ikon" class="chip-icon" />
+                         <span>12 mins from hotel</span>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+                        <div class="featured-actions">
+                        <div class="featured-actions">
+                   <md-fab class="join-fab" label="+ Csatlakozás" aria-label="Csatlakozás"></md-fab>
+                 </div>
+               </article>
+             </div>
+             <div class="right-column">
+               <!-- Egyelőre üres: csak a bal oldali kiemelt kártyát készítjük el -->
+             </div>
+           </div>
+         </section>
+  <div id="site-footer" class="footer" aria-label="Site footer">
+    <div class="footer-container">
+      <div class="footer-left">
+        <img src="./assets/eu2khub_logo.png" class="footer-logo-wide" alt="EU2K Hub Logó">
+      </div>
+      <div class="footer-center">
+        <a class="footer-privacy" data-translate="pages.index.privacy_policy" href="/EU2K-Hub/privacy_policy.html">Adatkezelési Tájékoztató</a>
+            <a class="footer-privacy" data-translate="pages.index.terms_of_service" href="/EU2K-Hub/terms_of_service.html">Használati Feltételek</a>
+      </div>
+      <div class="footer-right">
+        <img src="./assets/eu2kdevs_logo.png" class="footer-logo-wide" alt="EU2K Devs Logó">
+        <img src="./assets/eu2kdok_logo.png" class="footer-logo-wide" alt="EU2K DÖK Logó">
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

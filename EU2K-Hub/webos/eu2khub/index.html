@@ -1,0 +1,946 @@
+﻿<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Üdvözöllek az EU2K Hub-ban! Fedezd fel a legújabb eseményeket, híreket és tanulási lehetőségeket egy helyen.">
+  <title data-translate="pages.index.title" data-translate-fallback="EU2K Hub">EU2K Hub</title>
+  <!-- Bootstrap overlay mount (appears at the very beginning of page load) -->
+  <script>
+    (function(){
+      if (!document.getElementById('eu2k-page-overlay')) {
+        var o = document.createElement('div');
+        o.id = 'eu2k-page-overlay';
+        o.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#0B0F0B;border-radius:32px;opacity:1;transition:opacity 300ms ease-in-out;';
+        var inner = document.createElement('div');
+        inner.style.cssText = 'position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0B0F0B;border-radius:32px;';
+        var m = document.createElement('div');
+        m.id = 'eu2k-overlay-mount';
+        m.style.cssText = 'position:relative;width:100%;height:100%';
+        inner.appendChild(m);
+        o.appendChild(inner);
+        document.documentElement.appendChild(o);
+      }
+    })();
+  </script>
+  <!-- Global overlay loader (plays centered MP4 and fades out after window load + 500ms) -->
+  <script src="/EU2K-Hub/assets/js/page-overlay-loader.js"></script>
+  <script src="/assets/js/page-overlay-loader.js"></script>
+  <link rel="stylesheet" href="home.css">
+  <link rel="icon" href="./favicon.ico">
+  <script src="webOSTVjs-1.2.10/webOSTV.js" charset="utf-8"></script>
+  <script src="webOSTVjs-1.2.10/webOSTV-dev.js" charset="utf-8"></script>
+  <script type="text/javascript">
+    //sample code for calling LS2 API
+    webOS.service.request("luna://com.palm.systemservice", {
+      method: "clock/getTime",
+      parameters: {},
+      onSuccess: function (args) {
+        console.log("UTC:", args.utc);
+      },
+      onFailure: function (args) {
+        console.log("Failed to getTime");
+      }
+    });
+  </script>
+   <!--
+  <script type="importmap">
+    {
+      "imports": {
+  "@material/web/": "./assets/js/material-web-all.js"
+      }
+    }
+  </script>
+  <script type="text/javascript">
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+  t = l.createElement(r); t.async = 1; t.src = "./assets/js/clarity-s6n7qpfkv4.js";
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "s6n7qpfkv4");
+  </script>
+  <!-- importmap for @material/web removed (replaced with local modules in assets/js/@material/web) -->
+  <script type="module">
+    import './assets/js/@material/web/all.js';
+    import { styles as typescaleStyles } from './assets/js/@material/web/md-typescale-styles.js';
+
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+  <script type="module">
+  import { initializeApp } from "./assets/js/firebase-app-11.10.0.js";
+  // Firebase Analytics is disabled for webOS builds to avoid network requests and incompatibilities.
+  // import { getAnalytics } from "./assets/js/firebase-analytics-11.10.0.js";
+  import { getFirestore, collection, onSnapshot, query, orderBy, limit, startAfter, getDocs } from "./assets/js/firebase-firestore-11.10.0.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRRVx6BtQtCDKjFYA8yh9qYrcUONmkkwI",
+      authDomain: "eu2k-hub.firebaseapp.com",
+      projectId: "eu2k-hub",
+      storageBucket: "eu2k-hub.firebasestorage.app",
+      messagingSenderId: "560244867055",
+      appId: "1:560244867055:web:3cd51b85baead94989001a",
+      measurementId: "G-2JDPR089WD"
+    };
+
+  // Initialize Firebase (analytics intentionally omitted)
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+    // Make db globally available
+    window.db = db;
+
+    /* ---------------------- NEWS ----------------------- */
+    let lastVisible = null;
+    let loadingNews = false;
+    const pageSize = 14; // Frissítve 14 kártyára
+
+    // Fallback news data
+    function loadFallbackNews() {
+      console.log('📰 Loading fallback news data...');
+      const fallbackNews = [
+        {
+          title: "Valami baj van.",
+          desc: "Nemsokára kijavítjuk.",
+          image: "./assets/placeholder_img.svg",
+          link: "#"
+        },
+        {
+          title: "Valami baj van.",
+          desc: "Nemsokára kijavítjuk.",
+          image: "./assets/placeholder_img.svg",
+          link: "#"
+        },
+        {
+          title: "Valami baj van.",
+          desc: "Nemsokára kijavítjuk.",
+          image: "./assets/placeholder_img.svg",
+          link: "#"
+        },
+        {
+          title: "Valami baj van.",
+          desc: "Nemsokára kijavítjuk.",
+          image: "./assets/placeholder_img.svg",
+          link: "#"
+        },
+        {
+          title: "Valami baj van.",
+          desc: "Nemsokára kijavítjuk.",
+          image: "./assets/placeholder_img.svg",
+          link: "#"
+        },
+        {
+          title: "Valami baj van.",
+          desc: "Nemsokára kijavítjuk.",
+          image: "./assets/placeholder_img.svg",
+          link: "#"
+        }
+      ];
+
+      const cards = document.querySelectorAll("#newsRow .news-card");
+
+      fallbackNews.slice(0, cards.length).forEach((newsItem, index) => {
+        const card = cards[index];
+
+        // kép
+        const rect = card.querySelector(".red-rect");
+        if (rect) {
+          rect.style.backgroundImage = `url(${newsItem.image})`;
+          rect.style.backgroundSize = "cover";
+          rect.style.backgroundPosition = "center";
+          rect.style.backgroundColor = "var(--red)";
+        }
+
+        // cím
+        const titleSpan = card.querySelector(".news-label > span:first-child");
+        if (titleSpan) {
+          let title = newsItem.title;
+          if (title.length > 30) title = title.substring(0, 30) + "...";
+          titleSpan.textContent = title;
+        }
+
+        // leírás
+        const descSpan = card.querySelector(".news-label > span.desc");
+        if (descSpan) {
+          let desc = newsItem.desc;
+          if (desc.length > 60) desc = desc.substring(0, 60) + "...";
+          descSpan.textContent = desc;
+        }
+
+        // kattinthatóság
+        card.style.cursor = (newsItem.link !== "#") ? "pointer" : "default";
+        card.onclick = null; // Clear previous onclick
+        if (newsItem.link !== "#") {
+          card.onclick = () => {
+            let url = newsItem.link.trim();
+            if (!url.startsWith("http://") && !url.startsWith("https://")) url = "https://" + url;
+            window.open(url, "_blank");
+          };
+        }
+      });
+
+      console.log('✅ Fallback news loaded successfully');
+    }
+
+    // Load hírek
+    async function loadNews() {
+      console.log('🔄 Loading news...');
+      try {
+        const hirekRef = collection(db, "homePageData", "news", "hirek");
+        console.log('🔗 Trying to connect to collection: homePageData/news/hirek');
+
+        // Lekérjük az összes dokumentumot
+        const snapshot = await getDocs(hirekRef);
+        console.log('📰 News snapshot:', snapshot.docs.length, 'documents found');
+
+        // Debug: log all document IDs and their order
+        snapshot.docs.forEach((doc, index) => {
+          console.log(`📄 Document ${index}: ID=${doc.id}, data:`, doc.data());
+        });
+
+        if (snapshot.docs.length === 0) {
+          console.warn('⚠️ No news documents found in Firebase collection');
+          // Use fallback data
+          loadFallbackNews();
+          return;
+        }
+
+        // Rendezzük a dokumentumokat ID szerint csökkenő sorrendben (legnagyobb szám elöl)
+        const sortedDocs = snapshot.docs.sort((a, b) => {
+          const idA = parseInt(a.id) || 0;
+          const idB = parseInt(b.id) || 0;
+          return idB - idA; // Csökkenő sorrend
+        });
+
+        console.log('📰 Sorted news by ID (desc):', sortedDocs.map(doc => doc.id));
+
+        const cards = document.querySelectorAll("#newsRow .news-card");
+        console.log('🎯 Found', cards.length, 'news cards in DOM');
+
+        if (cards.length === 0) {
+          console.error('❌ No news cards found! Check if #newsRow exists and contains .news-card elements');
+          return;
+        }
+
+        // Az összes elérhető dokumentumot feldolgozzuk, de maximum annyi kártyát töltünk fel, amennyi van
+        const docsToProcess = sortedDocs.slice(0, Math.min(sortedDocs.length, cards.length));
+        console.log(`📰 Processing ${docsToProcess.length} news items for ${cards.length} cards`);
+
+        docsToProcess.forEach((doc, index) => {
+          const data = doc.data();
+          const card = cards[index];
+          console.log(`📄 Processing news ${index + 1}: ID=${doc.id}, Title="${data.title || 'No title'}"`);
+
+          // kép
+          const rect = card.querySelector(".red-rect");
+          if (rect) {
+            if (data.image && data.image.trim() !== '') {
+              rect.style.backgroundImage = `url(${data.image})`;
+              rect.style.backgroundSize = "cover";
+              rect.style.backgroundPosition = "center";
+              rect.style.backgroundColor = "transparent";
+            } else {
+              rect.style.backgroundImage = '';
+              rect.style.backgroundColor = "var(--red)";
+            }
+          }
+
+          // cím
+          const titleSpan = card.querySelector(".news-label > span:first-child");
+          if (titleSpan) {
+            let title = data.title || "Nincs cím";
+            if (title.length > 30) title = title.substring(0, 30) + "...";
+            titleSpan.textContent = title;
+          }
+
+          // leírás - a description mező használata
+          const descSpan = card.querySelector(".news-label > span.desc");
+          if (descSpan) {
+            let desc = data.description || data.desc || "";
+            if (desc.length > 60) desc = desc.substring(0, 60) + "...";
+            descSpan.textContent = desc;
+          }
+
+          // kattinthatóság
+          card.style.cursor = (data.link && data.link.trim() !== '') ? "pointer" : "default";
+          card.onclick = null; // Clear previous onclick
+          if (data.link && data.link.trim() !== '') {
+            card.onclick = () => {
+              let url = data.link.trim();
+              if (!url.startsWith("http://") && !url.startsWith("https://")) url = "https://" + url;
+              window.open(url, "_blank");
+            };
+          }
+        });
+
+        console.log('✅ News loading completed successfully');
+      } catch (error) {
+        console.error('❌ Error loading news:', error);
+        console.log('🔄 Falling back to placeholder content...');
+
+        // Fallback: Load fallback news instead of just placeholders
+        loadFallbackNews();
+      }
+    }
+
+    // Dinamikus méretezés a hírkártyákhoz
+    function handleNewsCardResize() {
+      const newsRow = document.getElementById("newsRow");
+      const cards = Array.from(document.querySelectorAll("#newsRow .news-card"));
+
+      if (!newsRow || cards.length === 0) return;
+
+      const containerWidth = newsRow.clientWidth;
+      const defaultCardWidth = 272; // Alapértelmezett kártya szélesség (CSS-ből)
+      const cardGap = 12; // Kártyák közötti távolság (CSS-ből)
+      const minCards = 2; // Minimum 2 kártya mindig látható legyen
+
+      // Számoljuk ki, hogy hány kártya fér el
+      let maxVisibleCards = 6;
+      for (let cardCount = 6; cardCount >= minCards; cardCount--) {
+        const totalWidth = (defaultCardWidth * cardCount) + (cardGap * (cardCount - 1));
+        if (totalWidth <= containerWidth) {
+          maxVisibleCards = cardCount;
+          break;
+        }
+      }
+
+      console.log(`📏 Container width: ${containerWidth}px, showing ${maxVisibleCards} cards`);
+
+      // Mutassuk/rejtsük el a kártyákat
+      cards.forEach((card, index) => {
+        if (index < maxVisibleCards) {
+          card.style.display = 'flex';
+          card.style.minWidth = `${defaultCardWidth}px`;
+          card.style.maxWidth = `${defaultCardWidth}px`;
+          card.style.width = `${defaultCardWidth}px`;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Ha van extra hely, osszuk el a kártyák között
+      const totalUsedWidth = (defaultCardWidth * maxVisibleCards) + (cardGap * (maxVisibleCards - 1));
+      if (containerWidth > totalUsedWidth && maxVisibleCards > 0) {
+        const extraSpace = containerWidth - totalUsedWidth;
+        const extraPerCard = extraSpace / maxVisibleCards;
+        const newCardWidth = defaultCardWidth + extraPerCard;
+
+        cards.slice(0, maxVisibleCards).forEach(card => {
+          card.style.minWidth = `${newCardWidth}px`;
+          card.style.maxWidth = `${newCardWidth}px`;
+          card.style.width = `${newCardWidth}px`;
+        });
+
+        console.log(`📏 Cards resized to: ${newCardWidth.toFixed(1)}px each`);
+      }
+    }
+
+    // Carousel gombok
+    function initNewsCarousel() {
+      const row = document.getElementById("newsRow");
+      const leftBtn = document.querySelector(".carousel-btn.left");
+      const rightBtn = document.querySelector(".carousel-btn.right");
+
+      leftBtn.addEventListener("click", () => row.scrollBy({ left: -300, behavior: "smooth" }));
+      rightBtn.addEventListener("click", () => row.scrollBy({ left: 300, behavior: "smooth" }));
+
+      // infinite scroll trigger
+      row.addEventListener("scroll", () => {
+        if (row.scrollLeft + row.clientWidth >= row.scrollWidth - 50) {
+          loadNews(false);
+        }
+      });
+
+      // Méretezés inicializálása
+      handleNewsCardResize();
+    }
+
+    /* ---------------------- EVENTS ----------------------- */
+    function handleDynamicLayout() {
+      const mainContent = document.querySelector('.main-content');
+      const containers = Array.from(document.querySelectorAll('.event-container'));
+      if (!mainContent || containers.length === 0) return;
+
+      const mainContentWidth = mainContent.clientWidth;
+      const availableWidth = mainContentWidth - 64;
+
+      const defaultWidths = [120, 400, 400, 400, 120, 120, 56];
+      const defaultHeights = [205, 205, 205, 205, 205, 205, 205];
+      const hideOrder = [4, 3, 2, 0, 5];
+
+      containers.forEach(c => c.classList.remove("hidden"));
+
+      let totalWidth = defaultWidths.reduce((a, b) => a + b, 0) + (defaultWidths.length - 1) * 8;
+
+      for (let i = 0; i < hideOrder.length; i++) {
+        if (totalWidth <= availableWidth) break;
+        const idx = hideOrder[i];
+        containers[idx].classList.add("hidden");
+        totalWidth -= defaultWidths[idx] + 8;
+      }
+
+      const visibleContainers = containers.filter(c => !c.classList.contains('hidden'));
+      if (visibleContainers.length > 0) {
+        const visibleWidths = visibleContainers.map(c => defaultWidths[containers.indexOf(c)]);
+        const visibleTotalWidth = visibleWidths.reduce((a, b) => a + b, 0) + (visibleContainers.length - 1) * 8;
+        const scaleRatio = Math.min(1 + (availableWidth - visibleTotalWidth) / visibleTotalWidth, 1.5);
+
+        visibleContainers.forEach(c => {
+          const idx = containers.indexOf(c);
+          const card = c.querySelector('.red-card');
+          if (card) {
+            card.style.width = `${defaultWidths[idx] * scaleRatio}px`;
+            card.style.height = `${defaultHeights[idx] * scaleRatio}px`;
+          }
+        });
+      }
+
+      loadEvents();
+    }
+
+    async function loadEvents() {
+      console.log('Loading events...');
+      try {
+        const eventsRef = collection(db, 'homePageData', 'events', 'esemenyek');
+        console.log('Trying to connect to database...');
+
+        const snapshot = await getDocs(eventsRef);
+        console.log('Events snapshot:', snapshot.docs.length, 'documents found');
+
+        // Debug: log all document IDs
+        snapshot.docs.forEach((doc, index) => {
+          console.log(`Event Document ${index}: ID=${doc.id}, data:`, doc.data());
+        });
+
+        if (snapshot.docs.length === 0) {
+          console.warn('No event documents found in Firebase collection');
+          return;
+        }
+
+        let events = [];
+        const now = new Date();
+        // Minden eseményt figyelembe veszünk, nem csak a következő 1 hónapot,
+        // így a közeli múlt eseményei is bekerülnek, és a legközelebbi esemény
+        // valóban középre kerülhet
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const eventDate = data.date?.toDate ? data.date.toDate() : null;
+          if (!eventDate) return;
+          events.push({ id: parseInt(doc.id), data, date: eventDate });
+        });
+
+        console.log('Collected events (all with valid date):', events.length);
+        events.sort((a, b) => a.id - b.id);
+
+        let closestEventIndex = -1;
+        let minDateDiff = Infinity;
+
+        events.forEach((event, index) => {
+          const diff = Math.abs(event.date - now);
+          if (diff < minDateDiff) {
+            minDateDiff = diff;
+            closestEventIndex = index;
+          }
+        });
+
+        if (closestEventIndex === -1 && events.length > 0) {
+          closestEventIndex = events.length - 1; // Legújabb (legnagyobb ID)
+        }
+
+        // Lokális konténerek és látható konténerek meghatározása az aktuális layout alapján
+        const containers = Array.from(document.querySelectorAll('.event-container'));
+        const visibleContainers = containers.filter(c => !c.classList.contains('hidden'));
+        if (visibleContainers.length === 0) {
+          console.warn('No visible event containers found after layout calculation');
+          return;
+        }
+        // Preferált közép: a 3 nagy kártya közül a 2. (containers[2]) ha látható,
+        // ha nem, próbáljuk a containers[1]-et, majd containers[3]-at, végül fallback középre
+        const preferOrder = [2, 1, 3];
+        let centerContainerIndex = Math.floor(visibleContainers.length / 2);
+        for (const idx of preferOrder) {
+          const el = containers[idx];
+          const visibleIdx = el ? visibleContainers.indexOf(el) : -1;
+          if (visibleIdx !== -1) {
+            centerContainerIndex = visibleIdx;
+            break;
+          }
+        }
+        const arrangedIndices = new Array(visibleContainers.length).fill(null);
+
+        if (closestEventIndex !== -1) {
+          arrangedIndices[centerContainerIndex] = closestEventIndex;
+
+          // Régebbi események (kisebb ID) elhelyezése balra
+          let leftIndex = centerContainerIndex - 1;
+          for (let i = closestEventIndex - 1; i >= 0 && leftIndex >= 0; i--) {
+            arrangedIndices[leftIndex--] = i;
+          }
+
+          // Újabb események (nagyobb ID) elhelyezése jobbra
+          let rightIndex = centerContainerIndex + 1;
+          for (let i = closestEventIndex + 1; i < events.length && rightIndex < visibleContainers.length; i++) {
+            arrangedIndices[rightIndex++] = i;
+          }
+        }
+
+        visibleContainers.forEach((container, i) => {
+          const itemIndex = arrangedIndices[i];
+          const item = itemIndex != null ? events[itemIndex] : null;
+
+          const card = container.querySelector('.red-card');
+          const titleSpan = container.querySelector('.event-label-text > span:first-child');
+          const descSpan = container.querySelector('.event-label-text > span.desc');
+          const placeSpan = container.querySelector('.event-label-text > span.place');
+          const arrowContainer = container.querySelector('.arrow-container');
+
+          if (!item) {
+            if (card) {
+              card.style.backgroundImage = '';
+              card.style.backgroundColor = '';
+            }
+            if (titleSpan) titleSpan.textContent = '';
+            if (descSpan) descSpan.textContent = '';
+            if (placeSpan) placeSpan.textContent = '';
+            if (arrowContainer) {
+              arrowContainer.style.opacity = '0';
+              arrowContainer.style.cursor = 'default';
+              arrowContainer.onclick = (e) => e.stopPropagation();
+            }
+            return;
+          }
+
+          console.log(`Processing event ${i + 1}: ID=${item.id}, Title="${item.data.title || 'No title'}"`);
+
+          if (card) {
+            if (item.data.image && item.data.image.trim() !== '') {
+              card.style.backgroundImage = `url(${item.data.image})`;
+              card.style.backgroundSize = 'cover';
+              card.style.backgroundPosition = 'center';
+              card.style.backgroundColor = 'transparent';
+            } else {
+              card.style.backgroundImage = '';
+              card.style.backgroundColor = 'var(--red)';
+            }
+          }
+
+          if (titleSpan) {
+            let title = item.data.title || "Nincs cím";
+            if (title.length > 30) title = title.substring(0, 30) + '...';
+            titleSpan.textContent = title;
+          }
+
+          if (descSpan) {
+            let desc = item.data.description || "";
+            if (desc.length > 50) desc = desc.substring(0, 50) + '...';
+            descSpan.textContent = desc;
+          }
+
+          if (placeSpan && item.data.place) {
+            placeSpan.textContent = "Helyszín: " + item.data.place;
+          }
+
+          if (arrowContainer) {
+            if (item.data.link && item.data.link.trim() !== '') {
+              arrowContainer.style.opacity = '1';
+              arrowContainer.style.cursor = 'pointer';
+              arrowContainer.style.filter = 'none';
+              arrowContainer.onclick = (e) => {
+                e.stopPropagation();
+                let url = item.data.link.trim();
+                if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
+                window.open(url, '_blank');
+              };
+            } else {
+              arrowContainer.style.opacity = '0.3';
+              arrowContainer.style.cursor = 'not-allowed';
+              arrowContainer.style.filter = 'grayscale(100%)';
+              arrowContainer.onclick = (e) => e.stopPropagation();
+            }
+          }
+        });
+
+        console.log('Events loading completed successfully');
+      } catch (error) {
+        console.error('❌ Error loading events:', error);
+      }
+    }
+
+    /* ---------------------- INIT ----------------------- */
+    window.addEventListener("load", () => {
+      console.log('Page loaded, initializing...');
+
+      // DOM elemek ellenőrzése
+      const newsRow = document.getElementById('newsRow');
+      const newsCards = document.querySelectorAll('#newsRow .news-card');
+      console.log('🔍 DOM check:', {
+        newsRow: !!newsRow,
+        newsCardsCount: newsCards.length,
+        db: !!window.db
+      });
+
+      if (!newsRow) {
+        console.error('❌ newsRow element not found!');
+        return;
+      }
+
+      if (newsCards.length === 0) {
+        console.error('❌ No news cards found!');
+        return;
+      }
+
+      // Kis késleltetés, hogy biztosan betöltődjenek a DOM elemek és Firebase
+      setTimeout(() => {
+        console.log('Starting delayed initialization...');
+        loadNews();
+        handleDynamicLayout();
+        initNewsCarousel();
+        // Kis késleltetés a hírek betöltése után a méretezéshez
+        setTimeout(handleNewsCardResize, 100);
+      }, 200);
+    });
+
+    window.addEventListener("resize", () => {
+      handleDynamicLayout();
+      handleNewsCardResize();
+    });
+  </script>
+  End of commented-out script block
+  -->
+<style id="footer-common-style">
+  /* Common footer + minimal main content padding */
+  .footer { margin-top: 8px; position: relative; }
+  /* Reserve space so footer doesn't overlap content */
+  .main-area .main-content { padding-bottom: 84px; }
+  #site-footer .footer-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: #0E1512;
+  }
+  #site-footer .footer-left img,
+  #site-footer .footer-right img {
+    height: 28px;
+    object-fit: contain;
+  }
+  #site-footer .footer-center {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #site-footer .footer-privacy {
+    color: #C4C8C3;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  @media (max-width: 900px) {
+    #site-footer .footer-container {
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 12px;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <div class="app-bg">
+    <aside class="sidebar">
+      <nav class="nav-menu">
+        <button class="nav-item list-button nav-item-list" type="button" aria-label="Menü">
+          <div class="nav-icon-container">
+            <img src="../../assets/navbar/menu.svg" class="nav-icon" alt="Menü">
+          </div>
+          <span data-translate="navigation.menu">Menü</span>
+        </button>
+  <a class="nav-item active" href="index.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/home_icon.svg" class="nav-icon" alt="Otthon">
+          </div>
+          <span data-translate="navigation.home">Otthon</span>
+        </a>
+  <a class="nav-item" href="qr-code.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/qr_code_icon.svg" class="nav-icon" alt="QR-Kód">
+          </div>
+          <span data-translate="navigation.qr" data-translate-fallback="QR-Kód">QR-Kód</span>
+        </a>
+  <a class="nav-item" href="youhub.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/youhub_icon.svg" class="nav-icon" alt="YouHub">
+          </div>
+          <span data-translate="navigation.youhub">YouHub</span>
+        </a>
+  <a class="nav-item" href="event_hub.html" tabindex="0">
+          <div class="nav-icon-container">
+            <img src="./assets/event_hub_icon.svg" class="nav-icon" alt="Event Hub">
+          </div>
+          <span data-translate="navigation.event_hub">Event Hub</span>
+        </a>
+      </nav>
+    </aside>
+    <script>
+      (function() {
+        const sidebar = document.querySelector('.sidebar');
+        const navMenu = document.querySelector('.nav-menu');
+        const toggleButton = document.querySelector('.list-button');
+        const navItems = document.querySelectorAll('.nav-menu .nav-item');
+        const icons = document.querySelectorAll('.nav-menu .nav-icon');
+        if (sidebar && toggleButton) {
+          toggleButton.addEventListener('click', () => {
+            const isOpenNow = sidebar.classList.toggle('open');
+            if (navMenu) navMenu.classList.toggle('nav-menu-open', isOpenNow);
+            navItems.forEach(item => item.classList.toggle('nav-item-open', isOpenNow));
+            toggleButton.classList.toggle('nav-item-open-list', isOpenNow);
+            icons.forEach(iconEl => iconEl.classList.toggle('nav-icon-open', isOpenNow));
+            const icon = toggleButton.querySelector('.nav-icon');
+            if (icon) {
+              icon.src = isOpenNow ? '../../assets/navbar/menu_open.svg' : '../../assets/navbar/menu.svg';
+            }
+          });
+        }
+        function markActiveNavItem() {
+          const currentPath = window.location.pathname.replace(/\/$/, '');
+          const currentName = currentPath.split('/').pop() || 'index.html';
+          document.querySelectorAll('.nav-menu .nav-item[href]').forEach(link => {
+            try {
+              const href = link.getAttribute('href');
+              const linkPath = new URL(href, window.location.href).pathname.replace(/\/$/, '');
+              const linkName = linkPath.split('/').pop() || 'index.html';
+              if (linkName === currentName) {
+                link.classList.add('active');
+              } else {
+                link.classList.remove('active');
+              }
+            } catch (e) {}
+          });
+        }
+        function updateNavIcons() {
+          document.querySelectorAll('.nav-item:not(.list-button) .nav-icon').forEach(img => {
+            const item = img.closest('.nav-item');
+            if (!item) return;
+            const isActive = item.classList.contains('active');
+            const src = img.getAttribute('src') || '';
+            if (src.includes('/assets/navbar/')) {
+              if (isActive && !src.includes('/assets/navbar/filled/')) {
+                img.setAttribute('src', src.replace('/assets/navbar/', '/assets/navbar/filled/'));
+              } else if (!isActive && src.includes('/assets/navbar/filled/')) {
+                img.setAttribute('src', src.replace('/assets/navbar/filled/', '/assets/navbar/'));
+              }
+            }
+          });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+          markActiveNavItem();
+          updateNavIcons();
+        });
+      })();
+    </script>
+    <main class="main-area">
+      <div class="main-content">
+        <header class="header">
+          <div class="welcome-container">
+            <img src="./assets/welcome_hand_icon.svg" class="welcome-icon" alt="Welcome">
+            <h1 class="welcome-text" data-translate="pages.index.welcome"
+              data-translate-fallback="Üdvözöllek a Hub-ban!">Üdvözöllek a Hub-ban!</h1>
+          </div>
+          <div class="header-icons">
+            <a href="./system/account.html" class="header-icon-link" tabindex="0">
+              <img src="./assets/account_icon.svg" class="header-icon" alt="Account">
+            </a>
+            <a href=".//settings" class="header-icon-link" tabindex="0">
+              <img src="./assets/settings_icon.svg" class="header-icon" alt="Settings">
+            </a>
+          </div>
+        </header>
+        <section class="events-section">
+          <div class="section-title">
+            <span data-translate="pages.index.upcoming_events" data-translate-fallback="Közelgő Események">Közelgő
+              Események</span>
+            <img src="./assets/arrow_forward.svg" class="arrow-icon" alt="Tovább">
+          </div>
+          <div class="event-frame">
+            <div class="top-cards-row">
+              <!-- Medium 1 -->
+              <div class="event-container" tabindex="0">
+                <div class="red-card medium" tabindex="0"></div>
+              </div>
+
+              <!-- Large 1 -->
+              <div class="event-container" tabindex="0">
+                <div class="red-card large" tabindex="0"></div>
+                <div class="event-label">
+                  <div class="event-label-text">
+                    <span>Esemény neve</span>
+                    <span class="desc">Esemény leírása</span>
+                    <span class="place">Esemény Helye</span>
+                  </div>
+                  <div class="arrow-container" tabindex="0">
+                    <img src="./assets/arrow_forward.svg" class="arrow-icon" alt="Tovább">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Large 2 -->
+              <div class="event-container" tabindex="0">
+                <div class="red-card large" tabindex="0"></div>
+                <div class="event-label">
+                  <div class="event-label-text">
+                    <span>Esemény neve</span>
+                    <span class="desc">Esemény leírása</span>
+                    <span class="place">Esemény Helye</span>
+                  </div>
+                  <div class="arrow-container" tabindex="0">
+                    <img src="./assets/arrow_forward.svg" class="arrow-icon" alt="Tovább">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Large 3 -->
+              <div class="event-container" tabindex="0">
+                <div class="red-card large" tabindex="0"></div>
+                <div class="event-label">
+                  <div class="event-label-text">
+                    <span>Esemény neve</span>
+                    <span class="desc">Esemény leírása</span>
+                    <span class="place">Esemény Helye</span>
+                  </div>
+                  <div class="arrow-container" tabindex="0">
+                    <img src="./assets/arrow_forward.svg" class="arrow-icon" alt="Tovább">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Medium 2 -->
+              <div class="event-container" tabindex="0">
+                <div class="red-card medium" tabindex="0"></div>
+              </div>
+
+              <!-- Medium 3 -->
+              <div class="event-container" tabindex="0">
+                <div class="red-card medium" tabindex="0"></div>
+              </div>
+
+              <!-- Small -->
+              <div class="event-container" tabindex="0">
+                <div class="red-card small" tabindex="0"></div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+        <section class="news-section">
+          <div class="section-title">
+            <span data-translate="pages.index.news" data-translate-fallback="Hírek">Hírek</span>
+            <img src="./assets/arrow_forward.svg" class="arrow-icon" alt="Tovább">
+          </div>
+
+          <!-- carousel wrapper -->
+          <div class="news-carousel">
+            <button class="carousel-btn left" tabindex="0">‹</button>
+
+            <div class="bottom-cards-row" id="newsRow">
+              <div class="news-card" tabindex="0">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card" tabindex="0">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card" tabindex="0">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card" tabindex="0">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card" tabindex="0">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card" tabindex="0">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card" tabindex="0">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card" tabindex="0">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+              <div class="news-card">
+                <div class="red-rect"></div>
+                <div class="news-label"><span>Title</span><span class="desc">Description</span></div>
+              </div>
+            </div>
+
+            <button class="carousel-btn right" tabindex="0">›</button>
+          </div>
+        </section>
+      </div>
+     <div id="site-footer" class="footer" aria-label="Site footer">
+       <div class="footer-container">
+         <div class="footer-left">
+           <img src="./assets/eu2khub_logo.png" class="footer-logo-wide" alt="EU2K Hub Logó">
+         </div>
+         <div class="footer-center">
+           <a class="footer-privacy" data-translate="pages.index.privacy_policy" href="/EU2K-Hub/privacy_policy.html">Adatkezelési Tájékoztató</a>
+            <a class="footer-privacy" data-translate="pages.index.terms_of_service" href="/EU2K-Hub/terms_of_service.html">Használati Feltételek</a>
+         </div>
+         <div class="footer-right">
+           <img src="./assets/eu2kdevs_logo.png" class="footer-logo-wide" alt="EU2K Devs Logó">
+           <img src="./assets/eu2kdok_logo.png" class="footer-logo-wide" alt="EU2K DÖK Logó">
+         </div>
+       </div>
+     </div>
+    </main>
+  </div>
+  <div id="event-mask"></div>
+
+
+  <script src="./assets/js/permissions.js"></script>
+  <script src="./assets/js/translations.js"></script>
+  <script src="./assets/js/welcome-screen.js"></script>
+  <script src="./assets/js/dpad-navigation.js"></script>
+
+  <!--
+  <script>
+    // Check if user has accepted terms of service
+    document.addEventListener('DOMContentLoaded', () => {
+      const termsAccepted = localStorage.getItem('termsAccepted');
+      if (termsAccepted !== 'true') {
+        // Redirect to onboarding if terms not accepted
+        window.location.href = './welcome/onboarding_student.html';
+      }
+    });
+  </script>
+-->
+</body>
+
+</html>

@@ -1,0 +1,173 @@
+/* GDPR Cookie Banner Styles */
+
+.consent-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  background: #1D3823;
+  border-top: 1px solid #CFF7D3;
+  padding: 18px 24px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(100%);
+  transition: transform 0.3s ease-in-out;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.consent-banner.consent-banner-visible {
+  transform: translateY(0);
+}
+
+.consent-banner-content {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100%;
+}
+
+.consent-banner-icon-container {
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.consent-banner-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.consent-banner-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-right: 24px;
+}
+
+.consent-banner-title {
+  color: #97FFAD;
+  font-weight: var(--font-weight-semibold, 600);
+  text-align: left;
+  font-size: 20px;
+}
+
+.consent-banner-desc {
+  color: #B9EBA2;
+  font-weight: var(--font-weight-regular, 400);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.consent-banner-actions-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  align-self: stretch;
+}
+
+.consent-banner-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: stretch;
+  flex: 0 0 auto;
+  height: 100%;
+}
+
+/* Banner gombok - admin banner stílusok alapján */
+.consent-banner-btn {
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  pointer-events: auto;
+  position: relative;
+  z-index: 0;
+  transition: background .15s ease, color .15s ease, transform .15s ease;
+  transform-origin: center;
+  transform: translateZ(0);
+  overflow: hidden;
+  will-change: transform;
+  backface-visibility: hidden;
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold, 600);
+  min-width: 100px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.consent-banner-btn:hover {
+  transform: scaleY(1.08);
+}
+
+.consent-banner-btn:active {
+  animation: consent-banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+}
+
+@keyframes consent-banner-btn-pop {
+  0%   { transform: scaleY(1.00); }
+  70%  { transform: scaleY(1.32); }
+  100% { transform: scaleY(1.25); }
+}
+
+/* Elfogadás gomb - KÉK */
+.consent-btn-accept {
+  background: #84B3FF;
+  color: #08152C;
+  border: 1px solid #282F3A;
+}
+
+.consent-btn-accept:hover {
+  background: #42587B;
+  color: #DBE8FF;
+  border: 1px solid #3A4F29;
+}
+
+/* Elutasítás gomb - ZÖLD */
+.consent-btn-reject {
+  background: #B8EDA2;
+  color: #082907;
+  border: 1px solid #CFF7D3;
+}
+
+.consent-btn-reject:hover {
+  background: #5C6C4B;
+  color: #E5FDCB;
+  border: 1px solid #3A4F29;
+}
+
+/* Reszponzív design */
+@media (max-width: 768px) {
+  .consent-banner-content {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .consent-banner-texts {
+    padding-right: 0;
+  }
+
+  .consent-banner-actions-wrapper {
+    width: 100%;
+  }
+
+  .consent-banner-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .consent-banner-btn {
+    flex: 1;
+    min-width: auto;
+  }
+}
+

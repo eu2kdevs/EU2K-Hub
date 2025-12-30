@@ -1,0 +1,1752 @@
+@import url('../assets/css/roboto.css');
+
+:root {
+  color-scheme: dark;
+  --md-sys-color-primary: rgb(155 212 160);
+  --md-sys-color-surface-tint: rgb(155 212 160);
+  --md-sys-color-on-primary: rgb(0 57 21);
+  --md-sys-color-primary-container: rgb(27 81 41);
+  --md-sys-color-on-primary-container: rgb(182 241 187);
+  --md-sys-color-secondary: rgb(157 212 158);
+  --md-sys-color-on-secondary: rgb(2 57 19);
+  --md-sys-color-secondary-container: rgb(30 81 39);
+  --md-sys-color-on-secondary-container: rgb(184 241 185);
+  --md-sys-color-tertiary: rgb(154 212 162);
+  --md-sys-color-on-tertiary: rgb(0 57 23);
+  --md-sys-color-tertiary-container: rgb(25 81 42);
+  --md-sys-color-on-tertiary-container: rgb(181 241 189);
+  --md-sys-color-error: rgb(255 179 178);
+  --md-sys-color-on-error: rgb(86 29 32);
+  --md-sys-color-error-container: rgb(115 51 53);
+  --md-sys-color-on-error-container: rgb(255 218 217);
+  --md-sys-color-background: rgb(16 21 16);
+  --md-sys-color-on-background: rgb(224 228 220);
+  --md-sys-color-surface: rgb(16 21 16);
+  --md-sys-color-on-surface: rgb(224 228 220);
+  --md-sys-color-surface-variant: rgb(65 73 65);
+  --md-sys-color-on-surface-variant: rgb(193 201 190);
+  --md-sys-color-outline: rgb(139 147 137);
+  --md-sys-color-outline-variant: rgb(65 73 65);
+  --md-sys-color-shadow: rgb(0 0 0);
+  --md-sys-color-scrim: rgb(0 0 0);
+  --md-sys-color-inverse-surface: rgb(224 228 220);
+  --md-sys-color-inverse-on-surface: rgb(45 50 44);
+  --md-sys-color-inverse-primary: rgb(53 105 63);
+  --md-sys-color-primary-fixed: rgb(182 241 187);
+  --md-sys-color-on-primary-fixed: rgb(0 33 9);
+  --md-sys-color-primary-fixed-dim: rgb(155 212 160);
+  --md-sys-color-on-primary-fixed-variant: rgb(27 81 41);
+  --md-sys-color-secondary-fixed: rgb(184 241 185);
+  --md-sys-color-on-secondary-fixed: rgb(0 33 8);
+  --md-sys-color-secondary-fixed-dim: rgb(157 212 158);
+  --md-sys-color-on-secondary-fixed-variant: rgb(30 81 39);
+  --md-sys-color-tertiary-fixed: rgb(181 241 189);
+  --md-sys-color-on-tertiary-fixed: rgb(0 33 11);
+  --md-sys-color-tertiary-fixed-dim: rgb(154 212 162);
+  --md-sys-color-on-tertiary-fixed-variant: rgb(25 81 42);
+  --md-sys-color-surface-dim: rgb(16 21 16);
+  --md-sys-color-surface-bright: rgb(54 58 53);
+  --md-sys-color-surface-container-lowest: rgb(11 15 11);
+  --md-sys-color-surface-container-low: rgb(24 29 24);
+  --md-sys-color-surface-container: rgb(28 33 28);
+  --md-sys-color-surface-container-high: rgb(38 43 38);
+  --md-sys-color-surface-container-highest: rgb(49 54 49);
+  --md-extended-color-sharp-light-color: rgb(156 212 159);
+  --md-extended-color-sharp-light-on-color: rgb(0 57 20);
+  --md-extended-color-sharp-light-color-container: rgb(29 81 40);
+  --md-extended-color-sharp-light-on-color-container: rgb(183 241 185);
+  --md-extended-color-sharp-dark-color: rgb(156 212 159);
+  --md-extended-color-sharp-dark-on-color: rgb(1 57 19);
+  --md-extended-color-sharp-dark-color-container: rgb(29 81 40);
+  --md-extended-color-sharp-dark-on-color-container: rgb(184 241 185);
+  --md-extended-color-sharp-white-color: rgb(156 212 159);
+  --md-extended-color-sharp-white-on-color: rgb(0 57 20);
+  --md-extended-color-sharp-white-color-container: rgb(29 81 40);
+  --md-extended-color-sharp-white-on-color-container: rgb(183 241 186);
+  --md-extended-color-teritary-dark-color: rgb(157 212 157);
+  --md-extended-color-teritary-dark-on-color: rgb(3 57 18);
+  --md-extended-color-teritary-dark-color-container: rgb(31 80 39);
+  --md-extended-color-teritary-dark-on-color-container: rgb(185 240 184);
+  --md-extended-color-yellow-dark-color: rgb(226 196 109);
+  --md-extended-color-yellow-dark-on-color: rgb(61 47 0);
+  --md-extended-color-yellow-dark-color-container: rgb(87 69 0);
+  --md-extended-color-yellow-dark-on-color-container: rgb(255 224 137);
+  --md-extended-color-yellow-dark2-color: rgb(230 195 108);
+  --md-extended-color-yellow-dark2-on-color: rgb(62 46 0);
+  --md-extended-color-yellow-dark2-color-container: rgb(89 68 0);
+  --md-extended-color-yellow-dark2-on-color-container: rgb(255 223 149);
+  --md-extended-color-yellow-mid-color: rgb(236 192 108);
+  --md-extended-color-yellow-mid-on-color: rgb(65 45 0);
+  --md-extended-color-yellow-mid-color-container: rgb(93 66 0);
+  --md-extended-color-yellow-mid-on-color-container: rgb(255 222 165);
+  --md-extended-color-yellow-light-color: rgb(233 193 108);
+  --md-extended-color-yellow-light-on-color: rgb(64 45 0);
+  --md-extended-color-yellow-light-color-container: rgb(91 67 0);
+  --md-extended-color-yellow-light-on-color-container: rgb(255 223 158);
+  --md-extended-color-yellow-dark3-color: rgb(237 192 108);
+  --md-extended-color-yellow-dark3-on-color: rgb(65 45 0);
+  --md-extended-color-yellow-dark3-color-container: rgb(93 66 0);
+  --md-extended-color-yellow-dark3-on-color-container: rgb(255 222 166);
+  --md-extended-color-yellow-mid2-color: rgb(236 192 108);
+  --md-extended-color-yellow-mid2-on-color: rgb(65 45 0);
+  --md-extended-color-yellow-mid2-color-container: rgb(93 66 0);
+  --md-extended-color-yellow-mid2-on-color-container: rgb(255 222 165);
+  --md-extended-color-yellow-mid3-color: rgb(232 194 108);
+  --md-extended-color-yellow-mid3-on-color: rgb(63 46 0);
+  --md-extended-color-yellow-mid3-color-container: rgb(91 67 0);
+  --md-extended-color-yellow-mid3-on-color-container: rgb(255 223 156);
+  --md-extended-color-purple-dark-color: rgb(205 189 255);
+  --md-extended-color-purple-dark-on-color: rgb(52 39 94);
+  --md-extended-color-purple-dark-color-container: rgb(75 62 118);
+  --md-extended-color-purple-dark-on-color-container: rgb(231 222 255);
+  --md-extended-color-purple-dark2-color: rgb(208 188 254);
+  --md-extended-color-purple-dark2-on-color: rgb(54 38 93);
+  --md-extended-color-purple-dark2-color-container: rgb(77 61 117);
+  --md-extended-color-purple-dark2-on-color-container: rgb(233 221 255);
+  --md-extended-color-purple-dark3-color: rgb(215 186 251);
+  --md-extended-color-purple-dark3-on-color: rgb(59 37 90);
+  --md-extended-color-purple-dark3-color-container: rgb(83 60 115);
+  --md-extended-color-purple-dark3-on-color-container: rgb(237 220 255);
+  --md-extended-color-purple-light-color: rgb(208 188 254);
+  --md-extended-color-purple-light-on-color: rgb(55 38 93);
+  --md-extended-color-purple-light-color-container: rgb(77 61 117);
+  --md-extended-color-purple-light-on-color-container: rgb(233 221 255);
+  --md-extended-color-blue-dark-color: rgb(208 189 254);
+  --md-extended-color-blue-dark-on-color: rgb(54 38 93);
+  --md-extended-color-blue-dark-color-container: rgb(77 61 117);
+  --md-extended-color-blue-dark-on-color-container: rgb(233 221 255);
+  --md-extended-color-blue-dark2-color: rgb(207 189 254);
+  --md-extended-color-blue-dark2-on-color: rgb(54 38 93);
+  --md-extended-color-blue-dark2-color-container: rgb(77 61 117);
+  --md-extended-color-blue-dark2-on-color-container: rgb(233 221 255);
+  --md-extended-color-green-dark-color: rgb(162 211 152);
+  --md-extended-color-green-dark-on-color: rgb(13 56 14);
+  --md-extended-color-green-dark-color-container: rgb(37 80 34);
+  --md-extended-color-green-dark-on-color-container: rgb(190 240 178);
+  --md-extended-color-green-light-color: rgb(161 211 154);
+  --md-extended-color-green-light-on-color: rgb(9 57 15);
+  --md-extended-color-green-light-color-container: rgb(35 80 36);
+  --md-extended-color-green-light-on-color-container: rgb(188 240 180);
+  --md-extended-color-green-mid-color: rgb(164 211 150);
+  --md-extended-color-green-mid-on-color: rgb(16 56 12);
+  --md-extended-color-green-mid-color-container: rgb(40 80 33);
+  --md-extended-color-green-mid-on-color-container: rgb(192 239 176);
+  --md-extended-color-green-light2-color: rgb(163 211 151);
+  --md-extended-color-green-light2-on-color: rgb(15 56 13);
+  --md-extended-color-green-light2-color-container: rgb(39 80 34);
+  --md-extended-color-green-light2-on-color-container: rgb(191 240 177);
+  --md-extended-color-green-dark2-color: rgb(164 211 150);
+  --md-extended-color-green-dark2-on-color: rgb(16 56 12);
+  --md-extended-color-green-dark2-color-container: rgb(39 80 33);
+  --md-extended-color-green-dark2-on-color-container: rgb(191 239 176);
+  --md-extended-color-green-dark3-color: rgb(163 211 151);
+  --md-extended-color-green-dark3-on-color: rgb(15 56 13);
+  --md-extended-color-green-dark3-color-container: rgb(39 80 34);
+  --md-extended-color-green-dark3-on-color-container: rgb(191 240 177);
+  --md-extended-color-green-light3-color: rgb(162 211 153);
+  --md-extended-color-green-light3-on-color: rgb(12 57 14);
+  --md-extended-color-green-light3-color-container: rgb(37 80 35);
+  --md-extended-color-green-light3-on-color-container: rgb(189 240 179);
+  --md-extended-color-green-light2-hovered-color: rgb(162 211 152);
+  --md-extended-color-green-light2-hovered-on-color: rgb(12 57 14);
+  --md-extended-color-green-light2-hovered-color-container: rgb(37 80 35);
+  --md-extended-color-green-light2-hovered-on-color-container: rgb(189 240 179);
+  --md-extended-color-green-dark2-hovered-color: rgb(161 211 153);
+  --md-extended-color-green-dark2-hovered-on-color: rgb(11 57 15);
+  --md-extended-color-green-dark2-hovered-color-container: rgb(36 80 35);
+  --md-extended-color-green-dark2-hovered-on-color-container: rgb(189 240 179);
+  --md-extended-color-system-regular-color: rgb(156 212 159);
+  --md-extended-color-system-regular-on-color: rgb(1 57 19);
+  --md-extended-color-system-regular-color-container: rgb(29 81 40);
+  --md-extended-color-system-regular-on-color-container: rgb(184 241 185);
+  --md-extended-color-system-hovered-color: rgb(154 212 161);
+  --md-extended-color-system-hovered-on-color: rgb(0 57 22);
+  --md-extended-color-system-hovered-color-container: rgb(26 81 42);
+  --md-extended-color-system-hovered-on-color-container: rgb(182 241 188);
+  --md-extended-color-purple-light-hovered-color: rgb(208 188 254);
+  --md-extended-color-purple-light-hovered-on-color: rgb(54 38 93);
+  --md-extended-color-purple-light-hovered-color-container: rgb(77 61 117);
+  --md-extended-color-purple-light-hovered-on-color-container: rgb(233 221 255);
+  --md-extended-color-yellow-dark2-hovered-color: rgb(228 195 108);
+  --md-extended-color-yellow-dark2-hovered-on-color: rgb(61 46 0);
+  --md-extended-color-yellow-dark2-hovered-color-container: rgb(88 68 0);
+  --md-extended-color-yellow-dark2-hovered-on-color-container: rgb(255 223 145);
+  --md-extended-color-yellow-dark3-hovered-color: rgb(232 194 108);
+  --md-extended-color-yellow-dark3-hovered-on-color: rgb(63 46 0);
+  --md-extended-color-yellow-dark3-hovered-color-container: rgb(91 67 0);
+  --md-extended-color-yellow-dark3-hovered-on-color-container: rgb(255 223 155);
+  --md-extended-color-teal-dark-color: rgb(128 212 214);
+  --md-extended-color-teal-dark-on-color: rgb(0 55 56);
+  --md-extended-color-teal-dark-color-container: rgb(0 79 81);
+  --md-extended-color-teal-dark-on-color-container: rgb(156 241 243);
+  --md-extended-color-teal-dark-hovered-color: rgb(128 212 217);
+  --md-extended-color-teal-dark-hovered-on-color: rgb(0 55 57);
+  --md-extended-color-teal-dark-hovered-color-container: rgb(0 79 83);
+  --md-extended-color-teal-dark-hovered-on-color-container: rgb(156 240 245);
+  --md-extended-color-teal-mid-color: rgb(128 212 215);
+  --md-extended-color-teal-mid-on-color: rgb(0 55 56);
+  --md-extended-color-teal-mid-color-container: rgb(0 79 82);
+  --md-extended-color-teal-mid-on-color-container: rgb(156 241 244);
+  --md-extended-color-teal-light-color: rgb(129 212 221);
+  --md-extended-color-teal-light-on-color: rgb(0 54 59);
+  --md-extended-color-teal-light-color-container: rgb(0 79 85);
+  --md-extended-color-teal-light-on-color-container: rgb(157 240 249);
+  --md-extended-color-teal-light-variant-color: rgb(129 211 221);
+  --md-extended-color-teal-light-variant-on-color: rgb(0 54 59);
+  --md-extended-color-teal-light-variant-color-container: rgb(0 79 86);
+  --md-extended-color-teal-light-variant-on-color-container: rgb(157 240 250);
+  --md-extended-color-teal-light2-color: rgb(128 213 212);
+  --md-extended-color-teal-light2-on-color: rgb(0 55 55);
+  --md-extended-color-teal-light2-color-container: rgb(0 79 80);
+  --md-extended-color-teal-light2-on-color-container: rgb(156 241 241);
+  --md-extended-color-teal-light-strong-color: rgb(129 211 221);
+  --md-extended-color-teal-light-strong-on-color: rgb(0 54 59);
+  --md-extended-color-teal-light-strong-color-container: rgb(0 79 85);
+  --md-extended-color-teal-light-strong-on-color-container: rgb(157 240 249);
+  --md-extended-color-teal-dark2-color: rgb(128 213 212);
+  --md-extended-color-teal-dark2-on-color: rgb(0 55 55);
+  --md-extended-color-teal-dark2-color-container: rgb(0 79 80);
+  --md-extended-color-teal-dark2-on-color-container: rgb(156 241 240);
+  --md-extended-color-system-dark-grey-color: rgb(153 212 162);
+  --md-extended-color-system-dark-grey-on-color: rgb(0 57 23);
+  --md-extended-color-system-dark-grey-color-container: rgb(25 81 42);
+  --md-extended-color-system-dark-grey-on-color-container: rgb(181 241 189);
+  --md-extended-color-system-light-gray-color: rgb(155 212 161);
+  --md-extended-color-system-light-gray-on-color: rgb(0 57 22);
+  --md-extended-color-system-light-gray-color-container: rgb(27 81 41);
+  --md-extended-color-system-light-gray-on-color-container: rgb(182 241 187);
+  --md-extended-color-system-green-mid-color: rgb(158 212 157);
+  --md-extended-color-system-green-mid-on-color: rgb(4 57 18);
+  --md-extended-color-system-green-mid-color-container: rgb(32 80 38);
+  --md-extended-color-system-green-mid-on-color-container: rgb(185 240 183);
+  --md-extended-color-system-green-dark-color: rgb(164 211 150);
+  --md-extended-color-system-green-dark-on-color: rgb(16 56 12);
+  --md-extended-color-system-green-dark-color-container: rgb(39 80 33);
+  --md-extended-color-system-green-dark-on-color-container: rgb(191 239 176);
+  --md-extended-color-system-green-mid2-color: rgb(160 212 155);
+  --md-extended-color-system-green-mid2-on-color: rgb(7 57 16);
+  --md-extended-color-system-green-mid2-color-container: rgb(34 80 37);
+  --md-extended-color-system-green-mid2-on-color-container: rgb(187 240 181);
+  --md-extended-color-system-green-mid-gray-color: rgb(158 212 157);
+  --md-extended-color-system-green-mid-gray-on-color: rgb(3 57 18);
+  --md-extended-color-system-green-mid-gray-color-container: rgb(31 80 39);
+  --md-extended-color-system-green-mid-gray-on-color-container: rgb(185 240 184);
+  --md-extended-color-system-green-light-strong-color: rgb(163 211 151);
+  --md-extended-color-system-green-light-strong-on-color: rgb(15 56 13);
+  --md-extended-color-system-green-light-strong-color-container: rgb(39 80 34);
+  --md-extended-color-system-green-light-strong-on-color-container: rgb(191 240 177);
+  --md-extended-color-system-green-light-gray-color: rgb(165 211 149);
+  --md-extended-color-system-green-light-gray-on-color: rgb(17 56 11);
+  --md-extended-color-system-green-light-gray-color-container: rgb(40 80 32);
+  --md-extended-color-system-green-light-gray-on-color-container: rgb(192 239 176);
+  --md-extended-color-system-green-dark2-color: rgb(158 212 156);
+  --md-extended-color-system-green-dark2-on-color: rgb(5 57 17);
+  --md-extended-color-system-green-dark2-color-container: rgb(32 80 38);
+  --md-extended-color-system-green-dark2-on-color-container: rgb(186 240 183);
+  --md-extended-color-system-green-light-gray2-color: rgb(159 212 156);
+  --md-extended-color-system-green-light-gray2-on-color: rgb(6 57 17);
+  --md-extended-color-system-green-light-gray2-color-container: rgb(33 80 37);
+  --md-extended-color-system-green-light-gray2-on-color-container: rgb(186 240 182);
+  --md-extended-color-onboarding-green-color: rgb(160 212 155);
+  --md-extended-color-onboarding-green-on-color: rgb(7 57 16);
+  --md-extended-color-onboarding-green-color-container: rgb(34 80 37);
+  --md-extended-color-onboarding-green-on-color-container: rgb(187 240 182);
+  --md-extended-color-onboarding-green-dark-color: rgb(162 211 152);
+  --md-extended-color-onboarding-green-dark-on-color: rgb(12 56 14);
+  --md-extended-color-onboarding-green-dark-color-container: rgb(37 80 35);
+  --md-extended-color-onboarding-green-dark-on-color-container: rgb(189 240 179);
+  --md-extended-color-onboarding-green-hovered-color: rgb(161 211 154);
+  --md-extended-color-onboarding-green-hovered-on-color: rgb(10 57 15);
+  --md-extended-color-onboarding-green-hovered-color-container: rgb(36 80 36);
+  --md-extended-color-onboarding-green-hovered-on-color-container: rgb(188 240 180);
+  --md-extended-color-onboarding-green-dark-hovered-color: rgb(162 211 152);
+  --md-extended-color-onboarding-green-dark-hovered-on-color: rgb(12 57 14);
+  --md-extended-color-onboarding-green-dark-hovered-color-container: rgb(37 80 35);
+  --md-extended-color-onboarding-green-dark-hovered-on-color-container: rgb(189 240 179);
+  --sidebar-bg: #101510;
+  --main-bg: #0b0f0b;
+  --surface-bg: #101510;
+  --card-bg: #232823;
+  --red: #ff0000;
+  --green-btn: #2d3a2d;
+  --green-btn-arrow: #b6c6b6;
+  --blue-btn: #06494B;
+  --blue-btn-arrow: #8CD5DC;
+  --text-main: #e3e3e3;
+  --text-secondary: #a0a0a0;
+  --border-radius: 32px;
+  --card-radius: 32px;
+  --news-radius: 20px;
+  --sidebar-width: 76px;
+  --transition: 0.2s cubic-bezier(.4, 0, .2, 1);
+  --md-linear-progress-track-height: 8px;
+  --md-linear-progress-track-shape: 8px;
+  --md-linear-progress-active-indicator-height: 8px;
+  --md-linear-progress-active-indicator-radius: 32px;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--surface-bg);
+  color: var(--text-main);
+  font-family: 'Roboto', Arial, sans-serif;
+  min-height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.app-bg {
+  position: relative;
+  min-height: 100vh;
+  min-width: 100vw;
+  width: 100vw;
+  /* Teljes szélesség használata */
+  height: 100vh;
+  background: var(--surface-bg);
+  display: flex;
+  flex-direction: row;
+}
+
+.sidebar {
+  background: #101510;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 0;
+  border-radius: 32px 0 0 32px;
+  min-width: var(--sidebar-width);
+  width: var(--sidebar-width);
+  height: calc(100vh - 44px);
+  margin-top: 22px;
+  margin-bottom: 22px;
+  z-index: 2;
+  position: relative;
+}
+
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 0;
+}
+
+.main-content {
+  background: var(--main-bg);
+  border-radius: 32px;
+  margin: 22px 22px 22px 0;
+  padding: 0 10px 22px 32px;
+  height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
+  max-width: calc(100% - 22px);
+  min-width: 800px;
+  /* Minimum szélesség a dinamikus méretezéshez */
+  width: auto;
+  /* Automatikus szélesség */
+  flex: 1;
+  /* Rugalmas méretezés */
+  overflow: hidden;
+  position: relative;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  margin-bottom: 0;
+  position: relative;
+  min-height: 80px;
+}
+
+.publish-layout {
+  display: flex;
+  gap: 32px;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  align-items: flex-start;
+}
+
+.back-arrow-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 40px;
+  min-width: 4px;
+  height: 140px;
+  /* Csak a header magasságáig */
+  flex-shrink: 0;
+}
+
+.back-arrow-btn {
+  --md-filled-button-container-color: #1E2A1E;
+  --md-filled-button-label-text-color: #E0E4DB;
+  width: 48px;
+  height: 100px;
+  min-width: 48px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-arrow-btn .arrow-img {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) saturate(100%) invert(88%) sepia(8%) saturate(15%) hue-rotate(23deg) brightness(96%) contrast(91%);
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-top: 40px;
+  margin-left: 22px;
+}
+
+.header-icons {
+  position: fixed;
+  top: 30px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 100;
+}
+
+.header-icon-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--green-btn);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  transition: var(--transition);
+}
+
+.header-icon-link:hover {
+  background-color: var(--card-bg);
+}
+
+.header-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.welcome-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.welcome-text {
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.back-button-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 80px;
+  margin-top: 100px;
+  margin-left: 50px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(30, 40, 30, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 32px;
+  width: 55x;
+  height: 90px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.back-button:hover {
+  background-color: rgba(20, 30, 20, 0.9);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+}
+
+.back-button img {
+  width: 24px;
+  height: 24px;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  margin-top: 40px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.account-settings-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-right: 24px;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.account-settings-container .icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--card-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  width: 64px;
+  padding: 0;
+  border-radius: 16px;
+  transition: var(--transition);
+  position: relative;
+}
+
+.nav-item:hover .nav-icon-container {
+  background-color: #232823;
+}
+
+.nav-item.active .nav-icon-container {
+  background-color: var(--green-btn);
+}
+
+.nav-item span {
+  color: #C1C9BE;
+}
+
+.nav-item.active span {
+  color: #D4E8D1;
+}
+
+.nav-icon {
+  filter: brightness(0) saturate(100%) invert(85%) sepia(6%) saturate(466%) hue-rotate(60deg) brightness(95%) contrast(86%);
+  /* #C1C9BE */
+}
+
+.nav-item.active .nav-icon {
+  filter: brightness(0) saturate(100%) invert(94%) sepia(11%) saturate(309%) hue-rotate(61deg) brightness(94%) contrast(90%);
+  /* #D4E8D1 */
+}
+
+.nav-icon-container {
+  width: 56px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  transition: var(--transition);
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.top-cards-row.shrinked .red-card.large {
+  width: 480px;
+}
+
+.top-cards-row.shrinked .red-card.medium {
+  width: 96px;
+}
+
+.top-cards-row.shrinked .red-card.small {
+  width: 44px;
+}
+
+.top-cards-row.shrinked .event-label,
+.top-cards-row.shrinked .event-label-text,
+.top-cards-row.shrinked .arrow-container {
+  transform: scale(0.9);
+  transform-origin: left center;
+}
+
+@media (max-width: 1200px) {
+  .red-card.large {
+    min-width: 220px;
+  }
+
+  .news-card {
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 900px) {
+  .main-content {
+    padding: 0 8px 32px 32px;
+  }
+
+  .red-card.large {
+    min-width: 140px;
+  }
+
+  .news-card {
+    min-width: 90px;
+  }
+
+  .sidebar {
+    margin-left: 8px;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+/* Responsive design for settings */
+@media (max-width: 1200px) {
+  .settings-cards {
+    min-width: 350px;
+    max-width: 500px;
+  }
+
+  .settings-content-layout {
+    gap: 40px;
+  }
+
+  /* General page responsive adjustments */
+  #general-page {
+    margin-left: -30px;
+    width: calc(100% + 15px);
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* General info card responsive */
+  .general-info-card {
+    grid-template-columns: 1fr 1px 1fr 1fr;
+    gap: 22px;
+  }
+}
+
+@media (max-width: 900px) {
+  .settings-cards {
+    min-width: 300px;
+    max-width: 400px;
+  }
+
+  .settings-content-layout {
+    gap: 30px;
+  }
+
+  .settings-pages {
+    padding-left: 20px;
+  }
+
+  /* General page responsive adjustments */
+  #general-page {
+    margin-left: -20px;
+    width: calc(100% + 10px);
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* General info card responsive */
+  .general-info-card {
+    grid-template-columns: 1fr 1px 1fr;
+    gap: 20px;
+  }
+
+  .general-info-column:last-child {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 700px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main-content {
+    border-radius: 32px;
+    margin: 8px;
+    box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container);
+  }
+
+  .main-area {
+    margin-left: 0;
+  }
+
+  .settings-content-layout {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .settings-cards {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .settings-vertical-divider {
+    display: none;
+  }
+
+  .settings-pages {
+    padding-left: 0;
+  }
+
+  /* General page responsive adjustments */
+  #general-page {
+    margin-left: 0;
+    margin-top: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* General info card responsive */
+  .general-info-card {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .general-info-column:nth-child(3) {
+    padding: 20px;
+  }
+
+  .general-info-column:last-child {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .general-info-divider {
+    display: none;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Scrollbar megjelenítése görgetéskor */
+.main-content:hover::-webkit-scrollbar-thumb {
+  background: #232823;
+}
+
+.main-content.scrolling::-webkit-scrollbar-thumb {
+  background: #232823;
+}
+
+/* Settings Content Layout */
+.settings-content-layout {
+  display: flex;
+  gap: 55px;
+  margin-top: 20px;
+  align-items: flex-start;
+}
+
+/* Settings Navigation */
+.settings-navigation {
+  flex: 0 0 auto;
+}
+
+.settings-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 585px;
+  max-width: 600px;
+  width: 100%;
+  margin-left: -42px;
+}
+
+/* Settings Card Base */
+.settings-card {
+  background: #101510;
+  padding: 17px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  min-height: 48px;
+}
+
+/* Card Types */
+.settings-card.single-card {
+  border-radius: 32px;
+  margin-bottom: 8px;
+}
+
+.settings-card.group-top {
+  border-radius: 32px 32px 8px 8px;
+}
+
+.settings-card.group-middle {
+  border-radius: 8px;
+  margin-top: 4px;
+}
+
+.settings-card.group-bottom {
+  border-radius: 8px 8px 32px 32px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+/* Active State */
+.settings-card.active {
+  background: #1E2A1E;
+  border-radius: 32px !important;
+  /* Eltávolítottuk a fix szélességet a dinamikus méretezés érdekében */
+}
+
+/* Hover State */
+.settings-card:hover {
+  border-radius: 22px !important;
+}
+
+/* Card Icon */
+.settings-card-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+/* Card Content */
+.settings-card-content {
+  flex: 1;
+}
+
+.settings-card-title {
+  color: #D4E8D1;
+  font-size: 1rem;
+  font-weight: 400;
+  margin-bottom: 2px;
+}
+
+.settings-card-desc {
+  color: rgba(212, 232, 209, 0.7);
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+/* Divider in Notifications Card */
+.settings-card-divider {
+  width: 1px;
+  height: 40px;
+  background: #D4E8D1;
+  margin-right: 4px;
+}
+
+/* Material Switch */
+.settings-card md-switch {
+  --md-switch-selected-track-color: #B7F1B9;
+  --md-switch-selected-handle-color: #003913;
+}
+
+/* Vertical Divider */
+.settings-vertical-divider {
+  width: 1px;
+  min-height: 500px;
+  background: #424940;
+  flex-shrink: 0;
+}
+
+/* Settings Pages */
+.settings-pages {
+  flex: 1;
+  padding-left: 40px;
+  padding-right: 0;
+  padding-top: 20px;
+}
+
+.settings-pages-experiments {
+  flex: 1;
+  padding-right: 0;
+  padding-top: 20px;
+  padding-left: 80px;
+  /* 40px alapértelmezett + 40px extra = 80px */
+}
+
+/* Experiments page specific styling - 40px extra indentation */
+#experiments-page {
+  margin-left: -40px;
+}
+
+.settings-page {
+  display: none !important;
+}
+
+.notifications-categories {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 32px;
+  padding: 20px;
+  background: rgba(16, 21, 16, 0.3);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.settings-page.active::-webkit-scrollbar {
+  display: none;
+}
+
+.settings-page h2 {
+  color: #D4E8D1;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.settings-page p {
+  color: rgba(212, 232, 209, 0.7);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Publish Content */
+.publish-content {
+  flex: 1;
+  min-width: 0;
+  margin-left: -32px;
+  /* Balra tolás, hogy a kártyák széle egy vonalban legyen a back button szélével */
+}
+
+/* Switch interakció javítása */
+.settings-card md-switch {
+  pointer-events: auto;
+  z-index: 10;
+  position: relative;
+}
+
+/* General Settings Page */
+/* Beta kártya */
+.general-beta-card {
+  background: #101510;
+  border-radius: 32px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.general-beta-text {
+  color: #C1C9BE;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.general-beta-card md-switch {
+  --md-switch-selected-track-color: #D4E8D1;
+  --md-switch-selected-handle-color: #101510;
+  --md-switch-disabled-selected-track-color: rgba(212, 232, 209, 0.5);
+  --md-switch-disabled-selected-handle-color: rgba(16, 21, 16, 0.7);
+}
+
+/* Nyelv container */
+.general-language-container {
+  background: #101510;
+  border-radius: 32px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.general-language-title {
+  color: #C1C9BE;
+  font-size: 1rem;
+  font-weight: 400;
+  margin-bottom: 12px;
+}
+
+.general-language-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.general-language-card {
+  background: #1E2A1E;
+  padding: 16px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 32px;
+}
+
+.general-language-card:first-child {
+  border-radius: 32px 32px 8px 8px;
+}
+
+.general-language-card:last-child {
+  border-radius: 8px 8px 32px 32px;
+}
+
+.general-language-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.general-language-flag {
+  width: 24px;
+  height: 24px;
+}
+
+.general-language-text {
+  color: #C1C9BE;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.general-language-card md-radio {
+  --md-radio-selected-icon-color: #D4E8D1;
+  --md-radio-unselected-icon-color: #C1C9BE;
+}
+
+/* Információs kártya */
+.general-info-card {
+  background: #101510;
+  border-radius: 32px;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.general-info-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.general-info-column:first-child {
+  align-items: center;
+  text-align: center;
+}
+
+/* Középső oszlop - ikonok és szövegek egyvonalban */
+.general-info-column:nth-child(3) {
+  align-items: flex-start;
+  /* Balra igazítás */
+  padding: 30px 20px 20px 20px;
+  /* Több padding felül */
+}
+
+.general-info-column:nth-child(3) .general-info-item {
+  justify-content: flex-start;
+  /* Ikonok balra */
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+}
+
+/* Jobb oszlop - logók egyvonalban */
+.general-info-column:last-child {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.general-info-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.general-info-logo {
+  width: 140px;
+  height: auto;
+}
+
+.general-info-logo-devs {
+  width: 120px;
+  height: auto;
+}
+
+.general-info-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.general-info-text {
+  color: #D4E8D1;
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+/* Bal oszlop specifikus stílusok */
+.general-info-column:first-child .general-info-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.general-info-column:first-child .general-info-text {
+  font-size: 0.9rem;
+}
+
+.general-info-divider {
+  width: 1px;
+  height: 100%;
+  background: #424940;
+  min-height: 200px;
+}
+
+/* Notifications Page Styles */
+#notifications-page.settings-page {
+  padding: 0 !important;
+  margin-left: -40px !important;
+  /* Balra tolás, hogy ugyanonnan kezdődjön mint a general page */
+  margin-top: -20px !important;
+  /* Feljebb tolás */
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: calc(100% + 40px) !important;
+  /* Szélesség kompenzálása a balra tolás miatt */
+}
+
+/* Notice kártya */
+.notifications-notice {
+  background: #2C332C;
+  border-radius: 32px;
+  padding: 16px 20px;
+  margin-left: 40px;
+  /* Padding helyett margin a bal oldalon */
+  margin-right: 20px;
+  /* Kis margin a jobb oldalon */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notice-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.notice-text {
+  color: #C1C9BE;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* Kategóriák kártya */
+.notifications-categories-card {
+  background: #101510;
+  border-radius: 32px;
+  padding: 20px 8px;
+  margin-left: 40px;
+  margin-right: 20px;
+  height: 600px;
+  position: relative;
+}
+
+.categories-title {
+  color: #C1C9BE;
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+/* Kategória elemek */
+.category-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 553px;
+  overflow-y: auto;
+  border-radius: 32px;
+}
+
+.category-item {
+  background: #1E2A1E;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s ease;
+}
+
+/* Lekerekítések */
+.category-item.first {
+  border-radius: 32px 32px 8px 8px;
+}
+
+.category-item.middle {
+  border-radius: 8px;
+}
+
+.category-item.last {
+  border-radius: 8px 8px 32px 32px;
+}
+
+.category-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.category-text {
+  color: #C1C9BE;
+  font-size: 1rem;
+  font-weight: 400;
+  flex: 1;
+}
+
+/* Notifications Page Styles */
+#notifications-page {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Notice kártya */
+.notifications-notice {
+  background: #2A2A2A;
+  border-radius: 32px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 8px 0;
+  /* 12px luk a széleken, 8px alul */
+}
+
+.notice-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.notice-text {
+  color: #D4E8D1;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* Kategóriák kártya */
+.notifications-categories-card {
+  background: #101510;
+  border-radius: 32px;
+  padding: 20px;
+  margin: 0 12px 8px 0;
+  /* 12px luk a széleken */
+}
+
+.categories-title {
+  color: #D4E8D1;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+
+/* Settings Page Navigation */
+.settings-page {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+.settings-page.active {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Notifications page custom styling */
+.notifications-page-custom {
+  margin-left: -40px;
+  margin-top: -20px;
+  width: calc(100% + 40px);
+}
+
+/* General page custom styling */
+.general-page-custom {
+  margin-left: -60px;
+  margin-top: -20px;
+  width: calc(100% + 30px);
+}
+
+/* Specific page overrides to ensure proper hiding */
+#notifications-page:not(.active) {
+  display: none !important;
+}
+
+#general-page:not(.active) {
+  display: none !important;
+}
+
+#stats-page:not(.active) {
+  display: none !important;
+}
+
+#community-page:not(.active) {
+  display: none !important;
+}
+
+#events-page:not(.active) {
+  display: none !important;
+}
+
+#messages-page:not(.active) {
+  display: none !important;
+}
+
+/* Community Page Styles */
+#community-page {
+  padding: 0;
+  margin-left: -40px;
+  margin-top: -20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: calc(100% + 40px);
+}
+
+/* Kurzusaim kártya */
+.community-courses-card {
+  background: #101510;
+  border-radius: 32px;
+  padding: 20px;
+  margin-left: 40px;
+  margin-right: 20px;
+  position: relative;
+}
+
+.community-card-title {
+  color: #C1C9BE;
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.community-no-courses {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 20px;
+}
+
+.community-block-icon {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.community-no-courses-text {
+  color: #C1C9BE;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: left;
+}
+
+/* Javaslataid kártya */
+.community-suggestions-card {
+  background: #101510;
+  border-radius: 32px;
+  padding: 20px;
+  margin-left: 40px;
+  margin-right: 20px;
+}
+
+.community-suggestion-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 15px;
+}
+
+.community-suggestion-item {
+  background: #1E2A1E;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.community-suggestion-item.first {
+  border-radius: 32px 32px 8px 8px;
+}
+
+.community-suggestion-item.middle {
+  border-radius: 8px;
+}
+
+.community-suggestion-item.last {
+  border-radius: 8px 8px 32px 32px;
+}
+
+.community-suggestion-text {
+  color: #C1C9BE;
+  font-size: 1rem;
+  font-weight: 400;
+  flex: 1;
+}
+
+.community-suggestion-arrow {
+  background: #697167;
+  border-radius: 32px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.community-suggestion-arrow:hover {
+  border-radius: 22px;
+}
+
+.community-arrow-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/*Community Page - same positioning as notifications */
+#community-page {
+  margin-left: -40px;
+  margin-top: -20px;
+  width: calc(100% + 40px);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Kurzusaim kártya */
+.community-courses-card {
+  background: #101510;
+  border-radius: 32px;
+  padding: 20px;
+  margin-left: 40px;
+  margin-right: 20px;
+  position: relative;
+}
+
+.community-card-title {
+  color: #C1C9BE;
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.community-no-courses {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 20px;
+}
+
+.community-block-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.community-no-courses-text {
+  color: #C1C9BE;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: left;
+}
+
+/* Javaslataid kártya */
+.community-suggestions-card {
+  background: #101510;
+  border-radius: 32px;
+  padding: 20px;
+  margin-left: 40px;
+  margin-right: 20px;
+}
+
+.community-suggestion-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 15px;
+}
+
+.community-suggestion-item {
+  background: #1E2A1E;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.community-suggestion-item.first {
+  border-radius: 32px 32px 8px 8px;
+}
+
+.community-suggestion-item.middle {
+  border-radius: 8px;
+}
+
+.community-suggestion-item.last {
+  border-radius: 8px 8px 32px 32px;
+}
+
+.community-suggestion-text {
+  color: #C1C9BE;
+  font-size: 1rem;
+  font-weight: 400;
+  flex: 1;
+}
+
+.community-suggestion-arrow {
+  background: #697167;
+  border-radius: 32px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.community-suggestion-arrow:hover {
+  border-radius: 22px;
+}
+
+.community-arrow-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Community Page */
+#community-page {
+  margin-left: -40px;
+  margin-top: -20px;
+  width: calc(100% + 40px);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Kurzusaim kártya */
+.community-courses-card {
+  background: #101510;
+  border-radius: 32px;
+  padding: 20px;
+  margin-left: 0;
+  margin-right: 20px;
+  position: relative;
+}
+
+.community-card-title {
+  color: #C1C9BE;
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.community-no-courses {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 20px;
+}
+
+.community-block-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.community-no-courses-text {
+  color: #C1C9BE;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: left;
+}
+
+/* Javaslataid kártya */
+.community-suggestions-card {
+  background: #101510;
+  border-radius: 32px;
+  padding: 20px;
+  margin-left: 0;
+  margin-right: 20px;
+}
+
+.community-suggestion-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 15px;
+}
+
+.community-suggestion-item {
+  background: #1E2A1E;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.community-suggestion-item.first {
+  border-radius: 32px 32px 8px 8px;
+}
+
+.community-suggestion-item.middle {
+  border-radius: 8px;
+}
+
+.community-suggestion-item.last {
+  border-radius: 8px 8px 32px 32px;
+}
+
+.community-suggestion-text {
+  color: #C1C9BE;
+  font-size: 1rem;
+  font-weight: 400;
+  flex: 1;
+}
+
+.community-suggestion-arrow {
+  background: #697167;
+  border-radius: 32px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.community-suggestion-arrow:hover {
+  border-radius: 22px;
+}
+
+.community-arrow-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* General Page - Desktop only */
+@media (min-width: 1201px) {
+  #general-page {
+    margin-left: -60px;
+    margin-top: -20px;
+    width: calc(100% + 30px);
+  }
+}
+
+#community-page .community-no-courses {
+  gap: 20px !important;
+  justify-content: flex-start !important;
+  padding-left: 20px !important;
+}
+
+#community-page .community-block-icon {
+  width: 88px !important;
+  height: 88px !important;
+}
+
+#community-page .community-no-courses-text {
+  font-weight: 750 !important;
+  font-size: 1.2rem !important;
+}
+
+#community-page .community-courses-card {
+  margin-bottom: 8px !important;
+}
+
+#community-page .community-suggestion-arrow {
+  background: #2d5a2f !important;
+}
+
+#community-page .community-suggestion-arrow:hover {
+  border-radius: 12px !important;
+}
+
+#community-page .community-arrow-icon {
+  filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(500%) hue-rotate(80deg) brightness(110%) contrast(90%) !important;
+}
+
+/*na ezt foigyeljd, képzeld, amikor a general settings page aktív, akkor a main contentre oylan mintha kerülne egy limit hogy mennyire lehet keskeny (kb semmi, alig lehet méretezni). Na itt a twist, viszont a többi settigns pagenél, pl a notificationsnél, ott tök normélisan viselkedik a main content*/

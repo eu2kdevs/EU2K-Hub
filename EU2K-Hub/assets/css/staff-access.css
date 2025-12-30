@@ -1,0 +1,42 @@
+/**
+ * Staff Access Card Styles
+ * Styling for the "Kollégáknak" card in settings
+ */
+
+.staff-card {
+  margin-top: 16px;
+}
+
+.staff-access-btn {
+  background: #D3FFA1;
+  color: #182C0E;
+  border: none;
+  border-radius: 16px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.staff-access-btn:hover {
+  background: #BFF089;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.staff-access-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.staff-access-btn.session-active {
+  background: #FF9A9A;
+  color: #4A0000;
+}
+
+.staff-access-btn.session-active:hover {
+  background: #FF8585;
+}
+
