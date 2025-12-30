@@ -303,7 +303,19 @@
     "dashboard": {
       "title": "Panel",
       "heading": "Panel",
-      "description": "Esta página está en desarrollo."
+      "heading_publish": "Panel de Control - Publicar",
+      "description": "Esta página está en desarrollo.",
+      "quick_commands": "Comandos Rápidos",
+      "suggestion_center": "Centro de Sugerencias",
+      "notification_center": "Centro de Notificaciones",
+      "publish": "Publicar",
+      "select_type": "Selecciona el tipo",
+      "news": "Noticia",
+      "event": "Evento",
+      "beta_banner": {
+        "title": "El Panel puede estar incompleto en la beta temprana.",
+        "description": "Las funciones del Panel están incompletas en la beta. Más partes estarán presentes en la versión completa."
+      }
     },
     "students": {
       "title": "Mis Estudiantes",

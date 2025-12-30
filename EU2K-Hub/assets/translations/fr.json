@@ -303,7 +303,19 @@
     "dashboard": {
       "title": "Tableau de bord",
       "heading": "Tableau de bord",
-      "description": "Cette page est en cours de développement."
+      "heading_publish": "Tableau de bord - Publier",
+      "description": "Cette page est en cours de développement.",
+      "quick_commands": "Commandes Rapides",
+      "suggestion_center": "Centre de Suggestions",
+      "notification_center": "Centre de Notifications",
+      "publish": "Publier",
+      "select_type": "Sélectionnez le type",
+      "news": "Nouvelle",
+      "event": "Événement",
+      "beta_banner": {
+        "title": "Le tableau de bord peut être incomplet en bêta.",
+        "description": "Les fonctionnalités sont incomplètes en bêta. D'autres parties seront présentes dans la version complète."
+      }
     },
     "students": {
       "title": "Mes Élèves",

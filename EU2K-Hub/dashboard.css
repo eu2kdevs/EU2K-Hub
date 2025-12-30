@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 :root {
   color-scheme: dark;
   --md-sys-color-primary: rgb(155 212 160);
@@ -64,7 +66,7 @@
   --news-radius: 20px;
   --sidebar-width: 76px;
   --sidebar-width-open: 198px;
-  --transition: 0.2s cubic-bezier(.4,0,.2,1);
+  --transition: 0.2s cubic-bezier(.4, 0, .2, 1);
   --font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -72,7 +74,8 @@
   --font-weight-bold: 700;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -82,6 +85,9 @@ body {
   background: #0D0F0A;
   color: var(--text-main);
   font-family: var(--font-family);
+  font-weight: 400;
+  font-optical-sizing: auto;
+  font-variation-settings: "wdth" 100;
   min-height: 100vh;
   width: 100vw;
   overflow-x: hidden;
@@ -161,20 +167,40 @@ body {
   color: #E5FDCB;
   transition: background .12s ease, filter .12s ease, height .12s ease-out;
   padding: 6px;
-  margin: 4px 0; 
+  margin: 4px 0;
   background: #273319;
 }
-.rail-item:hover { filter: brightness(0.95); }
-.rail-item:active { transform: none; }
+
+.rail-item:hover {
+  filter: brightness(0.95);
+}
+
+.rail-item:active {
+  transform: none;
+}
+
 .rail-item.is-active {
   background: #AFE86E;
   color: #32451D;
   height: 80px;
 }
-.rail-item.nav-btn { transition: background .12s ease, filter .12s ease, height .12s ease-out; }
-.rail-item.nav-btn:active { height: 72px; filter: brightness(0.98); }
-.rail-item.nav-btn.is-active:active { height: 88px; }
-.rail-item.rail-toggle { background: #182018; }
+
+.rail-item.nav-btn {
+  transition: background .12s ease, filter .12s ease, height .12s ease-out;
+}
+
+.rail-item.nav-btn:active {
+  height: 72px;
+  filter: brightness(0.98);
+}
+
+.rail-item.nav-btn.is-active:active {
+  height: 88px;
+}
+
+.rail-item.rail-toggle {
+  background: #182018;
+}
 
 .rail-icon {
   width: 40px;
@@ -185,12 +211,41 @@ body {
   border-radius: 16px;
   background: transparent;
 }
-.rail-icon img { width: 22px; height: 22px; display: block; }
-.rail-item.is-active .rail-icon img { width: 26px; height: 26px; }
-.rail-label { display: block; text-align: center; line-height: 1.2; margin: 0; padding: 0; }
-.rail-item.is-active .rail-icon img { filter: brightness(0) saturate(100%) invert(12%) sepia(41%) saturate(776%) hue-rotate(57deg) brightness(95%) contrast(94%); } /* #142204 közelítés */
-.rail-item:not(.is-active) .rail-icon img { filter: brightness(0) saturate(100%) invert(92%) sepia(17%) saturate(535%) hue-rotate(27deg) brightness(105%) contrast(101%); } /* #CEFF97 közelítés */
-.rail-label { font-size: 12px; line-height: 1; font-weight: var(--font-weight-semibold); }
+
+.rail-icon img {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.rail-item.is-active .rail-icon img {
+  width: 26px;
+  height: 26px;
+}
+
+.rail-label {
+  display: block;
+  text-align: center;
+  line-height: 1.2;
+  margin: 0;
+  padding: 0;
+}
+
+.rail-item.is-active .rail-icon img {
+  filter: brightness(0) saturate(100%) invert(12%) sepia(41%) saturate(776%) hue-rotate(57deg) brightness(95%) contrast(94%);
+}
+
+/* #142204 közelítés */
+.rail-item:not(.is-active) .rail-icon img {
+  filter: brightness(0) saturate(100%) invert(92%) sepia(17%) saturate(535%) hue-rotate(27deg) brightness(105%) contrast(101%);
+}
+
+/* #CEFF97 közelítés */
+.rail-label {
+  font-size: 12px;
+  line-height: 1;
+  font-weight: var(--font-weight-semibold);
+}
 
 .main-area {
   display: flex;
@@ -202,12 +257,14 @@ body {
 
 .main-scroll-area {
   flex: 1;
-  display: block; /* változtatva flex-ről block-ra, hogy természetesen görgessen */
+  display: block;
+  /* változtatva flex-ről block-ra, hogy természetesen görgessen */
   background: var(--main-bg);
   border-radius: 32px;
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
   overflow-y: auto;
-  overflow-x: hidden; /* disable horizontal scroll in main area */
+  overflow-x: hidden;
+  /* disable horizontal scroll in main area */
   scroll-behavior: smooth;
   padding: 22px;
   background: var(--main-content-bg);
@@ -219,8 +276,10 @@ body {
   flex-direction: column;
   gap: 18px;
   /* min-height eltávolítva, hogy görgethető legyen */
-  overflow-x: hidden; /* disable horizontal scroll */
-  overflow-y: visible; /* ne legyen külön görgetés */
+  overflow-x: hidden;
+  /* disable horizontal scroll */
+  overflow-y: visible;
+  /* ne legyen külön görgetés */
 }
 
 
@@ -232,13 +291,17 @@ body {
   position: relative;
   top: auto;
   z-index: 10;
-  background: var(--main-content-bg); /* same as main content */
+  background: var(--main-content-bg);
+  /* same as main content */
   backdrop-filter: none;
   flex-direction: column;
-  flex: 0 0 auto; /* do not let flexbox shrink the header */
+  flex: 0 0 auto;
+  /* do not let flexbox shrink the header */
   flex-shrink: 0;
-  overflow: visible; /* avoid clipping which looks like squashing */
-  overflow-x: visible; /* ne legyen külön görgetés */
+  overflow: visible;
+  /* avoid clipping which looks like squashing */
+  overflow-x: visible;
+  /* ne legyen külön görgetés */
 }
 
 .welcome-container {
@@ -282,10 +345,12 @@ body {
 /* Header icon gradient container - hug content, fills height */
 .header-icon-gradient {
   width: fit-content;
-  min-height: 68px; /* minimum magasság a gomboknak */
+  min-height: 68px;
+  /* minimum magasság a gomboknak */
   height: auto;
   border-radius: 32px;
-  background: #62754E; /* Alapértelmezett: csak zöld */
+  background: #62754E;
+  /* Alapértelmezett: csak zöld */
   display: flex;
   align-items: center;
   gap: 10px;
@@ -296,14 +361,13 @@ body {
 /* Gradient csak ha van login gomb (nincs bejelentkezve) */
 .header-icon-gradient.has-login {
   background: linear-gradient(90deg,
-    #62754E 0%,
-    #62754E 30%,
-    #4F6148 40%,
-    #3D4A52 55%,
-    #2F3842 70%,
-    #242B38 85%,
-    #242B38 100%
-  );
+      #62754E 0%,
+      #62754E 30%,
+      #4F6148 40%,
+      #3D4A52 55%,
+      #2F3842 70%,
+      #242B38 85%,
+      #242B38 100%);
 }
 
 /* Header icon wrapper - fills height */
@@ -329,7 +393,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: width .12s cubic-bezier(.2,.0,.2,1), border-radius .12s cubic-bezier(.2,.0,.2,1), background .12s ease;
+  transition: width .12s cubic-bezier(.2, .0, .2, 1), border-radius .12s cubic-bezier(.2, .0, .2, 1), background .12s ease;
   text-decoration: none;
   padding: 0;
   box-sizing: border-box;
@@ -358,11 +422,14 @@ body {
 /* Header login button - Bejelentkezés */
 .header-login-btn {
   flex: 0 0 auto;
-  min-width: 140px; /* minimum szélesség a szövegnek */
-  height: 52px; /* fix magasság az ikon gombokkal egyező */
+  min-width: 140px;
+  /* minimum szélesség a szövegnek */
+  height: 52px;
+  /* fix magasság az ikon gombokkal egyező */
   background: #84B3FF;
   border: 1px solid #282F3A;
-  border-radius: 16px; /* adjusted rounding */
+  border-radius: 16px;
+  /* adjusted rounding */
   border-left: none;
   color: #08152C;
   font-weight: var(--font-weight-semibold);
@@ -379,11 +446,14 @@ body {
 .header-login-btn:hover {
   background: #42587B;
   color: #DBE8FF;
-  transform: scaleY(1.12); /* stronger vertical grow on hover */
+  transform: scaleY(1.12);
+  /* stronger vertical grow on hover */
 }
 
 /* Click pop animation same as banner buttons */
-.header-login-btn:active { animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards; }
+.header-login-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
 
 /* Event card external info button - Külsős Információk */
 .event-card-external-info-btn {
@@ -392,7 +462,8 @@ body {
   height: 100%;
   background: #84B3FF;
   border: 1px solid #282F3A;
-  border-radius: 12px; /* kisebb lekerekítettség */
+  border-radius: 12px;
+  /* kisebb lekerekítettség */
   border-left: none;
   color: #08152C;
   font-weight: var(--font-weight-semibold);
@@ -413,7 +484,7 @@ body {
 }
 
 .event-card-external-info-btn:active {
-  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
 }
 
 .header-content {
@@ -433,25 +504,31 @@ body {
   overflow-y: hidden;
   scroll-behavior: smooth;
 }
-.header-scroll-row::-webkit-scrollbar { display: none; }
-.header-scroll-row { scrollbar-width: none; }
+
+.header-scroll-row::-webkit-scrollbar {
+  display: none;
+}
+
+.header-scroll-row {
+  scrollbar-width: none;
+}
 
 .info-banner {
-    background: #1D3823;
-    display: flex;
-    flex-direction: row;
-    padding: 18px 18px 18px 24px; 
-    border-radius: 32px;
-    border: 1px solid #CFF7D3;
-    gap: 16px;
-    margin-bottom: 8px;
+  background: #1D3823;
+  display: flex;
+  flex-direction: row;
+  padding: 18px 18px 18px 24px;
+  border-radius: 32px;
+  border: 1px solid #CFF7D3;
+  gap: 16px;
+  margin-bottom: 8px;
 }
 
 .info-banner-icon-container {
   height: 100%;
 }
 
-.info-banner-icon{
+.info-banner-icon {
   width: 32px;
   height: 32px;
 }
@@ -459,7 +536,8 @@ body {
 .banner-content {
   display: flex;
   flex-direction: row;
-  align-items: flex-start; /* szövegek a tetejére igazítva */
+  align-items: flex-start;
+  /* szövegek a tetejére igazítva */
   gap: 8px;
   flex-wrap: wrap;
   flex: 1 1 auto;
@@ -473,17 +551,18 @@ body {
   gap: 6px;
   flex: 1 1 auto;
   min-width: 0;
-  padding-right: 24px; /* az info-banner jobb oldali paddingját ide tesszük, actions-t nem érinti */
+  padding-right: 24px;
+  /* az info-banner jobb oldali paddingját ide tesszük, actions-t nem érinti */
 }
 
-.info-banner-title{
+.info-banner-title {
   color: #97FFAD;
   font-weight: var(--font-weight-semibold);
   text-align: left;
   font-size: 20px;
 }
 
-.info-banner-desc{
+.info-banner-desc {
   color: #B9EBA2;
   font-weight: var(--font-weight-regular);
   font-size: 12px;
@@ -498,7 +577,7 @@ body {
   align-self: stretch;
 }
 
-.banner-actions{
+.banner-actions {
   display: flex;
   flex-direction: row;
   gap: 8px;
@@ -516,34 +595,36 @@ body {
   padding: 10px 16px;
   border-radius: 24px;
   border: none;
-  cursor: pointer; /* mutató kéz */
+  cursor: pointer;
+  /* mutató kéz */
   pointer-events: auto;
   position: relative;
   z-index: 0;
   transition: background .15s ease, color .15s ease;
   transform-origin: center;
   transform: scaleY(1);
-  overflow: hidden; /* pop animációnál háttér ne lógjon ki */
+  overflow: hidden;
+  /* pop animációnál háttér ne lógjon ki */
 }
 
-.banner-btn.primary { 
-  background: #226932; 
-  color: #DBFCD6; 
+.banner-btn.primary {
+  background: #226932;
+  color: #DBFCD6;
 }
 
-.banner-btn.secondary { 
-  background: #0C471F; 
-  color: #CFF7D3; 
+.banner-btn.secondary {
+  background: #0C471F;
+  color: #CFF7D3;
 }
 
-.banner-btn.primary:hover { 
-  background: #83FF8F; 
+.banner-btn.primary:hover {
+  background: #83FF8F;
   color: #082907;
   border: 1px solid #3A4F29;
 }
 
-.banner-btn.secondary:hover { 
-  background: #93D98D; 
+.banner-btn.secondary:hover {
+  background: #93D98D;
   color: #082907;
   border: 1px solid #3A4F29;
 }
@@ -559,19 +640,31 @@ body {
 
 .banner-btn:hover,
 .banner-button:hover {
-  transform: scaleY(1.08); /* hover: subtle vertical grow only */
+  transform: scaleY(1.08);
+  /* hover: subtle vertical grow only */
 }
 
 /* click: real pop animation */
 .banner-btn:active,
 .banner-button:active {
-  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
 }
 
 @keyframes banner-btn-pop {
-  0%   { transform: scaleY(1.00); }
-  70%  { transform: scaleY(1.32); } /* overshoot */
-  100% { transform: scaleY(1.25); } /* settle */
+  0% {
+    transform: scaleY(1.00);
+  }
+
+  70% {
+    transform: scaleY(1.32);
+  }
+
+  /* overshoot */
+  100% {
+    transform: scaleY(1.25);
+  }
+
+  /* settle */
 }
 
 .banner-btn.primary {
@@ -590,39 +683,38 @@ body {
 
 /* Warning Banner */
 .warning-banner {
-    background: #261906;
-    display: flex;
-    flex-direction: row;
-    padding: 18px 18px 18px 24px; 
-    border-radius: 32px;
-    border: 1px solid #FFF1C2;
-    gap: 16px;
-    margin-bottom: 8px;
+  background: #261906;
+  display: flex;
+  flex-direction: row;
+  padding: 18px 18px 18px 24px;
+  border-radius: 32px;
+  border: 1px solid #FFF1C2;
+  gap: 16px;
 }
 
 .warning-banner-icon-container {
   height: 100%;
 }
 
-.warning-banner-icon{
+.warning-banner-icon {
   width: 32px;
   height: 32px;
 }
 
-.warning-banner-title{
+.warning-banner-title {
   color: #FFDFAF;
   font-weight: var(--font-weight-semibold);
   text-align: left;
   font-size: 20px;
 }
 
-.warning-banner-desc{
+.warning-banner-desc {
   color: #E9CE85;
   font-weight: var(--font-weight-regular);
   font-size: 12px;
 }
 
-.warning-banner-actions{
+.warning-banner-actions {
   display: flex;
   flex-direction: row;
   gap: 8px;
@@ -634,35 +726,92 @@ body {
   height: 83%;
 }
 
-.warning-banner .banner-btn.primary {
+.banner-btn-warning.primary {
   background: #FFDFAF;
   color: #211806;
   border: 1px solid #FFF1C2;
-  width: 70px;
+  width: 100%;
+  box-sizing: border-box;
+  flex: 1;
+  padding: 4px;
+  border-radius: 12px;
+  font-size: 12px;
+  height: 100%;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  pointer-events: auto;
 }
 
-.warning-banner .banner-btn.secondary {
+.banner-btn-warning.secondary {
   background: #EACF85;
   color: #211806;
   border: 1px solid #FFF1C2;
-  width: 170px;
+  width: 100%;
+  box-sizing: border-box;
+  flex: 1;
+  padding: 4px;
+  border-radius: 12px;
+  font-size: 12px;
+  height: 100%;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.banner-btn-warning:hover {
+  transform: scaleY(1.08);
+  /* hover: subtle vertical grow only */
+}
+
+/* click: real pop animation */
+.banner-btn-warning:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
 }
 
 @media (max-width: 900px) {
-  .main-content { padding: 0 8px 32px 32px; }
-  .sidebar { margin-left: 8px; }
-  .main-content { margin-left: 0; }
-}
-@media (max-width: 700px) {
-  .sidebar { display: none; }
-  .main-content { border-radius: 32px; margin: 8px; box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container); }
-  .main-area { margin-left: 0; }
-}
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-thumb { background: #232823; border-radius: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
+  .main-content {
+    padding: 0 8px 32px 32px;
+  }
 
-/* Permission Popup Overlay - for full screen overlays (game, auth popups) */
+  .sidebar {
+    margin-left: 8px;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main-content {
+    border-radius: 32px;
+    margin: 8px;
+    box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container);
+  }
+
+  .main-area {
+    margin-left: 0;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #232823;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Permission Popup Overlay */
 .permission-overlay {
   position: fixed;
   top: 0;
@@ -687,12 +836,15 @@ body {
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* High z-index to overlay everything in main-scroll-area */
-  pointer-events: auto; /* Prevent interaction with elements behind popup */
+  z-index: 1000;
+  /* High z-index to overlay everything in main-scroll-area */
+  pointer-events: auto;
+  /* Prevent interaction with elements behind popup */
 }
 
 .permission-overlay-scroll-area .permission-container {
-  pointer-events: auto; /* Re-enable clicks on the popup itself */
+  pointer-events: auto;
+  /* Re-enable clicks on the popup itself */
 }
 
 .permission-container {
@@ -704,19 +856,25 @@ body {
   width: 100%;
   max-height: 100%;
   height: fit-content;
-  overflow: hidden; /* Border-radius clips the scrollbar */
+  overflow: hidden;
+  /* Border-radius clips the scrollbar */
   box-sizing: border-box;
 }
 
 .permission-content {
   text-align: left;
-  max-height: calc(100vh - 96px); /* Account for padding and margins */
+  max-height: calc(100vh - 96px);
+  /* Account for padding and margins */
   height: fit-content;
   overflow-y: auto;
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: #445A2D #16210B; /* Firefox */
-  margin-right: -32px; /* Compensate for container padding */
-  padding-right: 32px; /* Re-add padding for content */
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: #445A2D #16210B;
+  /* Firefox */
+  margin-right: -32px;
+  /* Compensate for container padding */
+  padding-right: 32px;
+  /* Re-add padding for content */
   padding-bottom: 0;
   display: flex;
   flex-direction: column;
@@ -750,7 +908,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: width .12s cubic-bezier(.2,.0,.2,1), border-radius .12s cubic-bezier(.2,.0,.2,1), background .12s ease;
+  transition: width .12s cubic-bezier(.2, .0, .2, 1), border-radius .12s cubic-bezier(.2, .0, .2, 1), background .12s ease;
   cursor: pointer;
   padding: 0;
 }
@@ -835,7 +993,7 @@ body {
 }
 
 .permission-ok-btn:active {
-  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
 }
 
 
@@ -885,7 +1043,8 @@ body {
 
 .warning-content {
   text-align: center;
-  max-height: calc(70vh - 64px); /* container padding + biztonsági margó */
+  max-height: calc(70vh - 64px);
+  /* container padding + biztonsági margó */
   display: flex;
   flex-direction: column;
   align-items: center
@@ -955,7 +1114,8 @@ body {
 /* === Events Container (new) === */
 .events-container {
   display: grid;
-  grid-template-columns: 6fr 3fr 1fr; /* 60/30/10 ratio that fits container */
+  grid-template-columns: 6fr 3fr 1fr;
+  /* 60/30/10 ratio that fits container */
   gap: 24px;
   width: 100%;
   margin-top: 0;
@@ -968,15 +1128,18 @@ body {
   display: flex;
   align-items: stretch;
   justify-content: stretch;
-  height: 480px; /* lowered height */
+  height: 480px;
+  /* lowered height */
   background: #0D0F0A;
 }
+
 .event-card img.event-card-bg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* ensures full cover, removes black border from padding */
+  object-fit: cover;
+  /* ensures full cover, removes black border from padding */
 }
 
 /* Ensure the large card aligns its children to bottom-right (overlay) */
@@ -985,8 +1148,15 @@ body {
   align-items: flex-end;
 }
 
-.event-card--lg, .event-card--md, .event-card--sm { flex: initial; }
-.event-card--sm { min-width: 120px; }
+.event-card--lg,
+.event-card--md,
+.event-card--sm {
+  flex: initial;
+}
+
+.event-card--sm {
+  min-width: 120px;
+}
 
 .event-card-overlay {
   position: absolute;
@@ -997,7 +1167,8 @@ body {
   gap: 4px;
   background: rgba(70, 90, 47, 0.78);
   border-radius: 32px;
-  padding: 24px; /* reduced per request */
+  padding: 24px;
+  /* reduced per request */
   color: #C1EE8E;
   max-width: 100%;
   box-sizing: border-box;
@@ -1006,36 +1177,47 @@ body {
 
 .event-card-overlay--lg {
   bottom: 24px;
-  right: 24px; /* force right alignment */
-  left: auto !important; /* override base left:0 to prevent full-width stretch */
+  right: 24px;
+  /* force right alignment */
+  left: auto !important;
+  /* override base left:0 to prevent full-width stretch */
   width: min(50%, 600px) !important;
   max-width: min(50%, 600px) !important;
   min-width: 280px;
   align-items: flex-start;
 }
 
-.event-card--md { padding: 24px; box-sizing: border-box; }
+.event-card--md {
+  padding: 24px;
+  box-sizing: border-box;
+}
+
 .event-card-overlay--md {
   bottom: 24px;
   left: 24px;
-  right: 24px; /* fill exactly between paddings without explicit width */
+  right: 24px;
+  /* fill exactly between paddings without explicit width */
   align-items: flex-start;
-  padding: 16px 24px; /* slightly lower height than large */
+  padding: 16px 24px;
+  /* slightly lower height than large */
 }
 
 .event-card-title {
   color: #C1EE8E;
   font-weight: var(--font-weight-bold, 700);
-  font-size: 32px; /* növelt méret */
+  font-size: 32px;
+  /* növelt méret */
   line-height: 1.1;
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
 }
+
 .event-card-desc {
   color: #E5FDCB;
   font-weight: var(--font-weight-regular, 400);
-  font-size: 16px; /* növelt méret */
+  font-size: 16px;
+  /* növelt méret */
   line-height: 1.3;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -1048,8 +1230,16 @@ body {
   -webkit-box-orient: vertical;
 }
 
-.event-card--md .event-card-title { font-size: 24px; } /* növelt méret */
-.event-card--md .event-card-desc { font-size: 14px; } /* növelt méret */
+.event-card--md .event-card-title {
+  font-size: 24px;
+}
+
+/* növelt méret */
+.event-card--md .event-card-desc {
+  font-size: 14px;
+}
+
+/* növelt méret */
 
 /* Event card date */
 .event-card-date {
@@ -1060,7 +1250,7 @@ body {
   margin-top: 8px;
 }
 
-.event-card--md .event-card-date { 
+.event-card--md .event-card-date {
   font-size: 12px;
 }
 
@@ -1082,7 +1272,8 @@ body {
 .event-card-link-btn {
   background: #84B3FF;
   border: 1px solid #282F3A;
-  border-radius: 12px; /* kisebb lekerekítettség */
+  border-radius: 12px;
+  /* kisebb lekerekítettség */
   color: #08152C;
   font-weight: var(--font-weight-semibold);
   font-size: 14px;
@@ -1104,7 +1295,7 @@ body {
 }
 
 .event-card-link-btn:active {
-  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
 }
 
 /* Blur effect when session is not active */
@@ -1190,13 +1381,27 @@ body {
 }
 
 @keyframes qr-btn-pop {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(0.92); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.92);
+  }
 }
 
 @keyframes qr-btn-pop-horizontal {
-  0%, 100% { transform: scaleX(1); }
-  50% { transform: scaleX(0.88); }
+
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+
+  50% {
+    transform: scaleX(0.88);
+  }
 }
 
 /* Small buttons */
@@ -1209,3 +1414,248 @@ body {
   height: 32px;
 }
 
+
+/* Footer links spacing */
+.footer-center {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dashboard specific overrides */
+/* Override grid from dashboard.css if present */
+.qr-controls-container {
+  background: #223013;
+  border-radius: 32px;
+  padding: 20px;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.qr-controls-title {
+  color: #CEFF97;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.qr-controls-row {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  width: 100%;
+}
+
+.qr-buttons-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+/* Padding-less, colorless container for left column is implicitly .qr-buttons-column */
+
+.qr-control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.12s ease;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 16px 24px;
+  border: none;
+  flex: 1;
+  flex-direction: column;
+}
+
+.qr-btn-green {
+  background: #C1EA93;
+  border: 2px solid #57703B;
+  color: #334521;
+}
+
+.qr-btn-green:hover {
+  background: #DEFFBA;
+  transform: scaleY(1.08);
+}
+
+.qr-btn-blue {
+  background: #84B3FF;
+  border: 2px solid #282F3A;
+  color: #08152C;
+}
+
+.qr-btn-blue:hover {
+  background: #42587B;
+  color: #DBE8FF;
+  transform: scaleY(1.08);
+  /* Vertical grow for all buttons here per instructions implicitly? "a hover növekedés... marad" */
+}
+
+.qr-btn-publish {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  /* Fill height of the row logic: 
+     Left column has 2 buttons + gap. Right column is one button.
+     We want right button to match height of left column. 
+     Flex stretch does this automatically if align-items: stretch (default). */
+  flex: 1;
+  flex-direction: column;
+}
+
+.qr-control-btn:active {
+  animation: qr-btn-pop 0.16s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+}
+
+/* Warning banner with Rendben button specific override */
+.warning-banner .banner-actions-single {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  padding: 0;
+  background: transparent !important;
+  flex: 1;
+  /* Allow container to grow */
+  width: 100%;
+  height: 83%;
+}
+
+.warning-banner .banner-btn-single {
+  padding: 10px 16px;
+  border-radius: 24px;
+  background: #FFDFAF;
+  color: #211806;
+  border: 1px solid #FFF1C2;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+
+.warning-banner .banner-btn-single:hover {
+  transform: scaleY(1.08);
+  background: #EACF85;
+}
+
+/* Publish page styles */
+.publish-container {
+  background: #223013;
+  border-radius: 32px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.publish-title {
+  color: #CEFF97;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.publish-subtitle {
+  color: #E5FDCB;
+  font-size: 14px;
+  font-weight: 300;
+  margin: -4px 0 12px 0;
+}
+
+/* Header buttons container equivalent with reduced radius */
+.publish-buttons-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 215px !important;
+  background: linear-gradient(90deg, #62754E 0%, #62754E 30%, #4F6148 40%, #3D4A52 55%, #2F3842 70%, #242B38 85%, #242B38 100%);
+  padding: 8px;
+  border-radius: 16px;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.publish-btn {
+  height: 44px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all .12s ease;
+  padding: 32px 16px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+
+/* Hír button: Green, fill width */
+.publish-btn-news {
+  flex: 1;
+  /* Fill available width */
+  background: #C1EA93;
+  border: 2px solid #57703B;
+  color: #334521;
+}
+
+.publish-btn-news:hover {
+  background: #DEFFBA;
+  transform: scaleY(1.08);
+}
+
+/* Esemény button: Blue/Header style, hug width */
+.publish-btn-event {
+  flex: 0 0 auto;
+  /* Hug content */
+  width: auto;
+  /* Header login button style approximation */
+  background: #D3FFA1;
+  /* Actually login btn is often green-ish? Or White? */
+  background: #84B3FF;
+  border: 2px solid #282F3A;
+  color: #08152C;
+}
+
+.publish-btn-event:hover {
+  background: #42587B;
+  color: #DBE8FF;
+  transform: scaleY(1.08);
+}
+
+.publish-btn:active {
+  transform: scale(0.95);
+}
+
+/* Page visibility logic */
+.dashboard-page {
+  display: none;
+}
+
+.dashboard-page.active {
+  display: block;
+}
+
+/* Animations */
+@keyframes qr-btn-pop {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.92);
+  }
+}

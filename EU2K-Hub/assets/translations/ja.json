@@ -303,7 +303,19 @@
     "dashboard": {
       "title": "ダッシュボード",
       "heading": "ダッシュボード",
-      "description": "このページは開発中です。"
+      "heading_publish": "ダッシュボード - 公開",
+      "description": "このページは開発中です。",
+      "quick_commands": "クイックコマンド",
+      "suggestion_center": "提案センター",
+      "notification_center": "通知センター",
+      "publish": "公開",
+      "select_type": "タイプを選択",
+      "news": "ニュース",
+      "event": "イベント",
+      "beta_banner": {
+        "title": "ダッシュボードは初期ベータ版では不完全な場合があります。",
+        "description": "ダッシュボードの機能はベータ版では不完全です。より多くの部分は完全版で提供されます。"
+      }
     },
     "students": {
       "title": "私の生徒",

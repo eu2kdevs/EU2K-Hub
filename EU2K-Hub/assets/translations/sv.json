@@ -303,7 +303,19 @@
     "dashboard": {
       "title": "Instrumentpanel",
       "heading": "Instrumentpanel",
-      "description": "Denna sida är under utveckling."
+      "heading_publish": "Instrumentpanel - Publicera",
+      "description": "Denna sida är under utveckling.",
+      "quick_commands": "Snabbkommandon",
+      "suggestion_center": "Förslagscenter",
+      "notification_center": "Aviseringscenter",
+      "publish": "Publicera",
+      "select_type": "Välj typ",
+      "news": "Nyheter",
+      "event": "Evenemang",
+      "beta_banner": {
+        "title": "Instrumentpanelen kan vara ofullständig i tidig beta.",
+        "description": "Instrumentpanelens funktioner är ofullständiga i beta. Fler delar kommer att finnas i den fullständiga versionen."
+      }
     },
     "students": {
       "title": "Mina Elever",

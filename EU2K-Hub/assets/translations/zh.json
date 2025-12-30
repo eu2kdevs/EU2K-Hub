@@ -303,7 +303,19 @@
     "dashboard": {
       "title": "仪表板",
       "heading": "仪表板",
-      "description": "此页面正在开发中。"
+      "heading_publish": "仪表板 - 发布",
+      "description": "此页面正在开发中。",
+      "quick_commands": "快速命令",
+      "suggestion_center": "建议中心",
+      "notification_center": "通知中心",
+      "publish": "发布",
+      "select_type": "选择类型",
+      "news": "新闻",
+      "event": "事件",
+      "beta_banner": {
+        "title": "仪表板在早期测试版中可能不完整。",
+        "description": "仪表板功能在测试版中不完整。更多部分将出现在完整版本中。"
+      }
     },
     "students": {
       "title": "我的学生",

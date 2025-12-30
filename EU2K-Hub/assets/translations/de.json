@@ -306,7 +306,19 @@
     "dashboard": {
       "title": "Dashboard",
       "heading": "Dashboard",
-      "description": "Diese Seite befindet sich in der Entwicklung."
+      "heading_publish": "Dashboard - Veröffentlichen",
+      "description": "Diese Seite befindet sich im Aufbau.",
+      "quick_commands": "Schnellbefehle",
+      "suggestion_center": "Vorschlagszentrum",
+      "notification_center": "Benachrichtigungszentrum",
+      "publish": "Veröffentlichen",
+      "select_type": "Wählen Sie den Typ",
+      "news": "Nachricht",
+      "event": "Ereignis",
+      "beta_banner": {
+        "title": "Das Dashboard kann in der frühen Beta unvollständig sein.",
+        "description": "Dashboard-Funktionen sind in der Beta unvollständig. Weitere Teile werden in der Vollversion verfügbar sein."
+      }
     },
     "students": {
       "title": "Meine Schüler",

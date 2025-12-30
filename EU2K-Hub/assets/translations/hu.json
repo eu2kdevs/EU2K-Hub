@@ -316,7 +316,19 @@
     "dashboard": {
       "title": "Kezelőpult",
       "heading": "Kezelőpult",
-      "description": "Ez az oldal fejlesztés alatt áll."
+      "heading_publish": "Kezelőpult - Publikálás",
+      "description": "Ez az oldal fejlesztés alatt áll.",
+      "quick_commands": "Gyorsparancsok",
+      "suggestion_center": "Javaslat-központ",
+      "notification_center": "Értesítésközpont",
+      "publish": "Publikálás",
+      "select_type": "Válaszd ki a típusát",
+      "news": "Hír",
+      "event": "Esemény",
+      "beta_banner": {
+        "title": "A Kezelőpult a bétaverzió elején hiányos lehet.",
+        "description": "A Kezelőpult funkciói a bétaverzióban hiányosak. További részei a teljes kiadásban lesznek jelen."
+      }
     },
     "students": {
       "title": "Diákjaim",
