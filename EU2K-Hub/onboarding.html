@@ -495,8 +495,13 @@
                   <input type="text" id="classCodeInput" class="name-input" style="text-align: center;"
                     placeholder="Csatlakozási kód"
                     data-translate-placeholder="onboarding.assign_class.code_placeholder">
-                  <button class="looks-continue-btn name-continue-btn" id="assignClassContinueBtn"
-                    style="margin-top: 16px;" data-translate="onboarding.continue">Tovább</button>
+                  <div style="display: flex; gap: 12px; width: 100%; margin-top: 16px;">
+                    <button class="onboarding-header-btn" id="assignClassSkipBtn"
+                      data-translate="onboarding.teacher_actions.skip"
+                      data-translate-fallback="Átugrás">Átugrás</button>
+                    <button class="looks-continue-btn name-continue-btn" id="assignClassContinueBtn" style="flex: 1;"
+                      data-translate="onboarding.continue">Tovább</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2592,31 +2597,42 @@
               text: getLoginButtonText('onboarding.login_parent'),
               icon: 'assets/onboarding/accountTypes/parent.svg',
               type: 'green',
-              'data-login-type': 'parent'
+              'data-login-type': 'parent',
+              disabled: true
             },
             {
               id: 'guest',
               text: getLoginButtonText('onboarding.login_guest'),
               type: 'blue',
               isGuest: true,
-              'data-login-type': 'guest'
+              'data-login-type': 'guest',
+              disabled: true
             }
           ],
           onButtonClick: (button, index) => {
+            // Skip disabled buttons
+            if (button.disabled) return;
+
             updateLoginInfo(button.id);
-            // Start login process for student/teacher/parent
+            // Start login process for student/teacher
             if (button.id === 'student' || button.id === 'teacher') {
               startMicrosoftLogin(button.id).catch(error => {
                 console.error('❌ Login error:', error);
               });
-            } else if (button.id === 'parent') {
-              startGoogleLogin().catch(error => {
-                console.error('❌ Login error:', error);
-              });
             }
-            // Guest doesn't need login
           }
         });
+
+        // Disable parent and guest buttons visually
+        setTimeout(() => {
+          buttonGroup.buttonElements.forEach((btn, index) => {
+            const buttonConfig = buttonGroup.buttons[index];
+            if (buttonConfig.disabled) {
+              btn.style.opacity = '0.5';
+              btn.style.pointerEvents = 'none';
+            }
+          });
+        }, 100);
 
         // Function to update login info based on selected button
         const updateLoginInfo = (buttonId) => {
@@ -4266,17 +4282,20 @@
 
         let email = user.email || '';
         let jobTitle = '';
+        let fullName = '';
 
         try {
           const graphToken = await getGraphAccessToken();
           if (graphToken) {
-            const profileRes = await fetch('https://graph.microsoft.com/v1.0/me?$select=mail,jobTitle,userPrincipalName', {
+            const profileRes = await fetch('https://graph.microsoft.com/v1.0/me?$select=mail,jobTitle,userPrincipalName,displayName', {
               headers: { 'Authorization': `Bearer ${graphToken}` }
             });
             if (profileRes.ok) {
               const profile = await profileRes.json();
               email = profile.mail || profile.userPrincipalName || email;
               jobTitle = profile.jobTitle || jobTitle;
+              fullName = profile.displayName || '';
+              console.log('[Onboarding][Final] ✅ fullName from Graph API:', fullName);
             } else {
               console.warn('[Onboarding][Final] Graph profile fetch failed:', profileRes.status, profileRes.statusText);
             }
@@ -4324,12 +4343,15 @@
 
         const birthyear = ''; // Jelenleg nincs külön input, üres stringgel hozzuk létre
         const nowIso = new Date().toISOString();
+        const loginMethod = (userType === 'student' || userType === 'teacher') ? 'microsoft' : (userType === 'parent' ? 'google' : '');
 
         const userRef = window.firestoreDoc(window.db, 'users', user.uid);
 
         const payload = {
           email: email || '',
           jobTitle: jobTitle || '',
+          fullName: fullName || '',
+          loginMethod: loginMethod,
           birthyear,
           onboardingFinished: true,
           accessLevel,
@@ -4377,28 +4399,31 @@
           // A Graph API-s URL-t tároljuk, még ha jelenleg nem is működik teljesen
           const pfpUrl = useSchoolProfile ? 'https://graph.microsoft.com/v1.0/me/photo/$value' : '';
 
-          // Fetch jobTitle from Graph API
+          // Fetch jobTitle and displayName from Graph API
           let jobTitle = '';
           let email = window.auth.currentUser.email || '';
+          let fullName = '';
           try {
             const graphToken = await getGraphAccessToken();
             if (graphToken) {
-              console.log('[Onboarding] Fetching jobTitle from Graph API...');
-              const profileRes = await fetch('https://graph.microsoft.com/v1.0/me?$select=mail,jobTitle,userPrincipalName', {
+              console.log('[Onboarding] Fetching jobTitle and displayName from Graph API...');
+              const profileRes = await fetch('https://graph.microsoft.com/v1.0/me?$select=mail,jobTitle,userPrincipalName,displayName', {
                 headers: { 'Authorization': `Bearer ${graphToken}` }
               });
               if (profileRes.ok) {
                 const profile = await profileRes.json();
                 jobTitle = profile.jobTitle || '';
                 email = profile.mail || profile.userPrincipalName || email;
+                fullName = profile.displayName || '';
                 console.log('[Onboarding] ✅ JobTitle from Graph API:', jobTitle);
                 console.log('[Onboarding] ✅ Email from Graph API:', email);
+                console.log('[Onboarding] ✅ fullName from Graph API:', fullName);
               } else {
                 console.warn('[Onboarding] Graph profile fetch failed:', profileRes.status);
               }
             }
           } catch (graphErr) {
-            console.warn('[Onboarding] Could not fetch jobTitle from Graph API:', graphErr);
+            console.warn('[Onboarding] Could not fetch profile from Graph API:', graphErr);
           }
 
           const generalRef = window.firestoreDoc(window.db, 'users', uid, 'general_data', 'general');
@@ -4414,10 +4439,14 @@
             updatedAt: nowIso
           }, { merge: true });
 
-          // Fő felhasználói dokumentum frissítése (including jobTitle and email)
+          // Fő felhasználói dokumentum frissítése (including jobTitle, email, fullName, and loginMethod)
           const userRef = window.firestoreDoc(window.db, 'users', uid);
+          const userType = localStorage.getItem('eu2k-user-type') || '';
+          const loginMethod = (userType === 'student' || userType === 'teacher') ? 'microsoft' : (userType === 'parent' ? 'google' : '');
           await window.firestoreSetDoc(userRef, {
             displayName: nickname,
+            fullName: fullName || '',
+            loginMethod: loginMethod,
             pfpType,
             pfpColor,
             pfpUrl,
@@ -4566,6 +4595,16 @@
       if (teacherSkipActionBtn) {
         teacherSkipActionBtn.addEventListener('click', () => {
           console.log('[Onboarding] Skipping class registration');
+          sessionStorage.setItem('skipClassRegistration', 'true');
+          window.location.hash = '#preferences1';
+        });
+      }
+
+      // Skip button on student assign-class screen to bypass class assignment
+      const assignClassSkipBtn = document.getElementById('assignClassSkipBtn');
+      if (assignClassSkipBtn) {
+        assignClassSkipBtn.addEventListener('click', () => {
+          console.log('[Onboarding] Student skipping class assignment');
           sessionStorage.setItem('skipClassRegistration', 'true');
           window.location.hash = '#preferences1';
         });

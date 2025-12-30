@@ -1114,3 +1114,98 @@ body {
   user-select: none;
   transition: filter 0.3s ease;
 }
+
+.qr-controls-container {
+  background: #223013;
+  border-radius: 32px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 18px;
+  flex: 1;
+}
+
+.qr-small-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Base button style */
+.qr-control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.12s ease;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Green buttons */
+.qr-btn-green {
+  background: #C1EA93;
+  border: 2px solid #57703B;
+  color: #334521;
+}
+
+.qr-btn-green:hover {
+  background: #DEFFBA;
+}
+
+/* Blue buttons */
+.qr-btn-blue {
+  background: #84B3FF;
+  border: 2px solid #282F3A;
+  color: #08152C;
+}
+
+.qr-btn-blue:hover {
+  background: #42587B;
+  color: #DBE8FF;
+}
+
+/* Big buttons hover - vertical grow */
+.qr-btn-participation:hover,
+.qr-btn-restart:hover,
+.qr-btn-game:hover {
+  transform: scaleY(1.08);
+}
+
+/* Small buttons hover - horizontal grow */
+.qr-btn-small:hover {
+  transform: scaleX(1.08);
+}
+
+/* Click pop animation */
+.qr-control-btn:active {
+  animation: qr-btn-pop 0.16s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+}
+
+.qr-btn-small:active {
+  animation: qr-btn-pop-horizontal 0.16s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+}
+
+@keyframes qr-btn-pop {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.92); }
+}
+
+@keyframes qr-btn-pop-horizontal {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(0.88); }
+}
+
+/* Small buttons */
+.qr-btn-small {
+  flex: 1;
+}
+
+.qr-control-icon {
+  width: 32px;
+  height: 32px;
+}
+
