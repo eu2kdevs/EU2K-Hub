@@ -315,6 +315,36 @@
       "beta_banner": {
         "title": "Instrumentpanelen kan vara ofullständig i tidig beta.",
         "description": "Instrumentpanelens funktioner är ofullständiga i beta. Fler delar kommer att finnas i den fullständiga versionen."
+      },
+      "news_publish": {
+        "title": "Publicera Nyhet",
+        "subtitle": "Vänligen fyll i alla fält :)",
+        "title_label": "Nyhetens titel",
+        "link_label": "Nyhetens länk",
+        "author_label": "Nyhetens författare",
+        "content_label": "Nyhetens beskrivning",
+        "upload_image": "Ladda upp bild",
+        "publish": "Publicera",
+        "loading_title": "Publicerar nyhet",
+        "loading_subtitle": "Vänligen stäng inte denna sida!",
+        "success": "Nyheten publicerades framgångsrikt!",
+        "error": {
+          "title_required": "Titeln är obligatorisk (3-120 tecken)",
+          "title_too_short": "Titeln är för kort (min. 3 tecken)",
+          "title_too_long": "Titeln är för lång (max. 120 tecken)",
+          "title_html": "Titeln kan inte innehålla HTML-kod",
+          "link_invalid": "Ogiltigt länkformat",
+          "link_unsafe": "Länken är inte säker",
+          "link_html": "Länken kan inte innehålla HTML-kod",
+          "author_required": "Författaren är obligatorisk",
+          "author_html": "Författaren kan inte innehålla HTML-kod",
+          "content_html": "Innehållet kan inte innehålla HTML-kod",
+          "image_required": "Vänligen ladda upp en bild",
+          "upload_failed": "Uppladdningen misslyckades",
+          "generic": "Ett fel uppstod vid publiceringen",
+          "permission": "Du har inte behörighet att publicera",
+          "login": "Vänligen logga in"
+        }
       }
     },
     "students": {

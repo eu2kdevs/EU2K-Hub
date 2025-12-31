@@ -315,6 +315,36 @@
       "beta_banner": {
         "title": "Le tableau de bord peut être incomplet en bêta.",
         "description": "Les fonctionnalités sont incomplètes en bêta. D'autres parties seront présentes dans la version complète."
+      },
+      "news_publish": {
+        "title": "Publier une Nouvelle",
+        "subtitle": "Veuillez remplir tous les champs :)",
+        "title_label": "Titre de la nouvelle",
+        "link_label": "Lien de la nouvelle",
+        "author_label": "Auteur de la nouvelle",
+        "content_label": "Description de la Nouvelle",
+        "upload_image": "Télécharger une image",
+        "publish": "Publier",
+        "loading_title": "Publication de la nouvelle",
+        "loading_subtitle": "Veuillez ne pas fermer cette page!",
+        "success": "Nouvelle publiée avec succès!",
+        "error": {
+          "title_required": "Le titre est obligatoire (3-120 caractères)",
+          "title_too_short": "Le titre est trop court (min. 3 caractères)",
+          "title_too_long": "Le titre est trop long (max. 120 caractères)",
+          "title_html": "Le titre ne peut pas contenir de code HTML",
+          "link_invalid": "Format de lien invalide",
+          "link_unsafe": "Le lien n'est pas sécurisé",
+          "link_html": "Le lien ne peut pas contenir de code HTML",
+          "author_required": "L'auteur est obligatoire",
+          "author_html": "L'auteur ne peut pas contenir de code HTML",
+          "content_html": "Le contenu ne peut pas contenir de code HTML",
+          "image_required": "Veuillez télécharger une image",
+          "upload_failed": "Échec du téléchargement",
+          "generic": "Une erreur s'est produite lors de la publication",
+          "permission": "Vous n'avez pas la permission de publier",
+          "login": "Veuillez vous connecter"
+        }
       }
     },
     "students": {

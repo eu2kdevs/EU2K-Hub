@@ -328,6 +328,34 @@
       "beta_banner": {
         "title": "A Kezelőpult a bétaverzió elején hiányos lehet.",
         "description": "A Kezelőpult funkciói a bétaverzióban hiányosak. További részei a teljes kiadásban lesznek jelen."
+      },
+      "news_publish": {
+        "title": "Hír Publikálása",
+        "subtitle": "Kérlek tölts ki minden mezőt :)",
+        "title_label": "Hír címe",
+        "link_label": "Hír linkje",
+        "author_label": "Hír szerzője",
+        "content_label": "Hír Leírása",
+        "upload_image": "Kép feltöltése",
+        "publish": "Publikálás",
+        "loading_title": "Hír publikálása folyamatban",
+        "loading_subtitle": "Kérjük ne zárd be ezt az oldalt!",
+        "success": "Sikeresen publikáltuk a hírt!",
+        "error": {
+          "title_required": "A hír címe kötelező (3-120 karakter)",
+          "title_too_short": "A cím túl rövid (min. 3 karakter)",
+          "title_too_long": "A cím túl hosszú (max. 120 karakter)",
+          "title_html": "A cím nem tartalmazhat HTML kódot",
+          "link_invalid": "Érvénytelen link formátum",
+          "link_unsafe": "A link nem biztonságos",
+          "link_html": "A link nem tartalmazhat HTML kódot",
+          "author_required": "A szerző megadása kötelező",
+          "author_html": "A szerző nem tartalmazhat HTML kódot",
+          "content_html": "A tartalom nem tartalmazhat HTML kódot",
+          "image_required": "Kérlek tölts fel egy képet",
+          "upload_failed": "A feltöltés sikertelen",
+          "generic": "Hiba történt a publikálás során"
+        }
       }
     },
     "students": {

@@ -315,6 +315,36 @@
       "beta_banner": {
         "title": "The Dashboard may be incomplete in early beta.",
         "description": "Dashboard features are incomplete in beta. More parts will be present in the full release."
+      },
+      "news_publish": {
+        "title": "Publish News",
+        "subtitle": "Please fill in all fields :)",
+        "title_label": "News title",
+        "link_label": "News link",
+        "author_label": "News author",
+        "content_label": "News Description",
+        "upload_image": "Upload image",
+        "publish": "Publish",
+        "loading_title": "Publishing news",
+        "loading_subtitle": "Please do not close this page!",
+        "success": "News published successfully!",
+        "error": {
+          "title_required": "News title is required (3-120 characters)",
+          "title_too_short": "Title is too short (min. 3 characters)",
+          "title_too_long": "Title is too long (max. 120 characters)",
+          "title_html": "Title cannot contain HTML code",
+          "link_invalid": "Invalid link format",
+          "link_unsafe": "The link is not safe",
+          "link_html": "Link cannot contain HTML code",
+          "author_required": "Author is required",
+          "author_html": "Author cannot contain HTML code",
+          "content_html": "Content cannot contain HTML code",
+          "image_required": "Please upload an image",
+          "upload_failed": "Upload failed",
+          "generic": "An error occurred while publishing",
+          "permission": "You don't have permission to publish",
+          "login": "Please log in"
+        }
       }
     },
     "students": {

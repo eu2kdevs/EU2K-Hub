@@ -67,11 +67,29 @@
       "predeploy": [
         "npm --prefix \"$RESOURCE_DIR\" run lint"
       ]
+    },
+    {
+      "codebase": "publishnews",
+      "source": "EU2K-Hub/functions/publishnews",
+      "runtime": "nodejs22",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
     }
   ],
   "firestore": {
-    "rules": "EU2K-Hub/firestore.rules",
+    "rules": "firestore.rules",
     "indexes": "EU2K-Hub/firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
   },
   "hosting": {
     "site": "eu2khub",

@@ -318,6 +318,36 @@
       "beta_banner": {
         "title": "Das Dashboard kann in der frühen Beta unvollständig sein.",
         "description": "Dashboard-Funktionen sind in der Beta unvollständig. Weitere Teile werden in der Vollversion verfügbar sein."
+      },
+      "news_publish": {
+        "title": "Nachricht Veröffentlichen",
+        "subtitle": "Bitte füllen Sie alle Felder aus :)",
+        "title_label": "Titel der Nachricht",
+        "link_label": "Link zur Nachricht",
+        "author_label": "Autor der Nachricht",
+        "content_label": "Beschreibung der Nachricht",
+        "upload_image": "Bild hochladen",
+        "publish": "Veröffentlichen",
+        "loading_title": "Nachricht wird veröffentlicht",
+        "loading_subtitle": "Bitte schließen Sie diese Seite nicht!",
+        "success": "Nachricht erfolgreich veröffentlicht!",
+        "error": {
+          "title_required": "Der Nachrichtentitel ist erforderlich (3-120 Zeichen)",
+          "title_too_short": "Titel ist zu kurz (min. 3 Zeichen)",
+          "title_too_long": "Titel ist zu lang (max. 120 Zeichen)",
+          "title_html": "Titel darf keinen HTML-Code enthalten",
+          "link_invalid": "Ungültiges Link-Format",
+          "link_unsafe": "Der Link ist nicht sicher",
+          "link_html": "Link darf keinen HTML-Code enthalten",
+          "author_required": "Autor ist erforderlich",
+          "author_html": "Autor darf keinen HTML-Code enthalten",
+          "content_html": "Inhalt darf keinen HTML-Code enthalten",
+          "image_required": "Bitte laden Sie ein Bild hoch",
+          "upload_failed": "Upload fehlgeschlagen",
+          "generic": "Beim Veröffentlichen ist ein Fehler aufgetreten",
+          "permission": "Sie haben keine Berechtigung zum Veröffentlichen",
+          "login": "Bitte melden Sie sich an"
+        }
       }
     },
     "students": {

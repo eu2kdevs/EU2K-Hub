@@ -315,6 +315,36 @@
       "beta_banner": {
         "title": "ダッシュボードは初期ベータ版では不完全な場合があります。",
         "description": "ダッシュボードの機能はベータ版では不完全です。より多くの部分は完全版で提供されます。"
+      },
+      "news_publish": {
+        "title": "ニュースを公開",
+        "subtitle": "すべてのフィールドを入力してください :)",
+        "title_label": "ニュースのタイトル",
+        "link_label": "ニュースのリンク",
+        "author_label": "ニュースの著者",
+        "content_label": "ニュースの説明",
+        "upload_image": "画像をアップロード",
+        "publish": "公開",
+        "loading_title": "ニュースを公開中",
+        "loading_subtitle": "このページを閉じないでください！",
+        "success": "ニュースが正常に公開されました！",
+        "error": {
+          "title_required": "タイトルは必須です（3〜120文字）",
+          "title_too_short": "タイトルが短すぎます（最小3文字）",
+          "title_too_long": "タイトルが長すぎます（最大120文字）",
+          "title_html": "タイトルにHTMLコードを含めることはできません",
+          "link_invalid": "リンク形式が無効です",
+          "link_unsafe": "リンクが安全ではありません",
+          "link_html": "リンクにHTMLコードを含めることはできません",
+          "author_required": "著者は必須です",
+          "author_html": "著者にHTMLコードを含めることはできません",
+          "content_html": "コンテンツにHTMLコードを含めることはできません",
+          "image_required": "画像をアップロードしてください",
+          "upload_failed": "アップロードに失敗しました",
+          "generic": "公開中にエラーが発生しました",
+          "permission": "公開する権限がありません",
+          "login": "ログインしてください"
+        }
       }
     },
     "students": {

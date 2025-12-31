@@ -315,6 +315,36 @@
       "beta_banner": {
         "title": "仪表板在早期测试版中可能不完整。",
         "description": "仪表板功能在测试版中不完整。更多部分将出现在完整版本中。"
+      },
+      "news_publish": {
+        "title": "发布新闻",
+        "subtitle": "请填写所有字段 :)",
+        "title_label": "新闻标题",
+        "link_label": "新闻链接",
+        "author_label": "新闻作者",
+        "content_label": "新闻描述",
+        "upload_image": "上传图片",
+        "publish": "发布",
+        "loading_title": "正在发布新闻",
+        "loading_subtitle": "请不要关闭此页面！",
+        "success": "新闻发布成功！",
+        "error": {
+          "title_required": "标题是必填项（3-120个字符）",
+          "title_too_short": "标题太短（最少3个字符）",
+          "title_too_long": "标题太长（最多120个字符）",
+          "title_html": "标题不能包含HTML代码",
+          "link_invalid": "链接格式无效",
+          "link_unsafe": "链接不安全",
+          "link_html": "链接不能包含HTML代码",
+          "author_required": "作者是必填项",
+          "author_html": "作者不能包含HTML代码",
+          "content_html": "内容不能包含HTML代码",
+          "image_required": "请上传图片",
+          "upload_failed": "上传失败",
+          "generic": "发布时出错",
+          "permission": "您没有发布权限",
+          "login": "请登录"
+        }
       }
     },
     "students": {

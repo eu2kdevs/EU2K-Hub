@@ -315,6 +315,36 @@
       "beta_banner": {
         "title": "El Panel puede estar incompleto en la beta temprana.",
         "description": "Las funciones del Panel están incompletas en la beta. Más partes estarán presentes en la versión completa."
+      },
+      "news_publish": {
+        "title": "Publicar Noticia",
+        "subtitle": "Por favor, rellena todos los campos :)",
+        "title_label": "Título de la noticia",
+        "link_label": "Enlace de la noticia",
+        "author_label": "Autor de la noticia",
+        "content_label": "Descripción de la Noticia",
+        "upload_image": "Subir imagen",
+        "publish": "Publicar",
+        "loading_title": "Publicando noticia",
+        "loading_subtitle": "¡Por favor, no cierres esta página!",
+        "success": "¡Noticia publicada con éxito!",
+        "error": {
+          "title_required": "El título es obligatorio (3-120 caracteres)",
+          "title_too_short": "El título es muy corto (mín. 3 caracteres)",
+          "title_too_long": "El título es muy largo (máx. 120 caracteres)",
+          "title_html": "El título no puede contener código HTML",
+          "link_invalid": "Formato de enlace inválido",
+          "link_unsafe": "El enlace no es seguro",
+          "link_html": "El enlace no puede contener código HTML",
+          "author_required": "El autor es obligatorio",
+          "author_html": "El autor no puede contener código HTML",
+          "content_html": "El contenido no puede contener código HTML",
+          "image_required": "Por favor, sube una imagen",
+          "upload_failed": "Error al subir",
+          "generic": "Se produjo un error al publicar",
+          "permission": "No tienes permiso para publicar",
+          "login": "Por favor, inicia sesión"
+        }
       }
     },
     "students": {
