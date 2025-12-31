@@ -123,7 +123,11 @@
       "title": "EU2K Hub",
       "welcome": "Welcome to the Hub!",
       "upcoming_events": "Upcoming Events",
-      "news": "News",
+      "news": {
+        "title": "News",
+        "published": "Published",
+        "author": "Author"
+      },
       "event_name": "Event Name",
       "event_description": "Event description",
       "event_location": "Event Location",
@@ -322,6 +326,7 @@
         "title_label": "News title",
         "link_label": "News link",
         "author_label": "News author",
+        "date_label": "Publish date (leave empty for today)",
         "content_label": "News Description",
         "upload_image": "Upload image",
         "publish": "Publish",
@@ -341,6 +346,31 @@
           "content_html": "Content cannot contain HTML code",
           "image_required": "Please upload an image",
           "upload_failed": "Upload failed",
+          "generic": "An error occurred while publishing",
+          "permission": "You don't have permission to publish",
+          "login": "Please log in"
+        }
+      },
+      "event_publish": {
+        "title": "Publish Event",
+        "subtitle": "Please fill in all fields :)",
+        "title_label": "Event title",
+        "link_label": "Event link",
+        "place_label": "Event location",
+        "date_from_label": "Event start date",
+        "date_to_label": "Event end date (for single-day events, use the start date)",
+        "description_label": "Event Description",
+        "upload_image": "Upload image",
+        "publish": "Publish",
+        "loading_title": "Publishing event",
+        "loading_subtitle": "Please do not close this page!",
+        "success": "Event published successfully!",
+        "error": {
+          "title_required": "Event title is required (min. 3 characters)",
+          "place_required": "Event location is required",
+          "date_from_required": "Start date is required",
+          "date_to_required": "End date is required",
+          "image_required": "Please upload an image",
           "generic": "An error occurred while publishing",
           "permission": "You don't have permission to publish",
           "login": "Please log in"

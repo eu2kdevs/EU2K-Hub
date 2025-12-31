@@ -123,7 +123,11 @@
       "title": "EU2K Hub",
       "welcome": "欢迎来到 Hub！",
       "upcoming_events": "即将举行的活动",
-      "news": "新闻",
+      "news": {
+        "title": "新闻",
+        "published": "发布于",
+        "author": "作者"
+      },
       "event_name": "活动名称",
       "event_description": "活动描述",
       "event_location": "活动地点",
@@ -322,6 +326,7 @@
         "title_label": "新闻标题",
         "link_label": "新闻链接",
         "author_label": "新闻作者",
+        "date_label": "发布日期（留空则为今天）",
         "content_label": "新闻描述",
         "upload_image": "上传图片",
         "publish": "发布",
@@ -342,6 +347,31 @@
           "image_required": "请上传图片",
           "upload_failed": "上传失败",
           "generic": "发布时出错",
+          "permission": "您没有发布权限",
+          "login": "请登录"
+        }
+      },
+      "event_publish": {
+        "title": "发布活动",
+        "subtitle": "请填写所有字段 :)",
+        "title_label": "活动标题",
+        "link_label": "活动链接",
+        "place_label": "活动地点",
+        "date_from_label": "活动开始日期",
+        "date_to_label": "活动结束日期（单日活动请在此重复开始日期）",
+        "description_label": "活动描述",
+        "upload_image": "上传图片",
+        "publish": "发布",
+        "loading_title": "正在发布活动",
+        "loading_subtitle": "请勿关闭此页面！",
+        "success": "活动发布成功！",
+        "error": {
+          "title_required": "活动标题为必填项（最少3个字符）",
+          "place_required": "活动地点为必填项",
+          "date_from_required": "开始日期为必填项",
+          "date_to_required": "结束日期为必填项",
+          "image_required": "请上传一张图片",
+          "generic": "发布过程中发生错误",
           "permission": "您没有发布权限",
           "login": "请登录"
         }

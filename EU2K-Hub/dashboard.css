@@ -1685,25 +1685,28 @@ body {
   margin: 0 0 8px 0;
 }
 
-/* Main row container */
+/* Main row container - height defined by inputs column */
 .news-publish-row {
   display: flex;
   flex-direction: row;
   gap: 0;
   width: 100%;
-  min-height: 280px;
   align-items: stretch;
 }
 
-/* Left column: 3 inputs */
+/* Left column: 4 inputs - defines the height of the row */
 .news-inputs-column {
   display: flex;
   flex-direction: column;
   gap: 4px;
   min-width: 200px;
-  max-width: 260px;
-  flex-shrink: 0;
+  width: 280px;
+  /* Fixed width initially but shrinkable */
+  flex-shrink: 1;
+  /* Allow shrinking */
+  height: auto;
 }
+
 
 /* Input group (label + input) */
 .news-input-group {
@@ -1771,7 +1774,7 @@ body {
   box-sizing: border-box;
   transition: all 0.2s ease;
   resize: none;
-  min-height: 160px;
+  /* No min-height - fills available space from inputs column */
 }
 
 .news-content-textarea:focus {
@@ -1805,12 +1808,17 @@ body {
   gap: 12px;
   padding: 0 16px;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  height: 100%;
+  flex: 1;
 }
 
 /* Event card preview (smaller version) */
 .news-preview-card {
-  width: 180px;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
   aspect-ratio: 16/10;
   border-radius: 20px;
   overflow: hidden;
@@ -1883,8 +1891,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
 }
 
 .news-publish-btn:hover {
@@ -1963,31 +1969,53 @@ body {
 }
 
 /* Back button for news form */
-.news-back-btn {
-  background: transparent;
-  border: none;
-  color: #8FA274;
-  font-size: 13px;
+.header-edit-mode-btn {
+  flex: 0 0 auto;
+  min-width: 140px;
+  height: 52px;
+  background: #D3FFA1;
+  border: 1px solid #57703B;
+  border-radius: 16px;
+  /* Same as login button */
+  border-left: none;
+  color: #344521;
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
   cursor: pointer;
-  padding: 4px 0;
-  margin-bottom: 8px;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+  padding: 0 20px;
+  white-space: nowrap;
   display: flex;
   align-items: center;
-  gap: 6px;
-  transition: color 0.2s ease;
+  justify-content: center;
+  gap: 8px;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  /* Force GPU acceleration */
+  margin-bottom: 0;
 }
 
-.news-back-btn:hover {
-  color: #D3FFA1;
+.header-edit-mode-btn:hover {
+  background: #DEFFBA;
+  transform: scaleY(1.12);
+  /* Same as login button */
 }
 
-.news-back-btn img {
-  width: 16px;
-  height: 16px;
-  filter: brightness(0) saturate(100%) invert(62%) sepia(11%) saturate(501%) hue-rotate(56deg) brightness(93%) contrast(87%);
-  transform: rotate(180deg);
+/* Click pop animation same as login button */
+.header-edit-mode-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
 }
 
-.news-back-btn:hover img {
-  filter: brightness(0) saturate(100%) invert(92%) sepia(17%) saturate(535%) hue-rotate(27deg) brightness(105%) contrast(101%);
+.header-edit-mode-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.header-edit-mode-text {
+  color: #344521;
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
 }

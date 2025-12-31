@@ -123,7 +123,11 @@
       "title": "EU2K Hub",
       "welcome": "Hubへようこそ！",
       "upcoming_events": "今後のイベント",
-      "news": "ニュース",
+      "news": {
+        "title": "ニュース",
+        "published": "公開日",
+        "author": "著者"
+      },
       "event_name": "イベント名",
       "event_description": "イベントの説明",
       "event_location": "イベントの場所",
@@ -322,6 +326,7 @@
         "title_label": "ニュースのタイトル",
         "link_label": "ニュースのリンク",
         "author_label": "ニュースの著者",
+        "date_label": "公開日（今日の場合は空欄のまま）",
         "content_label": "ニュースの説明",
         "upload_image": "画像をアップロード",
         "publish": "公開",
@@ -341,6 +346,31 @@
           "content_html": "コンテンツにHTMLコードを含めることはできません",
           "image_required": "画像をアップロードしてください",
           "upload_failed": "アップロードに失敗しました",
+          "generic": "公開中にエラーが発生しました",
+          "permission": "公開する権限がありません",
+          "login": "ログインしてください"
+        }
+      },
+      "event_publish": {
+        "title": "イベントを公開",
+        "subtitle": "すべてのフィールドに入力してください :)",
+        "title_label": "イベントタイトル",
+        "link_label": "イベントリンク",
+        "place_label": "開催場所",
+        "date_from_label": "開始日",
+        "date_to_label": "終了日（1日のみの場合は開始日と同じ日付を入力）",
+        "description_label": "イベントの説明",
+        "upload_image": "画像をアップロード",
+        "publish": "公開",
+        "loading_title": "イベントを公開中",
+        "loading_subtitle": "このページを閉じないでください！",
+        "success": "イベントが正常に公開されました！",
+        "error": {
+          "title_required": "タイトルは必須です（3〜120文字）",
+          "place_required": "場所は必須です",
+          "date_from_required": "開始日は必須です",
+          "date_to_required": "終了日は必須です",
+          "image_required": "画像をアップロードしてください",
           "generic": "公開中にエラーが発生しました",
           "permission": "公開する権限がありません",
           "login": "ログインしてください"

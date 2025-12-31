@@ -114,7 +114,7 @@ exports.getNewsUploadUrl = onCall({ region }, async (request) => {
     // Check staff privileges
     const userRecord = await admin.auth().getUser(uid);
     const claims = userRecord.customClaims || {};
-    
+
     if (!claims.admin && !claims.owner && !claims.teacher) {
       throw new HttpsError('permission-denied', 'Only staff can upload news images');
     }
@@ -171,12 +171,12 @@ exports.publishNews = onCall({ region }, async (request) => {
     // Check staff privileges
     const userRecord = await admin.auth().getUser(uid);
     const claims = userRecord.customClaims || {};
-    
+
     if (!claims.admin && !claims.owner && !claims.teacher) {
       throw new HttpsError('permission-denied', 'Only staff can publish news');
     }
 
-    const { title, author, desc, link, imageUrl } = request.data;
+    const { title, author, desc, link, imageUrl, customDate } = request.data;
 
     // Validate inputs
     const validationErrors = validateInputs({ title, author, desc, link });
@@ -188,10 +188,24 @@ exports.publishNews = onCall({ region }, async (request) => {
     if (link) {
       const urlCheck = await checkUrlSafety(link);
       if (!urlCheck.safe) {
-        throw new HttpsError('invalid-argument', 'Link failed safety check', { 
-          reason: urlCheck.reason 
+        throw new HttpsError('invalid-argument', 'Link failed safety check', {
+          reason: urlCheck.reason
         });
       }
+    }
+
+    // Parse custom date or use current timestamp
+    let dateValue;
+    if (customDate && typeof customDate === 'string') {
+      // Parse the date string (format: YYYY-MM-DD) and convert to Firestore Timestamp
+      const parsedDate = new Date(customDate);
+      if (!isNaN(parsedDate.getTime())) {
+        dateValue = admin.firestore.Timestamp.fromDate(parsedDate);
+      } else {
+        dateValue = admin.firestore.FieldValue.serverTimestamp();
+      }
+    } else {
+      dateValue = admin.firestore.FieldValue.serverTimestamp();
     }
 
     // Transaction-based ID generation
@@ -199,7 +213,7 @@ exports.publishNews = onCall({ region }, async (request) => {
     let newsDocRef;
 
     await db.runTransaction(async (transaction) => {
-      const metaRef = db.doc('homePageData/news/meta');
+      const metaRef = db.doc('homePageData/news');
       const metaDoc = await transaction.get(metaRef);
 
       if (!metaDoc.exists) {
@@ -219,7 +233,7 @@ exports.publishNews = onCall({ region }, async (request) => {
         desc: desc ? desc.trim() : '',
         link: link ? link.trim() : '',
         image: imageUrl || '',
-        date: admin.firestore.FieldValue.serverTimestamp(),
+        date: dateValue,
         hubExclusive: false,
         createdBy: uid
       });
@@ -235,10 +249,10 @@ exports.publishNews = onCall({ region }, async (request) => {
 
   } catch (error) {
     console.error('[News Publish] Error:', error);
-    
+
     if (error instanceof HttpsError) throw error;
-    throw new HttpsError('internal', 'Failed to publish news', { 
-      message: error.message 
+    throw new HttpsError('internal', 'Failed to publish news', {
+      message: error.message
     });
   }
 });
@@ -249,3 +263,195 @@ exports.publishNews = onCall({ region }, async (request) => {
  */
 // TODO: Implement scheduled cleanup function
 // exports.cleanupOrphanNewsImages = onSchedule('every 24 hours', async (event) => { ... });
+
+// ========== EVENT PUBLISH FUNCTIONS ==========
+
+/**
+ * Validate event inputs on server side
+ */
+function validateEventInputs(data) {
+  const { title, place, dateFrom, dateTo, link } = data;
+  const errors = [];
+
+  // Title validation
+  if (!title || typeof title !== 'string') {
+    errors.push({ field: 'title', message: 'Title is required' });
+  } else if (title.trim().length < 3) {
+    errors.push({ field: 'title', message: 'Title too short (min 3 chars)' });
+  } else if (title.trim().length > 120) {
+    errors.push({ field: 'title', message: 'Title too long (max 120 chars)' });
+  } else if (HTML_TAG_REGEX.test(title)) {
+    errors.push({ field: 'title', message: 'Title cannot contain HTML' });
+  }
+
+  // Place validation
+  if (!place || typeof place !== 'string' || !place.trim()) {
+    errors.push({ field: 'place', message: 'Place is required' });
+  } else if (HTML_TAG_REGEX.test(place)) {
+    errors.push({ field: 'place', message: 'Place cannot contain HTML' });
+  }
+
+  // Date validation
+  if (!dateFrom) {
+    errors.push({ field: 'dateFrom', message: 'Start date is required' });
+  }
+  if (!dateTo) {
+    errors.push({ field: 'dateTo', message: 'End date is required' });
+  }
+
+  // Link HTML check
+  if (link && HTML_TAG_REGEX.test(link)) {
+    errors.push({ field: 'link', message: 'Link cannot contain HTML' });
+  }
+
+  return errors;
+}
+
+/**
+ * Get signed upload URL for event image
+ * 5-minute expiry, single use
+ */
+exports.getEventUploadUrl = onCall({ region }, async (request) => {
+  try {
+    // Authentication check
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'User must be authenticated');
+    }
+
+    const uid = request.auth.uid;
+
+    // Check staff privileges
+    const userRecord = await admin.auth().getUser(uid);
+    const claims = userRecord.customClaims || {};
+
+    if (!claims.admin && !claims.owner && !claims.teacher) {
+      throw new HttpsError('permission-denied', 'Only staff can upload event images');
+    }
+
+    const { contentType, eventId } = request.data;
+
+    if (!contentType || !contentType.startsWith('image/')) {
+      throw new HttpsError('invalid-argument', 'Invalid content type, must be image');
+    }
+
+    const bucket = storage.bucket();
+    const fileName = `eventPictures/${eventId}`;
+    const file = bucket.file(fileName);
+
+    // Generate signed URL for upload (5 minute expiry)
+    const [signedUrl] = await file.getSignedUrl({
+      version: 'v4',
+      action: 'write',
+      expires: Date.now() + 5 * 60 * 1000, // 5 minutes
+      contentType: contentType
+    });
+
+    console.log(`[Event Upload] Generated signed URL for ${fileName}`);
+
+    return {
+      uploadUrl: signedUrl,
+      fileName: fileName,
+      expiresIn: 300 // seconds
+    };
+
+  } catch (error) {
+    console.error('[Event Upload] Error generating signed URL:', error);
+    if (error instanceof HttpsError) throw error;
+    throw new HttpsError('internal', 'Failed to generate upload URL');
+  }
+});
+
+/**
+ * Publish event
+ * - Validates inputs
+ * - Checks URL safety
+ * - Uses transaction for ID generation
+ * - Creates Firestore document at homePageData/events/események/{id}
+ */
+exports.publishEvent = onCall({ region }, async (request) => {
+  try {
+    // Authentication check
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'User must be authenticated');
+    }
+
+    const uid = request.auth.uid;
+
+    // Check staff privileges
+    const userRecord = await admin.auth().getUser(uid);
+    const claims = userRecord.customClaims || {};
+
+    if (!claims.admin && !claims.owner && !claims.teacher) {
+      throw new HttpsError('permission-denied', 'Only staff can publish events');
+    }
+
+    const { title, link, place, description, imageUrl, dateFrom, dateTo } = request.data;
+
+    // Validate inputs
+    const validationErrors = validateEventInputs({ title, place, dateFrom, dateTo, link });
+    if (validationErrors.length > 0) {
+      throw new HttpsError('invalid-argument', 'Validation failed', { errors: validationErrors });
+    }
+
+    // Check URL safety (if provided)
+    if (link) {
+      const urlCheck = await checkUrlSafety(link);
+      if (!urlCheck.safe) {
+        throw new HttpsError('invalid-argument', 'Link failed safety check', {
+          reason: urlCheck.reason
+        });
+      }
+    }
+
+    // Parse dates
+    const dateFromValue = admin.firestore.Timestamp.fromDate(new Date(dateFrom));
+    const dateToValue = admin.firestore.Timestamp.fromDate(new Date(dateTo));
+
+    // Transaction-based ID generation
+    let newId;
+    let eventDocRef;
+
+    await db.runTransaction(async (transaction) => {
+      const metaRef = db.doc('homePageData/events');
+      const metaDoc = await transaction.get(metaRef);
+
+      if (!metaDoc.exists) {
+        // Initialize meta doc if it doesn't exist
+        newId = 1;
+        transaction.set(metaRef, { latestId: 1 });
+      } else {
+        newId = (metaDoc.data().latestId || 0) + 1;
+        transaction.update(metaRef, { latestId: newId });
+      }
+
+      // Create event document
+      eventDocRef = db.doc(`homePageData/events/esemenyek/${newId}`);
+      transaction.set(eventDocRef, {
+        title: title.trim(),
+        link: link ? link.trim() : '',
+        image: imageUrl || '',
+        description: description ? description.trim() : '',
+        place: place.trim(),
+        'date-from': dateFromValue,
+        'date-to': dateToValue,
+        createdBy: uid
+      });
+    });
+
+    console.log(`[Event Publish] Successfully created event #${newId} by user ${uid}`);
+
+    return {
+      success: true,
+      eventId: newId,
+      message: 'Event published successfully'
+    };
+
+  } catch (error) {
+    console.error('[Event Publish] Error:', error);
+
+    if (error instanceof HttpsError) throw error;
+    throw new HttpsError('internal', 'Failed to publish event', {
+      message: error.message
+    });
+  }
+});

@@ -123,7 +123,11 @@
       "title": "EU2K Hub",
       "welcome": "Üdvözöllek a Hub-ban!",
       "upcoming_events": "Közelgő Események",
-      "news": "Hírek",
+      "news": {
+        "title": "Hírek",
+        "published": "Kiadás",
+        "author": "Szerző"
+      },
       "event_name": "Esemény neve",
       "event_description": "Esemény leírása",
       "event_location": "Esemény Helye",
@@ -335,6 +339,7 @@
         "title_label": "Hír címe",
         "link_label": "Hír linkje",
         "author_label": "Hír szerzője",
+        "date_label": "Kiadási dátum (mai napért hagyd üresen)",
         "content_label": "Hír Leírása",
         "upload_image": "Kép feltöltése",
         "publish": "Publikálás",
@@ -355,6 +360,31 @@
           "image_required": "Kérlek tölts fel egy képet",
           "upload_failed": "A feltöltés sikertelen",
           "generic": "Hiba történt a publikálás során"
+        }
+      },
+      "event_publish": {
+        "title": "Esemény Publikálása",
+        "subtitle": "Kérlek tölts ki minden mezőt :)",
+        "title_label": "Esemény címe",
+        "link_label": "Esemény linkje",
+        "place_label": "Esemény helye",
+        "date_from_label": "Esemény kezdődátuma",
+        "date_to_label": "Esemény befejező dátuma (egynapos eseményeknél a kezdődátumot írd ide is)",
+        "description_label": "Esemény Leírása",
+        "upload_image": "Kép feltöltése",
+        "publish": "Publikálás",
+        "loading_title": "Esemény publikálása folyamatban",
+        "loading_subtitle": "Kérjük ne zárd be ezt az oldalt!",
+        "success": "Sikeresen publikáltuk az eseményt!",
+        "error": {
+          "title_required": "Az esemény címe kötelező (min. 3 karakter)",
+          "place_required": "Az esemény helye kötelező",
+          "date_from_required": "A kezdődátum kötelező",
+          "date_to_required": "A befejező dátum kötelező",
+          "image_required": "Kérlek tölts fel egy képet",
+          "generic": "Hiba történt a publikálás során",
+          "permission": "Nincs jogosultságod a publikáláshoz",
+          "login": "Kérlek jelentkezz be"
         }
       }
     },

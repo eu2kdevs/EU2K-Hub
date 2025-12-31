@@ -281,15 +281,29 @@
       const descText = newsData.description || newsData.desc || 'Hír leírása';
       description.textContent = descText; // Először tegyük be a teljes szöveget
 
-      // Dátum
+      // Dátum formázva: "Kiadás: YYYY.MM.DD"
       const date = document.createElement('p');
       date.className = 'news-card-date';
       const dateValue = newsData.date?.toDate ? newsData.date.toDate() : (newsData.date ? new Date(newsData.date) : new Date());
-      date.textContent = dateValue.toLocaleDateString('hu-HU');
+      const year = dateValue.getFullYear();
+      const month = String(dateValue.getMonth() + 1).padStart(2, '0');
+      const day = String(dateValue.getDate()).padStart(2, '0');
+      const publishedLabel = window.translationManager?.getTranslation('pages.index.news.published') || 'Kiadás';
+      date.textContent = `${publishedLabel}: ${year}.${month}.${day}`;
+
+      // Szerző
+      const author = document.createElement('p');
+      author.className = 'news-card-author';
+      const authorLabel = window.translationManager?.getTranslation('pages.index.news.author') || 'Szerző';
+      const authorValue = newsData.author || '';
+      author.textContent = authorValue ? `${authorLabel}: ${authorValue}` : '';
 
       contentContainer.appendChild(title);
       contentContainer.appendChild(description);
       contentContainer.appendChild(date);
+      if (authorValue) {
+        contentContainer.appendChild(author);
+      }
 
       card.appendChild(img);
       card.appendChild(contentContainer);
@@ -398,17 +412,26 @@
           const docs = snapshot.docs
             .map(doc => {
               const data = doc.data();
-              const dateValue = data.date?.toDate ? data.date.toDate() : (data.date ? new Date(data.date) : null);
+              const dateFrom = data['date-from']?.toDate ? data['date-from'].toDate() : (data['date-from'] ? new Date(data['date-from']) : null);
+              const dateTo = data['date-to']?.toDate ? data['date-to'].toDate() : (data['date-to'] ? new Date(data['date-to']) : null);
+
               return {
                 id: parseInt(doc.id, 10),
                 rawId: doc.id,
                 data: data,
-                date: dateValue
+                dateFrom: dateFrom,
+                dateTo: dateTo
               };
             })
-            .filter(item => !Number.isNaN(item.id) && item.date) // Csak valid ID-vel és dátummal
-            .filter(item => item.date >= now) // Csak mai vagy jövőbeli események
-            .sort((a, b) => a.date - b.date); // Dátum szerint növekvő (legközelebbi először)
+            .filter(item => !Number.isNaN(item.id) && item.dateFrom) // Csak valid ID-vel és dátummal
+            .filter(item => {
+              if (!item.dateFrom) return false;
+              // Compare with start of today
+              const d = new Date(item.dateFrom);
+              d.setHours(0, 0, 0, 0);
+              return d >= now;
+            }) // Csak mai vagy jövőbeli események
+            .sort((a, b) => a.dateFrom - b.dateFrom); // Dátum szerint növekvő (legközelebbi először)
 
           // Első 3 legközelebbi jövőbeli esemény
           const orderedEvents = [
@@ -559,12 +582,11 @@
         return;
       }
 
-      const { id, rawId, data } = eventDoc;
+      const { id, rawId, data, dateFrom, dateTo } = eventDoc;
       const title = (data.title || '').toString();
       const description = (data.description || data.desc || '').toString();
       const link = (data.link || '').toString().trim();
       const imageUrl = extractImageUrl(data);
-      const dateValue = data.date?.toDate ? data.date.toDate() : data.date;
       const place = (data.place || '').toString().trim();
 
       // Validate link
@@ -642,13 +664,21 @@
       if (dateEl) {
         let dateText = '';
 
-        // Format date if available
-        if (dateValue) {
-          const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          const day = String(date.getDate()).padStart(2, '0');
-          dateText = `${year}.${month}.${day}`;
+        const formatDate = (d) => {
+          if (!d) return '';
+          const y = d.getFullYear();
+          const m = String(d.getMonth() + 1).padStart(2, '0');
+          const day = String(d.getDate()).padStart(2, '0');
+          return `${y}.${m}.${day}`;
+        };
+
+        if (dateFrom) {
+          const fromStr = formatDate(dateFrom);
+          const toStr = formatDate(dateTo);
+          dateText = fromStr;
+          if (dateTo && toStr !== fromStr) {
+            dateText += ` - ${toStr}`;
+          }
         }
 
         // Add place if available
@@ -690,8 +720,8 @@
       cardEl.style.cursor = 'default';
       cardEl.onclick = null;
 
-      if (dateValue) {
-        const storedDate = dateValue instanceof Date ? dateValue.toISOString() : dateValue;
+      if (dateFrom) {
+        const storedDate = dateFrom instanceof Date ? dateFrom.toISOString() : dateFrom;
         cardEl.dataset.eventDate = storedDate;
       } else {
         delete cardEl.dataset.eventDate;

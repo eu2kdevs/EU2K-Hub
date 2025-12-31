@@ -123,7 +123,11 @@
       "title": "EU2K Hub",
       "welcome": "Willkommen im Hub!",
       "upcoming_events": "Bevorstehende Veranstaltungen",
-      "news": "Nachrichten",
+      "news": {
+        "title": "Nachrichten",
+        "published": "Veröffentlicht",
+        "author": "Autor"
+      },
       "event_name": "Veranstaltungsname",
       "event_description": "Veranstaltungsbeschreibung",
       "event_location": "Veranstaltungsort",
@@ -325,6 +329,7 @@
         "title_label": "Titel der Nachricht",
         "link_label": "Link zur Nachricht",
         "author_label": "Autor der Nachricht",
+        "date_label": "Veröffentlichungsdatum (leer lassen für heute)",
         "content_label": "Beschreibung der Nachricht",
         "upload_image": "Bild hochladen",
         "publish": "Veröffentlichen",
@@ -344,6 +349,31 @@
           "content_html": "Inhalt darf keinen HTML-Code enthalten",
           "image_required": "Bitte laden Sie ein Bild hoch",
           "upload_failed": "Upload fehlgeschlagen",
+          "generic": "Beim Veröffentlichen ist ein Fehler aufgetreten",
+          "permission": "Sie haben keine Berechtigung zum Veröffentlichen",
+          "login": "Bitte melden Sie sich an"
+        }
+      },
+      "event_publish": {
+        "title": "Veranstaltung veröffentlichen",
+        "subtitle": "Bitte füllen Sie alle Felder aus :)",
+        "title_label": "Veranstaltungstitel",
+        "link_label": "Veranstaltungslink",
+        "place_label": "Veranstaltungsort",
+        "date_from_label": "Startdatum der Veranstaltung",
+        "date_to_label": "Enddatum (bei eintägigen Events Startdatum wiederholen)",
+        "description_label": "Beschreibung der Veranstaltung",
+        "upload_image": "Bild hochladen",
+        "publish": "Veröffentlichen",
+        "loading_title": "Veranstaltung wird veröffentlicht",
+        "loading_subtitle": "Bitte schließen Sie diese Seite nicht!",
+        "success": "Veranstaltung erfolgreich veröffentlicht!",
+        "error": {
+          "title_required": "Veranstaltungstitel ist erforderlich (min. 3 Zeichen)",
+          "place_required": "Veranstaltungsort ist erforderlich",
+          "date_from_required": "Startdatum ist erforderlich",
+          "date_to_required": "Enddatum ist erforderlich",
+          "image_required": "Bitte laden Sie ein Bild hoch",
           "generic": "Beim Veröffentlichen ist ein Fehler aufgetreten",
           "permission": "Sie haben keine Berechtigung zum Veröffentlichen",
           "login": "Bitte melden Sie sich an"

@@ -907,6 +907,14 @@ body {
   margin: 0;
 }
 
+.news-card-author {
+  font-size: 12px;
+  font-weight: 400;
+  color: #D5ECBC;
+  line-height: 1;
+  margin: 0;
+}
+
 .red-rect {
   /* TODO(Figma): swap to exported gradient if provided */
   background: radial-gradient(120% 120% at 30% 20%, #28402B 0%, #0A1831 60%, #0B0F0B 100%);

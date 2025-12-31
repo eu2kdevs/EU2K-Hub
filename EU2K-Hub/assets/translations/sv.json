@@ -123,7 +123,11 @@
       "title": "EU2K Hub",
       "welcome": "Välkommen till Hub!",
       "upcoming_events": "Kommande Evenemang",
-      "news": "Nyheter",
+      "news": {
+        "title": "Nyheter",
+        "published": "Publicerad",
+        "author": "Författare"
+      },
       "event_name": "Evenemangsnamn",
       "event_description": "Evenemangsbeskrivning",
       "event_location": "Evenemangsplats",
@@ -322,6 +326,7 @@
         "title_label": "Nyhetens titel",
         "link_label": "Nyhetens länk",
         "author_label": "Nyhetens författare",
+        "date_label": "Publiceringsdatum (lämna tomt för idag)",
         "content_label": "Nyhetens beskrivning",
         "upload_image": "Ladda upp bild",
         "publish": "Publicera",
@@ -342,6 +347,31 @@
           "image_required": "Vänligen ladda upp en bild",
           "upload_failed": "Uppladdningen misslyckades",
           "generic": "Ett fel uppstod vid publiceringen",
+          "permission": "Du har inte behörighet att publicera",
+          "login": "Vänligen logga in"
+        }
+      },
+      "event_publish": {
+        "title": "Publicera evenemang",
+        "subtitle": "Vänligen fyll i alla fält :)",
+        "title_label": "Evenemangets titel",
+        "link_label": "Evenemangslänk",
+        "place_label": "Evenemangsplats",
+        "date_from_label": "Startdatum",
+        "date_to_label": "Slutdatum (för endagsevenemang, ange startdatum här också)",
+        "description_label": "Beskrivning av evenemanget",
+        "upload_image": "Ladda upp bild",
+        "publish": "Publicera",
+        "loading_title": "Publicerar evenemang",
+        "loading_subtitle": "Stäng inte denna sida!",
+        "success": "Evenemang publicerat!",
+        "error": {
+          "title_required": "Titel krävs (min. 3 tecken)",
+          "place_required": "Plats krävs",
+          "date_from_required": "Startdatum krävs",
+          "date_to_required": "Slutdatum krävs",
+          "image_required": "Vänligen ladda upp en bild",
+          "generic": "Ett fel uppstod vid publicering",
           "permission": "Du har inte behörighet att publicera",
           "login": "Vänligen logga in"
         }

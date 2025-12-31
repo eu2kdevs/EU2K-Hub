@@ -235,6 +235,11 @@
             </div>
             <div class="header-icon-container">
               <div class="header-icon-gradient">
+                <!-- Vissza gomb (50% opacity a fő dashboardon, aktív a formokon) -->
+                <button class="header-edit-mode-btn" id="dashboardBackBtn" style="opacity: 0.5; pointer-events: none;">
+                  <img class="header-edit-mode-icon" src="assets/onboarding/back_arrow.svg" alt="Vissza">
+                  <span class="header-edit-mode-text" data-translate="pages.settings.back">Vissza</span>
+                </button>
                 <div class="header-icon-wrapper" id="headerSettingsWrapper">
                   <a href="settings.html" class="header-icon-btn" id="headerSettingsBtn">
                     <img src="assets/general/settings.svg" alt="Settings">
@@ -335,10 +340,10 @@
               </div>
             </div>
 
-            <!-- News publish form (hidden initially) -->
+            <!-- News publish form -->
             <div id="news-publish-form" class="news-publish-form" style="display: none;">
-              <button class="news-back-btn" onclick="hideNewsPublishForm()">
-                <img src="assets/general/utility/arrow_forward.svg" alt="Vissza">
+              <button class="header-edit-mode-btn" onclick="hideNewsPublishForm()">
+                <img src="assets/onboarding/back_arrow.svg" alt="Vissza">
                 <span data-translate="pages.settings.back">Vissza</span>
               </button>
 
@@ -348,7 +353,7 @@
                 ki minden mezőt :)</p>
 
               <div class="news-publish-row">
-                <!-- Left: 3 inputs -->
+                <!-- Left: 4 inputs -->
                 <div class="news-inputs-column">
                   <div class="news-input-group">
                     <label class="news-input-label" data-translate="pages.dashboard.news_publish.title_label">Hír
@@ -364,6 +369,11 @@
                     <label class="news-input-label" data-translate="pages.dashboard.news_publish.author_label">Hír
                       szerzője</label>
                     <input type="text" id="newsAuthor" class="news-input" placeholder="Value">
+                  </div>
+                  <div class="news-input-group">
+                    <label class="news-input-label" data-translate="pages.dashboard.news_publish.date_label">Kiadási
+                      dátum (mai napért hagyd üresen)</label>
+                    <input type="date" id="newsDate" class="news-input">
                   </div>
                 </div>
 
@@ -411,6 +421,90 @@
             </div>
           </div>
 
+          <!-- Event publish form -->
+          <div id="event-publish-form" class="news-publish-form event-publish-form" style="display: none;">
+            <button class="header-edit-mode-btn" onclick="hideEventPublishForm()">
+              <img src="assets/onboarding/back_arrow.svg" alt="Vissza">
+              <span data-translate="pages.settings.back">Vissza</span>
+            </button>
+
+            <h2 class="news-publish-form-title" data-translate="pages.dashboard.event_publish.title">Esemény Publikálása
+            </h2>
+            <p class="news-publish-form-subtitle" data-translate="pages.dashboard.event_publish.subtitle">Kérlek tölts
+              ki minden mezőt :)</p>
+
+            <div class="news-publish-row">
+              <!-- Left: 5 inputs -->
+              <div class="news-inputs-column event-inputs-column">
+                <div class="news-input-group">
+                  <label class="news-input-label" data-translate="pages.dashboard.event_publish.title_label">Esemény
+                    címe</label>
+                  <input type="text" id="eventTitle" class="news-input" placeholder="Value" maxlength="120">
+                </div>
+                <div class="news-input-group">
+                  <label class="news-input-label" data-translate="pages.dashboard.event_publish.link_label">Esemény
+                    linkje</label>
+                  <input type="url" id="eventLink" class="news-input" placeholder="Value">
+                </div>
+                <div class="news-input-group">
+                  <label class="news-input-label" data-translate="pages.dashboard.event_publish.place_label">Esemény
+                    helye</label>
+                  <input type="text" id="eventPlace" class="news-input" placeholder="Value">
+                </div>
+                <div class="news-input-group">
+                  <label class="news-input-label" data-translate="pages.dashboard.event_publish.date_from_label">Esemény
+                    kezdődátuma</label>
+                  <input type="date" id="eventDateFrom" class="news-input">
+                </div>
+                <div class="news-input-group">
+                  <label class="news-input-label" data-translate="pages.dashboard.event_publish.date_to_label">Esemény
+                    befejező dátuma (egynapos eseményeknél a kezdődátumot írd ide is)</label>
+                  <input type="date" id="eventDateTo" class="news-input">
+                </div>
+              </div>
+
+              <!-- Middle: textarea -->
+              <div class="news-content-container">
+                <label class="news-input-label" data-translate="pages.dashboard.event_publish.description_label">Esemény
+                  Leírása</label>
+                <textarea id="eventDescription" class="news-content-textarea" placeholder="Value"></textarea>
+              </div>
+
+              <!-- Divider -->
+              <div class="news-divider"></div>
+
+              <!-- Preview card + upload -->
+              <div class="news-preview-container">
+                <div class="news-preview-card">
+                  <img id="eventPreviewImage" class="news-preview-card-bg"
+                    src="assets/general/image_placeholder_blue.svg" alt="Előnézet">
+                </div>
+                <button class="news-upload-btn" onclick="triggerEventImageUpload()"
+                  data-translate="pages.dashboard.event_publish.upload_image">Kép feltöltése</button>
+                <input type="file" id="eventImageInput" class="news-file-input" accept="image/*">
+              </div>
+
+              <!-- Divider -->
+              <div class="news-divider"></div>
+
+              <!-- Publish button -->
+              <div class="news-publish-btn-container">
+                <button id="eventPublishBtn" class="news-publish-btn" onclick="submitEventPublish()"
+                  data-translate="pages.dashboard.event_publish.publish">Publikálás</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Event publish loading popup -->
+          <div id="eventPublishPopup" class="news-publish-popup">
+            <div class="news-publish-popup-content">
+              <h3 class="news-publish-popup-title" data-translate="pages.dashboard.event_publish.loading_title">Esemény
+                publikálása folyamatban</h3>
+              <p class="news-publish-popup-subtitle" data-translate="pages.dashboard.event_publish.loading_subtitle">
+                Kérjük ne zárd be ezt az oldalt!</p>
+              <div class="news-publish-loader"></div>
+            </div>
+          </div>
 
           <script type="module">
             import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
@@ -590,8 +684,15 @@
       console.log('[Dashboard] Showing news publish form');
       const typeSelection = document.getElementById('publish-type-selection');
       const newsForm = document.getElementById('news-publish-form');
+      const backBtn = document.getElementById('dashboardBackBtn');
       if (typeSelection) typeSelection.style.display = 'none';
       if (newsForm) newsForm.style.display = 'flex';
+      // Activate back button
+      if (backBtn) {
+        backBtn.style.opacity = '1';
+        backBtn.style.pointerEvents = 'auto';
+        backBtn.onclick = hideNewsPublishForm;
+      }
       // Clear previous inputs
       clearNewsForm();
     }
@@ -600,8 +701,15 @@
       console.log('[Dashboard] Hiding news publish form');
       const typeSelection = document.getElementById('publish-type-selection');
       const newsForm = document.getElementById('news-publish-form');
+      const backBtn = document.getElementById('dashboardBackBtn');
       if (typeSelection) typeSelection.style.display = 'flex';
       if (newsForm) newsForm.style.display = 'none';
+      // Deactivate back button
+      if (backBtn) {
+        backBtn.style.opacity = '0.5';
+        backBtn.style.pointerEvents = 'none';
+        backBtn.onclick = null;
+      }
       clearNewsForm();
     }
 
@@ -610,12 +718,14 @@
       const linkInput = document.getElementById('newsLink');
       const authorInput = document.getElementById('newsAuthor');
       const contentInput = document.getElementById('newsContent');
+      const dateInput = document.getElementById('newsDate');
       const previewImg = document.getElementById('newsPreviewImage');
 
       if (titleInput) { titleInput.value = ''; titleInput.classList.remove('error'); }
       if (linkInput) { linkInput.value = ''; linkInput.classList.remove('error'); }
       if (authorInput) { authorInput.value = ''; authorInput.classList.remove('error'); }
       if (contentInput) { contentInput.value = ''; contentInput.classList.remove('error'); }
+      if (dateInput) { dateInput.value = ''; }
       if (previewImg) previewImg.src = 'assets/general/image_placeholder_blue.svg';
       selectedNewsImage = null;
     }
@@ -756,6 +866,7 @@
       const link = document.getElementById('newsLink')?.value?.trim();
       const author = document.getElementById('newsAuthor')?.value?.trim();
       const content = document.getElementById('newsContent')?.value?.trim();
+      const dateInput = document.getElementById('newsDate')?.value;
 
       // Show loading popup
       showNewsPublishPopup();
@@ -798,14 +909,15 @@
         const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(fileName)}?alt=media`;
         console.log('[Dashboard] Image uploaded, publishing news...');
 
-        // Step 4: Call publishNews function
+        // Step 4: Call publishNews function with optional custom date
         const publishNewsFunc = httpsCallable(functionsWest3, 'publishNews');
         const publishResult = await publishNewsFunc({
           title: title,
           author: author,
           desc: content,
           link: link,
-          imageUrl: imageUrl
+          imageUrl: imageUrl,
+          customDate: dateInput || null  // Pass custom date if provided
         });
 
         console.log('[Dashboard] News published:', publishResult.data);
@@ -852,10 +964,272 @@
 
 
 
+    // ========== EVENT PUBLISH FUNCTIONS ==========
+
+    // Store selected event image file
+    let selectedEventImage = null;
+
+    function showEventPublishForm() {
+      console.log('[Dashboard] Showing event publish form');
+      const typeSelection = document.getElementById('publish-type-selection');
+      const eventForm = document.getElementById('event-publish-form');
+      const backBtn = document.getElementById('dashboardBackBtn');
+      if (typeSelection) typeSelection.style.display = 'none';
+      if (eventForm) eventForm.style.display = 'flex';
+      // Activate back button
+      if (backBtn) {
+        backBtn.style.opacity = '1';
+        backBtn.style.pointerEvents = 'auto';
+        backBtn.onclick = hideEventPublishForm;
+      }
+      clearEventForm();
+    }
+
+    function hideEventPublishForm() {
+      console.log('[Dashboard] Hiding event publish form');
+      const typeSelection = document.getElementById('publish-type-selection');
+      const eventForm = document.getElementById('event-publish-form');
+      const backBtn = document.getElementById('dashboardBackBtn');
+      if (typeSelection) typeSelection.style.display = 'flex';
+      if (eventForm) eventForm.style.display = 'none';
+      // Deactivate back button
+      if (backBtn) {
+        backBtn.style.opacity = '0.5';
+        backBtn.style.pointerEvents = 'none';
+        backBtn.onclick = null;
+      }
+      clearEventForm();
+    }
+
+    function clearEventForm() {
+      const titleInput = document.getElementById('eventTitle');
+      const linkInput = document.getElementById('eventLink');
+      const placeInput = document.getElementById('eventPlace');
+      const dateFromInput = document.getElementById('eventDateFrom');
+      const dateToInput = document.getElementById('eventDateTo');
+      const descInput = document.getElementById('eventDescription');
+      const previewImg = document.getElementById('eventPreviewImage');
+
+      if (titleInput) { titleInput.value = ''; titleInput.classList.remove('error'); }
+      if (linkInput) { linkInput.value = ''; linkInput.classList.remove('error'); }
+      if (placeInput) { placeInput.value = ''; placeInput.classList.remove('error'); }
+      if (dateFromInput) { dateFromInput.value = ''; dateFromInput.classList.remove('error'); }
+      if (dateToInput) { dateToInput.value = ''; dateToInput.classList.remove('error'); }
+      if (descInput) { descInput.value = ''; descInput.classList.remove('error'); }
+      if (previewImg) previewImg.src = 'assets/general/image_placeholder_blue.svg';
+      selectedEventImage = null;
+    }
+
+    function triggerEventImageUpload() {
+      const fileInput = document.getElementById('eventImageInput');
+      if (fileInput) fileInput.click();
+    }
+
+    // Event image input change handler
+    document.addEventListener('DOMContentLoaded', () => {
+      const fileInput = document.getElementById('eventImageInput');
+      if (fileInput) {
+        fileInput.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file && file.type.startsWith('image/')) {
+            selectedEventImage = file;
+            const previewImg = document.getElementById('eventPreviewImage');
+            if (previewImg) {
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                previewImg.src = e.target.result;
+              };
+              reader.readAsDataURL(file);
+            }
+            console.log('[Dashboard] Event image selected:', file.name);
+          }
+        });
+      }
+    });
+
+    function showEventPublishPopup() {
+      const popup = document.getElementById('eventPublishPopup');
+      if (popup) popup.classList.add('active');
+    }
+
+    function hideEventPublishPopup() {
+      const popup = document.getElementById('eventPublishPopup');
+      if (popup) popup.classList.remove('active');
+    }
+
+    function showEventInputError(inputId, translationKey, fallback) {
+      const input = document.getElementById(inputId);
+      if (input) {
+        input.classList.add('error');
+        const errorMsg = getTranslation(translationKey, fallback);
+        if (window.showToastDirectly) {
+          window.showToastDirectly(
+            getTranslation('youhub.suggestions.notifications.types.warning', 'Figyelmeztetés'),
+            errorMsg,
+            'warning'
+          );
+        }
+      }
+    }
+
+    function validateEventInputs() {
+      // Clear previous errors
+      ['eventTitle', 'eventLink', 'eventPlace', 'eventDateFrom', 'eventDateTo', 'eventDescription'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('error');
+      });
+
+      const title = document.getElementById('eventTitle')?.value?.trim() || '';
+      const place = document.getElementById('eventPlace')?.value?.trim() || '';
+      const dateFrom = document.getElementById('eventDateFrom')?.value || '';
+      const dateTo = document.getElementById('eventDateTo')?.value || '';
+
+      // Title validation
+      if (!title || title.length < 3) {
+        showEventInputError('eventTitle', 'pages.dashboard.event_publish.error.title_required', 'Az esemény címe kötelező (min. 3 karakter)');
+        return false;
+      }
+
+      // Place validation
+      if (!place) {
+        showEventInputError('eventPlace', 'pages.dashboard.event_publish.error.place_required', 'Az esemény helye kötelező');
+        return false;
+      }
+
+      // Date from validation
+      if (!dateFrom) {
+        showEventInputError('eventDateFrom', 'pages.dashboard.event_publish.error.date_from_required', 'A kezdődátum kötelező');
+        return false;
+      }
+
+      // Date to validation
+      if (!dateTo) {
+        showEventInputError('eventDateTo', 'pages.dashboard.event_publish.error.date_to_required', 'A befejező dátum kötelező');
+        return false;
+      }
+
+      // Image validation
+      if (!selectedEventImage) {
+        showEventInputError('eventPreviewImage', 'pages.dashboard.event_publish.error.image_required', 'Kérlek tölts fel egy képet');
+        return false;
+      }
+
+      return true;
+    }
+
+    async function submitEventPublish() {
+      console.log('[Dashboard] Submitting event...');
+
+      // Validate inputs
+      if (!validateEventInputs()) {
+        return;
+      }
+
+      const title = document.getElementById('eventTitle')?.value?.trim();
+      const link = document.getElementById('eventLink')?.value?.trim() || '';
+      const place = document.getElementById('eventPlace')?.value?.trim();
+      const dateFrom = document.getElementById('eventDateFrom')?.value;
+      const dateTo = document.getElementById('eventDateTo')?.value;
+      const description = document.getElementById('eventDescription')?.value?.trim() || '';
+
+      // Show loading popup
+      showEventPublishPopup();
+
+      try {
+        // Import functions for europe-west3 region
+        const { getFunctions, httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+        const functionsWest3 = getFunctions(window.firebaseApp, 'europe-west3');
+
+        // Step 1: Get signed URL for image upload
+        console.log('[Dashboard] Getting signed upload URL for event...');
+        const getUploadUrl = httpsCallable(functionsWest3, 'getEventUploadUrl');
+
+        // Generate a temporary eventId (will be confirmed by server)
+        const tempEventId = Date.now().toString();
+
+        const uploadUrlResult = await getUploadUrl({
+          contentType: selectedEventImage.type,
+          eventId: tempEventId
+        });
+
+        const { uploadUrl, fileName } = uploadUrlResult.data;
+        console.log('[Dashboard] Got signed URL, uploading event image...');
+
+        // Step 2: Upload image directly to Storage via signed URL
+        const uploadResponse = await fetch(uploadUrl, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': selectedEventImage.type
+          },
+          body: selectedEventImage
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error('Image upload failed');
+        }
+
+        // Step 3: Get the public URL of the uploaded image
+        const bucket = 'eu2k-hub.firebasestorage.app';
+        const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(fileName)}?alt=media`;
+        console.log('[Dashboard] Event image uploaded, publishing event...');
+
+        // Step 4: Call publishEvent function
+        const publishEventFunc = httpsCallable(functionsWest3, 'publishEvent');
+        const publishResult = await publishEventFunc({
+          title: title,
+          link: link,
+          place: place,
+          description: description,
+          imageUrl: imageUrl,
+          dateFrom: dateFrom,
+          dateTo: dateTo
+        });
+
+        console.log('[Dashboard] Event published:', publishResult.data);
+
+        // Success
+        hideEventPublishPopup();
+        hideEventPublishForm();
+
+        if (window.showToastDirectly) {
+          window.showToastDirectly(
+            getTranslation('youhub.suggestions.notifications.types.success_operation', 'Sikeres művelet'),
+            getTranslation('pages.dashboard.event_publish.success', 'Sikeresen publikáltuk az eseményt!'),
+            'positive'
+          );
+        } else {
+          alert(getTranslation('pages.dashboard.event_publish.success', 'Sikeresen publikáltuk az eseményt!'));
+        }
+
+      } catch (error) {
+        console.error('[Dashboard] Event publish error:', error);
+        hideEventPublishPopup();
+
+        // Parse error message from Cloud Function
+        let errorMessage = error.message || getTranslation('pages.dashboard.event_publish.error.generic', 'Hiba történt a publikálás során');
+
+        // Check for specific error codes
+        if (error.code === 'permission-denied') {
+          errorMessage = getTranslation('pages.dashboard.event_publish.error.permission', 'Nincs jogosultságod a publikáláshoz');
+        } else if (error.code === 'unauthenticated') {
+          errorMessage = getTranslation('pages.dashboard.event_publish.error.login', 'Kérlek jelentkezz be');
+        }
+
+        if (window.showToastDirectly) {
+          window.showToastDirectly(
+            getTranslation('youhub.suggestions.notifications.types.error', 'Hiba'),
+            errorMessage,
+            'danger'
+          );
+        } else {
+          alert(errorMessage);
+        }
+      }
+    }
+
+    // Redirect from the button in publish-type-selection
     function publishEvent() {
-      // Placeholder for future implementation
-      const msg = window.translationManager?.getTranslation('pages.index.fixing_soon') || 'Hamarosan érkezik!';
-      alert(msg);
+      showEventPublishForm();
     }
 
     async function checkSessionAndUpdateBlur() {

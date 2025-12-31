@@ -123,7 +123,11 @@
       "title": "EU2K Hub",
       "welcome": "¡Bienvenido al Hub!",
       "upcoming_events": "Próximos Eventos",
-      "news": "Noticias",
+      "news": {
+        "title": "Noticias",
+        "published": "Publicado",
+        "author": "Autor"
+      },
       "event_name": "Nombre del Evento",
       "event_description": "Descripción del evento",
       "event_location": "Ubicación del Evento",
@@ -322,6 +326,7 @@
         "title_label": "Título de la noticia",
         "link_label": "Enlace de la noticia",
         "author_label": "Autor de la noticia",
+        "date_label": "Fecha de publicación (dejar vacío para hoy)",
         "content_label": "Descripción de la Noticia",
         "upload_image": "Subir imagen",
         "publish": "Publicar",
@@ -344,6 +349,31 @@
           "generic": "Se produjo un error al publicar",
           "permission": "No tienes permiso para publicar",
           "login": "Por favor, inicia sesión"
+        }
+      },
+      "event_publish": {
+        "title": "Publicar evento",
+        "subtitle": "Por favor completa todos los campos :)",
+        "title_label": "Título del evento",
+        "link_label": "Enlace del evento",
+        "place_label": "Lugar del evento",
+        "date_from_label": "Fecha de inicio del evento",
+        "date_to_label": "Fecha de finalización (para eventos de un día, usa la fecha de inicio)",
+        "description_label": "Descripción del evento",
+        "upload_image": "Subir imagen",
+        "publish": "Publicar",
+        "loading_title": "Publicando evento",
+        "loading_subtitle": "¡Por favor no cierres esta página!",
+        "success": "¡Evento publicado con éxito!",
+        "error": {
+          "title_required": "El título del evento es obligatorio (mín. 3 caracteres)",
+          "place_required": "El lugar del evento es obligatorio",
+          "date_from_required": "La fecha de inicio es obligatoria",
+          "date_to_required": "La fecha de finalización es obligatoria",
+          "image_required": "Por favor sube una imagen",
+          "generic": "Ocurrió un error al publicar",
+          "permission": "No tienes permiso para publicar",
+          "login": "Por favor inicia sesión"
         }
       }
     },

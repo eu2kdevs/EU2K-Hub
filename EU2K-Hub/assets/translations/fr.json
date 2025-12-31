@@ -123,7 +123,11 @@
       "title": "EU2K Hub",
       "welcome": "Bienvenue dans le Hub !",
       "upcoming_events": "Événements à venir",
-      "news": "Actualités",
+      "news": {
+        "title": "Actualités",
+        "published": "Publié",
+        "author": "Auteur"
+      },
       "event_name": "Nom de l'événement",
       "event_description": "Description de l'événement",
       "event_location": "Lieu de l'événement",
@@ -322,6 +326,7 @@
         "title_label": "Titre de la nouvelle",
         "link_label": "Lien de la nouvelle",
         "author_label": "Auteur de la nouvelle",
+        "date_label": "Date de publication (laisser vide pour aujourd'hui)",
         "content_label": "Description de la Nouvelle",
         "upload_image": "Télécharger une image",
         "publish": "Publier",
@@ -343,6 +348,31 @@
           "upload_failed": "Échec du téléchargement",
           "generic": "Une erreur s'est produite lors de la publication",
           "permission": "Vous n'avez pas la permission de publier",
+          "login": "Veuillez vous connecter"
+        }
+      },
+      "event_publish": {
+        "title": "Publier un événement",
+        "subtitle": "Veuillez remplir tous les champs :)",
+        "title_label": "Titre de l'événement",
+        "link_label": "Lien de l'événement",
+        "place_label": "Lieu de l'événement",
+        "date_from_label": "Date de début",
+        "date_to_label": "Date de fin (pour un jour, répétez la date de début)",
+        "description_label": "Description de l'événement",
+        "upload_image": "Télécharger une image",
+        "publish": "Publier",
+        "loading_title": "Publication en cours",
+        "loading_subtitle": "Veuillez ne pas fermer cette page !",
+        "success": "Événement publié avec succès !",
+        "error": {
+          "title_required": "Titre requis (min. 3 caractères)",
+          "place_required": "Lieu requis",
+          "date_from_required": "Date de début requise",
+          "date_to_required": "Date de fin requise",
+          "image_required": "Veuillez télécharger une image",
+          "generic": "Une erreur est survenue",
+          "permission": "Vous n'avez pas la permission",
           "login": "Veuillez vous connecter"
         }
       }
