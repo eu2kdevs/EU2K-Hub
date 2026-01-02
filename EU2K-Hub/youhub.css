@@ -64,7 +64,7 @@
   --news-radius: 20px;
   --sidebar-width: 76px;
   --sidebar-width-open: 198px;
-  --transition: 0.2s cubic-bezier(.4,0,.2,1);
+  --transition: 0.2s cubic-bezier(.4, 0, .2, 1);
   --font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -72,7 +72,8 @@
   --font-weight-bold: 700;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -165,20 +166,40 @@ body {
   color: #E5FDCB;
   transition: background .12s ease, filter .12s ease, height .12s ease-out;
   padding: 6px;
-  margin: 4px 0; 
+  margin: 4px 0;
   background: #273319;
 }
-.rail-item:hover { filter: brightness(0.95); }
-.rail-item:active { transform: none; }
+
+.rail-item:hover {
+  filter: brightness(0.95);
+}
+
+.rail-item:active {
+  transform: none;
+}
+
 .rail-item.is-active {
   background: #AFE86E;
   color: #32451D;
   height: 80px;
 }
-.rail-item.nav-btn { transition: background .12s ease, filter .12s ease, height .12s ease-out; }
-.rail-item.nav-btn:active { height: 72px; filter: brightness(0.98); }
-.rail-item.nav-btn.is-active:active { height: 88px; }
-.rail-item.rail-toggle { background: #182018; }
+
+.rail-item.nav-btn {
+  transition: background .12s ease, filter .12s ease, height .12s ease-out;
+}
+
+.rail-item.nav-btn:active {
+  height: 72px;
+  filter: brightness(0.98);
+}
+
+.rail-item.nav-btn.is-active:active {
+  height: 88px;
+}
+
+.rail-item.rail-toggle {
+  background: #182018;
+}
 
 .rail-icon {
   width: 40px;
@@ -189,12 +210,41 @@ body {
   border-radius: 16px;
   background: transparent;
 }
-.rail-icon img { width: 22px; height: 22px; display: block; }
-.rail-item.is-active .rail-icon img { width: 26px; height: 26px; }
-.rail-label { display: block; text-align: center; line-height: 1.2; margin: 0; padding: 0; }
-.rail-item.is-active .rail-icon img { filter: brightness(0) saturate(100%) invert(12%) sepia(41%) saturate(776%) hue-rotate(57deg) brightness(95%) contrast(94%); } /* #142204 közelítés */
-.rail-item:not(.is-active) .rail-icon img { filter: brightness(0) saturate(100%) invert(92%) sepia(17%) saturate(535%) hue-rotate(27deg) brightness(105%) contrast(101%); } /* #CEFF97 közelítés */
-.rail-label { font-size: 12px; line-height: 1; font-weight: var(--font-weight-semibold); }
+
+.rail-icon img {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.rail-item.is-active .rail-icon img {
+  width: 26px;
+  height: 26px;
+}
+
+.rail-label {
+  display: block;
+  text-align: center;
+  line-height: 1.2;
+  margin: 0;
+  padding: 0;
+}
+
+.rail-item.is-active .rail-icon img {
+  filter: brightness(0) saturate(100%) invert(12%) sepia(41%) saturate(776%) hue-rotate(57deg) brightness(95%) contrast(94%);
+}
+
+/* #142204 közelítés */
+.rail-item:not(.is-active) .rail-icon img {
+  filter: brightness(0) saturate(100%) invert(92%) sepia(17%) saturate(535%) hue-rotate(27deg) brightness(105%) contrast(101%);
+}
+
+/* #CEFF97 közelítés */
+.rail-label {
+  font-size: 12px;
+  line-height: 1;
+  font-weight: var(--font-weight-semibold);
+}
 
 .main-area {
   display: flex;
@@ -206,12 +256,14 @@ body {
 
 .main-scroll-area {
   flex: 1;
-  display: block; /* változtatva flex-ről block-ra, hogy természetesen görgessen */
+  display: block;
+  /* változtatva flex-ről block-ra, hogy természetesen görgessen */
   background: var(--main-bg);
   border-radius: 32px;
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
   overflow-y: auto;
-  overflow-x: hidden; /* disable horizontal scroll in main area */
+  overflow-x: hidden;
+  /* disable horizontal scroll in main area */
   scroll-behavior: smooth;
   padding: 22px;
   background: var(--main-content-bg);
@@ -242,12 +294,15 @@ body {
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* High z-index to overlay everything in main-scroll-area */
-  pointer-events: auto; /* Prevent interaction with elements behind popup */
+  z-index: 1000;
+  /* High z-index to overlay everything in main-scroll-area */
+  pointer-events: auto;
+  /* Prevent interaction with elements behind popup */
 }
 
 .permission-overlay-scroll-area .permission-container {
-  pointer-events: auto; /* Re-enable clicks on the popup itself */
+  pointer-events: auto;
+  /* Re-enable clicks on the popup itself */
 }
 
 .permission-container {
@@ -259,19 +314,25 @@ body {
   width: 100%;
   max-height: 100%;
   height: fit-content;
-  overflow: hidden; /* Border-radius clips the scrollbar */
+  overflow: hidden;
+  /* Border-radius clips the scrollbar */
   box-sizing: border-box;
 }
 
 .permission-content {
   text-align: left;
-  max-height: calc(100vh - 96px); /* Account for padding and margins */
+  max-height: calc(100vh - 96px);
+  /* Account for padding and margins */
   height: fit-content;
   overflow-y: auto;
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: #445A2D #16210B; /* Firefox */
-  margin-right: -32px; /* Compensate for container padding */
-  padding-right: 32px; /* Re-add padding for content */
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: #445A2D #16210B;
+  /* Firefox */
+  margin-right: -32px;
+  /* Compensate for container padding */
+  padding-right: 32px;
+  /* Re-add padding for content */
   padding-bottom: 0;
   display: flex;
   flex-direction: column;
@@ -305,7 +366,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: width .12s cubic-bezier(.2,.0,.2,1), border-radius .12s cubic-bezier(.2,.0,.2,1), background .12s ease;
+  transition: width .12s cubic-bezier(.2, .0, .2, 1), border-radius .12s cubic-bezier(.2, .0, .2, 1), background .12s ease;
   cursor: pointer;
   padding: 0;
 }
@@ -384,7 +445,8 @@ body {
   overflow: visible;
   will-change: transform;
   backface-visibility: hidden;
-  transform: translateZ(0); /* Force GPU acceleration */
+  transform: translateZ(0);
+  /* Force GPU acceleration */
   margin-bottom: 0;
 }
 
@@ -394,7 +456,8 @@ body {
 #adminConsolePopup .permission-ok-btn,
 #adminAssignClassPopup1 .permission-ok-btn,
 #adminAssignClassPopup2 .permission-ok-btn {
-  margin-bottom: 6px; /* Space for scaleY(1.12) growth */
+  margin-bottom: 6px;
+  /* Space for scaleY(1.12) growth */
 }
 
 .permission-ok-btn:hover {
@@ -405,7 +468,7 @@ body {
 }
 
 .permission-ok-btn:active {
-  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
 }
 
 /* Input field for staff transfer popup */
@@ -434,13 +497,16 @@ body {
 }
 
 .main-content {
-  position: relative; /* for absolute positioned overlays */
+  position: relative;
+  /* for absolute positioned overlays */
   display: flex;
   flex-direction: column;
   gap: 18px;
   /* min-height eltávolítva, hogy görgethető legyen */
-  overflow-x: hidden; /* disable horizontal scroll */
-  overflow-y: visible; /* ne legyen külön görgetés */
+  overflow-x: hidden;
+  /* disable horizontal scroll */
+  overflow-y: visible;
+  /* ne legyen külön görgetés */
 }
 
 /* YouHub Grid Controls */
@@ -475,8 +541,10 @@ body {
   z-index: 1;
   will-change: transform;
   backface-visibility: hidden;
-  transform: translateZ(0); /* Force GPU acceleration */
-  margin-bottom: 6px; /* Space for scaleY(1.12) growth */
+  transform: translateZ(0);
+  /* Force GPU acceleration */
+  margin-bottom: 6px;
+  /* Space for scaleY(1.12) growth */
 }
 
 .youhub-revert-btn:hover {
@@ -485,7 +553,9 @@ body {
   transform-origin: center;
 }
 
-.youhub-revert-btn:active { animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards; }
+.youhub-revert-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
 
 .youhub-revert-icon {
   width: 22px;
@@ -508,7 +578,8 @@ body {
   gap: 32px;
   width: 100%;
   box-sizing: border-box;
-  aspect-ratio: 802 / 675; /* Rectangle aspect ratio from Figma */
+  aspect-ratio: 802 / 675;
+  /* Rectangle aspect ratio from Figma */
   max-width: 100%;
 }
 
@@ -537,7 +608,7 @@ body {
 
 /* FLIP animation will handle transform transitions via JS */
 /* Keep other transitions for border, shadow, etc. */
-.youhub-grid > *:not(.dragging):not(.youhub-card-handle):not(.youhub-card-placeholder) {
+.youhub-grid>*:not(.dragging):not(.youhub-card-handle):not(.youhub-card-placeholder) {
   will-change: transform;
 }
 
@@ -554,10 +625,21 @@ body {
 
 /* Bounce animation for cards (like macOS notification) */
 @keyframes card-bounce {
-  0% { transform: translateY(0); }
-  30% { transform: translateY(-8px); }
-  60% { transform: translateY(-4px); }
-  100% { transform: translateY(0); }
+  0% {
+    transform: translateY(0);
+  }
+
+  30% {
+    transform: translateY(-8px);
+  }
+
+  60% {
+    transform: translateY(-4px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }
 
 /* Apply bounce animation */
@@ -880,7 +962,7 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: width .12s cubic-bezier(.2,0,.2,1), border-radius .12s cubic-bezier(.2,0,.2,1), background .12s ease, transform .12s ease;
+  transition: width .12s cubic-bezier(.2, 0, .2, 1), border-radius .12s cubic-bezier(.2, 0, .2, 1), background .12s ease, transform .12s ease;
   padding: 0;
   margin-left: auto;
 }
@@ -928,10 +1010,13 @@ body {
   line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
   line-clamp: 2;
-  overflow: hidden;
-  height: 70%;
+  -webkit-box-orient: vertical;
+  height: auto;
+  max-height: 2.8em;
+  /* Fallback height for 2 lines */
 }
 
 .suggestions-hive {
@@ -1293,8 +1378,10 @@ body {
   overflow: visible;
   will-change: transform;
   backface-visibility: hidden;
-  transform: translateZ(0); /* Force GPU acceleration */
-  margin-bottom: 4px; /* Space for scaleY(1.08) growth */
+  transform: translateZ(0);
+  /* Force GPU acceleration */
+  margin-bottom: 4px;
+  /* Space for scaleY(1.08) growth */
 }
 
 .suggestions-cta-sml {
@@ -1314,8 +1401,10 @@ body {
   overflow: visible;
   will-change: transform;
   backface-visibility: hidden;
-  transform: translateZ(0); /* Force GPU acceleration */
-  margin-bottom: 4px; /* Space for scaleY(1.08) growth */
+  transform: translateZ(0);
+  /* Force GPU acceleration */
+  margin-bottom: 4px;
+  /* Space for scaleY(1.08) growth */
 }
 
 .suggestions-cta img {
@@ -1347,7 +1436,8 @@ body {
 
 .suggestions-cta:hover {
   background: #DEFFBA;
-  transform: scaleY(1.08); /* hover: subtle vertical grow only */
+  transform: scaleY(1.08);
+  /* hover: subtle vertical grow only */
 }
 
 .suggestions-cta-sml:hover {
@@ -1362,11 +1452,11 @@ body {
 
 /* click: real pop animation */
 .suggestions-cta:active {
-  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
 }
 
 .suggestions-cta-sml:active {
-  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
 }
 
 @media (max-width: 1400px) {
@@ -1401,7 +1491,6 @@ body {
 
 .calendar-top-section {
   width: 100%;
-  flex: 1;
   background: #465A2F;
   border-radius: 13px;
   display: flex;
@@ -1410,6 +1499,69 @@ body {
   padding: 0 20px;
   box-sizing: border-box;
   position: relative;
+}
+
+.calendar-middle-section {
+  flex: 1;
+  border-radius: 16px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  background: #43562D;
+}
+
+.calendar-nav-shell {
+  background: transparent;
+  border-radius: 13px;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  align-self: stretch;
+}
+
+.calendar-nav-shell .myclass-navbar {
+  background: #273617;
+  border-radius: 10px;
+  padding: 6px;
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+  flex-wrap: nowrap;
+}
+
+.calendar-navbar {
+  flex: 0 0 auto;
+}
+
+.calendar-nav-shell .myclass-nav-item {
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.calendar-nav-shell .myclass-nav-item span {
+  color: #C5EE96;
+  transition: color 0.2s ease;
+}
+
+.calendar-nav-shell .myclass-nav-item.active {
+  background: #465A2F;
+}
+
+.calendar-nav-shell .myclass-nav-item.active span {
+  color: #EAFCCA;
 }
 
 .calendar-card-content {
@@ -1528,23 +1680,26 @@ body {
   padding: 12px 10px;
   margin-left: auto;
   cursor: pointer;
-  transition: width .12s cubic-bezier(.2,.0,.2,1), border-radius .12s cubic-bezier(.2,.0,.2,1), background .12s ease, transform .12s ease;
+  transition: width .12s cubic-bezier(.2, .0, .2, 1), border-radius .12s cubic-bezier(.2, .0, .2, 1), background .12s ease, transform .12s ease;
   text-decoration: none;
   box-sizing: border-box;
   will-change: transform;
   backface-visibility: hidden;
-  transform: translateZ(0); /* Force GPU acceleration */
-  margin-bottom: 3px; /* Space for scaleY(1.08) growth */
+  transform: translateZ(0);
+  /* Force GPU acceleration */
+  margin-bottom: 3px;
+  /* Space for scaleY(1.08) growth */
 }
 
 .notifications-history-btn:hover {
   background: #DEFFBA;
-  transform: scaleY(1.08); /* hover: subtle vertical grow only */
+  transform: scaleY(1.08);
+  /* hover: subtle vertical grow only */
 }
 
 /* click: real pop animation */
 .notifications-history-btn:active {
-  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
 }
 
 .notifications-history-icon {
@@ -1834,7 +1989,8 @@ body {
   min-height: 80px;
   will-change: transform;
   backface-visibility: hidden;
-  transform: translateZ(0); /* Force GPU acceleration */
+  transform: translateZ(0);
+  /* Force GPU acceleration */
   margin-bottom: 0;
 }
 
@@ -1858,18 +2014,20 @@ body {
 
 .notification-detail-action-btn--delete:hover {
   background: #DEFFBA;
-  transform: scaleY(1.08); /* hover: subtle vertical grow only */
+  transform: scaleY(1.08);
+  /* hover: subtle vertical grow only */
 }
 
 .notification-detail-action-btn--snooze:hover {
   background: #85adeb;
-  transform: scaleY(1.08); /* hover: subtle vertical grow only */
+  transform: scaleY(1.08);
+  /* hover: subtle vertical grow only */
 }
 
 /* click: real pop animation */
 .notification-detail-action-btn--delete:active,
 .notification-detail-action-btn--snooze:active {
-  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
 }
 
 .notification-detail-action-icon {
@@ -2176,9 +2334,12 @@ body {
 
 /* CSS változók a chart oszlopok szélességéhez (százalékban) */
 .myclass-main-content {
-  --chart-width-first-percent: 6.47%;  /* Első 3 és utolsó 3 oszlop szélessége % */
-  --chart-width-middle-percent: 11.18%; /* 4. és 5. oszlop szélessége % */
-  --chart-width-highlight-percent: 20%;  /* 6. oszlop szélessége % */
+  --chart-width-first-percent: 6.47%;
+  /* Első 3 és utolsó 3 oszlop szélessége % */
+  --chart-width-middle-percent: 11.18%;
+  /* 4. és 5. oszlop szélessége % */
+  --chart-width-highlight-percent: 20%;
+  /* 6. oszlop szélessége % */
 }
 
 .myclass-chart-container {
@@ -2350,9 +2511,12 @@ body {
 
 /* CSS változók a jelző elemek szélességéhez */
 .myclass-secondary-panel {
-  --indicator-width-first: 22px;  /* Első 3 elem szélessége */
-  --indicator-width-middle: 38px; /* 4. és 5. elem szélessége */
-  --indicator-width-highlight: 68px; /* 6. elem szélessége */
+  --indicator-width-first: 22px;
+  /* Első 3 elem szélessége */
+  --indicator-width-middle: 38px;
+  /* 4. és 5. elem szélessége */
+  --indicator-width-highlight: 68px;
+  /* 6. elem szélessége */
 }
 
 .myclass-indicator-container {
@@ -2452,6 +2616,12 @@ body {
   flex-shrink: 0;
 }
 
+.suggestions-calendar-nav-item-img {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0;
+}
+
 .myclass-nav-item span {
   color: #C5EE96;
   font-size: 12.5px;
@@ -2516,14 +2686,14 @@ body {
   background: #9FC177;
   border-radius: 9999px;
   cursor: grab;
-  transition: width 0.3s ease, height 0.3s ease, transform 0.16s cubic-bezier(.2,0,.2,1);
+  transition: width 0.3s ease, height 0.3s ease, transform 0.16s cubic-bezier(.2, 0, .2, 1);
   z-index: 10;
 }
 
 .youhub-card-handle:active {
   cursor: grabbing;
   width: 45%;
-  animation: handle-pop 0.16s cubic-bezier(.2,0,.2,1) forwards;
+  animation: handle-pop 0.16s cubic-bezier(.2, 0, .2, 1) forwards;
 }
 
 .youhub-card-handle:hover {
@@ -2532,9 +2702,17 @@ body {
 }
 
 @keyframes handle-pop {
-  0% { transform: translateX(-50%) scale(1); }
-  70% { transform: translateX(-50%) scale(1.1); }
-  100% { transform: translateX(-50%) scale(1.05); }
+  0% {
+    transform: translateX(-50%) scale(1);
+  }
+
+  70% {
+    transform: translateX(-50%) scale(1.1);
+  }
+
+  100% {
+    transform: translateX(-50%) scale(1.05);
+  }
 }
 
 /* Edit Mode Styles */
@@ -2605,13 +2783,17 @@ body {
   position: relative;
   top: auto;
   z-index: 10;
-  background: var(--main-content-bg); /* same as main content */
+  background: var(--main-content-bg);
+  /* same as main content */
   backdrop-filter: none;
   flex-direction: column;
-  flex: 0 0 auto; /* do not let flexbox shrink the header */
+  flex: 0 0 auto;
+  /* do not let flexbox shrink the header */
   flex-shrink: 0;
-  overflow: visible; /* avoid clipping which looks like squashing */
-  overflow-x: visible; /* ne legyen külön görgetés */
+  overflow: visible;
+  /* avoid clipping which looks like squashing */
+  overflow-x: visible;
+  /* ne legyen külön görgetés */
 }
 
 .welcome-container {
@@ -2648,10 +2830,12 @@ body {
 /* Header icon gradient container - hug content, fills height */
 .header-icon-gradient {
   width: fit-content;
-  min-height: 68px; /* minimum magasság a gomboknak */
+  min-height: 68px;
+  /* minimum magasság a gomboknak */
   height: auto;
   border-radius: 32px;
-  background: #62754E; /* Alapértelmezett: csak zöld */
+  background: #62754E;
+  /* Alapértelmezett: csak zöld */
   display: flex;
   align-items: center;
   gap: 10px;
@@ -2662,14 +2846,13 @@ body {
 /* Gradient csak ha van login gomb (nincs bejelentkezve) */
 .header-icon-gradient.has-login {
   background: linear-gradient(90deg,
-    #62754E 0%,
-    #62754E 30%,
-    #4F6148 40%,
-    #3D4A52 55%,
-    #2F3842 70%,
-    #242B38 85%,
-    #242B38 100%
-  );
+      #62754E 0%,
+      #62754E 30%,
+      #4F6148 40%,
+      #3D4A52 55%,
+      #2F3842 70%,
+      #242B38 85%,
+      #242B38 100%);
 }
 
 /* Ha csak kamera van (nincs login), marad csak zöld (nincs gradient) */
@@ -2678,18 +2861,17 @@ body {
 /* Gradient ha van login ÉS kamera indikátor */
 .header-icon-gradient.has-login.has-camera {
   background: linear-gradient(90deg,
-    #62754E 0%,
-    #62754E 8%,
-    #4F6148 16%,
-    #3D4A52 24%,
-    #2F3842 32%,
-    #242B38 40%,
-    #2F3842 48%,
-    #3D4A52 56%,
-    #4F6148 64%,
-    #62754E 72%,
-    #62754E 100%
-  );
+      #62754E 0%,
+      #62754E 8%,
+      #4F6148 16%,
+      #3D4A52 24%,
+      #2F3842 32%,
+      #242B38 40%,
+      #2F3842 48%,
+      #3D4A52 56%,
+      #4F6148 64%,
+      #62754E 72%,
+      #62754E 100%);
 }
 
 /* Header icon wrapper - fills height */
@@ -2715,7 +2897,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: width .12s cubic-bezier(.2,.0,.2,1), border-radius .12s cubic-bezier(.2,.0,.2,1), background .12s ease;
+  transition: width .12s cubic-bezier(.2, .0, .2, 1), border-radius .12s cubic-bezier(.2, .0, .2, 1), background .12s ease;
   text-decoration: none;
   padding: 0;
   box-sizing: border-box;
@@ -2744,11 +2926,14 @@ body {
 /* Header login button - Bejelentkezés */
 .header-login-btn {
   flex: 0 0 auto;
-  min-width: 140px; /* minimum szélesség a szövegnek */
-  height: 52px; /* fix magasság az ikon gombokkal egyező */
+  min-width: 140px;
+  /* minimum szélesség a szövegnek */
+  height: 52px;
+  /* fix magasság az ikon gombokkal egyező */
   background: #84B3FF;
   border: 1px solid #282F3A;
-  border-radius: 16px; /* adjusted rounding */
+  border-radius: 16px;
+  /* adjusted rounding */
   border-left: none;
   color: #08152C;
   font-weight: var(--font-weight-semibold);
@@ -2762,18 +2947,22 @@ body {
   justify-content: center;
   will-change: transform;
   backface-visibility: hidden;
-  transform: translateZ(0); /* Force GPU acceleration */
+  transform: translateZ(0);
+  /* Force GPU acceleration */
   margin-bottom: 0;
 }
 
 .header-login-btn:hover {
   background: #42587B;
   color: #DBE8FF;
-  transform: scaleY(1.12); /* stronger vertical grow on hover */
+  transform: scaleY(1.12);
+  /* stronger vertical grow on hover */
 }
 
 /* Click pop animation same as banner buttons */
-.header-login-btn:active { animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards; }
+.header-login-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
 
 /* Header Edit Mode Button - inherits from login button */
 .header-edit-mode-btn {
@@ -2782,7 +2971,8 @@ body {
   height: 52px;
   background: #D3FFA1;
   border: 1px solid #57703B;
-  border-radius: 16px; /* Same as login button */
+  border-radius: 16px;
+  /* Same as login button */
   border-left: none;
   color: #344521;
   font-weight: var(--font-weight-semibold);
@@ -2797,17 +2987,21 @@ body {
   gap: 8px;
   will-change: transform;
   backface-visibility: hidden;
-  transform: translateZ(0); /* Force GPU acceleration */
+  transform: translateZ(0);
+  /* Force GPU acceleration */
   margin-bottom: 0;
 }
 
 .header-edit-mode-btn:hover {
   background: #DEFFBA;
-  transform: scaleY(1.12); /* Same as login button */
+  transform: scaleY(1.12);
+  /* Same as login button */
 }
 
 /* Click pop animation same as login button */
-.header-edit-mode-btn:active { animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards; }
+.header-edit-mode-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
 
 .header-edit-mode-icon {
   width: 22px;
@@ -2839,25 +3033,31 @@ body {
   overflow-y: hidden;
   scroll-behavior: smooth;
 }
-.header-scroll-row::-webkit-scrollbar { display: none; }
-.header-scroll-row { scrollbar-width: none; }
+
+.header-scroll-row::-webkit-scrollbar {
+  display: none;
+}
+
+.header-scroll-row {
+  scrollbar-width: none;
+}
 
 .info-banner {
-    background: #1D3823;
-    display: flex;
-    flex-direction: row;
-    padding: 18px 18px 18px 24px; 
-    border-radius: 32px;
-    border: 1px solid #CFF7D3;
-    gap: 16px;
-    margin-bottom: 8px;
+  background: #1D3823;
+  display: flex;
+  flex-direction: row;
+  padding: 18px 18px 18px 24px;
+  border-radius: 32px;
+  border: 1px solid #CFF7D3;
+  gap: 16px;
+  margin-bottom: 8px;
 }
 
 .info-banner-icon-container {
   height: 100%;
 }
 
-.info-banner-icon{
+.info-banner-icon {
   width: 32px;
   height: 32px;
 }
@@ -2865,7 +3065,8 @@ body {
 .banner-content {
   display: flex;
   flex-direction: row;
-  align-items: flex-start; /* szövegek a tetejére igazítva */
+  align-items: flex-start;
+  /* szövegek a tetejére igazítva */
   gap: 8px;
   flex-wrap: wrap;
   flex: 1 1 auto;
@@ -2879,17 +3080,18 @@ body {
   gap: 6px;
   flex: 1 1 auto;
   min-width: 0;
-  padding-right: 24px; /* az info-banner jobb oldali paddingját ide tesszük, actions-t nem érinti */
+  padding-right: 24px;
+  /* az info-banner jobb oldali paddingját ide tesszük, actions-t nem érinti */
 }
 
-.info-banner-title{
+.info-banner-title {
   color: #97FFAD;
   font-weight: var(--font-weight-semibold);
   text-align: left;
   font-size: 20px;
 }
 
-.info-banner-desc{
+.info-banner-desc {
   color: #B9EBA2;
   font-weight: var(--font-weight-regular);
   font-size: 12px;
@@ -2904,7 +3106,7 @@ body {
   align-self: stretch;
 }
 
-.banner-actions{
+.banner-actions {
   display: flex;
   flex-direction: row;
   gap: 8px;
@@ -2923,36 +3125,39 @@ body {
   padding: 10px 16px;
   border-radius: 24px;
   border: none;
-  cursor: pointer; /* mutató kéz */
+  cursor: pointer;
+  /* mutató kéz */
   pointer-events: auto;
   position: relative;
   z-index: 0;
   transition: background .15s ease, color .15s ease, transform .15s ease;
   transform-origin: center;
-  transform: translateZ(0); /* Force GPU acceleration */
-  overflow: hidden; /* pop animációnál háttér ne lógjon ki */
+  transform: translateZ(0);
+  /* Force GPU acceleration */
+  overflow: hidden;
+  /* pop animációnál háttér ne lógjon ki */
   will-change: transform;
   backface-visibility: hidden;
 }
 
-.banner-btn.primary { 
-  background: #226932; 
-  color: #DBFCD6; 
+.banner-btn.primary {
+  background: #226932;
+  color: #DBFCD6;
 }
 
-.banner-btn.secondary { 
-  background: #0C471F; 
-  color: #CFF7D3; 
+.banner-btn.secondary {
+  background: #0C471F;
+  color: #CFF7D3;
 }
 
-.banner-btn.primary:hover { 
-  background: #83FF8F; 
+.banner-btn.primary:hover {
+  background: #83FF8F;
   color: #082907;
   border: 1px solid #3A4F29;
 }
 
-.banner-btn.secondary:hover { 
-  background: #93D98D; 
+.banner-btn.secondary:hover {
+  background: #93D98D;
   color: #082907;
   border: 1px solid #3A4F29;
 }
@@ -2968,19 +3173,31 @@ body {
 
 .banner-btn:hover,
 .banner-button:hover {
-  transform: scaleY(1.08); /* hover: subtle vertical grow only */
+  transform: scaleY(1.08);
+  /* hover: subtle vertical grow only */
 }
 
 /* click: real pop animation */
 .banner-btn:active,
 .banner-button:active {
-  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
 }
 
 @keyframes banner-btn-pop {
-  0%   { transform: scaleY(1.00); }
-  70%  { transform: scaleY(1.32); } /* overshoot */
-  100% { transform: scaleY(1.25); } /* settle */
+  0% {
+    transform: scaleY(1.00);
+  }
+
+  70% {
+    transform: scaleY(1.32);
+  }
+
+  /* overshoot */
+  100% {
+    transform: scaleY(1.25);
+  }
+
+  /* settle */
 }
 
 .banner-btn.primary {
@@ -2999,39 +3216,39 @@ body {
 
 /* Warning Banner */
 .warning-banner {
-    background: #261906;
-    display: flex;
-    flex-direction: row;
-    padding: 18px 18px 18px 24px; 
-    border-radius: 32px;
-    border: 1px solid #FFF1C2;
-    gap: 16px;
-    margin-bottom: 8px;
+  background: #261906;
+  display: flex;
+  flex-direction: row;
+  padding: 18px 18px 18px 24px;
+  border-radius: 32px;
+  border: 1px solid #FFF1C2;
+  gap: 16px;
+  margin-bottom: 8px;
 }
 
 .warning-banner-icon-container {
   height: 100%;
 }
 
-.warning-banner-icon{
+.warning-banner-icon {
   width: 32px;
   height: 32px;
 }
 
-.warning-banner-title{
+.warning-banner-title {
   color: #FFDFAF;
   font-weight: var(--font-weight-semibold);
   text-align: left;
   font-size: 20px;
 }
 
-.warning-banner-desc{
+.warning-banner-desc {
   color: #E9CE85;
   font-weight: var(--font-weight-regular);
   font-size: 12px;
 }
 
-.warning-banner-actions{
+.warning-banner-actions {
   display: flex;
   flex-direction: row;
   gap: 8px;
@@ -3076,23 +3293,59 @@ body {
   transform: scale(0.9);
   transform-origin: left center;
 }
+
 @media (max-width: 1200px) {
-  .red-card.large { min-width: 220px; }
+  .red-card.large {
+    min-width: 220px;
+  }
 }
+
 @media (max-width: 900px) {
-  .main-content { padding: 0 8px 32px 32px; }
-  .red-card.large { min-width: 140px; }
-  .sidebar { margin-left: 8px; }
-  .main-content { margin-left: 0; }
+  .main-content {
+    padding: 0 8px 32px 32px;
+  }
+
+  .red-card.large {
+    min-width: 140px;
+  }
+
+  .sidebar {
+    margin-left: 8px;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
 }
+
 @media (max-width: 700px) {
-  .sidebar { display: none; }
-  .main-content { border-radius: 32px; margin: 8px; box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container); }
-  .main-area { margin-left: 0; }
+  .sidebar {
+    display: none;
+  }
+
+  .main-content {
+    border-radius: 32px;
+    margin: 8px;
+    box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container);
+  }
+
+  .main-area {
+    margin-left: 0;
+  }
 }
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-thumb { background: #232823; border-radius: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #232823;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
 
 
 /* ===================== FOOTER ===================== */
@@ -3238,7 +3491,8 @@ body {
   flex-direction: column;
   gap: 0px;
   align-items: flex-start;
-  padding-top: 8px; /* tér az első gomb beta tagjének felül */
+  padding-top: 8px;
+  /* tér az első gomb beta tagjének felül */
 }
 
 .footer-item {
@@ -3255,13 +3509,15 @@ body {
   display: inline-block;
   white-space: normal;
   line-height: 1.4;
-  margin-bottom: 8px; /* gap a gombok között */
+  margin-bottom: 8px;
+  /* gap a gombok között */
 }
 
 /* Ha van beta badge a gombban, extra tér kell */
 .footer-section:nth-child(2) .footer-item:last-child,
 .footer-section:nth-child(3) .footer-item {
-  margin-right: 10px; /* tér a beta tagnek jobbra */
+  margin-right: 10px;
+  /* tér a beta tagnek jobbra */
 }
 
 .footer-item:hover {
@@ -3281,4 +3537,331 @@ body {
   font-weight: 600;
   display: inline-block;
   white-space: nowrap;
+}
+
+/* ----------------------------------------------------- */
+/* CALENDAR CARD REDESIGN - New Styles */
+/* ----------------------------------------------------- */
+
+.calendar-card-content {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 12px;
+  height: 100%;
+}
+
+/* Top Section: Header Row + Date Bar */
+.calendar-top-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px;
+}
+
+.calendar-header-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  position: relative;
+  /* For centering title */
+}
+
+.calendar-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.calendar-title {
+  color: #CEFF97;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+  flex: 1;
+  /* Pushes content to sides, but we want absolute center? */
+  /* If we flex: 1, text-align: center works if there are items on both sides balancing it. */
+  /* But button is only on right. */
+  /* Let's try to center it properly. */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.calendar-full-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #CEFF97;
+  border-radius: 12px;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  margin-left: auto;
+  /* Push to right */
+}
+
+.calendar-full-btn:hover {
+  opacity: 0.9;
+}
+
+.calendar-full-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.calendar-full-text {
+  color: #243114;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Date Bar */
+.calendar-date-bar {
+  background: #273617;
+  border-radius: 10px;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 56px;
+  width: 100%;
+  /* Fill the container */
+  box-sizing: border-box;
+  /* Include padding in width */
+}
+
+.calendar-date-text {
+  color: #CEFF97;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.calendar-date-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.calendar-month-text {
+  color: #465A2F;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.calendar-month-pill {
+  background: #465A2F;
+  border-radius: 999px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  /* Wider padding as requested */
+  cursor: pointer;
+  min-width: 48px;
+  /* Ensure visual width */
+}
+
+.calendar-month-pill img {
+  width: 12px;
+  height: 12px;
+}
+
+.calendar-more-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid #57703B;
+  background: #D3FFA1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: width .12s cubic-bezier(.2, 0, .2, 1), border-radius .12s cubic-bezier(.2, 0, .2, 1), background .12s ease, transform .12s ease;
+  padding: 0;
+  margin-left: auto;
+}
+
+.calendar-more-btn:hover {
+  width: 48px;
+  border-radius: 12px;
+  background: #DEFFBA;
+}
+
+.calendar-more-btn:active {
+  transform: scale(0.96);
+}
+
+.calendar-more-btn img {
+  width: 16px;
+  height: 16px;
+}
+
+/* Middle Section: Nav + Grid */
+.calendar-middle-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+  /* Fills remaining space */
+  min-height: 0;
+  background: transparent;
+  /* "Children hugging" - no bg/padding implies transparent container */
+}
+
+/* Navigation */
+.calendar-nav-shell {
+  padding: 0;
+}
+
+.calendar-navbar {
+  display: flex;
+  gap: 8px;
+}
+
+.calendar-nav-item {
+  flex: 1;
+  justify-content: center;
+}
+
+/* Grid Layout */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  /* Important for scrolling */
+  overflow-y: auto;
+  padding-bottom: 2px;
+  /* Spacing for scroll */
+}
+
+.calendar-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Schedule Card */
+.calendar-schedule-card {
+  background: #243114;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  flex: 1;
+}
+
+.calendar-schedule-card--highlight {
+  background: #CEFF97;
+  border-radius: 24px;
+}
+
+.calendar-schedule-card--highlight .calendar-subject-name,
+.calendar-schedule-card--highlight .calendar-detail-item span {
+  color: #243114 !important;
+}
+
+.calendar-schedule-card--highlight .calendar-card-right-bar {
+  background: #465A2F;
+}
+
+.calendar-card-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+}
+
+.calendar-card-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.calendar-card-middle {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 0;
+  background: transparent;
+  min-width: 0;
+}
+
+.calendar-subject-name {
+  color: #CEFF97;
+  font-weight: 700;
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.calendar-card-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.calendar-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.calendar-detail-item img {
+  width: 14px;
+  height: 14px;
+}
+
+.calendar-detail-item span {
+  color: #CEFF97;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.calendar-detail-separator {
+  color: #CEFF97;
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.calendar-card-right-bar {
+  background: #465A2F;
+  width: 32px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.calendar-card-right-bar img {
+  width: 16px;
+  height: 16px;
+}
+
+
+/* Calendar Nav Item Sizing */
+.suggestions-nav-item[data-calendar-nav="timetable"],
+.suggestions-nav-item[data-calendar-nav="exams"] {
+  flex: 0 1 auto;
+  /* Shrink to content, don't grow excessively */
+}
+
+.suggestions-nav-item[data-calendar-nav="rp"],
+.suggestions-nav-item[data-calendar-nav="bell"] {
+  flex: 1 0 auto;
+  /* Grow to fill space */
 }

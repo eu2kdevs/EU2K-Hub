@@ -604,16 +604,19 @@
                     <div class="myclass-navbar" role="tablist" aria-label="Javaslatok navigáció">
                       <button class="myclass-nav-item suggestions-nav-item active" data-suggestion-nav="suggestions"
                         type="button">
-                        <img src="assets/youhub/suggestions/suggestion.svg" alt="" aria-hidden="true">
+                        <img src="assets/youhub/suggestions/suggestion.svg" alt=""
+                          class="suggestions-calendar-nav-item-img" aria-hidden="true">
                         <span data-translate="youhub.suggestions.title"
                           data-translate-fallback="Javaslatok">Javaslatok</span>
                       </button>
                       <button class="myclass-nav-item suggestions-nav-item" data-suggestion-nav="hive" type="button">
-                        <img src="assets/youhub/suggestions/hive.svg" alt="" aria-hidden="true">
+                        <img src="assets/youhub/suggestions/hive.svg" alt="" class="suggestions-calendar-nav-item-img"
+                          aria-hidden="true">
                         <span data-translate="youhub.suggestions.hive" data-translate-fallback="Hive">Hive</span>
                       </button>
                       <button class="myclass-nav-item suggestions-nav-item" data-suggestion-nav="submit" type="button">
-                        <img src="assets/youhub/suggestions/send.svg" alt="" aria-hidden="true">
+                        <img src="assets/youhub/suggestions/send.svg" alt="" class="suggestions-calendar-nav-item-img"
+                          aria-hidden="true">
                         <span data-translate="youhub.suggestions.submit"
                           data-translate-fallback="Beküldés">Beküldés</span>
                       </button>
@@ -888,14 +891,203 @@
             </div>
             <div class="youhub-card" data-card-id="calendar" draggable="false">
               <div class="youhub-card-content calendar-card-content">
+                <!-- Top Section (Header + Date Bar) -->
                 <div class="calendar-top-section">
-                  <div class="calendar-empty-state">
-                    <img src="assets/youhub/calendar/nothing_seems_to_be_here.svg" alt="" class="calendar-empty-icon">
-                    <div class="calendar-empty-text-container">
-                      <p class="calendar-empty-title" data-translate="youhub.calendar.empty.title"
-                        data-translate-fallback="A Naptár még nem elérhető.">A Naptár még nem elérhető.</p>
-                      <p class="calendar-empty-subtitle" data-translate="youhub.calendar.empty.subtitle"
-                        data-translate-fallback="Nézz vissza később!">Nézz vissza később!</p>
+                  <div class="calendar-header-row">
+                    <img src="assets/youhub/calendar/calendar.svg" alt="Naptár" class="calendar-icon">
+                    <h2 class="calendar-title" data-translate="youhub.calendar.title" data-translate-fallback="Naptár">
+                      Naptár</h2>
+                    <button class="notifications-history-btn" type="button">
+                      <img src="assets/youhub/calendar/calendar_dark.svg" alt="Teljes Naptár"
+                        class="calendar-full-icon">
+                      <span class="calendar-full-text" data-translate="youhub.calendar.full"
+                        data-translate-fallback="Teljes Naptár">Teljes Naptár</span>
+                    </button>
+                  </div>
+
+                  <!-- Date Bar -->
+                  <div class="calendar-date-bar">
+                    <div class="calendar-date-text" data-translate="youhub.calendar.date_placeholder"
+                      data-translate-fallback="Január 02. - Péntek">Január 02. - Péntek</div>
+                    <div class="calendar-date-controls">
+                      <span class="calendar-month-text" data-translate="youhub.calendar.month_placeholder"
+                        data-translate-fallback="Január 2026.">Január 2026.</span>
+                      <button class="calendar-month-pill" type="button" aria-label="Hónap választása">
+                        <img src="assets/youhub/calendar/arrow_down.svg" alt="" aria-hidden="true">
+                      </button>
+                      <button class="calendar-more-btn" type="button" aria-label="Szerkesztés">
+                        <img src="assets/youhub/calendar/edit.svg" alt="" aria-hidden="true">
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Middle Section -->
+                <div class="suggestions-middle-section">
+                  <!-- Navigation -->
+                  <div class="suggestions-nav-shell">
+                    <div class="myclass-navbar calendar-navbar" role="tablist" aria-label="Naptár navigáció">
+                      <button class="myclass-nav-item suggestions-nav-item active" data-calendar-nav="timetable"
+                        type="button">
+                        <img src="assets/youhub/calendar/class_sheet.svg" alt=""
+                          class="suggestions-calendar-nav-item-img" aria-hidden="true">
+                        <span data-translate="youhub.calendar.nav.timetable"
+                          data-translate-fallback="Órarend">Órarend</span>
+                      </button>
+                      <button class="myclass-nav-item suggestions-nav-item" data-calendar-nav="exams" type="button">
+                        <img src="assets/youhub/calendar/exams.svg" alt="" class="suggestions-calendar-nav-item-img"
+                          aria-hidden="true">
+                        <span data-translate="youhub.calendar.nav.exams"
+                          data-translate-fallback="Dolgozatok">Dolgozatok</span>
+                      </button>
+                      <button class="myclass-nav-item suggestions-nav-item" data-calendar-nav="rp" type="button">
+                        <img src="assets/youhub/calendar/rp.svg" alt="" class="suggestions-calendar-nav-item-img"
+                          aria-hidden="true">
+                        <span data-translate="youhub.calendar.nav.rp"
+                          data-translate-fallback="Reading Progressek">Reading Progressek</span>
+                      </button>
+                      <button class="myclass-nav-item suggestions-nav-item" data-calendar-nav="bell" type="button">
+                        <img src="assets/youhub/calendar/bell.svg" alt="" class="suggestions-calendar-nav-item-img"
+                          aria-hidden="true">
+                        <span data-translate="youhub.calendar.nav.bell"
+                          data-translate-fallback="Csengetési Rend">Csengetési Rend</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Main Content Grid -->
+                  <div class="calendar-grid">
+                    <div class="calendar-column">
+                      <!-- Card 1 -->
+                      <div class="calendar-schedule-card">
+                        <div class="calendar-card-icon-container">
+                          <img src="assets/youhub/calendar/notactive/smile.svg" alt="" class="calendar-card-icon">
+                        </div>
+                        <div class="calendar-card-middle">
+                          <span class="calendar-subject-name">Óra neve</span>
+                          <div class="calendar-card-details">
+                            <div class="calendar-detail-item">
+                              <img src="assets/youhub/calendar/notactive/person.svg" alt="">
+                              <span>Tanár neve</span>
+                            </div>
+                            <span class="calendar-detail-separator">|</span>
+                            <div class="calendar-detail-item">
+                              <img src="assets/youhub/calendar/notactive/place.svg" alt="">
+                              <span>Terem</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="calendar-card-right-bar">
+                          <img src="assets/youhub/calendar/notactive/clock.svg" alt="">
+                        </div>
+                      </div>
+                      <!-- Card 2 -->
+                      <div class="calendar-schedule-card calendar-schedule-card--highlight">
+                        <div class="calendar-card-icon-container">
+                          <img src="assets/youhub/calendar/active/code.svg" alt="" class="calendar-card-icon">
+                        </div>
+                        <div class="calendar-card-middle">
+                          <span class="calendar-subject-name">Óra neve</span>
+                          <div class="calendar-card-details">
+                            <div class="calendar-detail-item">
+                              <img src="assets/youhub/calendar/active/person.svg" alt="">
+                              <span>Tanár neve</span>
+                            </div>
+                            <span class="calendar-detail-separator">|</span>
+                            <div class="calendar-detail-item">
+                              <img src="assets/youhub/calendar/active/place.svg" alt="">
+                              <span>Terem</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="calendar-card-right-bar">
+                          <img src="assets/youhub/calendar/notactive/clock.svg" alt="">
+                        </div>
+                      </div>
+                      <!-- Card 3 -->
+                      <div class="calendar-schedule-card">
+                        <div class="calendar-card-icon-container">
+                          <img src="assets/youhub/calendar/notactive/brush.svg" alt="" class="calendar-card-icon">
+                        </div>
+                        <div class="calendar-card-middle">
+                          <span class="calendar-subject-name">Óra neve</span>
+                          <div class="calendar-card-details">
+                            <div class="calendar-detail-item">
+                              <img src="assets/youhub/calendar/notactive/person.svg" alt="">
+                              <span>Tanár neve</span>
+                            </div>
+                            <span class="calendar-detail-separator">|</span>
+                            <div class="calendar-detail-item">
+                              <img src="assets/youhub/calendar/notactive/place.svg" alt="">
+                              <span>Terem</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="calendar-card-right-bar">
+                          <img src="assets/youhub/calendar/notactive/clock.svg" alt="">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="calendar-column">
+                      <!-- Card 4 -->
+                      <div class="calendar-schedule-card">
+                        <div class="calendar-card-icon-container">
+                          <img src="assets/youhub/calendar/notactive/leaf.svg" alt="" class="calendar-card-icon">
+                        </div>
+                        <div class="calendar-card-middle">
+                          <span class="calendar-subject-name">Óra neve</span>
+                          <div class="calendar-card-details">
+                            <div class="calendar-detail-item">
+                              <img src="assets/youhub/calendar/notactive/person.svg" alt="">
+                              <span>Tanár neve</span>
+                            </div>
+                            <span class="calendar-detail-separator">|</span>
+                            <div class="calendar-detail-item">
+                              <img src="assets/youhub/calendar/notactive/place.svg" alt="">
+                              <span>Terem</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="calendar-card-right-bar">
+                          <img src="assets/youhub/calendar/notactive/clock.svg" alt="">
+                        </div>
+                      </div>
+                      <!-- Card 5 -->
+                      <div class="calendar-schedule-card">
+                        <div class="calendar-card-middle">
+                          <span class="calendar-subject-name" data-translate="youhub.calendar.lunch"
+                            data-translate-fallback="Ebédszünet">Ebédszünet</span>
+                          <div class="calendar-card-details">
+                            <div class="calendar-detail-item">
+                              <img src="assets/youhub/calendar/notactive/clock.svg" alt="">
+                              <span>11:55 - 12:25</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Card 6 -->
+                      <div class="calendar-schedule-card">
+                        <div class="calendar-card-icon-container">
+                          <img src="assets/youhub/calendar/notactive/bank.svg" alt="" class="calendar-card-icon">
+                        </div>
+                        <div class="calendar-card-middle">
+                          <span class="calendar-subject-name">Óra neve</span>
+                          <div class="calendar-card-details">
+                            <div class="calendar-detail-item">
+                              <img src="assets/youhub/calendar/notactive/person.svg" alt="">
+                              <span>Tanár neve</span>
+                            </div>
+                            <span class="calendar-detail-separator">|</span>
+                            <div class="calendar-detail-item">
+                              <img src="assets/youhub/calendar/notactive/place.svg" alt="">
+                              <span>Terem</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="calendar-card-right-bar">
+                          <img src="assets/youhub/calendar/notactive/clock.svg" alt="">
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1478,6 +1670,44 @@
 
               return scored.length > 0 ? scored[0].item : null;
             }
+
+            // Calendar Date Update Logic
+            function updateCalendarDate() {
+              const now = new Date();
+              const months = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'];
+              const days = ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'];
+
+              const monthName = months[now.getMonth()];
+              const dayName = days[now.getDay()];
+              const dayNum = now.getDate();
+              const year = now.getFullYear();
+
+              // Format: "Január 02. - Péntek"
+              const dayPadded = dayNum < 10 ? `0${dayNum}` : dayNum;
+              const dateText = `${monthName} ${dayPadded}. - ${dayName}`;
+
+              // Format: "Január 2026."
+              const monthText = `${monthName} ${year}.`;
+
+              const dateEl = document.querySelector('.calendar-date-text');
+              const monthEl = document.querySelector('.calendar-month-text');
+
+              if (dateEl) {
+                dateEl.textContent = dateText;
+                // Update fallback as well to prevent flicker if translation kicks in late/fails
+                dateEl.setAttribute('data-translate-fallback', dateText);
+              }
+              if (monthEl) {
+                monthEl.textContent = monthText;
+                monthEl.setAttribute('data-translate-fallback', monthText);
+              }
+            }
+
+            // Call immediately
+            updateCalendarDate();
+
+            // Re-run periodically just in case date changes while open (optional, but good for midnight crossover)
+            setInterval(updateCalendarDate, 60000);
 
             async function preloadSubmitReferenceData() {
               if (referenceDataLoaded || referenceDataLoading) return;
@@ -3145,8 +3375,8 @@
         const slope = (n * sumXY - sumX * sumY) / denominator;
         const intercept = (sumY - slope * sumX) / n;
 
-        // Predict next 3 months (offsets: 1, 2, 3)
-        const futureOffsets = [1, 2, 3];
+        // Predict next 3 months (offsets: 0, 1, 2, 3)
+        const futureOffsets = [0, 1, 2, 3];
         futureOffsets.forEach(offset => {
           const meta = getMonthMeta(currentMonthIndex, offset, currentYear);
           // Skip if month is 07 or 08 (summer break)
@@ -3157,11 +3387,11 @@
           // The isInNextSchoolYear check is only for reading past data, not for predictions
 
           // Check if this is a future month that should be predicted
-          // Future months are those with offset > 0 (next 3 months)
-          const isFutureMonth = offset > 0;
+          // Future months are those with offset >= 0 (including current)
+          const isFutureMonth = offset >= 0;
 
           // Only predict if value doesn't exist yet (null, undefined, NaN, or 0.00)
-          // OR if it's a future month (offset > 0) - always predict future months
+          // OR if it's a future month (offset >= 0) - always predict future months
           const currentValue = myClassGradesData[meta.docId];
           const hasNoValue = currentValue === null ||
             currentValue === undefined ||
@@ -3171,6 +3401,8 @@
           if (hasNoValue || isFutureMonth) {
 
             // Predict value using linear regression
+            // Map offset to regression x-scale. 
+            // If offset 0 follows immediately after previous data, it's at index n.
             const predictedIndex = n + (offset - 1);
             let predictedValue = intercept + slope * predictedIndex;
 
@@ -3920,7 +4152,7 @@
           } else {
             // Load group info
             try {
-              const groupRef = doc(window.db, `public/groups/${sender}`);
+              const groupRef = doc(window.db, 'public', 'senders', 'groups', sender);
               const groupSnap = await getDoc(groupRef);
               if (groupSnap.exists()) {
                 const groupData = groupSnap.data();
@@ -3978,38 +4210,35 @@
 
                 // Format class name for display (e.g., 2030e -> 8.E Osztálynak)
                 let displayName = sentTo;
-                console.log('[Notifications] Parsing class name:', sentTo);
                 try {
                   // Try to parse class ID format (e.g., 2030e)
                   const classMatch = sentTo.match(/^(\d+)([a-z])$/i);
-                  console.log('[Notifications] Class match:', classMatch);
                   if (classMatch) {
-                    const year = parseInt(classMatch[1]);
-                    const type = classMatch[2].toUpperCase();
-                    const currentYear = new Date().getFullYear();
-                    const currentMonth = new Date().getMonth() + 1;
-                    // Calculate grade: if we're in September-December, we're in the same academic year
-                    // If we're in January-August, we're in the previous academic year
-                    let grade = year - currentYear;
-                    if (currentMonth >= 1 && currentMonth <= 8) {
-                      // January-August: previous academic year
-                      grade -= 1;
+                    const graduationYear = parseInt(classMatch[1]);
+                    const classLetter = classMatch[2].toUpperCase();
+
+                    const now = new Date();
+                    const currentYear = now.getFullYear();
+                    const currentMonth = now.getMonth() + 1; // 1-12
+
+                    const yearsRemaining = graduationYear - currentYear;
+                    let gradeNumber = 12 - yearsRemaining;
+
+                    if (currentMonth >= 9) {
+                      gradeNumber += 1;
                     }
-                    // Convert to actual grade (12th grade in graduation year)
-                    grade = 13 - grade;
-                    console.log('[Notifications] Calculated grade:', grade, 'from year:', year, 'currentYear:', currentYear, 'currentMonth:', currentMonth);
-                    if (grade >= 1 && grade <= 12) {
+
+                    if (gradeNumber >= 1 && gradeNumber <= 13) {
                       let classLabel = window.translationManager?.getTranslation('youhub.myclass.title', 'Osztályom');
-                      if (classLabel === 'Osztályom') classLabel = 'Osztálynak';
-                      else if (classLabel === 'My Class') classLabel = 'Class';
+                      if (classLabel === 'Osztályom') classLabel = 'Osztálynak'; // Hu
+                      else if (classLabel === 'My Class') classLabel = 'Class'; // En
                       else if (!classLabel) classLabel = 'Osztálynak';
-                      displayName = `${grade}.${type} ${classLabel}`;
-                      console.log('[Notifications] Display name set to:', displayName);
+
+                      displayName = `${gradeNumber}.${classLetter} ${classLabel}`;
                     }
                   }
                 } catch (err) {
                   console.warn('[Notifications] Error parsing class name:', err);
-                  // Keep original sentTo if parsing fails
                 }
 
                 const sentToLabel = getTranslation('youhub.notifications.detail.sent_to', 'Kiküldve:');
