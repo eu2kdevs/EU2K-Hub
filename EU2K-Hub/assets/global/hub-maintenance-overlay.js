@@ -66,7 +66,9 @@
     const target = getTargetRoot();
     if (!target) return;
 
-    wipeChrome();
+    if (!options.preserveChrome) {
+      wipeChrome();
+    }
 
     while (target.firstChild) {
       target.removeChild(target.firstChild);
@@ -141,7 +143,9 @@
     container.appendChild(content);
     target.appendChild(container);
 
-    attachChromeObserver();
+    if (!options.preserveChrome) {
+      attachChromeObserver();
+    }
   }
 
   function createMaintenanceOverlay() {
@@ -165,7 +169,8 @@
       titleFallback: 'A YouHub vendégek számára nem használható.',
       descKey: 'guest.youhub_description',
       descFallback: 'Jelentkezz be hogy elérhess végtelen lehetőségeket a YouHubbal.',
-      showLoginButton: true
+      showLoginButton: true,
+      preserveChrome: true
     });
   }
 
@@ -196,43 +201,110 @@
     }
   }
 
-  function init() {
-    const path = window.location.pathname || '';
-    const guest = !isLoggedIn();
+  function createYouHubLogicOverlay() {
+    buildOverlay({
+      iconSrc: 'assets/navbar/youhub.svg', // Assumed icon based on request "youhub icon"
+      iconAlt: 'YouHub',
+      iconSize: '160px',
+      titleKey: 'maintenance.youhub_title',
+      titleFallback: 'A YouHub munkálatok alatt van.',
+      descKey: 'maintenance.youhub_desc',
+      descFallback: 'Kérlek nézz vissza később!',
+      preserveChrome: true
+      // Use logic to hide original content? buildOverlay calls wipeChrome()
+    });
+  }
 
-    const isYouhubRoot =
-      path.endsWith('/youhub') ||
-      path.endsWith('/youhub.html');
-
-    const isSettingsRoot =
-      path.endsWith('/settings') ||
-      path.endsWith('/settings.html');
-
-    // YouHub vendég-blokk
-    if (isYouhubRoot && guest) {
-      createYouhubGuestOverlay();
-      return;
-    }
-
-    // Settings vendég-blokk (#functions vagy #notifications)
-    if (isSettingsRoot && guest) {
-      handleSettingsGuest();
-      window.addEventListener('hashchange', handleSettingsGuest);
-      return;
-    }
-
-    // Általános maintenance overlay – csak ha nincs bypass
+  async function checkYouHubMaintenance() {
     try {
-      const bypass = window.localStorage.getItem(BYPASS_KEY);
-      if (bypass && bypass.toLowerCase() === 'true') {
+      // 1. Wait for Firebase App
+      let retries = 0;
+      while (!window.firebaseApp && retries < 50) {
+        await new Promise(r => setTimeout(r, 100));
+        retries++;
+      }
+
+      if (!window.firebaseApp) {
+        // Safe fallback
+        createYouHubLogicOverlay();
         return;
       }
-    } catch (e) {
-      console.warn('[HubMaintenance] localStorage nem elérhető, overlay ennek ellenére megjelenhet.', e);
-    }
 
-    createMaintenanceOverlay();
+      const { getAuth, onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
+      const auth = getAuth(window.firebaseApp);
+
+      onAuthStateChanged(auth, (authUser) => {
+        const EXEMPT_UID = 'CUvAu5ZLjQV4FJcd3JpzeqF8cJu2';
+
+        // Debug Overrides
+        const debugGuest = localStorage.getItem('eu2k-debug-guest') === 'true';
+        const debugUid = localStorage.getItem('eu2k-debug-uid');
+
+        let user = authUser;
+        let effectiveUid = user ? user.uid : null;
+
+        if (debugGuest) {
+          user = null;
+          console.log('[HubMaintenance] Debug: Simulating Guest');
+        } else if (debugUid) {
+          effectiveUid = debugUid;
+          // Construct fake user if actual user is missing but we want to simulate logged in?
+          // Usually debugUid implies we want to simulate 'logged in as X'.
+          if (!user) user = { uid: debugUid };
+          console.log('[HubMaintenance] Debug: Simulating UID:', effectiveUid);
+        }
+
+        // Priority 1: Check Guest
+        if (!user) {
+          createYouhubGuestOverlay();
+          return;
+        }
+
+        // Priority 2: Check Maintenance Exemption
+        if (effectiveUid !== EXEMPT_UID) {
+          createYouHubLogicOverlay();
+          return;
+        }
+
+        // Allowed
+        console.log('[HubMaintenance] Access Granted.');
+      });
+
+    } catch (err) {
+      console.error('[HubMaintenance] Auth check failed', err);
+      createYouHubLogicOverlay();
+    }
   }
+
+  function init() {
+    const path = window.location.pathname || '';
+
+    // 1. Scope: Only YouHub
+    const isYouhubRoot = path.endsWith('/youhub') || path.endsWith('/youhub.html');
+    if (!isYouhubRoot) return;
+
+    // 2. Logic: Check UID
+    checkYouHubMaintenance();
+  }
+
+  // Debug Helpers
+  window.EU2K_DEBUG = {
+    setGuest: (enable) => {
+      if (enable) localStorage.setItem('eu2k-debug-guest', 'true');
+      else localStorage.removeItem('eu2k-debug-guest');
+      location.reload();
+    },
+    setSimulatedUid: (uid) => {
+      if (uid) localStorage.setItem('eu2k-debug-uid', uid);
+      else localStorage.removeItem('eu2k-debug-uid');
+      location.reload();
+    },
+    reset: () => {
+      localStorage.removeItem('eu2k-debug-guest');
+      localStorage.removeItem('eu2k-debug-uid');
+      location.reload();
+    }
+  };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

@@ -282,13 +282,18 @@
                 </div>
               </div>
               <div class="name-right-column">
-                <label class="name-label" for="nameInput" data-translate="onboarding.name_label">Neved:</label>
+                <label class="name-label" for="fullNameInput" data-translate="onboarding.fullname_label"
+                  data-translate-fallback="Teljes Neved:">Teljes Neved:</label>
+                <input type="text" id="fullNameInput" class="name-input" placeholder="Vezetéknév Keresztnév"
+                  data-translate-placeholder="onboarding.fullname_placeholder" style="margin-bottom: 16px;">
+
+                <label class="name-label" for="nameInput" data-translate="onboarding.nickname_label"
+                  data-translate-fallback="Beceneved:">Beceneved:</label>
                 <input type="text" id="nameInput" class="name-input" placeholder="Ide írd..."
                   data-translate-placeholder="onboarding.name_placeholder">
                 <p class="name-hint" data-translate="onboarding.name_hint"
-                  data-translate-fallback="Nem kell megadnod a teljes nevedet, add meg azt a nevet, ahogyan szeretnéd, hogy a többiek hívjanak. Ha tanár vagy, erre különösen figyelj!">
-                  Nem kell megadnod a teljes nevedet, add meg azt a nevet, ahogyan szeretnéd, hogy a többiek hívjanak.
-                  Ha tanár vagy, erre különösen figyelj!</p>
+                  data-translate-fallback="Add meg azt a nevet, ahogyan szeretnéd, hogy a többiek hívjanak.">
+                  Add meg azt a nevet, ahogyan szeretnéd, hogy a többiek hívjanak.</p>
                 <button class="looks-continue-btn name-continue-btn" id="nameContinueBtn"
                   data-translate="onboarding.continue">Tovább</button>
               </div>
@@ -3770,37 +3775,95 @@
         console.log('[Onboarding] Adding click handler to nameContinueBtn');
         nameContinueBtn.addEventListener('click', async () => {
           console.log('[Onboarding] nameContinueBtn clicked!');
+          const fullNameInput = document.getElementById('fullNameInput');
+          const nameInput = document.getElementById('nameInput'); // This is nickname
+
+          const fullNameValue = (fullNameInput?.value || '').trim();
           const nicknameValue = (nameInput?.value || '').trim();
-          console.log('[Onboarding] nicknameValue:', nicknameValue);
-          if (!nicknameValue) {
-            console.log('[Onboarding] Empty nickname, showing toast...');
+
+          console.log('[Onboarding] Values:', { fullNameValue, nicknameValue });
+
+          if (!fullNameValue || !nicknameValue) {
+            console.log('[Onboarding] Missing fields, showing toast...');
             if (window.showToastDirectly) {
-              window.showToastDirectly('Hiányzó mező', 'Kérlek add meg a neved!', 'warning', 'info');
+              window.showToastDirectly('Hiányzó mező', 'Kérlek töltsd ki mindkét mezőt!', 'warning', 'info');
             } else {
-              alert('Kérlek add meg a neved!');
+              alert('Kérlek töltsd ki mindkét mezőt!');
             }
-            nameInput?.focus();
+            if (!fullNameValue) fullNameInput?.focus();
+            else nameInput?.focus();
             return;
           }
-          localStorage.setItem('eu2k-nickname', nicknameValue);
-          const saved = await saveNicknameToGeneral(nicknameValue);
-          if (saved) {
-            console.log('✅ Nickname mentve');
-            const userType = (localStorage.getItem('eu2k-user-type') || '').trim();
-            console.log('[Onboarding] Navigation check - UserType:', userType);
 
+          // UI Feedback
+          nameContinueBtn.disabled = true;
+          nameContinueBtn.textContent = 'Mentés...';
+
+          try {
+            // Import Firebase
+            const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
+            const { getFirestore, doc, getDoc, setDoc, updateDoc } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+
+            const app = window.firebaseApp || (await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js")).getApp();
+            const auth = getAuth(app);
+            const db = window.db || getFirestore(app);
+            const user = auth.currentUser;
+
+            if (!user) throw new Error('No user logged in');
+
+            // 1. Fetch Version Info
+            const versionRef = doc(db, 'version', 'info');
+            const versionSnap = await getDoc(versionRef);
+            let versionData = { editionLatest: 'unknown', versionLatest: 'unknown' };
+            if (versionSnap.exists()) {
+              versionData = versionSnap.data();
+            }
+
+            // 2. Prepare Data
+            const language = localStorage.getItem('eu2k-language') || 'hu';
+
+            // 3. Perform Writes
+            await Promise.all([
+              // Update User Profile
+              updateDoc(doc(db, 'users', user.uid), {
+                fullName: fullNameValue,
+                nickname: nicknameValue
+              }),
+
+              // Create WebInfo
+              setDoc(doc(db, 'users', user.uid, 'webinfo', 'webinfo'), {
+                edition: versionData.editionLatest || 'Standard',
+                version: versionData.versionLatest || '1.0.0'
+              }),
+
+              // Update Settings/General
+              setDoc(doc(db, 'users', user.uid, 'settings', 'general'), {
+                language: language
+              }, { merge: true })
+            ]);
+
+            localStorage.setItem('eu2k-nickname', nicknameValue); // Keep for local usage if needed
+            console.log('✅ Onboarding data saved successfully');
+
+            // Navigation
+            const userType = (localStorage.getItem('eu2k-user-type') || '').trim();
             if (userType === 'teacher') {
-              console.log('User is teacher, skipping student steps...');
               window.location.hash = '#preferences1';
             } else {
               window.location.hash = '#personal-info';
             }
-          } else {
+
+          } catch (e) {
+            console.error('[Onboarding] Error saving data:', e);
             if (window.showToastDirectly) {
-              window.showToastDirectly('Hiba', 'Nem sikerült elmenteni a nevedet. Próbáld újra!', 'danger', 'info');
+              window.showToastDirectly('Hiba', 'Nem sikerült menteni az adatokat. Próbáld újra!', 'danger', 'info');
             } else {
-              alert('Nem sikerült elmenteni a nevedet. Próbáld újra!');
+              alert('Hiba történt a mentéskor. Próbáld újra!');
             }
+          } finally {
+            nameContinueBtn.disabled = false;
+            nameContinueBtn.textContent = nameContinueBtn.getAttribute('data-translate') === 'onboarding.continue' ? 'Tovább' : 'Tovább';
+            // Re-translate button text if possible, but 'Tovább' is fine as fallback
           }
         });
       }

@@ -785,6 +785,58 @@ body {
   color: #EAFCCA;
 }
 
+.calendar-nav-shell {
+  background: transparent;
+  border-radius: 13px;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  align-self: stretch;
+}
+
+.calendar-nav-shell .myclass-navbar {
+  background: #273617;
+  border-radius: 10px;
+  padding: 6px;
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+  flex-wrap: nowrap;
+}
+
+.calendar-navbar {
+  flex: 0 0 auto;
+}
+
+.calendar-nav-shell .myclass-nav-item {
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.calendar-nav-shell .myclass-nav-item span {
+  color: #C5EE96;
+  transition: color 0.2s ease;
+}
+
+.calendar-nav-shell .myclass-nav-item.active {
+  background: #465A2F;
+}
+
+.calendar-nav-shell .myclass-nav-item.active span {
+  color: #EAFCCA;
+}
+
 .suggestions-sections {
   flex: 1;
   display: flex;
@@ -3854,14 +3906,14 @@ body {
 
 
 /* Calendar Nav Item Sizing */
-.suggestions-nav-item[data-calendar-nav="timetable"],
-.suggestions-nav-item[data-calendar-nav="exams"] {
+.calendar-nav-item[data-calendar-nav="timetable"],
+.calendar-nav-item[data-calendar-nav="exams"] {
   flex: 0 1 auto;
   /* Shrink to content, don't grow excessively */
 }
 
-.suggestions-nav-item[data-calendar-nav="rp"],
-.suggestions-nav-item[data-calendar-nav="bell"] {
+.calendar-nav-item[data-calendar-nav="rp"],
+.calendar-nav-item[data-calendar-nav="bell"] {
   flex: 1 0 auto;
   /* Grow to fill space */
 }

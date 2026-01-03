@@ -925,28 +925,28 @@
                 <!-- Middle Section -->
                 <div class="suggestions-middle-section">
                   <!-- Navigation -->
-                  <div class="suggestions-nav-shell">
+                  <div class="calendar-nav-shell">
                     <div class="myclass-navbar calendar-navbar" role="tablist" aria-label="Naptár navigáció">
-                      <button class="myclass-nav-item suggestions-nav-item active" data-calendar-nav="timetable"
+                      <button class="myclass-nav-item calendar-nav-item active" data-calendar-nav="timetable"
                         type="button">
                         <img src="assets/youhub/calendar/class_sheet.svg" alt=""
                           class="suggestions-calendar-nav-item-img" aria-hidden="true">
                         <span data-translate="youhub.calendar.nav.timetable"
                           data-translate-fallback="Órarend">Órarend</span>
                       </button>
-                      <button class="myclass-nav-item suggestions-nav-item" data-calendar-nav="exams" type="button">
+                      <button class="myclass-nav-item calendar-nav-item" data-calendar-nav="exams" type="button">
                         <img src="assets/youhub/calendar/exams.svg" alt="" class="suggestions-calendar-nav-item-img"
                           aria-hidden="true">
                         <span data-translate="youhub.calendar.nav.exams"
                           data-translate-fallback="Dolgozatok">Dolgozatok</span>
                       </button>
-                      <button class="myclass-nav-item suggestions-nav-item" data-calendar-nav="rp" type="button">
+                      <button class="myclass-nav-item calendar-nav-item" data-calendar-nav="rp" type="button">
                         <img src="assets/youhub/calendar/rp.svg" alt="" class="suggestions-calendar-nav-item-img"
                           aria-hidden="true">
                         <span data-translate="youhub.calendar.nav.rp"
                           data-translate-fallback="Reading Progressek">Reading Progressek</span>
                       </button>
-                      <button class="myclass-nav-item suggestions-nav-item" data-calendar-nav="bell" type="button">
+                      <button class="myclass-nav-item calendar-nav-item" data-calendar-nav="bell" type="button">
                         <img src="assets/youhub/calendar/bell.svg" alt="" class="suggestions-calendar-nav-item-img"
                           aria-hidden="true">
                         <span data-translate="youhub.calendar.nav.bell"
@@ -956,7 +956,7 @@
                   </div>
 
                   <!-- Main Content Grid -->
-                  <div class="calendar-grid">
+                  <div id="calendar-view-timetable" class="calendar-grid">
                     <div class="calendar-column">
                       <!-- Card 1 -->
                       <div class="calendar-schedule-card">
@@ -1090,6 +1090,10 @@
                       </div>
                     </div>
                   </div>
+                  <!-- Placeholder Views -->
+                  <div id="calendar-view-exams" class="calendar-grid" style="display: none;"></div>
+                  <div id="calendar-view-rp" class="calendar-grid" style="display: none;"></div>
+                  <div id="calendar-view-bell" class="calendar-grid" style="display: none;"></div>
                 </div>
               </div>
               <div class="youhub-card-handle"></div>
@@ -1148,7 +1152,7 @@
             import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
             import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-            const suggestionsNavShell = document.querySelector('.suggestions-nav-shell');
+            const suggestionsNavShell = document.querySelector('.suggestions-card-content .suggestions-nav-shell');
             const suggestionNavButtons = suggestionsNavShell ? Array.from(suggestionsNavShell.querySelectorAll('.suggestions-nav-item')) : [];
             const suggestionSections = Array.from(document.querySelectorAll('.suggestions-section'));
             const hiveButton = suggestionsNavShell?.querySelector('[data-suggestion-nav="hive"]') || null;
@@ -1700,6 +1704,7 @@
               if (monthEl) {
                 monthEl.textContent = monthText;
                 monthEl.setAttribute('data-translate-fallback', monthText);
+                monthEl.setAttribute('data-translate-fallback', monthText);
               }
             }
 
@@ -1708,6 +1713,51 @@
 
             // Re-run periodically just in case date changes while open (optional, but good for midnight crossover)
             setInterval(updateCalendarDate, 60000);
+
+            // Calendar Navigation Logic
+            function setupCalendarNavigation() {
+              const navItems = document.querySelectorAll('.calendar-navbar .calendar-nav-item');
+              const views = {
+                'timetable': document.getElementById('calendar-view-timetable'),
+                'exams': document.getElementById('calendar-view-exams'),
+                'rp': document.getElementById('calendar-view-rp'),
+                'bell': document.getElementById('calendar-view-bell')
+              };
+
+              // Helper to switch view
+              function switchTab(targetKey) {
+                // 1. Update Active State
+                navItems.forEach(nav => {
+                  if (nav.getAttribute('data-calendar-nav') === targetKey) {
+                    nav.classList.add('active');
+                  } else {
+                    nav.classList.remove('active');
+                  }
+                });
+
+                // 2. Switch View
+                Object.keys(views).forEach(key => {
+                  const view = views[key];
+                  if (view) {
+                    view.style.display = (key === targetKey) ? 'grid' : 'none';
+                  }
+                });
+              }
+
+              navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                  const targetKey = item.getAttribute('data-calendar-nav');
+                  switchTab(targetKey);
+                });
+              });
+
+              // Force default state
+              switchTab('timetable');
+            }
+
+            // Initialize Navigation
+            setupCalendarNavigation();
+
 
             async function preloadSubmitReferenceData() {
               if (referenceDataLoaded || referenceDataLoading) return;
@@ -2366,6 +2416,7 @@
       let currentTargetIndex = null;
       let targetStartTime = null;
       let moveTimeout = null;
+
 
       const editBtn = document.getElementById('headerEditModeBtn');
       if (!editBtn) {
@@ -4718,6 +4769,7 @@
   <script src="assets/js/footer.js"></script>
   <script src="assets/js/staff-timer.js"></script>
   <script src="assets/js/staff-nav-items.js"></script>
+  <script src="assets/global/hub-maintenance-overlay.js"></script>
 </body>
 
 </html>
