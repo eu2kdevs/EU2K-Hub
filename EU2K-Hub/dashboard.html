@@ -1619,9 +1619,9 @@
 
         // Call server to resolve/validate time
         const result = await validateTimelineFunc({
-          startTime: inputStartTime,
-          endTime: inputEndTime,
-          lessonNumber: calendarState.selectedHour,
+          startTime: inputStartTime || null,
+          endTime: inputEndTime || null,
+          lessonNumber: typeof calendarState.selectedHour === 'number' ? calendarState.selectedHour + 1 : calendarState.selectedHour,
           lessonType: calendarState.selectedLessonType
         });
 
