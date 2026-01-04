@@ -9,6 +9,7 @@
   <title data-translate="pages.dashboard.title" data-translate-fallback="Kezelőpult">Kezelőpult</title>
   <link rel="stylesheet" href="dashboard.css">
   <link rel="stylesheet" href="assets/css/consent-banner.css">
+  <link rel="stylesheet" href="assets/components/language-dropdown.css">
   <link rel="icon" href="favicon.ico">
   <script>
     (function () {
@@ -193,6 +194,7 @@
       } catch (e) { }
     });
   </script>
+  <script src="assets/components/language-dropdown.js" defer></script>
 </head>
 
 <body>
@@ -304,22 +306,30 @@
           <div id="main-page" class="dashboard-page active">
             <div class="qr-controls-container">
               <span class="qr-controls-title" data-translate="pages.dashboard.quick_commands">Gyorsparancsok</span>
-              <div class="qr-controls-row">
+              <div class="qr-controls-row qr-controls-2x2">
+                <!-- Column 1 -->
                 <div class="qr-buttons-column">
                   <button class="qr-control-btn qr-btn-green qr-btn-participation" onclick="openSuggestionCenter()">
                     <img src="assets/dashboard/suggestion-center.svg" class="qr-control-icon" alt="Javaslat-központ">
                     <span data-translate="pages.dashboard.suggestion_center">Javaslat-központ</span>
                   </button>
-                  <!-- Changed to Blue as per updated requirements (image & text match) -->
                   <button class="qr-control-btn qr-btn-blue qr-btn-restart" onclick="openNotificationCenter()">
                     <img src="assets/dashboard/notification-center.svg" class="qr-control-icon" alt="Értesítésközpont">
                     <span data-translate="pages.dashboard.notification_center">Értesítésközpont</span>
                   </button>
                 </div>
-                <button class="qr-control-btn qr-btn-blue qr-btn-publish" onclick="openPublish()">
-                  <img src="assets/dashboard/publish_blue.svg" class="qr-control-icon" alt="Publikálás">
-                  <span data-translate="pages.dashboard.publish">Publikálás</span>
-                </button>
+                <!-- Column 2 -->
+                <div class="qr-buttons-column">
+                  <button class="qr-control-btn qr-btn-blue qr-btn-publish" onclick="openPublish()">
+                    <img src="assets/dashboard/publish_blue.svg" class="qr-control-icon" alt="Publikálás">
+                    <span data-translate="pages.dashboard.publish">Publikálás</span>
+                  </button>
+                  <button class="qr-control-btn qr-btn-green qr-btn-calendar" onclick="openCalendarManager()">
+                    <img src="assets/youhub/calendar/calendar_dark.svg" class="qr-control-icon" alt="Naptárak kezelése">
+                    <span data-translate="pages.dashboard.manage_calendars"
+                      data-translate-fallback="Naptárak kezelése">Naptárak kezelése</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -506,6 +516,400 @@
             </div>
           </div>
 
+          <!-- ============================================ -->
+          <!-- CALENDAR ASSIGNMENT SECTION                  -->
+          <!-- ============================================ -->
+
+          <!-- Calendar Assignment Page - Step 1: Class & Process Selection -->
+          <div id="calendar-assign-page" class="dashboard-page">
+            <div id="calendar-assign-selection" class="calendar-assign-container">
+              <span class="calendar-assign-title" data-translate="pages.dashboard.assign_calendars.title">Naptárak
+                hozzárendelése</span>
+              <span class="calendar-assign-subtitle" data-translate="pages.dashboard.assign_calendars.subtitle">Válaszd
+                ki az osztályt és a folyamatot</span>
+
+              <div class="calendar-assign-dropdowns">
+                <!-- Class Dropdown -->
+                <div class="calendar-assign-dropdown-group">
+                  <label class="calendar-assign-label"
+                    data-translate="pages.dashboard.assign_calendars.class_label">Osztály</label>
+                  <div id="calendarClassDropdown" class="language-dropdown"></div>
+                </div>
+
+                <!-- Process Dropdown -->
+                <div class="calendar-assign-dropdown-group">
+                  <label class="calendar-assign-label"
+                    data-translate="pages.dashboard.assign_calendars.process_label">Hozzárendelési folyamat</label>
+                  <div id="calendarProcessDropdown" class="language-dropdown"></div>
+                </div>
+              </div>
+
+              <!-- Navigation Buttons -->
+              <div class="calendar-assign-nav-buttons">
+                <button class="calendar-assign-btn calendar-assign-btn-back" onclick="calendarAssignBack()">
+                  <img src="assets/onboarding/back_arrow.svg" alt="Vissza">
+                </button>
+                <button class="calendar-assign-btn calendar-assign-btn-next" id="calendarStep1Next"
+                  onclick="calendarSelectTime()" disabled>
+                  <span data-translate="common.next">Tovább</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar Assignment Page - Step 2: Select Time -->
+          <div id="calendar-select-time-page" class="dashboard-page" style="display: none;">
+            <div class="calendar-assign-container">
+              <span class="calendar-assign-title" data-translate="pages.dashboard.assign_calendars.select_time">Válassz
+                időpontot</span>
+              <span class="calendar-assign-subtitle" id="calendarSelectTimeSubtitle"></span>
+
+              <div class="calendar-assign-dropdowns">
+                <!-- Day Dropdown -->
+                <div class="calendar-assign-dropdown-group">
+                  <label class="calendar-assign-label" data-translate="pages.dashboard.assign_calendars.day">Nap</label>
+                  <div id="calendarDayDropdown" class="language-dropdown"></div>
+                </div>
+
+                <!-- Hour Dropdown -->
+                <div class="calendar-assign-dropdown-group">
+                  <label class="calendar-assign-label"
+                    data-translate="pages.dashboard.assign_calendars.hour">Óra</label>
+                  <div id="calendarHourDropdown" class="language-dropdown"></div>
+                </div>
+              </div>
+
+              <!-- Navigation Buttons -->
+              <div class="calendar-assign-nav-buttons calendar-assign-nav-3btn">
+                <button class="calendar-assign-btn calendar-assign-btn-back" onclick="calendarBackToStep1()">
+                  <img src="assets/onboarding/back_arrow.svg" alt="Vissza">
+                </button>
+                <div class="calendar-assign-right-buttons">
+                  <button class="calendar-assign-btn calendar-assign-btn-next" id="calendarStep2Next"
+                    onclick="calendarScheduleAssign()" disabled>
+                    <span data-translate="common.next">Tovább</span>
+                  </button>
+                  <button class="calendar-assign-btn calendar-assign-btn-variation" id="calendarVariationBtn"
+                    onclick="calendarAddVariation()" disabled>
+                    <span data-translate="pages.dashboard.assign_calendars.add_variation">Variáció hozzáadása</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar Assignment Page - Step 3: Schedule Assignment -->
+          <div id="calendar-schedule-assign-page" class="dashboard-page" style="display: none;">
+            <div class="calendar-assign-container">
+              <span class="calendar-assign-title" id="calendarScheduleTitle"
+                data-translate="pages.dashboard.assign_calendars.schedule_assign">Órarend hozzárendelése</span>
+              <span class="calendar-assign-subtitle" id="calendarScheduleSubtitle"></span>
+
+              <div class="calendar-assign-inputs">
+                <!-- Lesson Type Dropdown -->
+                <div class="calendar-assign-dropdown-group">
+                  <label class="calendar-assign-label" data-translate="pages.dashboard.assign_calendars.lesson_type">Óra
+                    típusa</label>
+                  <div id="calendarLessonTypeDropdown" class="language-dropdown"></div>
+                </div>
+
+                <!-- Teacher Dropdown -->
+                <div class="calendar-assign-dropdown-group">
+                  <label class="calendar-assign-label"
+                    data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár neve</label>
+                  <div id="calendarTeacherDropdown" class="language-dropdown"></div>
+                </div>
+
+                <!-- Timeline Input -->
+                <div class="calendar-assign-dropdown-group">
+                  <label class="calendar-assign-label"
+                    data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</label>
+                  <div class="calendar-timeline-input-group">
+                    <input type="text" id="calendarTimelineStart" class="calendar-timeline-input" placeholder="00:00"
+                      maxlength="5">
+                    <span class="calendar-timeline-separator">-</span>
+                    <input type="text" id="calendarTimelineEnd" class="calendar-timeline-input" placeholder="00:00"
+                      maxlength="5" readonly>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Navigation Buttons -->
+              <div class="calendar-assign-nav-buttons">
+                <button class="calendar-assign-btn calendar-assign-btn-back" onclick="calendarBackToStep2()">
+                  <img src="assets/onboarding/back_arrow.svg" alt="Vissza">
+                </button>
+                <button class="calendar-assign-btn calendar-assign-btn-next" id="calendarStep3Next"
+                  onclick="console.log('[Calendar] Next button clicked'); calendarShowLessons()" disabled>
+                  <span data-translate="common.next">Tovább</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar Assignment Page - Step 4: Lessons View -->
+          <div id="calendar-lessons-page" class="dashboard-page" style="display: none;">
+            <div class="calendar-assign-container calendar-lessons-container">
+              <span class="calendar-assign-title" id="calendarLessonsTitle">Órák - Hétfő</span>
+
+              <!-- Lesson Cards Wrapper -->
+              <div class="calendar-lessons-wrapper">
+                <div class="calendar-lessons-scroll" id="calendarLessonsScroll">
+                  <!-- 0. óra Card -->
+                  <div class="calendar-lesson-card" data-lesson="0">
+                    <span class="calendar-lesson-number">0. óra</span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.lesson_type">Óra típusa</span>: <span
+                        class="lesson-type-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
+                        class="lesson-teacher-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
+                        class="lesson-timeline-value">-</span></span>
+                    <button class="calendar-lesson-delete-btn" onclick="event.stopPropagation(); deleteLessonCard(0)">
+                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                    </button>
+                  </div>
+                  <!-- 1. óra Card -->
+                  <div class="calendar-lesson-card" data-lesson="1">
+                    <span class="calendar-lesson-number">1. óra</span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.lesson_type">Óra típusa</span>: <span
+                        class="lesson-type-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
+                        class="lesson-teacher-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
+                        class="lesson-timeline-value">-</span></span>
+                    <button class="calendar-lesson-delete-btn" onclick="event.stopPropagation(); deleteLessonCard(1)">
+                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                    </button>
+                  </div>
+                  <div class="calendar-lesson-card" data-lesson="2">
+                    <span class="calendar-lesson-number">2. óra</span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.lesson_type">Óra típusa</span>: <span
+                        class="lesson-type-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
+                        class="lesson-teacher-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
+                        class="lesson-timeline-value">-</span></span>
+                    <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(2)">
+                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                    </button>
+                  </div>
+                  <div class="calendar-lesson-card" data-lesson="3">
+                    <span class="calendar-lesson-number">3. óra</span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.lesson_type">Óra típusa</span>: <span
+                        class="lesson-type-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
+                        class="lesson-teacher-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
+                        class="lesson-timeline-value">-</span></span>
+                    <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(3)">
+                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                    </button>
+                  </div>
+                  <div class="calendar-lesson-card" data-lesson="4">
+                    <span class="calendar-lesson-number">4. óra</span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.lesson_type">Óra típusa</span>: <span
+                        class="lesson-type-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
+                        class="lesson-teacher-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
+                        class="lesson-timeline-value">-</span></span>
+                    <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(4)">
+                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                    </button>
+                  </div>
+                  <div class="calendar-lesson-card" data-lesson="5">
+                    <span class="calendar-lesson-number">5. óra</span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.lesson_type">Óra típusa</span>: <span
+                        class="lesson-type-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
+                        class="lesson-teacher-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
+                        class="lesson-timeline-value">-</span></span>
+                    <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(5)">
+                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                    </button>
+                  </div>
+                  <div class="calendar-lesson-card" data-lesson="6">
+                    <span class="calendar-lesson-number">6. óra</span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.lesson_type">Óra típusa</span>: <span
+                        class="lesson-type-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
+                        class="lesson-teacher-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
+                        class="lesson-timeline-value">-</span></span>
+                    <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(6)">
+                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                    </button>
+                  </div>
+                  <div class="calendar-lesson-card" data-lesson="7">
+                    <span class="calendar-lesson-number">7. óra</span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.lesson_type">Óra típusa</span>: <span
+                        class="lesson-type-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
+                        class="lesson-teacher-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
+                        class="lesson-timeline-value">-</span></span>
+                    <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(7)">
+                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                    </button>
+                  </div>
+                  <div class="calendar-lesson-card" data-lesson="8">
+                    <span class="calendar-lesson-number">8. óra</span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.lesson_type">Óra típusa</span>: <span
+                        class="lesson-type-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
+                        class="lesson-teacher-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
+                        class="lesson-timeline-value">-</span></span>
+                    <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(8)">
+                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Add Lesson Button (fixed right with blur) -->
+                <div class="calendar-add-lesson-container">
+                  <button class="calendar-add-lesson-btn" onclick="addLessonCard()">
+                    <span data-translate="pages.dashboard.assign_calendars.add_lesson">Óra hozzáadása</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Navigation Buttons -->
+              <div class="calendar-assign-nav-buttons">
+                <button class="calendar-assign-btn calendar-assign-btn-back" onclick="calendarBackToStep2()">
+                  <img src="assets/onboarding/back_arrow.svg" alt="Vissza">
+                  <span data-translate="common.back">Vissza</span>
+                </button>
+                <button class="calendar-assign-btn calendar-assign-btn-next" id="calendarStep4Next"
+                  onclick="calendarApplyChanges()">
+                  <span data-translate="common.next">Tovább</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar Assignment Page - Variation -->
+          <div id="calendar-variation-page" class="dashboard-page" style="display: none;">
+            <div class="calendar-assign-container">
+              <span class="calendar-assign-title" id="calendarVariationTitle">Variáció hozzáadása - Hétfő 1. óra</span>
+              <span class="calendar-assign-subtitle" id="calendarVariationSubtitle"></span>
+
+              <div class="calendar-assign-inputs">
+                <!-- Lesson Type Dropdown -->
+                <div class="calendar-assign-dropdown-group">
+                  <label class="calendar-assign-label" data-translate="pages.dashboard.assign_calendars.lesson_type">Óra
+                    típusa</label>
+                  <select id="variationLessonTypeDropdown" class="calendar-assign-dropdown">
+                    <option value="" data-translate="pages.dashboard.assign_calendars.select_placeholder">Válassz...
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Teacher Dropdown -->
+                <div class="calendar-assign-dropdown-group">
+                  <label class="calendar-assign-label"
+                    data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár neve</label>
+                  <select id="variationTeacherDropdown" class="calendar-assign-dropdown">
+                    <option value="" data-translate="pages.dashboard.assign_calendars.select_placeholder">Válassz...
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Repeat Type -->
+                <div class="calendar-assign-dropdown-group">
+                  <label class="calendar-assign-label"
+                    data-translate="pages.dashboard.assign_calendars.repeat_type">Ismétlődés típusa</label>
+                  <div class="calendar-repeat-input-group">
+                    <input type="number" id="variationRepeatCount" class="calendar-repeat-count-input" placeholder="1"
+                      min="1" max="52">
+                    <select id="variationRepeatType" class="calendar-assign-dropdown calendar-repeat-dropdown">
+                      <option value="" data-translate="pages.dashboard.assign_calendars.select_placeholder">Válassz...
+                      </option>
+                      <option value="week" data-translate="pages.dashboard.assign_calendars.repeat_weekly">hetente
+                      </option>
+                      <option value="month" data-translate="pages.dashboard.assign_calendars.repeat_monthly">havonta
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Special Sequence -->
+                <div class="calendar-assign-dropdown-group calendar-special-sequence-group"
+                  style="opacity: 0.5; pointer-events: none;">
+                  <label class="calendar-assign-label"
+                    data-translate="pages.dashboard.assign_calendars.special_sequence">Speciális ismétlődési
+                    szekvencia</label>
+                  <input type="text" id="variationDateSequence" class="calendar-date-sequence-input"
+                    placeholder="éééé.hh.nn - éééé.hh.nn">
+                  <span class="calendar-sequence-help"
+                    data-translate="pages.dashboard.assign_calendars.special_sequence_help">(ha egy dátumot írsz be csak
+                    addig a napig fogja ismételni a variációt a kiválasztott napodon, de ha egy tartományt írsz be a
+                    kezdődátumtól a befejeződátumig fogja ismételni.)</span>
+                </div>
+              </div>
+
+              <!-- Navigation Buttons -->
+              <div class="calendar-assign-nav-buttons">
+                <button class="calendar-assign-btn calendar-assign-btn-back" onclick="calendarBackToStep2()">
+                  <img src="assets/onboarding/back_arrow.svg" alt="Vissza">
+                  <span data-translate="common.back">Vissza</span>
+                </button>
+                <button class="calendar-assign-btn calendar-assign-btn-apply" id="calendarVariationApply"
+                  onclick="calendarApplyVariation()">
+                  <span data-translate="pages.dashboard.assign_calendars.apply">Alkalmazás</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar Variation Confirmation Popup -->
+          <div id="calendarVariationPopup" class="permission-overlay-scroll-area" style="display: none;">
+            <div class="permission-container">
+              <button class="permission-close-btn" onclick="closeVariationPopup()">
+                <img src="assets/general/close.svg" alt="Bezárás">
+              </button>
+              <div class="permission-content">
+                <h2 class="permission-title" data-translate="pages.dashboard.assign_calendars.variation_confirm_title">
+                  Variáció megerősítése</h2>
+                <p class="permission-text" id="variationConfirmText"></p>
+                <div class="permission-btn-group">
+                  <button class="permission-cancel-btn" onclick="closeVariationPopup()"
+                    data-translate="common.cancel">Mégse</button>
+                  <button class="permission-ok-btn" onclick="confirmVariation()"
+                    data-translate="common.continue">Folytatás</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <script type="module">
             import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
@@ -671,6 +1075,793 @@
       console.log('[Dashboard] Opening Publish page');
       window.location.hash = '#publish';
     }
+
+    // =====================================================
+    // CALENDAR ASSIGNMENT CONTROLLER
+    // =====================================================
+
+    // State management
+    const calendarState = {
+      classes: {},           // { classId: formattedName }
+      selectedClassId: null,
+      selectedClassName: null,
+      selectedProcess: null,
+      selectedDay: null,
+      selectedHour: null,
+      lessons: {},           // { lessonId: name }
+      teachers: {},          // { normalizedName: fullName }
+      timetable: {},         // { lesson1: { startTime, finishTime }, ... }
+      lessonData: {},        // saved lesson data by lesson number
+      variationData: null,   // current variation being edited
+      firstSchoolDay: null   // first day of school year
+    };
+
+    // Open calendar manager
+    function openCalendarManager() {
+      console.log('[Calendar] Opening Calendar Manager');
+
+      // Use hash navigation
+      window.location.hash = '#assign-calendars';
+
+      // Hide all dashboard pages including main-page
+      hideAllDashboardPages();
+
+      // Show calendar assign page
+      const page = document.getElementById('calendar-assign-page');
+      if (page) {
+        page.style.display = 'block';
+        page.classList.add('active');
+      }
+
+      // Load classes
+      loadClassesForDropdown();
+
+      // Setup dropdown listeners
+      setupCalendarDropdownListeners();
+    }
+
+    // Hide all dashboard pages
+    function hideAllDashboardPages() {
+      const allPages = [
+        'main-page',
+        'publish-page',
+        'calendar-assign-page',
+        'calendar-select-time-page',
+        'calendar-schedule-assign-page',
+        'calendar-lessons-page',
+        'calendar-variation-page'
+      ];
+      allPages.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.classList.remove('active');
+          el.style.display = 'none';
+        }
+      });
+    }
+
+    // Hide all calendar pages (keeps main-page visible)
+    function hideAllCalendarPages() {
+      const pages = [
+        'calendar-assign-page',
+        'calendar-select-time-page',
+        'calendar-schedule-assign-page',
+        'calendar-lessons-page',
+        'calendar-variation-page'
+      ];
+      pages.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.classList.remove('active');
+          el.style.display = 'none';
+        }
+      });
+    }
+
+    // Setup dropdown event listeners
+    function setupCalendarDropdownListeners() {
+      const classDropdown = document.getElementById('calendarClassDropdown');
+      const processDropdown = document.getElementById('calendarProcessDropdown');
+      const dayDropdown = document.getElementById('calendarDayDropdown');
+      const hourDropdown = document.getElementById('calendarHourDropdown');
+      const repeatTypeDropdown = document.getElementById('variationRepeatType');
+
+      // Step 1: Enable next button when both class and process selected
+      const updateStep1Next = () => {
+        const nextBtn = document.getElementById('calendarStep1Next');
+        if (nextBtn) {
+          const classSelected = classDropdown?.value;
+          const processSelected = processDropdown?.value;
+          nextBtn.disabled = !classSelected || !processSelected;
+        }
+      };
+
+      if (classDropdown) classDropdown.addEventListener('change', updateStep1Next);
+      if (processDropdown) processDropdown.addEventListener('change', updateStep1Next);
+
+      // Step 2: Enable next/variation buttons when day and hour selected
+      const updateStep2Btns = () => {
+        const nextBtn = document.getElementById('calendarStep2Next');
+        const varBtn = document.getElementById('calendarVariationBtn');
+        const daySelected = dayDropdown?.value;
+        const hourSelected = hourDropdown?.value;
+        const bothSelected = daySelected && hourSelected;
+
+        if (nextBtn) nextBtn.disabled = !bothSelected;
+        if (varBtn) varBtn.disabled = !bothSelected;
+      };
+
+      if (dayDropdown) dayDropdown.addEventListener('change', updateStep2Btns);
+      if (hourDropdown) hourDropdown.addEventListener('change', updateStep2Btns);
+
+      // Variation: Enable special sequence when repeat type selected
+      if (repeatTypeDropdown) {
+        repeatTypeDropdown.addEventListener('change', () => {
+          const sequenceGroup = document.querySelector('.calendar-special-sequence-group');
+          if (sequenceGroup) {
+            if (repeatTypeDropdown.value) {
+              sequenceGroup.style.opacity = '1';
+              sequenceGroup.style.pointerEvents = 'auto';
+            } else {
+              sequenceGroup.style.opacity = '0.5';
+              sequenceGroup.style.pointerEvents = 'none';
+            }
+          }
+        });
+      }
+    }
+
+    // Calendar dropdown instances
+    let calendarClassDropdownInstance = null;
+    let calendarProcessDropdownInstance = null;
+    let calendarDayDropdownInstance = null;
+    let calendarHourDropdownInstance = null;
+
+    // Load classes from Cloud Function
+    async function loadClassesForDropdown() {
+      console.log('[Calendar] Loading classes via Cloud Function...');
+      try {
+        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
+        const functions = getFunctions(window.app, 'europe-west3');
+        const loadClasses = httpsCallable(functions, 'loadClasses');
+
+        const result = await loadClasses();
+        const { classes } = result.data;
+
+        // Store class data
+        const classNames = ['Válassz osztályt...'];
+        classes.forEach(cls => {
+          calendarState.classes[cls.id] = cls.name;
+          classNames.push(cls.name);
+        });
+
+        // Initialize LanguageDropdown for classes
+        const classContainer = document.getElementById('calendarClassDropdown');
+        if (classContainer && window.LanguageDropdown) {
+          classContainer.innerHTML = '';
+          calendarClassDropdownInstance = new window.LanguageDropdown(classContainer, {
+            options: classNames,
+            selectedIndex: 0,
+            onChange: (value, index) => {
+              calendarState.selectedClassName = index > 0 ? value : null;
+              updateStep1NextButton();
+            }
+          });
+        }
+
+        // Initialize Process dropdown
+        const processContainer = document.getElementById('calendarProcessDropdown');
+        if (processContainer && window.LanguageDropdown) {
+          processContainer.innerHTML = '';
+          calendarProcessDropdownInstance = new window.LanguageDropdown(processContainer, {
+            options: ['Válassz folyamatot...', 'Órarend'],
+            selectedIndex: 0,
+            onChange: (value, index) => {
+              calendarState.selectedProcess = index > 0 ? 'schedule' : null;
+              updateStep1NextButton();
+            }
+          });
+        }
+
+        console.log('[Calendar] Loaded', classes.length, 'classes from Cloud Function');
+      } catch (e) {
+        console.error('[Calendar] Failed to load classes:', e);
+      }
+    }
+
+    // Update step 1 next button state
+    function updateStep1NextButton() {
+      const nextBtn = document.getElementById('calendarStep1Next');
+      if (nextBtn) {
+        nextBtn.disabled = !calendarState.selectedClassName || !calendarState.selectedProcess;
+      }
+    }
+
+    // Format class ID to readable name (e.g., "2030e" -> "8.E Osztály")
+    function formatClassName(classId) {
+      // Pattern: graduation year + class letter (e.g., 2030e, 2029a)
+      const match = classId.match(/^(\d{4})([a-z])$/i);
+      if (!match) return classId;
+
+      const gradYear = parseInt(match[1]);
+      const classLetter = match[2].toUpperCase();
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth(); // 0-11
+
+      // Calculate grade: if before September, subtract 1
+      const schoolYear = currentMonth < 8 ? currentYear : currentYear + 1;
+      const grade = 12 - (gradYear - schoolYear);
+
+      if (grade < 1 || grade > 12) return classId;
+
+      return `${grade}.${classLetter} Osztály`;
+    }
+
+    // Navigation functions
+    function calendarAssignBack() {
+      window.location.hash = '';
+      hideAllCalendarPages();
+      const mainPage = document.getElementById('main-page');
+      if (mainPage) {
+        mainPage.style.display = 'block';
+        mainPage.classList.add('active');
+      }
+    }
+
+    async function calendarSelectTime() {
+      // Values already stored in calendarState from onChange callbacks
+
+      // Send selection to Cloud Function
+      try {
+        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
+        const functions = getFunctions(window.app, 'europe-west3');
+        const selectClass = httpsCallable(functions, 'selectClass');
+
+        const result = await selectClass({ className: calendarState.selectedClassName });
+        calendarState.selectedClassId = result.data.classId;
+        console.log('[Calendar] Class selected:', result.data);
+      } catch (e) {
+        console.error('[Calendar] Failed to select class:', e);
+      }
+
+      // Save to session storage
+      sessionStorage.setItem('calendar_classId', calendarState.selectedClassId);
+      sessionStorage.setItem('calendar_className', calendarState.selectedClassName);
+      sessionStorage.setItem('calendar_process', calendarState.selectedProcess);
+
+      hideAllCalendarPages();
+      const page = document.getElementById('calendar-select-time-page');
+      if (page) {
+        page.style.display = 'block';
+        page.classList.add('active');
+      }
+
+      // Update subtitle
+      const subtitle = document.getElementById('calendarSelectTimeSubtitle');
+      if (subtitle) {
+        subtitle.textContent = calendarState.selectedClassName;
+      }
+
+      // Initialize Step 2 dropdowns
+      initStep2Dropdowns();
+    }
+
+    // Initialize Step 2 (day/hour) dropdowns
+    function initStep2Dropdowns() {
+      const dayMapping = {
+        'Válassz napot...': null,
+        'Hétfő': 'monday',
+        'Kedd': 'tuesday',
+        'Szerda': 'wednesday',
+        'Csütörtök': 'thursday',
+        'Péntek': 'friday'
+      };
+      const dayNames = Object.keys(dayMapping);
+
+      // Day dropdown
+      const dayContainer = document.getElementById('calendarDayDropdown');
+      if (dayContainer && window.LanguageDropdown) {
+        dayContainer.innerHTML = '';
+        calendarDayDropdownInstance = new window.LanguageDropdown(dayContainer, {
+          options: dayNames,
+          selectedIndex: 0,
+          onChange: (value, index) => {
+            calendarState.selectedDay = dayMapping[value] || null;
+            calendarState.selectedDayName = index > 0 ? value : null;
+            updateStep2Buttons();
+          }
+        });
+      }
+
+      // Hour dropdown (0-10, where 0 is valid)
+      const hourOptions = ['Válassz órát...', '0.', '1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.', '9.', '10.'];
+      const hourContainer = document.getElementById('calendarHourDropdown');
+      if (hourContainer && window.LanguageDropdown) {
+        hourContainer.innerHTML = '';
+        calendarHourDropdownInstance = new window.LanguageDropdown(hourContainer, {
+          options: hourOptions,
+          selectedIndex: 0,
+          onChange: (value, index) => {
+            // index 0 = placeholder, index 1 = 0. óra, index 2 = 1. óra, etc.
+            calendarState.selectedHour = index > 0 ? index - 1 : null;
+            updateStep2Buttons();
+          }
+        });
+      }
+    }
+
+    // Update Step 2 buttons (next and variation)
+    function updateStep2Buttons() {
+      const nextBtn = document.getElementById('calendarStep2Next');
+      const varBtn = document.getElementById('calendarVariationBtn');
+      // selectedHour can be 0, so check for null specifically
+      const bothSelected = calendarState.selectedDay && calendarState.selectedHour !== null;
+
+      if (nextBtn) nextBtn.disabled = !bothSelected;
+      if (varBtn) varBtn.disabled = !bothSelected;
+    }
+
+    function calendarBackToStep1() {
+      window.location.hash = '#assign-calendars';
+      hideAllCalendarPages();
+      const page = document.getElementById('calendar-assign-page');
+      if (page) {
+        page.style.display = 'block';
+        page.classList.add('active');
+      }
+    }
+
+    async function calendarScheduleAssign() {
+      // Values are already in calendarState from LanguageDropdown onChange callbacks
+      // Don't override them with undefined DOM values!
+
+      // Send selection to Cloud Function
+      try {
+        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
+        const functions = getFunctions(window.app, 'europe-west3');
+        const selectTimeSlot = httpsCallable(functions, 'selectTimeSlot');
+
+        const result = await selectTimeSlot({
+          day: calendarState.selectedDay,
+          hour: calendarState.selectedHour,
+          process: calendarState.selectedProcess
+        });
+        console.log('[Calendar] Time slot selected:', result.data);
+      } catch (e) {
+        console.error('[Calendar] Failed to select time slot:', e);
+      }
+
+      // Save to session storage
+      sessionStorage.setItem('calendar_day', calendarState.selectedDay);
+      sessionStorage.setItem('calendar_hour', calendarState.selectedHour);
+      sessionStorage.setItem('calendar_dayName', calendarState.selectedDayName || '');
+
+      hideAllCalendarPages();
+      const page = document.getElementById('calendar-schedule-assign-page');
+      if (page) {
+        page.style.display = 'block';
+        page.classList.add('active');
+      }
+
+      // Update title and subtitle
+      updateScheduleAssignTitle();
+
+      // Load lesson types and teachers
+      loadLessonTypes();
+      loadTeachers();
+    }
+
+    function updateScheduleAssignTitle() {
+      const title = document.getElementById('calendarScheduleTitle');
+      const subtitle = document.getElementById('calendarScheduleSubtitle');
+
+      if (title && calendarState.selectedClassName) {
+        const baseTitle = window.translationManager?.getTranslation('pages.dashboard.assign_calendars.schedule_assign') || 'Órarend hozzárendelése';
+        title.textContent = `${baseTitle} - ${calendarState.selectedClassName}`;
+      }
+
+      if (subtitle) {
+        const dayName = calendarState.selectedDayName || calendarState.selectedDay || '';
+        subtitle.textContent = `${dayName} - ${calendarState.selectedHour}. óra`;
+      }
+    }
+
+    function calendarBackToStep2() {
+      hideAllCalendarPages();
+      const page = document.getElementById('calendar-select-time-page');
+      if (page) {
+        page.style.display = 'block';
+        page.classList.add('active');
+      }
+    }
+
+    // Calendar dropdown instances for Step 3
+    let calendarLessonTypeDropdownInstance = null;
+    let calendarTeacherDropdownInstance = null;
+
+    // Load lesson types from Cloud Function
+    async function loadLessonTypes() {
+      console.log('[Calendar] Loading lesson types via Cloud Function...');
+      try {
+        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
+        const functions = getFunctions(window.app, 'europe-west3');
+        const loadLessonTypesFunc = httpsCallable(functions, 'loadLessonTypes');
+
+        const result = await loadLessonTypesFunc();
+        const { lessons, defaultTimeline } = result.data;
+
+        // Store lesson data
+        const lessonNames = ['Válassz óra típust...'];
+        const lessonIds = [null];
+        let initialIndex = 0;
+
+        lessons.forEach((lesson, index) => {
+          calendarState.lessons[lesson.id] = lesson.name;
+          lessonNames.push(lesson.name);
+          lessonIds.push(lesson.id);
+
+          // Check if this matches current selection (for editing)
+          if (calendarState.selectedLessonType === lesson.id) {
+            initialIndex = index + 1; // +1 because of "Válassz..." option
+          }
+        });
+
+        // Initialize LanguageDropdown for lesson types
+        const container = document.getElementById('calendarLessonTypeDropdown');
+        if (container && window.LanguageDropdown) {
+          container.innerHTML = '';
+          calendarLessonTypeDropdownInstance = new window.LanguageDropdown(container, {
+            options: lessonNames,
+            selectedIndex: initialIndex,
+            onChange: (value, index) => {
+              calendarState.selectedLessonType = index > 0 ? lessonIds[index] : null;
+              calendarState.selectedLessonTypeName = index > 0 ? value : null;
+              updateStep3NextButton();
+            }
+          });
+        }
+
+        // Populate timeline inputs with defaults ONLY if we are NOT editing an existing valid timeline
+        // or if the inputs are currently empty
+        const startInput = document.getElementById('calendarTimelineStart');
+        const endInput = document.getElementById('calendarTimelineEnd');
+        const currentData = calendarState.lessonData[calendarState.selectedHour];
+
+        // If editing and we have saved data, use that
+        if (currentData && currentData.timelineStart && currentData.timelineEnd) {
+          if (startInput) startInput.value = currentData.timelineStart;
+          if (endInput) endInput.value = currentData.timelineEnd;
+        } else if (defaultTimeline) {
+          // Otherwise use defaults from server
+          if (startInput && defaultTimeline.startTime && !startInput.value) {
+            startInput.value = defaultTimeline.startTime;
+          }
+          if (endInput && defaultTimeline.finishTime && !endInput.value) {
+            endInput.value = defaultTimeline.finishTime;
+          }
+        }
+
+        console.log('[Calendar] Loaded', lessons.length, 'lesson types. Selected index:', initialIndex);
+        updateStep3NextButton(); // Ensure button state is updated
+      } catch (e) {
+        console.error('[Calendar] Failed to load lesson types:', e);
+      }
+    }
+
+    // Load teachers from Cloud Function
+    async function loadTeachers() {
+      console.log('[Calendar] Loading teachers via Cloud Function...');
+      try {
+        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
+        const functions = getFunctions(window.app, 'europe-west3');
+        const loadTeachersFunc = httpsCallable(functions, 'loadTeachers');
+
+        const result = await loadTeachersFunc();
+        const { teachers } = result.data;
+
+        const teacherNames = ['Válassz szaktanárt...'];
+        const teacherIds = [null]; // Stores normalized names
+        let initialIndex = 0;
+
+        teachers.forEach((t, index) => {
+          calendarState.teachers[t.normalizedName] = t.fullName;
+          teacherNames.push(t.fullName);
+          teacherIds.push(t.normalizedName);
+
+          // Check if this matches current selection (for editing)
+          if (calendarState.selectedTeacher === t.normalizedName || calendarState.selectedTeacherName === t.fullName) {
+            initialIndex = index + 1;
+            // Ensure ID consistency
+            calendarState.selectedTeacher = t.normalizedName;
+          }
+        });
+
+        // Initialize LanguageDropdown for teachers
+        const container = document.getElementById('calendarTeacherDropdown');
+        if (container && window.LanguageDropdown) {
+          container.innerHTML = '';
+          calendarTeacherDropdownInstance = new window.LanguageDropdown(container, {
+            options: teacherNames,
+            selectedIndex: initialIndex,
+            onChange: (value, index) => {
+              calendarState.selectedTeacher = index > 0 ? teacherIds[index] : null;
+              calendarState.selectedTeacherName = index > 0 ? value : null;
+              updateStep3NextButton();
+            }
+          });
+        }
+
+        console.log('[Calendar] Loaded', teachers.length, 'teachers. Selected index:', initialIndex);
+        updateStep3NextButton(); // Ensure button state is updated
+      } catch (e) {
+        console.error('[Calendar] Failed to load teachers:', e);
+      }
+    }
+
+    // Update Step 3 next button state
+    function updateStep3NextButton() {
+      const nextBtn = document.getElementById('calendarStep3Next');
+      if (nextBtn) {
+        nextBtn.disabled = !calendarState.selectedLessonType || !calendarState.selectedTeacher;
+      }
+    }
+
+    async function calendarShowLessons() {
+      // Get current inputs (might be empty)
+      const inputStartTime = document.getElementById('calendarTimelineStart')?.value;
+      const inputEndTime = document.getElementById('calendarTimelineEnd')?.value;
+
+      try {
+        console.log('[Calendar] Resolving timeline on server...');
+        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
+        const functions = getFunctions(window.app, 'europe-west3');
+        const validateTimelineFunc = httpsCallable(functions, 'validateTimeline');
+
+        // Call server to resolve/validate time
+        const result = await validateTimelineFunc({
+          startTime: inputStartTime,
+          endTime: inputEndTime,
+          lessonNumber: calendarState.selectedHour,
+          lessonType: calendarState.selectedLessonType
+        });
+
+        const { startTime, endTime, collision, warning, source } = result.data;
+        console.log(`[Calendar] Server Resolved: ${startTime}-${endTime} (Source: ${source})`);
+
+        if (warning) {
+          alert(warning); // Simple alert for collision warnings
+        }
+
+        // Store resolved lesson data
+        const lessonNum = calendarState.selectedHour;
+        calendarState.lessonData[lessonNum] = {
+          lessonType: calendarState.selectedLessonType,
+          lessonTypeName: calendarState.selectedLessonTypeName,
+          teacher: calendarState.selectedTeacher,
+          teacherName: calendarState.selectedTeacherName,
+          timelineStart: startTime, // Use server resolved time
+          timelineEnd: endTime      // Use server resolved time
+        };
+
+        sessionStorage.setItem('calendar_lessonData', JSON.stringify(calendarState.lessonData));
+
+        hideAllCalendarPages();
+        const page = document.getElementById('calendar-lessons-page');
+        if (page) {
+          page.style.display = 'block';
+          page.classList.add('active');
+        }
+
+        // Update title
+        const title = document.getElementById('calendarLessonsTitle');
+        const dayNames = {
+          monday: 'Hétfő', tuesday: 'Kedd', wednesday: 'Szerda',
+          thursday: 'Csütörtök', friday: 'Péntek'
+        };
+        if (title) {
+          title.textContent = `Órák - ${dayNames[calendarState.selectedDay] || calendarState.selectedDay}`;
+        }
+
+        // Populate lesson cards
+        populateLessonCards();
+
+      } catch (e) {
+        console.error('[Calendar] Failed to resolve timeline:', e);
+        alert('Hiba történt az idővonal ellenőrzésekor. Kérlek próbáld újra.');
+      }
+    }
+
+    function populateLessonCards() {
+      const cards = document.querySelectorAll('.calendar-lesson-card');
+      cards.forEach(card => {
+        const lessonNum = parseInt(card.dataset.lesson);
+        const data = calendarState.lessonData[lessonNum];
+
+        const typeValue = card.querySelector('.lesson-type-value');
+        const teacherValue = card.querySelector('.lesson-teacher-value');
+        const timelineValue = card.querySelector('.lesson-timeline-value');
+
+        if (data) {
+          card.classList.remove('incomplete');
+          if (typeValue) typeValue.textContent = data.lessonTypeName || '-';
+          if (teacherValue) teacherValue.textContent = data.teacherName || data.teacher || '-';
+          if (timelineValue) {
+            timelineValue.textContent = (data.timelineStart && data.timelineEnd)
+              ? `${data.timelineStart} - ${data.timelineEnd}`
+              : '-';
+          }
+        } else {
+          card.classList.add('incomplete');
+          if (typeValue) typeValue.textContent = '-';
+          if (teacherValue) teacherValue.textContent = '-';
+          if (timelineValue) timelineValue.textContent = '-';
+        }
+
+        // Add click handler to edit lesson
+        card.onclick = () => editLessonCard(lessonNum);
+      });
+    }
+
+    function editLessonCard(lessonNum) {
+      // Set selected hour to this lesson
+      calendarState.selectedHour = lessonNum;
+      sessionStorage.setItem('calendar_hour', lessonNum);
+
+      // Go to Step 3 to edit this lesson
+      hideAllCalendarPages();
+      const page = document.getElementById('calendar-schedule-assign-page');
+      if (page) {
+        page.style.display = 'block';
+        page.classList.add('active');
+      }
+
+      // Update title with the selected hour
+      updateScheduleAssignTitle();
+
+      // Load dropdowns
+      loadLessonTypes();
+      loadTeachers();
+    }
+
+    function deleteLessonCard(lessonNum) {
+      delete calendarState.lessonData[lessonNum];
+      sessionStorage.setItem('calendar_lessonData', JSON.stringify(calendarState.lessonData));
+      populateLessonCards();
+    }
+
+    function addLessonCard() {
+      // Go back to Step 2 (Válassz időpontot) to select a new hour
+      hideAllCalendarPages();
+      const page = document.getElementById('calendar-select-time-page');
+      if (page) {
+        page.style.display = 'block';
+        page.classList.add('active');
+      }
+      // Re-initialize dropdowns for Step 2
+      initStep2Dropdowns();
+    }
+
+    function calendarAddVariation() {
+      const dayDropdown = document.getElementById('calendarDayDropdown');
+      const hourDropdown = document.getElementById('calendarHourDropdown');
+
+      calendarState.selectedDay = dayDropdown?.value;
+      calendarState.selectedHour = hourDropdown?.value;
+
+      hideAllCalendarPages();
+      const page = document.getElementById('calendar-variation-page');
+      if (page) page.classList.add('active');
+
+      // Update title
+      const title = document.getElementById('calendarVariationTitle');
+      const dayNames = {
+        monday: 'Hétfő', tuesday: 'Kedd', wednesday: 'Szerda',
+        thursday: 'Csütörtök', friday: 'Péntek'
+      };
+      if (title) {
+        const dayName = dayNames[calendarState.selectedDay] || calendarState.selectedDay;
+        title.textContent = `Variáció hozzáadása - ${dayName} ${calendarState.selectedHour}. óra`;
+      }
+
+      // Load dropdowns
+      loadLessonTypes();
+      loadTeachers();
+    }
+
+    function calendarApplyVariation() {
+      // Gather variation data
+      const lessonType = document.getElementById('variationLessonTypeDropdown')?.value;
+      const teacher = document.getElementById('variationTeacherDropdown')?.value;
+      const repeatCount = document.getElementById('variationRepeatCount')?.value || '1';
+      const repeatType = document.getElementById('variationRepeatType')?.value;
+      const dateSequence = document.getElementById('variationDateSequence')?.value;
+
+      if (!lessonType || !repeatType) {
+        console.warn('[Calendar] Variation missing required fields');
+        return;
+      }
+
+      // Format: week_1, month_2, etc.
+      const repeatRule = `${repeatType}_${repeatCount}`;
+
+      calendarState.variationData = {
+        lessonType,
+        lessonTypeName: calendarState.lessons[lessonType] || lessonType,
+        teacher,
+        repeatRule,
+        dateSequence,
+        day: calendarState.selectedDay,
+        hour: calendarState.selectedHour
+      };
+
+      // Show confirmation popup
+      showVariationConfirmPopup();
+    }
+
+    function showVariationConfirmPopup() {
+      const popup = document.getElementById('calendarVariationPopup');
+      const confirmText = document.getElementById('variationConfirmText');
+
+      if (confirmText && calendarState.variationData) {
+        const v = calendarState.variationData;
+        const dayNames = {
+          monday: 'Hétfő', tuesday: 'Kedd', wednesday: 'Szerda',
+          thursday: 'Csütörtök', friday: 'Péntek'
+        };
+        const dayName = dayNames[v.day] || v.day;
+
+        confirmText.innerHTML = `
+          <strong>${dayName} ${v.hour}. óra</strong><br>
+          Óra típusa: ${v.lessonTypeName}<br>
+          Ismétlődés: ${v.repeatRule}<br>
+          ${v.dateSequence ? `Időszak: ${v.dateSequence}` : ''}
+        `;
+      }
+
+      if (popup) popup.style.display = 'flex';
+    }
+
+    function closeVariationPopup() {
+      const popup = document.getElementById('calendarVariationPopup');
+      if (popup) popup.style.display = 'none';
+    }
+
+    function confirmVariation() {
+      console.log('[Calendar] Variation confirmed:', calendarState.variationData);
+      closeVariationPopup();
+
+      // Go back to select time
+      calendarBackToStep2();
+    }
+
+    function calendarApplyChanges() {
+      console.log('[Calendar] Applying changes...');
+      console.log('[Calendar] Lesson data:', calendarState.lessonData);
+
+      // TODO: Save to Firestore
+      // This will be the final step to write data to the database
+
+      calendarAssignBack();
+    }
+
+    // Timeline auto-calculation (+45 min)
+    document.addEventListener('DOMContentLoaded', () => {
+      const startInput = document.getElementById('calendarTimelineStart');
+      const endInput = document.getElementById('calendarTimelineEnd');
+
+      if (startInput && endInput) {
+        startInput.addEventListener('input', () => {
+          const time = startInput.value;
+          if (/^\d{2}:\d{2}$/.test(time)) {
+            const [hours, minutes] = time.split(':').map(Number);
+            const endMinutes = minutes + 45;
+            const endHours = hours + Math.floor(endMinutes / 60);
+            const finalMinutes = endMinutes % 60;
+            endInput.value = `${String(endHours).padStart(2, '0')}:${String(finalMinutes).padStart(2, '0')}`;
+          }
+        });
+      }
+    });
 
     function publishNews() {
       // Legacy function - now redirects to showNewsPublishForm

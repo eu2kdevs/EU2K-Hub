@@ -1196,3 +1196,51 @@ exports.setAdminPassword = onCall({ region }, async (request) => {
     throw new HttpsError('internal', error.message);
   }
 });
+
+/**
+ * Save onboarding names (fullName and nickname)
+ * Called during onboarding to save user's full name and nickname
+ * Writes to users/{userId} document
+ */
+exports.saveOnboardingNames = onCall({ region }, async (request) => {
+  try {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'User must be authenticated');
+    }
+
+    const uid = request.auth.uid;
+    const { fullName, nickname } = request.data;
+
+    // Validate inputs
+    if (!fullName || typeof fullName !== 'string' || !fullName.trim()) {
+      throw new HttpsError('invalid-argument', 'fullName is required and must be a non-empty string');
+    }
+
+    if (!nickname || typeof nickname !== 'string' || !nickname.trim()) {
+      throw new HttpsError('invalid-argument', 'nickname is required and must be a non-empty string');
+    }
+
+    const trimmedFullName = fullName.trim();
+    const trimmedNickname = nickname.trim();
+
+    // Save to users/{uid}
+    await db.collection('users').doc(uid).set({
+      fullName: trimmedFullName,
+      nickname: trimmedNickname,
+      namesUpdatedAt: admin.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+
+    console.log(`[saveOnboardingNames] Saved for user ${uid}: fullName="${trimmedFullName}", nickname="${trimmedNickname}"`);
+
+    return {
+      success: true,
+      fullName: trimmedFullName,
+      nickname: trimmedNickname
+    };
+
+  } catch (error) {
+    console.error('[saveOnboardingNames] Error:', error);
+    if (error instanceof HttpsError) throw error;
+    throw new HttpsError('internal', error.message);
+  }
+});

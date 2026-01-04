@@ -9,6 +9,21 @@
       ]
     },
     {
+      "codebase": "calendarassignment",
+      "source": "EU2K-Hub/functions/calendarassignment",
+      "runtime": "nodejs22",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    },
+    {
       "codebase": "gemini",
       "source": "EU2K-Hub/functions/gemini",
       "runtime": "nodejs22",

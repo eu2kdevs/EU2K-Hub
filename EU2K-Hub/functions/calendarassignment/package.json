@@ -1,0 +1,26 @@
+{
+    "name": "calendarassignment",
+    "description": "EU2K Hub Calendar Assignment Cloud Function",
+    "main": "index.js",
+    "engines": {
+        "node": "22"
+    },
+    "scripts": {
+        "lint": "echo \"No linting configured\"",
+        "build": "echo \"No build step required\"",
+        "serve": "firebase emulators:start --only functions",
+        "shell": "firebase functions:shell",
+        "start": "npm run shell",
+        "deploy": "firebase deploy --only functions:calendarassignment",
+        "logs": "firebase functions:log"
+    },
+    "dependencies": {
+        "date-fns": "^3.6.0",
+        "firebase-admin": "^13.0.2",
+        "firebase-functions": "^6.3.0"
+    },
+    "devDependencies": {
+        "firebase-functions-test": "^3.1.0"
+    },
+    "private": true
+}

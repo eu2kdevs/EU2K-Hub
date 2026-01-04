@@ -1,7 +1,7 @@
 rules_version = '2';
 
 service cloud.firestore {
-  match /databases/{database}/documents {
+  match / databases / { database } / documents {
 
     function isSignedIn() {
       return request.auth != null;
@@ -34,15 +34,15 @@ service cloud.firestore {
     function userBelongsToClass(classId) {
       return isSignedIn()
         && exists(
-          /databases/$(database)/documents/users/$(request.auth.uid)/groups/ownclass
+          /databases/$(database) / documents / users / $(request.auth.uid) / groups / ownclass
         )
         && (
           get(
-            /databases/$(database)/documents/users/$(request.auth.uid)/groups/ownclass
+            /databases/$(database) / documents / users / $(request.auth.uid) / groups / ownclass
           ).data.classFinishes
           +
           get(
-            /databases/$(database)/documents/users/$(request.auth.uid)/groups/ownclass
+            /databases/$(database) / documents / users / $(request.auth.uid) / groups / ownclass
           ).data.classType
         ) == classId;
     }
@@ -50,16 +50,16 @@ service cloud.firestore {
     // -----------------------------
     // CLASSES
     // -----------------------------
-    match /classes/{classId} {
+    match / classes / { classId } {
       allow read: if isClassStaff() || userBelongsToClass(classId);
       allow write: if isClassStaff();
 
-      match /grades/{gradeId} {
+      match / grades / { gradeId } {
         allow read: if isClassStaff() || userBelongsToClass(classId);
         allow write: if isClassStaff();
       }
 
-      match /{document=**} {
+      match / { document=**} {
         allow read, write: if isClassStaff();
       }
     }
@@ -67,7 +67,7 @@ service cloud.firestore {
     // -----------------------------
     // USER LOOKUP
     // -----------------------------
-    match /userlookup/names/{normalizedName}/{uid} {
+    match / userlookup / names / { normalizedName } / { uid } {
       allow read, get, list: if isTeacher() || isOwner() || isAdmin();
       allow write: if false;
     }
@@ -75,7 +75,7 @@ service cloud.firestore {
     // -----------------------------
     // VERSION
     // -----------------------------
-    match /version/{document=**} {
+    match / version / { document=**} {
       allow read: if true;
       allow write: if isPrivileged();
     }
@@ -83,7 +83,7 @@ service cloud.firestore {
     // -----------------------------
     // FEEDBACK
     // -----------------------------
-    match /homePageData/feedback/{subcollection}/{document=**} {
+    match / homePageData / feedback / { subcollection } / { document=**} {
       allow write: if true;
       allow read: if isClassStaff();
     }
@@ -92,19 +92,19 @@ service cloud.firestore {
     // EVENTS / NEWS / NEW-THINGS
     // news csak Cloud Functionből írható
     // -----------------------------
-    match /homePageData/{docId}/{document=**} {
+    match / homePageData / { docId } / { document=**} {
       allow read: if docId in ['events', 'news', 'new-things'];
       allow write: if isClassStaff() && docId != 'news';
     }
 
     // News hirek collection - only Cloud Functions
-    match /homePageData/news/hirek/{newsId} {
+    match / homePageData / news / hirek / { newsId } {
       allow read: if true;
       allow write: if false;
     }
 
     // News meta (ID counter) - only Cloud Functions
-    match /homePageData/news/meta {
+    match / homePageData / news / meta {
       allow read: if isClassStaff();
       allow write: if false;
     }
@@ -112,10 +112,10 @@ service cloud.firestore {
     // -----------------------------
     // USERS
     // -----------------------------
-    match /users/{userId} {
+    match / users / { userId } {
       allow read: if true;
 
-      match /{document=**} {
+      match / { document=**} {
         allow read, write: if isSignedIn()
           && (request.auth.uid == userId || isClassStaff());
       }
@@ -124,7 +124,7 @@ service cloud.firestore {
     // -----------------------------
     // PUBLIC USER CARDS
     // -----------------------------
-    match /public/users/{collection}/{userId} {
+    match / public / users / { collection } / { userId } {
       allow read: if true;
       allow write: if isSignedIn() && request.auth.uid == userId;
     }
@@ -132,13 +132,13 @@ service cloud.firestore {
     // -----------------------------
     // SUGGESTIONS
     // -----------------------------
-    match /suggestions/{suggestionId} {
+    match / suggestions / { suggestionId } {
       allow read: if true;
       allow write: if isSignedIn()
         && request.resource.data.ownerId == request.auth.uid;
     }
 
-    match /users/{userId}/suggestions/{suggestionId} {
+    match / users / { userId } / suggestions / { suggestionId } {
       allow read: if isSignedIn() && request.auth.uid == userId;
       allow write: if isSignedIn()
         && request.auth.uid == userId
@@ -148,7 +148,7 @@ service cloud.firestore {
     // -----------------------------
     // EVENT HUB
     // -----------------------------
-    match /event_hub/{document=**} {
+    match / event_hub / { document=**} {
       allow read: if true;
       allow write: if isClassStaff();
     }
@@ -156,7 +156,7 @@ service cloud.firestore {
     // -----------------------------
     // EVENTS
     // -----------------------------
-    match /events/{document=**} {
+    match / events / { document=**} {
       allow read: if true;
       allow write: if isSignedIn();
     }
@@ -164,7 +164,7 @@ service cloud.firestore {
     // -----------------------------
     // GROUPS
     // -----------------------------
-    match /groups/{document=**} {
+    match / groups / { document=**} {
       allow read: if true;
       allow write: if isSignedIn();
     }
@@ -172,21 +172,21 @@ service cloud.firestore {
     // -----------------------------
     // SETTINGS
     // -----------------------------
-    match /settings/{userId}/{document=**} {
+    match / settings / { userId } / { document=**} {
       allow read, write: if isSignedIn() && request.auth.uid == userId;
     }
 
     // -----------------------------
     // ADMIN
     // -----------------------------
-    match /admin/{document=**} {
+    match / admin / { document=**} {
       allow read, write: if isAdmin();
     }
 
     // -----------------------------
     // ANNOUNCEMENTS
     // -----------------------------
-    match /announcements/{document=**} {
+    match / announcements / { document=**} {
       allow read: if isSignedIn();
       allow write: if isTeacher() || isAdmin();
     }
@@ -194,14 +194,14 @@ service cloud.firestore {
     // -----------------------------
     // GRAPH TOKENS
     // -----------------------------
-    match /graphTokens/{userId} {
+    match / graphTokens / { userId } {
       allow read, write: if isSignedIn() && request.auth.uid == userId;
     }
 
     // -----------------------------
     // FALLBACK
     // -----------------------------
-    match /{document=**} {
+    match / { document=**} {
       allow read: if isPrivileged();
       allow write: if isSignedIn();
     }

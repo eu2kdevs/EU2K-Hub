@@ -65,6 +65,60 @@
 </head>
 
 <body>
+  <!-- Loading Overlay for Page Transitions -->
+  <div id="onboardingLoadingOverlay" class="onboarding-loading-overlay" style="display: none;">
+    <div class="onboarding-loading-content">
+      <div class="onboarding-loading-spinner"></div>
+      <span class="onboarding-loading-text" data-translate="onboarding.loading_screen_text">Betöltés</span>
+    </div>
+  </div>
+  <style>
+    .onboarding-loading-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      pointer-events: none;
+    }
+
+    .onboarding-loading-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .onboarding-loading-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .onboarding-loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: onboarding-spin 1s linear infinite;
+    }
+
+    .onboarding-loading-text {
+      color: #fff;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    @keyframes onboarding-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
   <div class="app-bg">
     <main class="main-area">
       <div class="main-scroll-area">
@@ -285,7 +339,11 @@
                 <label class="name-label" for="fullNameInput" data-translate="onboarding.fullname_label"
                   data-translate-fallback="Teljes Neved:">Teljes Neved:</label>
                 <input type="text" id="fullNameInput" class="name-input" placeholder="Vezetéknév Keresztnév"
-                  data-translate-placeholder="onboarding.fullname_placeholder" style="margin-bottom: 16px;">
+                  data-translate-placeholder="onboarding.fullname_placeholder">
+                <p class="name-hint" data-translate="onboarding.fullname_hint"
+                  data-translate-fallback="Írd be a teljes neved minden másodlagos neveddel együtt, pontosan úgy, ahogy a Teamsben szerepel.">
+                  Írd be a teljes neved minden másodlagos neveddel együtt, pontosan úgy, ahogy a Teamsben szerepel.</p>
+
 
                 <label class="name-label" for="nameInput" data-translate="onboarding.nickname_label"
                   data-translate-fallback="Beceneved:">Beceneved:</label>
@@ -1351,11 +1409,11 @@
             await saveOnboardingNotifSettings();
             console.log('[Onboarding] Settings saved, navigating to #preferences2');
             // Mentés után lépjünk a 2. preferencia oldalra
-            window.location.hash = '#preferences2';
+            navigateWithLoading('#preferences2');
           } catch (e) {
             console.error('[Onboarding] Error saving settings or navigating:', e);
             // Mégis navigáljunk, ha a mentés hibázott
-            window.location.hash = '#preferences2';
+            navigateWithLoading('#preferences2');
           }
         });
       } else {
@@ -1485,6 +1543,47 @@
     }
 
     // Handle URL hash changes
+    // Loading overlay helpers
+    function showLoadingOverlay() {
+      const overlay = document.getElementById('onboardingLoadingOverlay');
+      if (overlay) {
+        overlay.style.display = 'flex';
+        // Translate the loading text
+        const loadingText = overlay.querySelector('.onboarding-loading-text');
+        if (loadingText && window.translationManager) {
+          loadingText.textContent = window.translationManager.getTranslation('onboarding.loading_screen_text') || 'Betöltés';
+        }
+        // Trigger reflow then add visible class for animation
+        overlay.offsetHeight;
+        overlay.classList.add('visible');
+      }
+    }
+
+    function hideLoadingOverlay() {
+      const overlay = document.getElementById('onboardingLoadingOverlay');
+      if (overlay) {
+        overlay.classList.remove('visible');
+        setTimeout(() => {
+          overlay.style.display = 'none';
+        }, 300); // Match the CSS transition duration
+      }
+    }
+
+    // Wrapper to navigate with loading overlay
+    function navigateWithLoading(hash) {
+      showLoadingOverlay();
+      // Small delay to show loading, then navigate and hide
+      setTimeout(() => {
+        window.location.hash = hash;
+        // Hide after a moment to allow content to render
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            hideLoadingOverlay();
+          });
+        });
+      }, 100);
+    }
+
     // Helper function to hide all onboarding screens
     function hideAllOnboardingScreens() {
       const onboardingMain = document.getElementById('onboardingMain');
@@ -2334,7 +2433,7 @@
       const pref2Next = document.getElementById('preferences2NextBtn');
       if (pref2Next) {
         pref2Next.addEventListener('click', () => {
-          window.location.hash = '#legal-terms';
+          navigateWithLoading('#legal-terms');
         });
       }
 
@@ -2346,7 +2445,7 @@
           } catch (e) {
             console.error('[Onboarding][Terms] save failed, continuing anyway', e);
           }
-          window.location.hash = '#last-things';
+          navigateWithLoading('#last-things');
         });
       }
 
@@ -2379,7 +2478,7 @@
           }
 
           // Navigálás a finished képernyőre
-          window.location.hash = '#finished';
+          navigateWithLoading('#finished');
         });
       }
 
@@ -2887,7 +2986,7 @@
           localStorage.removeItem('eu2k-auth-in-progress');
 
           // Success - navigate to looks screen
-          window.location.hash = '#looks';
+          navigateWithLoading('#looks');
 
           // 🔥 AUTOMATIKUSAN lekérjük a Microsoft profilképet Firebase Function-n keresztül
           // A blob-ot localStorage-ba mentjük, és a looks screen betöltésekor használjuk
@@ -3024,7 +3123,7 @@
           localStorage.removeItem('eu2k-auth-in-progress');
 
           // Success - navigate to looks screen
-          window.location.hash = '#looks';
+          navigateWithLoading('#looks');
 
         } catch (error) {
           console.error('❌ Google popup auth failed:', error);
@@ -3641,7 +3740,7 @@
         }
 
         console.log('✅ Profile selection saved');
-        window.location.hash = '#name';
+        navigateWithLoading('#name');
       }
 
       if (looksDefaultContinueBtn) {
@@ -3797,21 +3896,33 @@
 
           // UI Feedback
           nameContinueBtn.disabled = true;
-          nameContinueBtn.textContent = 'Mentés...';
+          const savingText = window.translationManager?.getTranslation('onboarding.saving') || 'Mentés...';
+          nameContinueBtn.textContent = savingText;
 
           try {
             // Import Firebase
             const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
-            const { getFirestore, doc, getDoc, setDoc, updateDoc } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+            const { getFirestore, doc, getDoc, setDoc } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+            const { getFunctions, httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
 
             const app = window.firebaseApp || (await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js")).getApp();
             const auth = getAuth(app);
             const db = window.db || getFirestore(app);
+            const functions = window.functionsInstance || getFunctions(app, 'europe-west1');
             const user = auth.currentUser;
 
             if (!user) throw new Error('No user logged in');
 
-            // 1. Fetch Version Info
+            // 1. Call Cloud Function to save fullName and nickname
+            console.log('[Onboarding] Calling saveOnboardingNames Cloud Function...');
+            const saveOnboardingNames = httpsCallable(functions, 'saveOnboardingNames');
+            const result = await saveOnboardingNames({
+              fullName: fullNameValue,
+              nickname: nicknameValue
+            });
+            console.log('[Onboarding] ✅ saveOnboardingNames result:', result.data);
+
+            // 2. Fetch Version Info
             const versionRef = doc(db, 'version', 'info');
             const versionSnap = await getDoc(versionRef);
             let versionData = { editionLatest: 'unknown', versionLatest: 'unknown' };
@@ -3819,17 +3930,11 @@
               versionData = versionSnap.data();
             }
 
-            // 2. Prepare Data
+            // 3. Prepare Data
             const language = localStorage.getItem('eu2k-language') || 'hu';
 
-            // 3. Perform Writes
+            // 4. Perform Additional Writes (subcollections - allowed by rules)
             await Promise.all([
-              // Update User Profile
-              updateDoc(doc(db, 'users', user.uid), {
-                fullName: fullNameValue,
-                nickname: nicknameValue
-              }),
-
               // Create WebInfo
               setDoc(doc(db, 'users', user.uid, 'webinfo', 'webinfo'), {
                 edition: versionData.editionLatest || 'Standard',
@@ -3845,12 +3950,12 @@
             localStorage.setItem('eu2k-nickname', nicknameValue); // Keep for local usage if needed
             console.log('✅ Onboarding data saved successfully');
 
-            // Navigation
+            // Navigation with loading screen
             const userType = (localStorage.getItem('eu2k-user-type') || '').trim();
             if (userType === 'teacher') {
-              window.location.hash = '#preferences1';
+              navigateWithLoading('#preferences1');
             } else {
-              window.location.hash = '#personal-info';
+              navigateWithLoading('#personal-info');
             }
 
           } catch (e) {
@@ -3905,7 +4010,7 @@
           } catch (err) {
             console.warn('[Onboarding] Could not save birthdate to Firebase:', err);
           }
-          window.location.hash = '#contacts';
+          navigateWithLoading('#contacts');
         });
       }
 
@@ -3961,7 +4066,7 @@
             console.warn('[Onboarding] Could not save guardian contacts to Firebase:', err);
           }
 
-          window.location.hash = '#assign-class';
+          navigateWithLoading('#assign-class');
         });
       }
 
@@ -4003,7 +4108,7 @@
             if (data.classFinishes && data.classType) {
               console.log('[Onboarding] ✅ User already has class assignment! classFinishes:', data.classFinishes, 'classType:', data.classType);
               console.log('[Onboarding] ➡️ Proceeding to #preferences1');
-              window.location.hash = '#preferences1';
+              navigateWithLoading('#preferences1');
               return;
             } else {
               console.log('[Onboarding] ⚠️ ownclass exists but missing classFinishes or classType');
@@ -4026,7 +4131,7 @@
 
             if (newData.classFinishes) {
               console.log('[Onboarding] ✅ Class assignment successful!');
-              window.location.hash = '#preferences1';
+              navigateWithLoading('#preferences1');
               return;
             }
           }
@@ -4053,7 +4158,7 @@
           const classCode = document.getElementById('classCodeInput')?.value?.trim() || '';
           console.log('[Onboarding] Class code entered:', classCode);
           // TODO: Validate class code with backend function
-          window.location.hash = '#preferences1';
+          navigateWithLoading('#preferences1');
         });
       }
 
@@ -4410,10 +4515,12 @@
 
         const userRef = window.firestoreDoc(window.db, 'users', user.uid);
 
+        // NOTE: fullName is NOT included here - it's saved by saveOnboardingNames Cloud Function
+        // We only save other onboarding completion data here
         const payload = {
           email: email || '',
           jobTitle: jobTitle || '',
-          fullName: fullName || '',
+          // fullName is handled by Cloud Function - DO NOT overwrite!
           loginMethod: loginMethod,
           birthyear,
           onboardingFinished: true,
@@ -4502,13 +4609,15 @@
             updatedAt: nowIso
           }, { merge: true });
 
-          // Fő felhasználói dokumentum frissítése (including jobTitle, email, fullName, and loginMethod)
+          // Fő felhasználói dokumentum frissítése (displayName, pfp settings, etc.)
+          // NOTE: fullName is NOT included - it's saved by saveOnboardingNames Cloud Function
           const userRef = window.firestoreDoc(window.db, 'users', uid);
           const userType = localStorage.getItem('eu2k-user-type') || '';
           const loginMethod = (userType === 'student' || userType === 'teacher') ? 'microsoft' : (userType === 'parent' ? 'google' : '');
+
           await window.firestoreSetDoc(userRef, {
             displayName: nickname,
-            fullName: fullName || '',
+            // fullName is handled by Cloud Function - DO NOT overwrite!
             loginMethod: loginMethod,
             pfpType,
             pfpColor,
