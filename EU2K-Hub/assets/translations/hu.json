@@ -450,7 +450,7 @@
         "logged_in_with": "Bejelentkezett: {accountType} fiókkal",
         "notifications_audible": "Értesítések hallhatóak",
         "still_member_of": "Még tagja a(z): {groups} csoport(ok)nak.",
-        "not_member_of_others": "{fullName} nem tagja más csopotnak.",
+        "not_member_of_others": "{fullName} nem tagja más csoportnak.",
         "community_contributions": "Hozzájárulások a közösséghez",
         "suggestions_count": "{count} javaslat ({hive} Hive, {private} nem nyilvános)",
         "participation_rate": "Programokon való részvételi %: -",
