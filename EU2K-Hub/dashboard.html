@@ -617,7 +617,32 @@
                 <div class="calendar-assign-dropdown-group">
                   <label class="calendar-assign-label"
                     data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár neve</label>
-                  <div id="calendarTeacherDropdown" class="language-dropdown"></div>
+                  <div class="calendar-teacher-row">
+                    <div id="calendarTeacherDropdown" class="language-dropdown"></div>
+                    <button id="calendarAddTeacherBtn" class="calendar-add-teacher-btn"
+                      onclick="calendarShowSplitTeacher()">
+                      <span data-translate="pages.dashboard.assign_calendars.add_another_teacher">Másik szaktanár
+                        hozzáadása</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Split Class Container (Teacher 2 + Student Group) -->
+                <div id="calendarSplitContainer" class="calendar-split-container" style="display: none;">
+                  <div class="calendar-assign-dropdown-group">
+                    <label class="calendar-assign-label"
+                      data-translate="pages.dashboard.assign_calendars.teacher_name">Másik szaktanár</label>
+                    <div id="calendarTeacher2Dropdown" class="language-dropdown"></div>
+                  </div>
+                  <div class="calendar-assign-dropdown-group">
+                    <label class="calendar-assign-label"
+                      data-translate="pages.dashboard.assign_calendars.student_group">Diákcsoport kiválasztása</label>
+                    <div class="calendar-student-search-wrapper">
+                      <div id="calendarStudentGhost" class="ghost-text"></div>
+                      <input type="text" id="calendarStudentSearchInput" class="calendar-student-search-input"
+                        placeholder="Keresés..." autocomplete="off">
+                    </div>
+                  </div>
                 </div>
 
                 <!-- Timeline Input -->
@@ -668,7 +693,7 @@
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
                     <button class="calendar-lesson-delete-btn" onclick="event.stopPropagation(); deleteLessonCard(0)">
-                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                      <img src="assets/youhub/notifications/trahscan_red.svg" alt="Törlés">
                     </button>
                   </div>
                   <!-- 1. óra Card -->
@@ -684,7 +709,7 @@
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
                     <button class="calendar-lesson-delete-btn" onclick="event.stopPropagation(); deleteLessonCard(1)">
-                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                      <img src="assets/youhub/notifications/trahscan_red.svg" alt="Törlés">
                     </button>
                   </div>
                   <div class="calendar-lesson-card" data-lesson="2">
@@ -699,7 +724,7 @@
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
                     <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(2)">
-                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                      <img src="assets/youhub/notifications/trahscan_red.svg" alt="Törlés">
                     </button>
                   </div>
                   <div class="calendar-lesson-card" data-lesson="3">
@@ -714,7 +739,7 @@
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
                     <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(3)">
-                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                      <img src="assets/youhub/notifications/trahscan_red.svg" alt="Törlés">
                     </button>
                   </div>
                   <div class="calendar-lesson-card" data-lesson="4">
@@ -729,7 +754,7 @@
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
                     <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(4)">
-                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                      <img src="assets/youhub/notifications/trahscan_red.svg" alt="Törlés">
                     </button>
                   </div>
                   <div class="calendar-lesson-card" data-lesson="5">
@@ -744,7 +769,7 @@
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
                     <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(5)">
-                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                      <img src="assets/youhub/notifications/trahscan_red.svg" alt="Törlés">
                     </button>
                   </div>
                   <div class="calendar-lesson-card" data-lesson="6">
@@ -759,7 +784,7 @@
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
                     <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(6)">
-                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                      <img src="assets/youhub/notifications/trahscan_red.svg" alt="Törlés">
                     </button>
                   </div>
                   <div class="calendar-lesson-card" data-lesson="7">
@@ -774,7 +799,7 @@
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
                     <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(7)">
-                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                      <img src="assets/youhub/notifications/trahscan_red.svg" alt="Törlés">
                     </button>
                   </div>
                   <div class="calendar-lesson-card" data-lesson="8">
@@ -789,7 +814,7 @@
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
                     <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(8)">
-                      <img src="assets/youhub/suggestions/delete.svg" alt="Törlés">
+                      <img src="assets/youhub/notifications/trahscan_red.svg" alt="Törlés">
                     </button>
                   </div>
                 </div>
@@ -808,6 +833,11 @@
                   <img src="assets/onboarding/back_arrow.svg" alt="Vissza">
                   <span data-translate="common.back">Vissza</span>
                 </button>
+
+                <!-- Modified Days Dropdown (Visible only if multiple days have data) -->
+                <div id="calendarModifiedDaysDropdown" class="calendar-modified-days-dropdown"
+                  style="display: none; min-width: 150px;"></div>
+
                 <button class="calendar-assign-btn calendar-assign-btn-next" id="calendarStep4Next"
                   onclick="calendarApplyChanges()">
                   <span data-translate="common.next">Tovább</span>
@@ -1091,10 +1121,30 @@
       lessons: {},           // { lessonId: name }
       teachers: {},          // { normalizedName: fullName }
       timetable: {},         // { lesson1: { startTime, finishTime }, ... }
-      lessonData: {},        // saved lesson data by lesson number
+      lessonData: {},        // saved lesson data { day: { lessonNum: data } }
       variationData: null,   // current variation being edited
       firstSchoolDay: null   // first day of school year
     };
+
+    // Restore state from session storage
+    function restoreCalendarState() {
+      try {
+        const lData = sessionStorage.getItem('calendar_lessonData');
+        if (lData) {
+          calendarState.lessonData = JSON.parse(lData);
+          console.log('[Calendar] Restored lessonData:', calendarState.lessonData);
+        }
+
+        calendarState.selectedClassId = sessionStorage.getItem('calendar_classId');
+        calendarState.selectedClassName = sessionStorage.getItem('calendar_className');
+        // Process usually defaults or is reselected
+      } catch (e) {
+        console.error('[Calendar] Failed to restore state:', e);
+      }
+    }
+
+    // Call restore on load
+    restoreCalendarState();
 
     // Open calendar manager
     function openCalendarManager() {
@@ -1382,8 +1432,13 @@
           options: hourOptions,
           selectedIndex: 0,
           onChange: (value, index) => {
-            // index 0 = placeholder, index 1 = 0. óra, index 2 = 1. óra, etc.
-            calendarState.selectedHour = index > 0 ? index - 1 : null;
+            // Robustly parse hour from value (e.g. "0.", "1.") to avoid index mismatch
+            // "Válassz..." will fail regex and fall to else
+            if (value && /^\d+\.$/.test(value)) {
+              calendarState.selectedHour = parseInt(value, 10);
+            } else {
+              calendarState.selectedHour = null;
+            }
             updateStep2Buttons();
           }
         });
@@ -1478,6 +1533,7 @@
     // Calendar dropdown instances for Step 3
     let calendarLessonTypeDropdownInstance = null;
     let calendarTeacherDropdownInstance = null;
+    let calendarTeacher2DropdownInstance = null;
 
     // Load lesson types from Cloud Function
     async function loadLessonTypes() {
@@ -1487,7 +1543,9 @@
         const functions = getFunctions(window.app, 'europe-west3');
         const loadLessonTypesFunc = httpsCallable(functions, 'loadLessonTypes');
 
-        const result = await loadLessonTypesFunc();
+        // Pass selectedHour explicitly to ensure server uses the correct hour for defaults
+        // (Server fails to sync session session fast enough otherwise)
+        const result = await loadLessonTypesFunc({ selectedHour: calendarState.selectedHour });
         const { lessons, defaultTimeline } = result.data;
 
         // Store lesson data
@@ -1502,9 +1560,12 @@
 
           // Check if this matches current selection (for editing)
           if (calendarState.selectedLessonType === lesson.id) {
+            console.log(`[Calendar] Found matching lesson type: ${lesson.id} at index ${index + 1}`);
             initialIndex = index + 1; // +1 because of "Válassz..." option
           }
         });
+
+        console.log(`[Calendar] Lesson Type Selection - State: ${calendarState.selectedLessonType}, InitialIndex: ${initialIndex}`);
 
         // Initialize LanguageDropdown for lesson types
         const container = document.getElementById('calendarLessonTypeDropdown');
@@ -1525,7 +1586,9 @@
         // or if the inputs are currently empty
         const startInput = document.getElementById('calendarTimelineStart');
         const endInput = document.getElementById('calendarTimelineEnd');
-        const currentData = calendarState.lessonData[calendarState.selectedHour];
+        const selectedDay = calendarState.selectedDay;
+        const dayData = calendarState.lessonData[selectedDay] || {};
+        const currentData = dayData[calendarState.selectedHour];
 
         // If editing and we have saved data, use that
         if (currentData && currentData.timelineStart && currentData.timelineEnd) {
@@ -1549,6 +1612,7 @@
     }
 
     // Load teachers from Cloud Function
+    // Load teachers from Cloud Function
     async function loadTeachers() {
       console.log('[Calendar] Loading teachers via Cloud Function...');
       try {
@@ -1571,12 +1635,11 @@
           // Check if this matches current selection (for editing)
           if (calendarState.selectedTeacher === t.normalizedName || calendarState.selectedTeacherName === t.fullName) {
             initialIndex = index + 1;
-            // Ensure ID consistency
             calendarState.selectedTeacher = t.normalizedName;
           }
         });
 
-        // Initialize LanguageDropdown for teachers
+        // Initialize LanguageDropdown for Teacher 1
         const container = document.getElementById('calendarTeacherDropdown');
         if (container && window.LanguageDropdown) {
           container.innerHTML = '';
@@ -1591,12 +1654,62 @@
           });
         }
 
+        // Initialize LanguageDropdown for Teacher 2
+        const container2 = document.getElementById('calendarTeacher2Dropdown');
+        if (container2 && window.LanguageDropdown) {
+          let initialIndex2 = 0;
+          // Validate if persisted teacher2 is still valid
+          if (calendarState.selectedTeacher2) {
+            const idx = teacherIds.indexOf(calendarState.selectedTeacher2);
+            if (idx >= 0) {
+              initialIndex2 = idx;
+            } else {
+              // Teacher not found or null, reset state
+              calendarState.selectedTeacher2 = null;
+              calendarState.selectedTeacherName2 = null;
+            }
+          }
+
+          container2.innerHTML = '';
+          calendarTeacher2DropdownInstance = new window.LanguageDropdown(container2, {
+            options: teacherNames,
+            selectedIndex: initialIndex2,
+            onChange: (value, index) => {
+              calendarState.selectedTeacher2 = index > 0 ? teacherIds[index] : null;
+              calendarState.selectedTeacherName2 = index > 0 ? value : null;
+              updateStep3NextButton();
+            }
+          });
+
+          // If we have a second teacher or student group data, show the split view
+          const hasStudentGroup = calendarState.studentGroup && calendarState.studentGroup.length > 0;
+          // Check input value too?
+          const studentInput = document.getElementById('calendarStudentSearchInput');
+          const hasInputValue = studentInput && studentInput.value.trim().length > 0;
+
+          if (initialIndex2 > 0 || hasStudentGroup) {
+            calendarShowSplitTeacher();
+            if (hasStudentGroup && studentInput && !studentInput.value) {
+              studentInput.value = calendarState.studentGroup;
+              // Trigger ghost update?
+              const ghost = document.getElementById('calendarStudentGhost');
+              if (ghost) ghost.textContent = ''; // clear ghost on init since full value is present
+            }
+          } else {
+            // Reset split view visibility?
+            // If we are editing a card with single teacher, we should hide split view
+            document.getElementById('calendarSplitContainer').style.display = 'none';
+            document.getElementById('calendarAddTeacherBtn').style.display = 'flex';
+          }
+        }
+
         console.log('[Calendar] Loaded', teachers.length, 'teachers. Selected index:', initialIndex);
         updateStep3NextButton(); // Ensure button state is updated
       } catch (e) {
         console.error('[Calendar] Failed to load teachers:', e);
       }
     }
+
 
     // Update Step 3 next button state
     function updateStep3NextButton() {
@@ -1632,16 +1745,30 @@
           alert(warning); // Simple alert for collision warnings
         }
 
-        // Store resolved lesson data
+        // Store resolved lesson data bucketed by day
         const lessonNum = calendarState.selectedHour;
-        calendarState.lessonData[lessonNum] = {
+        const selectedDay = calendarState.selectedDay;
+
+        console.log(`[Calendar] Saving lesson: Day=${selectedDay}, Hour=${lessonNum} (type: ${typeof lessonNum})`);
+
+        // Ensure day bucket exists
+        if (!calendarState.lessonData[selectedDay]) {
+          calendarState.lessonData[selectedDay] = {};
+        }
+
+        calendarState.lessonData[selectedDay][lessonNum] = {
           lessonType: calendarState.selectedLessonType,
           lessonTypeName: calendarState.selectedLessonTypeName,
           teacher: calendarState.selectedTeacher,
           teacherName: calendarState.selectedTeacherName,
+          teacher2: calendarState.selectedTeacher2 || null,
+          teacherName2: calendarState.selectedTeacherName2 || null,
+          studentGroup: document.getElementById('calendarStudentSearchInput')?.value || null,
           timelineStart: startTime, // Use server resolved time
           timelineEnd: endTime      // Use server resolved time
         };
+
+        console.log('[Calendar] Updated state:', JSON.parse(JSON.stringify(calendarState.lessonData)));
 
         sessionStorage.setItem('calendar_lessonData', JSON.stringify(calendarState.lessonData));
 
@@ -1653,14 +1780,7 @@
         }
 
         // Update title
-        const title = document.getElementById('calendarLessonsTitle');
-        const dayNames = {
-          monday: 'Hétfő', tuesday: 'Kedd', wednesday: 'Szerda',
-          thursday: 'Csütörtök', friday: 'Péntek'
-        };
-        if (title) {
-          title.textContent = `Órák - ${dayNames[calendarState.selectedDay] || calendarState.selectedDay}`;
-        }
+        updateLessonPageHeader();
 
         // Populate lesson cards
         populateLessonCards();
@@ -1671,11 +1791,28 @@
       }
     }
 
+    function updateLessonPageHeader() {
+      const title = document.getElementById('calendarLessonsTitle');
+      const dayNames = {
+        monday: 'Hétfő', tuesday: 'Kedd', wednesday: 'Szerda',
+        thursday: 'Csütörtök', friday: 'Péntek'
+      };
+      if (title) {
+        title.textContent = `Órák - ${dayNames[calendarState.selectedDay] || calendarState.selectedDay}`;
+      }
+
+      // Update day selector if it exists
+      updateModifiedDaysDropdown();
+    }
+
     function populateLessonCards() {
       const cards = document.querySelectorAll('.calendar-lesson-card');
+      const selectedDay = calendarState.selectedDay;
+      const dayData = calendarState.lessonData[selectedDay] || {};
+
       cards.forEach(card => {
         const lessonNum = parseInt(card.dataset.lesson);
-        const data = calendarState.lessonData[lessonNum];
+        const data = dayData[lessonNum];
 
         const typeValue = card.querySelector('.lesson-type-value');
         const teacherValue = card.querySelector('.lesson-teacher-value');
@@ -1684,7 +1821,13 @@
         if (data) {
           card.classList.remove('incomplete');
           if (typeValue) typeValue.textContent = data.lessonTypeName || '-';
-          if (teacherValue) teacherValue.textContent = data.teacherName || data.teacher || '-';
+          if (teacherValue) {
+            let tText = data.teacherName || data.teacher || '-';
+            if (data.teacherName2) {
+              tText += ` vagy ${data.teacherName2}`;
+            }
+            teacherValue.textContent = tText;
+          }
           if (timelineValue) {
             timelineValue.textContent = (data.timelineStart && data.timelineEnd)
               ? `${data.timelineStart} - ${data.timelineEnd}`
@@ -1707,6 +1850,54 @@
       calendarState.selectedHour = lessonNum;
       sessionStorage.setItem('calendar_hour', lessonNum);
 
+      // Populate local state from saved data so dropdowns are pre-selected correctly
+      const selectedDay = calendarState.selectedDay;
+      const dayData = calendarState.lessonData[selectedDay] || {};
+      const savedData = dayData[lessonNum];
+
+      console.log(`[Calendar] Edit Lesson ${lessonNum} (type: ${typeof lessonNum}). Data keys:`, Object.keys(dayData));
+
+      if (savedData) {
+        console.log(`[Calendar] Edit Lesson ${lessonNum}: loaded saved data`, savedData);
+        calendarState.selectedLessonType = savedData.lessonType;
+        calendarState.selectedLessonTypeName = savedData.lessonTypeName;
+        calendarState.selectedTeacher = savedData.teacher;
+        calendarState.selectedTeacherName = savedData.teacherName;
+        calendarState.selectedTeacher2 = savedData.teacher2;
+        calendarState.selectedTeacherName2 = savedData.teacherName2;
+        calendarState.studentGroup = savedData.studentGroup;
+      } else {
+        console.log(`[Calendar] Edit Lesson ${lessonNum}: no saved data, FULL RESET`);
+        calendarState.selectedLessonType = null;
+        calendarState.selectedLessonTypeName = null;
+        calendarState.selectedTeacher = null;
+        calendarState.selectedTeacherName = null;
+        calendarState.selectedTeacher2 = null;
+        calendarState.selectedTeacherName2 = null;
+        calendarState.studentGroup = null;
+      }
+
+      // Clear timeline inputs so defaults can be loaded
+      const startInput = document.getElementById('calendarTimelineStart');
+      const endInput = document.getElementById('calendarTimelineEnd');
+      if (startInput) startInput.value = '';
+      if (endInput) endInput.value = '';
+
+      // Clear student search input to prevent data leak
+      const studentInput = document.getElementById('calendarStudentSearchInput');
+      const studentGhost = document.getElementById('calendarStudentGhost');
+      if (studentInput) studentInput.value = '';
+      if (studentGhost) {
+        studentGhost.textContent = '';
+        studentGhost.classList.remove('is-visible');
+      }
+
+      // Clear dropdown containers to prevent stale data flash
+      const lessonDropdown = document.getElementById('calendarLessonTypeDropdown');
+      const teacherDropdown = document.getElementById('calendarTeacherDropdown');
+      if (lessonDropdown) lessonDropdown.innerHTML = '';
+      if (teacherDropdown) teacherDropdown.innerHTML = '';
+
       // Go to Step 3 to edit this lesson
       hideAllCalendarPages();
       const page = document.getElementById('calendar-schedule-assign-page');
@@ -1724,9 +1915,67 @@
     }
 
     function deleteLessonCard(lessonNum) {
-      delete calendarState.lessonData[lessonNum];
-      sessionStorage.setItem('calendar_lessonData', JSON.stringify(calendarState.lessonData));
-      populateLessonCards();
+      const selectedDay = calendarState.selectedDay;
+      if (calendarState.lessonData[selectedDay]) {
+        delete calendarState.lessonData[selectedDay][lessonNum];
+        sessionStorage.setItem('calendar_lessonData', JSON.stringify(calendarState.lessonData));
+        populateLessonCards();
+        updateModifiedDaysDropdown();
+      }
+    }
+
+    function updateModifiedDaysDropdown() {
+      const container = document.getElementById('calendarModifiedDaysDropdown');
+      if (!container || !window.LanguageDropdown) return;
+
+      const dayNames = {
+        monday: 'Hétfő', tuesday: 'Kedd', wednesday: 'Szerda',
+        thursday: 'Csütörtök', friday: 'Péntek'
+      };
+
+      // Get all days that have data
+      const daysWithData = Object.keys(calendarState.lessonData).filter(day => {
+        const data = calendarState.lessonData[day];
+        return data && Object.keys(data).length > 0;
+      });
+
+      // Ensure current day is included
+      const currentDay = calendarState.selectedDay;
+      const allDays = Array.from(new Set([...daysWithData, currentDay]));
+
+      // Filter out non-day keys if any (e.g. if migration failed and numbers are keys)
+      const validDays = allDays.filter(d => ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].includes(d));
+
+      // Sort days
+      const dayOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+      validDays.sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b));
+
+      if (validDays.length > 0) {
+        container.style.display = 'block';
+        container.innerHTML = '';
+
+        const options = validDays.map(day => dayNames[day] || day);
+        const selectedIndex = validDays.indexOf(currentDay);
+
+        new window.LanguageDropdown(container, {
+          options: options,
+          selectedIndex: selectedIndex,
+          onChange: (value, index) => {
+            const newDay = validDays[index];
+            if (newDay !== calendarState.selectedDay) {
+              calendarState.selectedDay = newDay;
+              // Also update day dropdown in step 2 if we go back?
+              const dayDropdown = document.getElementById('calendarDayDropdown');
+              // if (dayDropdown) { ... } 
+
+              updateLessonPageHeader();
+              populateLessonCards();
+            }
+          }
+        });
+      } else {
+        container.style.display = 'none';
+      }
     }
 
     function addLessonCard() {
@@ -1834,14 +2083,60 @@
       calendarBackToStep2();
     }
 
-    function calendarApplyChanges() {
+    async function calendarApplyChanges() {
       console.log('[Calendar] Applying changes...');
       console.log('[Calendar] Lesson data:', calendarState.lessonData);
 
-      // TODO: Save to Firestore
-      // This will be the final step to write data to the database
+      const nextBtn = document.getElementById('calendarStep4Next');
+      if (nextBtn) {
+        nextBtn.disabled = true;
+        // Spinner?
+        nextBtn.innerHTML = '<span class="loading-spinner"></span> Mentés...';
+      }
 
-      calendarAssignBack();
+      try {
+        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
+        const functions = getFunctions(window.app, 'europe-west3');
+        const saveLessonAssignmentFunc = httpsCallable(functions, 'saveLessonAssignment');
+
+        // Prepare payload
+        const payload = {
+          classId: calendarState.selectedClassId,
+          className: calendarState.selectedClassName,
+          day: calendarState.selectedDay,
+          lessons: calendarState.lessonData
+        };
+
+        const result = await saveLessonAssignmentFunc(payload);
+        console.log('[Calendar] Saved successfully', result.data);
+
+        // Success Feedback
+        if (window.showToastDirectly) {
+          window.showToastDirectly(
+            getTranslation('common.success', 'Siker'),
+            getTranslation('pages.dashboard.assign_calendars.success_save', 'Az órarend mentése sikeres!'),
+            'positive'
+          );
+        } else {
+          alert(getTranslation('pages.dashboard.assign_calendars.success_save', 'Az órarend mentése sikeres!'));
+        }
+
+        calendarAssignBack();
+
+      } catch (error) {
+        console.error('[Calendar] Save failed:', error);
+        const msg = error.message || 'Ismeretlen hiba';
+        if (window.showToastDirectly) {
+          window.showToastDirectly('Hiba', 'Hiba a mentés során: ' + msg, 'danger');
+        } else {
+          alert('Hiba a mentés során: ' + msg);
+        }
+
+        if (nextBtn) {
+          nextBtn.disabled = false;
+          nextBtn.innerHTML = '<span data-translate="common.next">Tovább</span>';
+        }
+      }
     }
 
     // Timeline auto-calculation (+45 min)
@@ -2421,6 +2716,283 @@
     // Redirect from the button in publish-type-selection
     function publishEvent() {
       showEventPublishForm();
+    }
+
+    /* Split Teacher Logic */
+    // Global variables for user suggestions
+    let userSuggestions = [];
+    let userSuggestionsLoaded = false;
+
+
+    function calendarShowSplitTeacher() {
+      const btn = document.getElementById('calendarAddTeacherBtn');
+      const container = document.getElementById('calendarSplitContainer');
+      if (btn) btn.style.display = 'none';
+      if (container) container.style.display = 'flex';
+
+      // Initialize 2nd teacher dropdown if empty
+      // We reusing the same logic as loadLessonTypes but we need to make sure we populate it with teachers
+      // Ideally loadLessonTypes should populate both if the 2nd one exists?
+      // Or we can just copy the innerHTML from the first one?
+      const teacher1Dropdown = document.getElementById('calendarTeacherDropdown');
+      const teacher2Dropdown = document.getElementById('calendarTeacher2Dropdown');
+
+      if (teacher1Dropdown && teacher2Dropdown && !teacher2Dropdown.hasChildNodes()) {
+        // Create a new LanguageDropdown instance for the 2nd teacher
+        // Since LanguageDropdown framework might need re-init, we can try to clone or just re-render.
+        // Assuming dashboard uses a global 'LanguageDropdown' class or helper.
+        // Looking at initStep2Dropdowns:
+        // teacherDropdown = new LanguageDropdown(document.getElementById('calendarTeacherDropdown'), ...)
+        // We need to instantiate it.
+
+        // Using the global teacher options stored in calendarState or similar?
+        // loadLessonTypes fetches users and populates calendarTeacherDropdown.
+        // We can access 'calendarState.teachers' if we saved it?
+
+        // Actually, loadLessonTypes in dashboard.html calls Cloud Function which returns { teachers: [...] }?
+        // No, loadLessonTypes populates the dropdowns directly? 
+        // Let's check loadLessonTypes implementation.
+        // It seems it receives data and updates dropdown.
+
+        // If we don't have the teacher list readily available, we might need to fetch it or store it when loading lesson types.
+        // HACK: Clone the nodes? LanguageDropdown is complex (custom custom element logic).
+
+        // Better approach: When loadLessonTypes runs, it should populate 'teacher2' as well if it exists, OR store the teacher options globally so we can re-render.
+        // But for now, if the user clicks "Add", we assume the list is the same as Teacher 1.
+      }
+
+      // Initialize user search logic
+      const studentInput = document.getElementById('calendarStudentSearchInput');
+      const studentGhost = document.getElementById('calendarStudentGhost');
+      if (studentInput && studentGhost) {
+        setupUserSearchLogic(studentInput, studentGhost);
+      }
+    }
+
+    async function loadUserSuggestions() {
+      if (userSuggestionsLoaded) return;
+      try {
+        const db = window.db;
+        if (!db) return;
+        const { collection, getDocs, query, limit } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+        const usersSnap = await getDocs(query(collection(db, 'public/users/nevek'), limit(100)));
+        userSuggestions = usersSnap.docs.map((docSnap) => {
+          const data = docSnap.data() || {};
+          const displayName = data.name || data.displayName || docSnap.id;
+          return {
+            id: docSnap.id,
+            display: displayName,
+            match: displayName.toLowerCase()
+          };
+        });
+        userSuggestionsLoaded = true;
+      } catch (err) {
+        console.warn('[Dashboard] Failed to load user suggestions', err);
+        userSuggestions = [];
+      }
+    }
+
+    function findUserSuggestion(rawValue) {
+      const value = (rawValue || '').trim().toLowerCase();
+      if (!value || userSuggestions.length === 0) return null;
+
+      let match = userSuggestions.find((item) => item && item.match && item.match.startsWith(value));
+      if (match) return match;
+
+      const words = value.split(/\s+/);
+      const scored = userSuggestions
+        .filter((item) => item && item.match)
+        .map((item) => {
+          const matchLower = item.match.toLowerCase();
+          let score = 0;
+          const allWordsMatch = words.every((word) => matchLower.includes(word));
+          if (allWordsMatch) {
+            if (matchLower.startsWith(value)) {
+              score = 1000;
+            } else {
+              words.forEach((word) => {
+                const index = matchLower.indexOf(word);
+                if (index >= 0) {
+                  score += 100 - index;
+                }
+              });
+            }
+          }
+          return { item, score };
+        })
+        .filter((entry) => entry.score > 0)
+        .sort((a, b) => b.score - a.score);
+
+      return scored.length > 0 ? scored[0].item : null;
+    }
+
+    function applyGhostToElement(element, fullValue, searchValue, suggestionText, inputEl) {
+      if (!element) return;
+      const isFocused = inputEl ? document.activeElement === inputEl : true;
+      if (!searchValue || !suggestionText || !isFocused) {
+        if (element) {
+          element.textContent = '';
+          element.classList.remove('is-visible');
+        }
+        return;
+      }
+
+      const normalizedInput = searchValue.toLowerCase();
+      const normalizedSuggestion = suggestionText.toLowerCase();
+      if (!normalizedSuggestion.startsWith(normalizedInput)) {
+        if (element) {
+          element.textContent = '';
+          element.classList.remove('is-visible');
+        }
+        return;
+      }
+
+      const lastCommaIndex = fullValue.lastIndexOf(',');
+      const prefixBeforeSearch = lastCommaIndex >= 0 ? fullValue.slice(0, lastCommaIndex + 1) + ' ' : '';
+      const remainder = suggestionText.slice(searchValue.length);
+      element.innerHTML = `<span class="ghost-prefix">${escapeHtml(prefixBeforeSearch)}${escapeHtml(searchValue)}</span>${escapeHtml(remainder)}`;
+      element.classList.add('is-visible');
+    }
+
+    function escapeHtml(value) {
+      return (value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function simplifyName(fullName) {
+      if (!fullName) return '';
+      const normalized = fullName.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const lowercased = normalized.toLowerCase();
+      const simplified = lowercased.replace(/\s+/g, '_');
+      return simplified;
+    }
+
+    async function lookupAndReplaceUserName(input, simplifiedName, originalName) {
+      try {
+        const db = window.db;
+        if (!db) {
+          console.warn('[Dashboard] Firestore not initialized');
+          return null;
+        }
+
+        const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+        const namesCollectionRef = collection(db, 'usrlookup', 'names', simplifiedName);
+        const userDocs = await getDocs(namesCollectionRef);
+
+        if (!userDocs.empty) {
+          const userDoc = userDocs.docs[0];
+          const userData = userDoc.data();
+          const userId = userDoc.id;
+          const fullName = userData.fullName || originalName || input.value;
+
+          const fullValue = input.value;
+          const lastCommaIndex = fullValue.lastIndexOf(',');
+          if (lastCommaIndex >= 0) {
+            input.value = fullValue.slice(0, lastCommaIndex + 1) + ' ' + fullName;
+          } else {
+            input.value = fullName;
+          }
+
+          // We should ideally store the userId somewhere, but for calendar assignment we might just store the names string?
+          // Or do we need user IDs? Class registration uses user IDs.
+          // For calendar assignment, we probably just need the names string or IDs if backend supports it.
+          // 'student_group' logic in backend?
+          // The current requirement says "group selection input (with search logic identical to the "Add students")"
+          // Class registration creates a class with users.
+          // THIS feature assigns a teacher (or two) to a lesson. And "student group".
+          // Does "Student Group" mean a list of students? Or a predefined group?
+          // "Student selection feature". "Search logic identical to Add students".
+          // Likely we just want the list of names/IDs stringified or array.
+
+          return { userId, fullName };
+        } else {
+          return null;
+        }
+      } catch (error) {
+        console.error('[Dashboard] Error looking up user name:', error);
+        return null;
+      }
+    }
+
+    function setupUserSearchLogic(input, ghostElement) {
+      if (!input || !ghostElement) return;
+      loadUserSuggestions();
+
+      let lastCommaSpaceDeleted = false;
+
+      function updateUserGhost() {
+        if (!input || !ghostElement) return;
+        const fullValue = input.value;
+        const lastCommaIndex = fullValue.lastIndexOf(',');
+        const searchValue = lastCommaIndex >= 0 ? fullValue.slice(lastCommaIndex + 1).trim() : fullValue.trim();
+        const suggestion = findUserSuggestion(searchValue);
+        applyGhostToElement(ghostElement, fullValue, searchValue, suggestion?.display, input);
+      }
+
+      input.addEventListener('input', updateUserGhost);
+      input.addEventListener('focus', updateUserGhost);
+      input.addEventListener('blur', () => {
+        if (ghostElement) {
+          ghostElement.textContent = '';
+          ghostElement.classList.remove('is-visible');
+        }
+      });
+
+      input.addEventListener('keydown', async (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          const fullValue = input.value;
+          const lastCommaIndex = fullValue.lastIndexOf(',');
+          const searchValue = lastCommaIndex >= 0 ? fullValue.slice(lastCommaIndex + 1).trim() : fullValue.trim();
+
+          if (searchValue) {
+            const simplifiedName = simplifyName(searchValue);
+            await lookupAndReplaceUserName(input, simplifiedName, searchValue);
+          }
+        }
+      });
+
+      input.addEventListener('keydown', async (event) => {
+        if (event.key === 'Tab' && !event.shiftKey) {
+          const fullValue = input.value;
+          const lastCommaIndex = fullValue.lastIndexOf(',');
+          const searchValue = lastCommaIndex >= 0 ? fullValue.slice(lastCommaIndex + 1).trim() : fullValue.trim();
+          const suggestion = findUserSuggestion(searchValue);
+          if (suggestion && suggestion.display) {
+            event.preventDefault();
+            const simplifiedName = simplifyName(searchValue);
+            const result = await lookupAndReplaceUserName(input, simplifiedName, searchValue);
+            if (result && result.fullName) {
+              updateUserGhost();
+            } else {
+              const newName = suggestion.display;
+              if (lastCommaIndex >= 0) {
+                const beforeComma = fullValue.slice(0, lastCommaIndex + 1).trim();
+                input.value = `${beforeComma} ${newName}`;
+              } else {
+                input.value = newName;
+              }
+              updateUserGhost();
+            }
+          }
+        } else if (event.key === ' ' && !lastCommaSpaceDeleted) {
+          const fullValue = input.value;
+          const cursorPos = input.selectionStart || 0;
+          if (cursorPos > 0 && fullValue.slice(cursorPos - 1, cursorPos + 1) === ', ') {
+            lastCommaSpaceDeleted = true;
+          }
+        } else if (event.key === 'Backspace') {
+          const fullValue = input.value;
+          const cursorPos = input.selectionStart || 0;
+          if (cursorPos > 0 && fullValue.slice(cursorPos - 2, cursorPos) === ', ') {
+            lastCommaSpaceDeleted = true;
+          }
+        }
+      });
     }
 
     async function checkSessionAndUpdateBlur() {
