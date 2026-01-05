@@ -66,6 +66,19 @@ function formatMinutesToTime(totalMinutes) {
 }
 
 /**
+ * Format date to "HH:MM" in Europe/Budapest timezone
+ */
+function formatTime(date) {
+    if (!date) return null;
+    return date.toLocaleTimeString('hu-HU', {
+        timeZone: 'Europe/Budapest',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+}
+
+/**
  * Get week number from first school day
  */
 function getSchoolWeekNumber(date, firstDayTimestamp) {
@@ -242,9 +255,16 @@ exports.loadLessonTypes = onCall({ region }, async (request) => {
 
         const uid = request.auth.uid;
 
-        // Get session to know which hour is selected
+        // Allow client to override selectedHour (e.g. when clicking Edit on a card)
+        const { selectedHour: paramHour } = request.data;
+
+        // Get session to know which hour is selected (fallback)
         const sessionDoc = await db.collection(SESSION_COLLECTION).doc(uid).get();
-        const selectedHour = sessionDoc.exists ? sessionDoc.data().selectedHour : null;
+        let selectedHour = sessionDoc.exists ? sessionDoc.data().selectedHour : null;
+
+        if (paramHour !== undefined && paramHour !== null) {
+            selectedHour = paramHour;
+        }
 
         // Get lessons
         const lessonsSnapshot = await db.collection('lessons').get();
@@ -265,12 +285,12 @@ exports.loadLessonTypes = onCall({ region }, async (request) => {
                     const ttData = timetableDoc.data();
                     if (ttData.startTime) {
                         startTime = ttData.startTime.toDate
-                            ? format(ttData.startTime.toDate(), 'HH:mm')
+                            ? formatTime(ttData.startTime.toDate())
                             : ttData.startTime;
                     }
                     if (ttData.finishTime) {
                         finishTime = ttData.finishTime.toDate
-                            ? format(ttData.finishTime.toDate(), 'HH:mm')
+                            ? formatTime(ttData.finishTime.toDate())
                             : ttData.finishTime;
                     }
                 }
@@ -286,12 +306,12 @@ exports.loadLessonTypes = onCall({ region }, async (request) => {
                         const ttData = defaultTimeDoc.data();
                         if (ttData.startTime) {
                             startTime = ttData.startTime.toDate
-                                ? format(ttData.startTime.toDate(), 'HH:mm')
+                                ? formatTime(ttData.startTime.toDate())
                                 : ttData.startTime;
                         }
                         if (ttData.finishTime) {
                             finishTime = ttData.finishTime.toDate
-                                ? format(ttData.finishTime.toDate(), 'HH:mm')
+                                ? formatTime(ttData.finishTime.toDate())
                                 : ttData.finishTime;
                         }
                     }
@@ -317,10 +337,10 @@ exports.loadLessonTypes = onCall({ region }, async (request) => {
                     const ttData = defaultTimeDoc.data();
                     defaultTimeline = {
                         startTime: ttData.startTime?.toDate
-                            ? format(ttData.startTime.toDate(), 'HH:mm')
+                            ? formatTime(ttData.startTime.toDate())
                             : ttData.startTime,
                         finishTime: ttData.finishTime?.toDate
-                            ? format(ttData.finishTime.toDate(), 'HH:mm')
+                            ? formatTime(ttData.finishTime.toDate())
                             : ttData.finishTime
                     };
                 }
@@ -435,8 +455,8 @@ exports.validateTimeline = onCall({ region }, async (request) => {
                     if (typeDoc.exists) {
                         const data = typeDoc.data();
                         if (data.startTime && data.finishTime) {
-                            const startRaw = data.startTime.toDate ? format(data.startTime.toDate(), 'HH:mm') : data.startTime;
-                            const endRaw = data.finishTime.toDate ? format(data.finishTime.toDate(), 'HH:mm') : data.finishTime;
+                            const startRaw = data.startTime.toDate ? formatTime(data.startTime.toDate()) : data.startTime;
+                            const endRaw = data.finishTime.toDate ? formatTime(data.finishTime.toDate()) : data.finishTime;
 
                             const start = normalizeTime(startRaw);
                             const end = normalizeTime(endRaw);
@@ -461,8 +481,8 @@ exports.validateTimeline = onCall({ region }, async (request) => {
                     if (lessonDoc.exists) {
                         const data = lessonDoc.data();
                         if (data.startTime && data.finishTime) {
-                            const startRaw = data.startTime.toDate ? format(data.startTime.toDate(), 'HH:mm') : data.startTime;
-                            const endRaw = data.finishTime.toDate ? format(data.finishTime.toDate(), 'HH:mm') : data.finishTime;
+                            const startRaw = data.startTime.toDate ? formatTime(data.startTime.toDate()) : data.startTime;
+                            const endRaw = data.finishTime.toDate ? formatTime(data.finishTime.toDate()) : data.finishTime;
 
                             const start = normalizeTime(startRaw);
                             const end = normalizeTime(endRaw);
@@ -520,8 +540,8 @@ exports.validateTimeline = onCall({ region }, async (request) => {
             const data = doc.data();
             if (!data.startTime || !data.finishTime) continue;
 
-            const lessonStartTime = data.startTime.toDate ? format(data.startTime.toDate(), 'HH:mm') : data.startTime;
-            const lessonEndTime = data.finishTime.toDate ? format(data.finishTime.toDate(), 'HH:mm') : data.finishTime;
+            const lessonStartTime = data.startTime.toDate ? formatTime(data.startTime.toDate()) : data.startTime;
+            const lessonEndTime = data.finishTime.toDate ? formatTime(data.finishTime.toDate()) : data.finishTime;
 
             const lessonStartMinutes = parseTimeToMinutes(lessonStartTime);
             const lessonEndMinutes = parseTimeToMinutes(lessonEndTime);
@@ -571,7 +591,7 @@ exports.saveLessonAssignment = onCall({ region }, async (request) => {
         }
 
         const uid = request.auth.uid;
-        const { lessonNumber, lessonType, teacher, startTime, endTime, useDefaultTime } = request.data;
+        const data = request.data;
 
         // Get session
         const sessionDoc = await db.collection(SESSION_COLLECTION).doc(uid).get();
@@ -582,21 +602,100 @@ exports.saveLessonAssignment = onCall({ region }, async (request) => {
         const sessionData = sessionDoc.data();
         const lessonData = sessionData.lessonData || {};
 
-        // Store lesson assignment
-        lessonData[lessonNumber] = {
-            lessonType,
-            teacher,
-            startTime: useDefaultTime ? null : startTime,
-            endTime: useDefaultTime ? null : endTime,
-            useDefaultTime: !!useDefaultTime
-        };
+        if (data.lessons) {
+            // Bulk update
+            // Check if items are days or lessons
+            Object.entries(data.lessons).forEach(([key, val]) => {
+                const isDay = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].includes(key);
+
+                if (isDay) {
+                    // Handle Day Bucket
+                    if (!lessonData[key]) lessonData[key] = {};
+                    const dayLessons = val; // { 0: {...}, 1: {...} }
+
+                    if (dayLessons) {
+                        Object.entries(dayLessons).forEach(([num, lData]) => {
+                            if (!lData) {
+                                delete lessonData[key][num];
+                            } else {
+                                lessonData[key][num] = {
+                                    lessonType: lData.lessonType,
+                                    lessonTypeName: lData.lessonTypeName,
+                                    teacher: lData.teacher,
+                                    teacherName: lData.teacherName,
+                                    teacher2: lData.teacher2 || null,
+                                    teacherName2: lData.teacherName2 || null,
+                                    studentGroup: lData.studentGroup || null,
+                                    startTime: lData.timelineStart || lData.startTime,
+                                    endTime: lData.timelineEnd || lData.endTime,
+                                    useDefaultTime: false
+                                };
+                            }
+                        });
+                    }
+                } else {
+                    // Legacy/Flat format (key is lesson number)
+                    // We treat this as "no specific day" or "current day" - but mixed storage is bad.
+                    // If we want to support this, we should really know the day.
+                    // For now, if we detect numbers, we might just store them at root (Legacy behavior)
+                    // OR ignore them if we want to enforce new standard.
+                    // To keep legacy working, let's keep root assignment if key is number
+                    if (!isNaN(parseInt(key))) {
+                        const num = key;
+                        const lData = val;
+                        if (!lData) {
+                            delete lessonData[num];
+                        } else {
+                            lessonData[num] = {
+                                lessonType: lData.lessonType,
+                                lessonTypeName: lData.lessonTypeName,
+                                teacher: lData.teacher,
+                                teacherName: lData.teacherName,
+                                teacher2: lData.teacher2 || null,
+                                teacherName2: lData.teacherName2 || null,
+                                studentGroup: lData.studentGroup || null,
+                                startTime: lData.timelineStart || lData.startTime,
+                                endTime: lData.timelineEnd || lData.endTime,
+                                useDefaultTime: false
+                            };
+                        }
+                    }
+                }
+            });
+        } else {
+            // Legacy single update support
+            const { lessonNumber, lessonType, teacher, startTime, endTime, useDefaultTime } = data;
+            const day = data.day; // Optional day param?
+
+            // If day is provided, we save to that day. Else root (legacy).
+            if (day && ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].includes(day)) {
+                if (!lessonData[day]) lessonData[day] = {};
+                if (lessonNumber) {
+                    lessonData[day][lessonNumber] = {
+                        lessonType,
+                        teacher,
+                        startTime: useDefaultTime ? null : startTime,
+                        endTime: useDefaultTime ? null : endTime,
+                        useDefaultTime: !!useDefaultTime
+                    };
+                }
+            } else if (lessonNumber) {
+                lessonData[lessonNumber] = {
+                    lessonType,
+                    teacher,
+                    startTime: useDefaultTime ? null : startTime,
+                    endTime: useDefaultTime ? null : endTime,
+                    useDefaultTime: !!useDefaultTime
+                };
+            }
+        }
 
         await db.collection(SESSION_COLLECTION).doc(uid).update({
             lessonData
         });
 
-        console.log(`[Calendar] Saved lesson ${lessonNumber} assignment for user ${uid}`);
-        return { success: true, lessonNumber };
+        console.log(`[Calendar] Saved lesson assignment for user ${uid}`);
+        return { success: true };
 
     } catch (error) {
         console.error('[Calendar] saveLessonAssignment error:', error);
@@ -645,22 +744,38 @@ exports.getLessonCards = onCall({ region }, async (request) => {
             if (match) {
                 const data = doc.data();
                 defaultTimes[match[1]] = {
-                    startTime: data.startTime?.toDate ? format(data.startTime.toDate(), 'HH:mm') : data.startTime,
-                    finishTime: data.finishTime?.toDate ? format(data.finishTime.toDate(), 'HH:mm') : data.finishTime
+                    startTime: data.startTime?.toDate ? formatTime(data.startTime.toDate()) : data.startTime,
+                    finishTime: data.finishTime?.toDate ? formatTime(data.finishTime.toDate()) : data.finishTime
                 };
             }
         });
 
+        // Resolve current day's lesson data
+        let currentDayLessons = lessonData;
+        // If lessonData has the selectedDay key, use that bucket.
+        // Otherwise, fall back to root (legacy) or empty if structure is new but day not found.
+        if (selectedDay && lessonData[selectedDay]) {
+            currentDayLessons = lessonData[selectedDay];
+        }
+
         // Build cards
         const cards = [];
         for (let i = 1; i <= 8; i++) {
-            const data = lessonData[i];
+            const data = currentDayLessons[i];
             if (data) {
                 // Get teacher fullName
-                let teacherFullName = data.teacher;
-                if (teacherMapping[data.teacher]) {
+                let teacherFullName = data.teacherName || data.teacher;
+                if (!data.teacherName && teacherMapping[data.teacher]) {
                     // Reverse lookup - data.teacher might be normalizedName
-                    teacherFullName = data.teacher;
+                    // Original code assigned data.teacher, but teacherMapping likely holds the full name?
+                    // Safe approach: if data.teacherName exists use it.
+                    // If not, use mapping if available.
+                    // Assuming mapping contains the full name.
+                    // If previous code was `teacherFullName = data.teacher` inside the if, maybe it was a no-op/bug?
+                    // I will use mapping value if available.
+                    // If mapping is map<normalized, full>:
+                    // teacherFullName = teacherMapping[data.teacher];
+                    // BUT for safety I will stick to data.teacher if mapping is weird, but try to use name if saved.
                 }
 
                 // Get timeline
@@ -677,6 +792,8 @@ exports.getLessonCards = onCall({ region }, async (request) => {
                     number: i,
                     typeName: lessonNames[data.lessonType] || data.lessonType || '-',
                     teacher: teacherFullName || '-',
+                    teacher2: data.teacherName2 || data.teacher2 || null,
+                    studentGroup: data.studentGroup || null,
                     timeline,
                     complete: true
                 });

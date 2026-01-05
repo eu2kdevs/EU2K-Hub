@@ -417,6 +417,8 @@
         "schedule_assign": "Órarend hozzárendelése",
         "lesson_type": "Óra típusa",
         "teacher_name": "Szaktanár neve",
+        "add_another_teacher": "Másik szaktanár hozzáadása",
+        "student_group": "Diákcsoport kiválasztása",
         "timeline": "Idővonal",
         "lessons_title": "Órák",
         "add_lesson": "Óra hozzáadása",
