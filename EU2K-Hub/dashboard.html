@@ -1501,7 +1501,60 @@
       // Update title and subtitle
       updateScheduleAssignTitle();
 
-      // Load lesson types and teachers
+      // CHECK IF WE HAVE SAVED DATA FOR THIS SLOT
+      const selectedDay = calendarState.selectedDay;
+      const lessonNum = calendarState.selectedHour;
+      const dayData = calendarState.lessonData[selectedDay] || {};
+      const savedData = dayData[lessonNum];
+
+      console.log(`[Calendar] ScheduleAssign - Checking for saved data. Day: ${selectedDay}, Hour: ${lessonNum}`, savedData);
+
+      if (savedData) {
+        // LOAD saved data
+        console.log('[Calendar] Loading existing data for this slot');
+        calendarState.selectedLessonType = savedData.lessonType;
+        calendarState.selectedLessonTypeName = savedData.lessonTypeName;
+        calendarState.selectedTeacher = savedData.teacher;
+        calendarState.selectedTeacherName = savedData.teacherName;
+        calendarState.selectedTeacher2 = savedData.teacher2;
+        calendarState.selectedTeacherName2 = savedData.teacherName2;
+        calendarState.studentGroup = savedData.studentGroup;
+      } else {
+        // CLEAR state for new/empty slot
+        console.log('[Calendar] No data for this slot - CLEARING state');
+        calendarState.selectedLessonType = null;
+        calendarState.selectedLessonTypeName = null;
+        calendarState.selectedTeacher = null;
+        calendarState.selectedTeacherName = null;
+        calendarState.selectedTeacher2 = null;
+        calendarState.selectedTeacherName2 = null;
+        calendarState.studentGroup = null;
+
+        // CRITICAL: Clear DOM inputs to prevent bleeding
+        const startInput = document.getElementById('calendarTimelineStart');
+        const endInput = document.getElementById('calendarTimelineEnd');
+        const studentInput = document.getElementById('calendarStudentSearchInput');
+        const studentGhost = document.getElementById('calendarStudentGhost');
+
+        if (startInput) startInput.value = '';
+        if (endInput) endInput.value = '';
+        if (studentInput) studentInput.value = '';
+        if (studentGhost) {
+          studentGhost.textContent = '';
+          studentGhost.classList.remove('is-visible');
+        }
+      }
+
+      // CRITICAL: Clear dropdown containers deeply to prevent visual flash
+      const lessonDropdown = document.getElementById('calendarLessonTypeDropdown');
+      const teacherDropdown = document.getElementById('calendarTeacherDropdown');
+      const teacher2Dropdown = document.getElementById('calendarTeacher2Dropdown');
+
+      if (lessonDropdown) lessonDropdown.innerHTML = '';
+      if (teacherDropdown) teacherDropdown.innerHTML = '';
+      if (teacher2Dropdown) teacher2Dropdown.innerHTML = '';
+
+      // Load lesson types and teachers (they will use the cleared/loaded calendarState to set initial selection)
       loadLessonTypes();
       loadTeachers();
     }
@@ -1595,7 +1648,7 @@
           if (startInput) startInput.value = currentData.timelineStart;
           if (endInput) endInput.value = currentData.timelineEnd;
         } else if (defaultTimeline) {
-          // Otherwise use defaults from server
+          // Otherwise use defaults from server ONLY if inputs are empty
           if (startInput && defaultTimeline.startTime && !startInput.value) {
             startInput.value = defaultTimeline.startTime;
           }
@@ -1685,7 +1738,7 @@
           const hasStudentGroup = calendarState.studentGroup && calendarState.studentGroup.length > 0;
           // Check input value too?
           const studentInput = document.getElementById('calendarStudentSearchInput');
-          const hasInputValue = studentInput && studentInput.value.trim().length > 0;
+          //const hasInputValue = studentInput && studentInput.value.trim().length > 0;
 
           if (initialIndex2 > 0 || hasStudentGroup) {
             calendarShowSplitTeacher();
@@ -1693,7 +1746,7 @@
               studentInput.value = calendarState.studentGroup;
               // Trigger ghost update?
               const ghost = document.getElementById('calendarStudentGhost');
-              if (ghost) ghost.textContent = ''; // clear ghost on init since full value is present
+              // if (ghost) ghost.textContent = ''; // clear ghost on init since full value is present
             }
           } else {
             // Reset split view visibility?
@@ -1768,7 +1821,7 @@
           timelineEnd: endTime      // Use server resolved time
         };
 
-        console.log('[Calendar] Updated state:', JSON.parse(JSON.stringify(calendarState.lessonData)));
+        console.log('[Calendar] Updated state snapshot:', JSON.parse(JSON.stringify(calendarState.lessonData)));
 
         sessionStorage.setItem('calendar_lessonData', JSON.stringify(calendarState.lessonData));
 
@@ -1933,11 +1986,14 @@
         thursday: 'Csütörtök', friday: 'Péntek'
       };
 
-      // Get all days that have data
+      // Get all days that have data - ITERATE ALL KEYS
       const daysWithData = Object.keys(calendarState.lessonData).filter(day => {
         const data = calendarState.lessonData[day];
+        // Ensure day has at least one lesson
         return data && Object.keys(data).length > 0;
       });
+
+      console.log('[Calendar] Days with data:', daysWithData);
 
       // Ensure current day is included
       const currentDay = calendarState.selectedDay;
@@ -1963,10 +2019,13 @@
           onChange: (value, index) => {
             const newDay = validDays[index];
             if (newDay !== calendarState.selectedDay) {
+              console.log('[Calendar] Switching day to:', newDay);
               calendarState.selectedDay = newDay;
-              // Also update day dropdown in step 2 if we go back?
+
+              // Also update day dropdown in step 2 so if we go back it is correct
               const dayDropdown = document.getElementById('calendarDayDropdown');
-              // if (dayDropdown) { ... } 
+              // We can't easily update LanguageDropdown externally without a reference or recreating it
+              // But we can update the state that matters
 
               updateLessonPageHeader();
               populateLessonCards();
