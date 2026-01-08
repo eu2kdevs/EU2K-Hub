@@ -116,6 +116,7 @@ class StudentCalendar {
         }
 
         await this.fetchAndRenderTimetable(dayName);
+        await this.checkAdditionalCalendars();
     }
 
     getCurrentDayName() {
@@ -259,6 +260,51 @@ class StudentCalendar {
 
         await this.renderCards(lessons);
         this.updateActiveStatus();
+    }
+
+    async checkAdditionalCalendars() {
+        if (!this.db || !this.classId) return;
+
+        const sections = [
+            {
+                name: 'exams',
+                viewId: 'calendar-view-exams',
+                icon: 'assets/youhub/calendar/exams.svg',
+                title: 'Nincsenek dolgozataid!',
+                subtitle: 'Itt fognak megjelenni a dolgozatok, amint hozzáadják őket.'
+            },
+            {
+                name: 'rp',
+                viewId: 'calendar-view-rp',
+                icon: 'assets/youhub/calendar/rp.svg',
+                title: 'Nincsenek Reading Progress adataid!',
+                subtitle: 'Itt fognak megjelenni az olvasási előrehaladásaid.'
+            },
+            {
+                name: 'bell_schedule',
+                viewId: 'calendar-view-bell',
+                icon: 'assets/youhub/calendar/bell.svg',
+                title: 'Nem találtunk csengetési rendet!',
+                subtitle: 'Amint felkerül, itt fogod látni a csengetési rendet.'
+            }
+        ];
+
+        for (const section of sections) {
+            const viewEl = document.getElementById(section.viewId);
+            if (!viewEl) continue;
+
+            try {
+                // Firestore collection paths must end with a collection (odd segment count).
+                // Structure mirrors timetable: classes/{classId}/calendar/{section}/items/{doc}
+                const snap = await getDocs(collection(this.db, 'classes', this.classId, 'calendar', section.name, 'items'));
+                if (snap.empty) {
+                    this.renderSectionEmpty(viewEl, section.icon, section.title, section.subtitle);
+                }
+            } catch (e) {
+                console.warn(`[StudentCalendar] Failed to load ${section.name}:`, e);
+                this.renderSectionEmpty(viewEl, section.icon, section.title, section.subtitle);
+            }
+        }
     }
 
     async renderCards(lessons) {
@@ -487,6 +533,18 @@ class StudentCalendar {
         <div class="students-empty-text-container">
           <p class="students-empty-title">Nem találtuk az órarended!</p>
           <p class="students-empty-subtitle">Jelezd a hibát Turóczi Ádámnak vagy Hegyi Marianna titkárnőnek!</p>
+        </div>
+      </div>
+    `;
+    }
+
+    renderSectionEmpty(viewEl, iconPath, title, subtitle) {
+        viewEl.innerHTML = `
+      <div class="calendar-empty-state students-empty-state" style="display:flex;grid-column:span 2;height:100%;min-height:0;overflow:hidden;">
+        <img src="${iconPath}" alt="${title}" class="students-empty-icon">
+        <div class="students-empty-text-container">
+          <p class="students-empty-title">${title}</p>
+          <p class="students-empty-subtitle">${subtitle}</p>
         </div>
       </div>
     `;

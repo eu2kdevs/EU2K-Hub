@@ -821,6 +821,7 @@
                                 <span class="suggestions-input-label"
                                   data-translate="youhub.suggestions.submit_steps.step2.user_label"
                                   data-translate-fallback="Megjelenítés kinek">Megjelenítés kinek</span>
+                              <p class="suggestions-help-text" data-translate="youhub.suggestions.submit_steps.step2.user_hint" data-translate-fallback="Hagyd üresen a publikus megjelenítéshez.">Hagyd üresen a publikus megjelenítéshez.</p>
                                 <div class="suggestions-search-wrapper">
                                   <input id="suggestionUserSearch" data-form-field="userSearch" type="text"
                                     class="suggestions-input-control suggestions-input-control--search"
@@ -835,6 +836,7 @@
                                 <span class="suggestions-input-label"
                                   data-translate="youhub.suggestions.submit_steps.step2.group_label"
                                   data-translate-fallback="Célcsoport">Célcsoport</span>
+                              <p class="suggestions-help-text" data-translate="youhub.suggestions.submit_steps.step2.group_hint" data-translate-fallback="Hagyd üresen a publikus megjelenítéshez.">Hagyd üresen a publikus megjelenítéshez.</p>
                                 <div class="suggestions-search-wrapper">
                                   <input id="suggestionGroupSearch" data-form-field="groupSearch" type="text"
                                     class="suggestions-input-control suggestions-input-control--search suggestions-input-control--large"
@@ -1168,6 +1170,36 @@
             const auth = getAuth();
             const suggestionsDb = window.db || getFirestore();
             const suggestionCardElements = Array.from(document.querySelectorAll('.suggestion-card'));
+            const SUGGESTIONS_DEVICE_ID_KEY = 'youhub-suggestions-device-id';
+
+            function generateSuggestionsDeviceId() {
+              const randomPart = (crypto.randomUUID ? crypto.randomUUID() : `id-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`);
+              return `youhub-${randomPart}`;
+            }
+
+            function getSuggestionsDeviceId() {
+              try {
+                const existing = localStorage.getItem(SUGGESTIONS_DEVICE_ID_KEY);
+                if (existing) return existing;
+                const fresh = generateSuggestionsDeviceId();
+                localStorage.setItem(SUGGESTIONS_DEVICE_ID_KEY, fresh);
+                return fresh;
+              } catch {
+                return generateSuggestionsDeviceId();
+              }
+            }
+
+            function persistSuggestionsDeviceId(deviceId) {
+              if (!deviceId) return;
+              try {
+                const current = localStorage.getItem(SUGGESTIONS_DEVICE_ID_KEY);
+                if (current !== deviceId) {
+                  localStorage.setItem(SUGGESTIONS_DEVICE_ID_KEY, deviceId);
+                }
+              } catch {
+                // ignore storage errors (private mode, etc.)
+              }
+            }
 
             const SUBMIT_FORM_STORAGE_KEY = 'youhub-submit-form-state';
             const submitFormState = {
@@ -1196,6 +1228,15 @@
             const userProfileCache = new Map();
             let referenceDataLoaded = false;
             let referenceDataLoading = false;
+
+            function simplifyName(value) {
+              return (value || '')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+                .replace(/\s+/g, '_')
+                .trim();
+            }
 
             const DEFAULT_NAV_ID = 'suggestions';
             let activeNavId = DEFAULT_NAV_ID;
@@ -1330,21 +1371,22 @@
                   const suggestion = findUserSuggestion(searchValue);
                   if (suggestion && suggestion.display) {
                     event.preventDefault();
-                    const newName = suggestion.display;
+                    const newValue = suggestion.value || suggestion.display;
+                    const newLabel = suggestion.display;
                     // Replace the last part with the full name
                     if (lastCommaIndex >= 0) {
                       // There's a comma, replace the part after it
                       const beforeComma = fullValue.slice(0, lastCommaIndex + 1).trim();
-                      const updatedValue = `${beforeComma} ${newName}`;
+                      const updatedValue = `${beforeComma} ${newValue}`;
                       formElements.userSearchInput.value = updatedValue;
                       submitFormState.restrictUsers = updatedValue;
                     } else {
                       // No comma, replace the entire value
-                      formElements.userSearchInput.value = newName;
-                      submitFormState.restrictUsers = newName;
+                      formElements.userSearchInput.value = newValue;
+                      submitFormState.restrictUsers = newValue;
                     }
                     persistFormState();
-                    updateUserGhost();
+                    applyGhostToElement(formElements.userGhost, newValue, newLabel, formElements.userSearchInput);
                     lastCommaSpaceDeleted = false; // Reset after Tab
                   }
                 } else if (event.key === ' ' && !lastCommaSpaceDeleted) {
@@ -1359,7 +1401,8 @@
                     // The current value is a complete name, add comma+space
                     event.preventDefault();
                     const beforeComma = lastCommaIndex >= 0 ? fullValue.slice(0, lastCommaIndex + 1).trim() : '';
-                    const updatedValue = beforeComma ? `${beforeComma} ${suggestion.display}, ` : `${suggestion.display}, `;
+                    const token = suggestion.value || suggestion.display;
+                    const updatedValue = beforeComma ? `${beforeComma} ${token}, ` : `${token}, `;
                     formElements.userSearchInput.value = updatedValue;
                     submitFormState.restrictUsers = updatedValue;
                     persistFormState();
@@ -1397,7 +1440,7 @@
                   const suggestion = findClassOrGroupSuggestion(searchValue);
                   if (suggestion && suggestion.display) {
                     event.preventDefault();
-                    const newItem = suggestion.display;
+                    const newItem = suggestion.value || suggestion.display;
                     // Replace the last part with the full name
                     if (lastCommaIndex >= 0) {
                       // There's a comma, replace the part after it
@@ -1566,30 +1609,24 @@
               if (!value) return null;
               const combined = [...classSuggestions, ...groupSuggestions];
 
-              // First try exact start match
-              let match = combined.find((item) => item && item.match && item.match.startsWith(value));
+              // First try exact start match on display
+              let match = combined.find((item) => item && item.display && item.display.toLowerCase().startsWith(value));
               if (match) return match;
 
-              // Then try word-based matching (e.g., "benk" matches "benkó" better than "batka")
               const words = value.split(/\s+/);
               const scored = combined
-                .filter((item) => item && item.match)
+                .filter((item) => item && item.display)
                 .map((item) => {
-                  const matchLower = item.match.toLowerCase();
+                  const matchLower = item.display.toLowerCase();
                   let score = 0;
-                  // Check if all words appear in the match string
                   const allWordsMatch = words.every((word) => matchLower.includes(word));
                   if (allWordsMatch) {
-                    // Prefer matches that start with the input
                     if (matchLower.startsWith(value)) {
                       score = 1000;
                     } else {
-                      // Score based on how early the words appear
                       words.forEach((word) => {
                         const index = matchLower.indexOf(word);
-                        if (index >= 0) {
-                          score += 100 - index;
-                        }
+                        if (index >= 0) score += 100 - index;
                       });
                     }
                   }
@@ -1605,74 +1642,55 @@
               const value = (rawValue || '').trim().toLowerCase();
               if (!value) return null;
 
-              // Filter out already used names from the current input
               const fullValue = formElements.userSearchInput?.value || '';
               const lastCommaIndex = fullValue.lastIndexOf(',');
               const beforeLastComma = lastCommaIndex >= 0 ? fullValue.slice(0, lastCommaIndex) : '';
-              const usedNames = beforeLastComma ? beforeLastComma.split(',').map(s => s.trim().toLowerCase()).filter(s => s) : [];
+              const usedValues = beforeLastComma ? beforeLastComma.split(',').map(s => s.trim().toLowerCase()).filter(s => s) : [];
 
-              // Filter suggestions to exclude already used names
               const availableSuggestions = userSuggestions.filter((item) => {
-                if (!item || !item.match) return false;
-                const matchLower = item.match.toLowerCase();
-                return !usedNames.some(used => matchLower === used);
+                if (!item || !item.value) return false;
+                const valueLower = item.value.toLowerCase();
+                return !usedValues.some(used => valueLower === used);
               });
 
-              // First try exact start match
-              let match = availableSuggestions.find((item) => item.match && item.match.toLowerCase().startsWith(value));
+              let match = availableSuggestions.find((item) => item.display && item.display.toLowerCase().startsWith(value));
               if (match) return match;
 
-              // Then try word-based matching (e.g., "turó" matches "Turóczi Ádám" better than "Nagy Gergely László")
               const words = value.split(/\s+/);
               const scored = availableSuggestions
-                .filter((item) => item && item.match)
+                .filter((item) => item && item.display)
                 .map((item) => {
-                  const matchLower = item.match.toLowerCase();
+                  const matchLower = item.display.toLowerCase();
                   let score = 0;
-
-                  // Check if the input matches the start of any word in the match
                   const matchWords = matchLower.split(/\s+/);
                   const startsWithWord = matchWords.some(word => word.startsWith(value));
                   if (startsWithWord) {
-                    score = 2000; // Highest priority for word-start matches
-                    // Prefer matches where the word starts earlier
+                    score = 2000;
                     const wordIndex = matchWords.findIndex(word => word.startsWith(value));
                     score += 1000 - (wordIndex * 100);
                   }
-
-                  // Check if all words appear in the match string
                   const allWordsMatch = words.every((word) => matchLower.includes(word));
                   if (allWordsMatch) {
-                    // Prefer matches that start with the input
                     if (matchLower.startsWith(value)) {
                       score = Math.max(score, 1500);
                     } else {
-                      // Score based on how early the words appear
                       words.forEach((word) => {
                         const index = matchLower.indexOf(word);
-                        if (index >= 0) {
-                          score += 100 - index;
-                        }
+                        if (index >= 0) score += 100 - index;
                       });
                     }
                   }
-
-                  // Also check if any word in the match starts with the input
                   if (!startsWithWord) {
                     matchWords.forEach((word) => {
-                      if (word.startsWith(value)) {
-                        score = Math.max(score, 1000);
-                      }
+                      if (word.startsWith(value)) score = Math.max(score, 1000);
                     });
                   }
-
                   return { item, score };
                 })
                 .filter((entry) => entry.score > 0)
                 .sort((a, b) => {
-                  // Sort by score, but if scores are equal, prefer shorter matches
                   if (b.score !== a.score) return b.score - a.score;
-                  return a.item.match.length - b.item.match.length;
+                  return a.item.display.length - b.item.display.length;
                 });
 
               return scored.length > 0 ? scored[0].item : null;
@@ -1768,43 +1786,55 @@
               referenceDataLoading = true;
 
               try {
-                const { collection, getDocs, limit, query } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
-
+                // Load classes (id -> display) - full load, to allow lookup by id
                 try {
-                  const classesSnap = await getDocs(query(collection(suggestionsDb, 'classes'), limit(3)));
+                  const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+                  const classesSnap = await getDocs(collection(suggestionsDb, 'classes'));
                   classSuggestions = classesSnap.docs.map((docSnap) => ({
                     id: docSnap.id,
                     display: formatClassLabel(docSnap.id),
-                    match: docSnap.id.toLowerCase()
+                    match: docSnap.id.toLowerCase(),
+                    value: docSnap.id
                   }));
                 } catch (err) {
                   console.warn('[SuggestionsForm] Failed to load classes', err);
                 }
 
+                // Load groups
                 try {
-                  const groupsSnap = await getDocs(query(collection(suggestionsDb, 'groups'), limit(3)));
-                  groupSuggestions = groupsSnap.docs.map((docSnap) => ({
-                    id: docSnap.id,
-                    display: docSnap.id,
-                    match: docSnap.id.toLowerCase()
-                  }));
+                  const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+                  const groupsSnap = await getDocs(collection(suggestionsDb, 'groups'));
+                  groupSuggestions = groupsSnap.docs.map((docSnap) => {
+                    const data = docSnap.data() || {};
+                    const displayName = data.name || docSnap.id;
+                    return {
+                      id: docSnap.id,
+                      display: displayName,
+                      match: displayName.toLowerCase(),
+                      value: docSnap.id
+                    };
+                  });
                 } catch (err) {
                   console.warn('[SuggestionsForm] Failed to load groups', err);
                 }
 
+                // Load users from usrlookup/names (requires function)
                 try {
-                  const usersSnap = await getDocs(query(collection(suggestionsDb, 'public/users/nevek'), limit(50)));
-                  userSuggestions = usersSnap.docs.map((docSnap) => {
-                    const data = docSnap.data() || {};
-                    const displayName = data.name || data.displayName || docSnap.id;
-                    return {
-                      id: docSnap.id,
-                      display: displayName,
-                      match: displayName.toLowerCase()
-                    };
-                  });
+                  const callable = window.createHttpsCallable ? window.createHttpsCallable('suggestionsFetchNames') : null;
+                  if (callable) {
+                    const resp = await callable({});
+                    const list = resp?.data?.names || [];
+                    userSuggestions = list.map((item) => ({
+                      id: item.userId || item.id,
+                      display: item.fullName || item.normalizedName || item.id,
+                      match: (item.fullName || '').toLowerCase(),
+                      value: item.normalizedName || simplifyName(item.fullName || '')
+                    }));
+                  } else {
+                    userSuggestions = [];
+                  }
                 } catch (err) {
-                  console.warn('[SuggestionsForm] Failed to load user suggestions', err);
+                  console.warn('[SuggestionsForm] Failed to load user suggestions (names lookup)', err);
                   userSuggestions = [];
                 }
               } finally {
@@ -1824,126 +1854,53 @@
             }
 
             async function loadLatestSuggestions() {
-              if (!suggestionsDb) return;
+              const callable = window.createHttpsCallable ? window.createHttpsCallable('suggestionsFetch') : null;
+              if (!callable) {
+                console.warn('[Suggestions] callable factory missing');
+                return;
+              }
+
+              const deviceId = getSuggestionsDeviceId();
+              const getTranslation = (key, fallback) => window.translationManager?.getTranslation(key) || fallback;
+              const unknownUser = getTranslation('youhub.unknown_user', 'Ismeretlen felhasználó');
+
               try {
-                const { collection, query, orderBy, limit, getDocs, doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
-                const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
-                const auth = getAuth();
-                const currentUser = auth.currentUser;
+                const response = await callable({ deviceId });
+                const payload = response?.data || {};
 
-                const suggestionsQuery = query(collection(suggestionsDb, 'suggestions'), orderBy('createdAt', 'desc'), limit(20));
-                const snapshot = await getDocs(suggestionsQuery);
-                const items = [];
-
-                for (const docSnap of snapshot.docs) {
-                  const data = docSnap.data() || {};
-
-                  // Check restrictToUsers
-                  const restrictToUsers = (data.restrictToUsers || '').trim();
-                  if (restrictToUsers) {
-                    // Check if current user's name is in the list
-                    let userAllowed = false;
-                    if (currentUser) {
-                      try {
-                        // Get current user's name from public/users/nevek/{userId}
-                        const userNameRef = doc(suggestionsDb, `public/users/nevek/${currentUser.uid}`);
-                        const userNameSnap = await getDoc(userNameRef);
-                        if (userNameSnap.exists()) {
-                          const userNameData = userNameSnap.data() || {};
-                          const userName = (userNameData.name || userNameData.displayName || '').trim();
-                          if (userName) {
-                            // Check if the user's name is in the restrictToUsers list
-                            const restrictedNames = restrictToUsers.split(',').map(n => n.trim().toLowerCase());
-                            userAllowed = restrictedNames.includes(userName.toLowerCase());
-                          }
-                        }
-                      } catch (err) {
-                        console.warn('[Suggestions] Failed to check user restriction', err);
-                      }
-                    }
-                    if (!userAllowed) {
-                      continue; // Skip this suggestion
-                    }
-                  }
-
-                  // Check restrictToGroups
-                  const restrictToGroups = (data.restrictToGroups || '').trim();
-                  if (restrictToGroups) {
-                    // Check if current user is in any of the restricted groups/classes
-                    let groupAllowed = false;
-                    if (currentUser) {
-                      try {
-                        const restrictedGroups = restrictToGroups.split(',').map(g => g.trim());
-                        for (const groupName of restrictedGroups) {
-                          // Try to find the class/group ID from the name
-                          // Format: "8.E Osztály" -> need to find matching class
-                          const classMatch = groupName.match(/(\d+)\.([a-zA-Z])/i);
-                          if (classMatch) {
-                            const grade = parseInt(classMatch[1]);
-                            const letter = classMatch[2].toLowerCase();
-                            // Try to find the class in classes collection
-                            const classesRef = collection(suggestionsDb, 'classes');
-                            const classesSnap = await getDocs(classesRef);
-                            for (const classDoc of classesSnap.docs) {
-                              const classData = classDoc.data() || {};
-                              const classType = (classData.classType || '').toLowerCase();
-                              const classFinishes = classData.classFinishes || new Date().getFullYear() + 4;
-                              const currentYear = new Date().getFullYear();
-                              const currentMonth = new Date().getMonth() + 1;
-                              let calculatedGrade = classFinishes - currentYear;
-                              if (currentMonth >= 1 && currentMonth <= 8) {
-                                calculatedGrade -= 1;
-                              }
-                              if (calculatedGrade < 1) calculatedGrade = 1;
-                              if (calculatedGrade > 12) calculatedGrade = 12;
-
-                              // Check if this class matches
-                              if (classType === letter && calculatedGrade === grade) {
-                                // Check if user is in this class
-                                const classUsersRef = collection(suggestionsDb, `classes/${classDoc.id}/users`);
-                                const classUsersSnap = await getDocs(classUsersRef);
-                                const userInClass = classUsersSnap.docs.some(userDoc => userDoc.id === currentUser.uid);
-                                if (userInClass) {
-                                  groupAllowed = true;
-                                  break;
-                                }
-                              }
-                            }
-                          } else {
-                            // Direct group/class ID match (e.g., "2030e")
-                            const classUsersRef = collection(suggestionsDb, `classes/${groupName}/users`);
-                            const classUsersSnap = await getDocs(classUsersRef);
-                            const userInClass = classUsersSnap.docs.some(userDoc => userDoc.id === currentUser.uid);
-                            if (userInClass) {
-                              groupAllowed = true;
-                              break;
-                            }
-                          }
-                          if (groupAllowed) break;
-                        }
-                      } catch (err) {
-                        console.warn('[Suggestions] Failed to check group restriction', err);
-                      }
-                    }
-                    if (!groupAllowed) {
-                      continue; // Skip this suggestion
-                    }
-                  }
-
-                  const ownerProfile = await fetchUserProfile(data.ownerId, doc, getDoc);
-                  items.push({
-                    id: docSnap.id,
-                    data,
-                    ownerProfile
-                  });
-
-                  // Stop after we have 4 items
-                  if (items.length >= 4) break;
+                if (payload.deviceId) {
+                  persistSuggestionsDeviceId(payload.deviceId);
                 }
+
+                const currentUser = auth.currentUser;
+                const items = (payload.suggestions || [])
+                  .sort((a, b) => (b?.createdAt || 0) - (a?.createdAt || 0))
+                  .slice(0, 4)
+                  .map((entry) => {
+                    const owner = entry.owner || {};
+                    const ownerProfile = {
+                      name: owner.fullName || unknownUser,
+                      picture: owner.picture || null,
+                      userId: owner.userId || null,
+                      normalizedName: owner.normalizedName || null,
+                      isCurrentUser: !!(owner.userId && currentUser && owner.userId === currentUser.uid)
+                    };
+
+                    return {
+                      id: entry.id,
+                      data: {
+                        title: entry.title,
+                        content: entry.content,
+                        hive: !!entry.hive
+                      },
+                      ownerProfile
+                    };
+                  });
 
                 updateSuggestionCards(items);
               } catch (error) {
                 console.error('[Suggestions] Failed to load latest entries', error);
+                updateSuggestionCards([]);
               }
             }
 

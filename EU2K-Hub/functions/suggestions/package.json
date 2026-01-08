@@ -1,0 +1,19 @@
+{
+  "name": "suggestions",
+  "description": "EU2K Hub Suggestions loader Cloud Function",
+  "main": "index.js",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "lint": "echo \"No linting configured\"",
+    "build": "echo \"No build step required\"",
+    "deploy": "firebase deploy --only functions:suggestions"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.2",
+    "firebase-functions": "^6.3.0"
+  },
+  "private": true
+}
+

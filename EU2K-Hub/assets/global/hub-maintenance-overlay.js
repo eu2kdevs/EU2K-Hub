@@ -284,7 +284,8 @@
     if (!isYouhubRoot) return;
 
     // 2. Logic: Check UID
-    checkYouHubMaintenance();
+    // YouHub maintenance overlay ideiglenesen kikapcsolva
+    // checkYouHubMaintenance();
   }
 
   // Debug Helpers
