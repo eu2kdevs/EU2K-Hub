@@ -1371,7 +1371,7 @@
                   const suggestion = findUserSuggestion(searchValue);
                   if (suggestion && suggestion.display) {
                     event.preventDefault();
-                    const newValue = suggestion.value || suggestion.display;
+                    const newValue = suggestion.display;
                     const newLabel = suggestion.display;
                     // Replace the last part with the full name
                     if (lastCommaIndex >= 0) {
@@ -1401,7 +1401,7 @@
                     // The current value is a complete name, add comma+space
                     event.preventDefault();
                     const beforeComma = lastCommaIndex >= 0 ? fullValue.slice(0, lastCommaIndex + 1).trim() : '';
-                    const token = suggestion.value || suggestion.display;
+                    const token = suggestion.display;
                     const updatedValue = beforeComma ? `${beforeComma} ${token}, ` : `${token}, `;
                     formElements.userSearchInput.value = updatedValue;
                     submitFormState.restrictUsers = updatedValue;
@@ -1440,7 +1440,7 @@
                   const suggestion = findClassOrGroupSuggestion(searchValue);
                   if (suggestion && suggestion.display) {
                     event.preventDefault();
-                    const newItem = suggestion.value || suggestion.display;
+                    const newItem = suggestion.display;
                     // Replace the last part with the full name
                     if (lastCommaIndex >= 0) {
                       // There's a comma, replace the part after it
@@ -2086,13 +2086,23 @@
                 const { doc, setDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
 
                 const suggestionId = await generateSequentialSuggestionId(auth.currentUser.uid);
+                const resolvedUsers = normalizeList(submitFormState.restrictUsers).map((token) => {
+                  const match = userSuggestions.find(u => u.display.toLowerCase() === token.toLowerCase());
+                  return match?.value || token;
+                });
+
+                const resolvedGroups = normalizeList(submitFormState.restrictGroups).map((token) => {
+                  const match = [...classSuggestions, ...groupSuggestions].find(g => g.display.toLowerCase() === token.toLowerCase());
+                  return match?.id || match?.value || token;
+                });
+
                 const payload = {
                   title,
                   content,
                   hive: !!submitFormState.hive,
                   share: !!submitFormState.share,
-                  restrictToUsers: normalizeList(submitFormState.restrictUsers),
-                  restrictToGroups: normalizeList(submitFormState.restrictGroups),
+                  restrictToUsers: resolvedUsers,
+                  restrictToGroups: resolvedGroups,
                   ownerId: auth.currentUser.uid,
                   createdAt: serverTimestamp()
                 };

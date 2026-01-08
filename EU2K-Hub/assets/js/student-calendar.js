@@ -294,9 +294,9 @@ class StudentCalendar {
             if (!viewEl) continue;
 
             try {
-                // Firestore collection paths must end with a collection (odd segment count).
-                // Structure mirrors timetable: classes/{classId}/calendar/{section}/items/{doc}
-                const snap = await getDocs(collection(this.db, 'classes', this.classId, 'calendar', section.name, 'items'));
+                // Érvényes útvonal: classes/{classId}/calendar (doc) / {section} (subcollection)
+                const calendarDoc = doc(this.db, 'classes', this.classId, 'calendar');
+                const snap = await getDocs(collection(calendarDoc, section.name));
                 if (snap.empty) {
                     this.renderSectionEmpty(viewEl, section.icon, section.title, section.subtitle);
                 }

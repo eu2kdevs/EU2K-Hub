@@ -170,6 +170,7 @@ exports.suggestionsFetchNames = onCall(runtimeOpts, async (request) => {
     const namesDocRef = db.collection('usrlookup').doc('names');
     const collections = await namesDocRef.listCollections();
     for (const col of collections) {
+      if (col.id === 'toBeAdded') continue;
       const normalizedName = col.id;
       const docsSnap = await col.get();
       docsSnap.forEach((doc) => {
