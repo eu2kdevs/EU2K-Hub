@@ -1628,6 +1628,10 @@ body {
   align-items: center;
   justify-content: center;
   gap: 48px;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  grid-column: span 2;
 }
 
 .calendar-empty-icon {
@@ -3786,20 +3790,44 @@ body {
 .calendar-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr; /* Single row that takes all available space */
   gap: 12px;
   width: 100%;
-  flex: 1;
+  height: 100%; /* Force grid to take parent's full height */
   min-height: 0;
-  /* Important for scrolling */
-  overflow-y: auto;
+  overflow: hidden;
   padding-bottom: 2px;
-  /* Spacing for scroll */
 }
 
 .calendar-column {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-height: 0; /* Important for flex child overflow */
+  max-height: 100%; /* Don't exceed grid cell */
+  overflow: hidden; /* Prevent column itself from overflowing */
+}
+
+/* First column cards should fill available height equally */
+.calendar-column:first-child .calendar-schedule-card {
+  flex: 1 1 0;
+  min-height: 64px;
+  max-height: 100%; /* Critical */
+  overflow: hidden;
+}
+
+/* Second column (right) cards should have equal height */
+/* Flexible cards grow to fill available space */
+.calendar-column:last-child .calendar-schedule-card:not(.calendar-schedule-card--lunch-compact) {
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+/* Lunch card should not flex grow - fixed height */
+.calendar-column:last-child .calendar-schedule-card--lunch-compact {
+  flex: 0 0 auto; /* Don't grow or shrink */
+  min-height: 36px;
+  height: 36px; /* Fixed height */
 }
 
 /* Schedule Card */
@@ -3810,7 +3838,8 @@ body {
   display: flex;
   align-items: stretch;
   gap: 12px;
-  flex: 1;
+  min-height: 64px;
+  height: auto;
 }
 
 .calendar-schedule-card--highlight {
@@ -3821,6 +3850,26 @@ body {
 .calendar-schedule-card--highlight .calendar-subject-name,
 .calendar-schedule-card--highlight .calendar-detail-item span {
   color: #243114 !important;
+}
+
+/* Highlight card - time text color same as teacher/place */
+.calendar-schedule-card--highlight .calendar-detail-group-hover span {
+  color: #243114 !important;
+}
+
+/* Normal card - time text color same as teacher/place (default green) */
+.calendar-schedule-card .calendar-detail-group-hover span {
+  color: #BCE989;
+}
+
+/* Lesson icon stays the same color regardless of highlight */
+.calendar-schedule-card .calendar-card-icon {
+  /* No filter change on highlight */
+}
+
+/* Teacher icon in hover state changes to match teacher icon color */
+.calendar-schedule-card--highlight .detail-icon-clock-hover {
+  filter: brightness(0) saturate(100%) invert(15%) sepia(10%) saturate(1000%) hue-rotate(45deg);
 }
 
 .calendar-schedule-card--highlight .calendar-card-right-bar {
@@ -3897,6 +3946,8 @@ body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  height: 100%;
+
 }
 
 .calendar-card-right-bar img {
@@ -3916,4 +3967,533 @@ body {
 .calendar-nav-item[data-calendar-nav="bell"] {
   flex: 1 0 auto;
   /* Grow to fill space */
+}
+/* Student Calendar Styles */
+.student-calendar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  overflow-y: auto;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.student-lesson-card {
+  display: flex;
+  align-items: center;
+  background: rgba(30, 40, 20, 0.4);
+  border: 1px solid rgba(75, 98, 49, 0.3);
+  border-radius: 12px;
+  padding: 10px 14px;
+  gap: 12px;
+  min-height: 56px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.student-lesson-card:hover {
+  background: rgba(40, 50, 30, 0.6);
+  border-color: rgba(75, 98, 49, 0.6);
+}
+
+.student-lesson-card .lesson-time {
+  font-size: 13px;
+  color: #A0C080;
+  white-space: nowrap;
+  min-width: 85px;
+}
+
+.student-lesson-card .lesson-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.student-lesson-card .lesson-name {
+  color: #E5FDCB;
+  font-weight: 600;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-lesson-card .lesson-details {
+  color: #8da175;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-lesson-card .lesson-number {
+  font-size: 18px;
+  font-weight: 700;
+  color: #4B6231;
+  opacity: 0.6;
+}
+
+/* Lunch Card */
+.student-lesson-card.lunch-card {
+  background: rgba(255, 129, 129, 0.1); /* Subtle red tint */
+  border-color: rgba(255, 129, 129, 0.2);
+  min-height: 48px;
+}
+
+.student-lesson-card.lunch-card .lesson-time {
+  color: #ffaaaa;
+}
+
+.student-lesson-card.lunch-card .lesson-name {
+  color: #ffd6d6;
+}
+
+.student-lesson-card.lunch-card .lesson-icon {
+  font-size: 18px;
+}
+
+/* Compact Mode */
+.student-calendar-container.compact-mode {
+  gap: 6px;
+}
+
+.student-calendar-container.compact-mode .student-lesson-card {
+  padding: 6px 12px;
+  min-height: 44px;
+  border-radius: 8px;
+}
+
+.student-calendar-container.compact-mode .student-lesson-card .lesson-name {
+  font-size: 14px;
+}
+
+.student-calendar-container.compact-mode .student-lesson-card .lesson-details {
+  font-size: 11px;
+}
+
+.student-calendar-container.compact-mode .student-lesson-card.lunch-card {
+  min-height: 32px; /* Half heightish */
+  padding: 4px 12px;
+  opacity: 0.8;
+}
+
+.student-calendar-container.compact-mode .student-lesson-card.lunch-card .lesson-time {
+  font-size: 11px;
+}
+
+
+/* Active Lesson Highlight */
+.student-lesson-card.active-lesson {
+  background: rgba(175, 232, 110, 0.2); /* Light green tint */
+  border-color: #AFE86E;
+  box-shadow: 0 0 12px rgba(175, 232, 110, 0.15);
+}
+
+.student-lesson-card.active-lesson .lesson-name {
+  color: #ffffff;
+}
+
+.student-lesson-card.active-lesson .lesson-time {
+  color: #AFE86E;
+  font-weight: 700;
+}
+
+
+/* Force MyClass Content Layout for Calendar */
+.myclass-main-content {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  min-height: 200px !important; /* Minimum height to ensure visibility */
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+.student-calendar-container {
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* Calendar Compact Mode */
+.calendar-compact-mode .calendar-schedule-card {
+  padding: 8px 10px;
+  min-height: auto;
+}
+
+.calendar-compact-mode .calendar-schedule-card .calendar-subject-name {
+  font-size: 13px;
+}
+
+.calendar-compact-mode .calendar-schedule-card .calendar-card-details {
+  font-size: 11px;
+}
+
+.calendar-compact-mode .calendar-card-icon-container {
+  width: 28px;
+  height: 28px;
+}
+
+.calendar-compact-mode .calendar-card-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Lunch Card Styles */
+.calendar-schedule-card--lunch {
+  background: rgba(255, 200, 100, 0.08);
+  border-color: rgba(255, 200, 100, 0.2);
+}
+
+.calendar-schedule-card--lunch .calendar-subject-name {
+  color: #FFD699;
+}
+
+/* Compact Lunch Card - Single Line */
+.calendar-schedule-card--lunch-compact {
+  padding: 6px 10px !important;
+  min-height: 32px !important;
+  flex-direction: row;
+  align-items: center;
+}
+
+.calendar-schedule-card--lunch-compact .calendar-card-middle--inline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.calendar-schedule-card--lunch-compact .calendar-lunch-time {
+  font-size: 11px;
+  color: #A0C080;
+  white-space: nowrap;
+}
+
+.calendar-schedule-card--lunch-compact .calendar-subject-name {
+  font-size: 12px;
+  margin: 0;
+}
+
+.calendar-schedule-card--lunch-compact .calendar-card-icon-container {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+}
+
+.calendar-schedule-card--lunch-compact .calendar-card-icon {
+  width: 12px;
+  height: 12px;
+}
+
+
+/* Compact Lunch Card - Single Line */
+.calendar-schedule-card--lunch-compact {
+  padding: 6px 12px !important;
+  min-height: 36px !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-schedule-card--lunch-compact .calendar-card-middle {
+  flex: 0 0 auto;
+}
+
+.calendar-schedule-card--lunch-compact .calendar-subject-name {
+  font-size: 13px;
+  margin: 0;
+}
+
+.calendar-lunch-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.calendar-lunch-right img {
+  width: 14px;
+  height: 14px;
+}
+
+.calendar-lunch-time {
+  font-size: 12px;
+  color: #A0C080; /* Same as teacher text color */
+  white-space: nowrap;
+}
+
+/* Normal cards - icon centered and bigger */
+.calendar-schedule-card .calendar-card-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-schedule-card .calendar-card-icon {
+  width: 28px;
+  height: 28px;
+}
+
+/* Hover effect: show time, hide teacher/place */
+.calendar-detail-hover {
+  display: none;
+}
+
+.calendar-card-right-bar:hover ~ .calendar-card-middle .calendar-detail-default,
+.calendar-schedule-card:hover .calendar-card-right-bar:hover ~ .calendar-card-middle .calendar-detail-default {
+  display: none;
+}
+
+.calendar-card-right-bar:hover ~ .calendar-card-middle .calendar-detail-hover {
+  display: flex;
+}
+
+/* Alternative: hover on the right bar itself */
+.calendar-schedule-card .calendar-card-right-bar {
+  cursor: pointer;
+}
+
+.calendar-schedule-card:has(.calendar-card-right-bar:hover) .calendar-detail-default {
+  display: none !important;
+}
+
+.calendar-schedule-card:has(.calendar-card-right-bar:hover) .calendar-detail-hover {
+  display: flex !important;
+}
+
+/* Center icons vertically in calendar cards */
+.calendar-schedule-card {
+  align-items: center;
+}
+
+.calendar-card-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Fade animation for hover time swap */
+.calendar-detail-default,
+.calendar-detail-hover {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.calendar-schedule-card:has(.calendar-card-right-bar:hover) .calendar-detail-default {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.calendar-schedule-card .calendar-detail-hover {
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.calendar-schedule-card:has(.calendar-card-right-bar:hover) .calendar-detail-hover {
+  opacity: 1;
+  position: relative;
+  pointer-events: auto;
+}
+
+/* Fade animation structure */
+.calendar-card-details {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+.calendar-detail-group-default,
+.calendar-detail-group-hover {
+  grid-area: 1 / 1; /* Stack them */
+  display: flex;
+  align-items: center;
+  white-space: nowrap; /* Prevent wrapping */
+  transition: opacity 0.3s ease-in-out;
+}
+
+.calendar-detail-group-default {
+  opacity: 1;
+}
+
+.calendar-detail-group-hover {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Hover trigger from right bar */
+.calendar-schedule-card:has(.calendar-card-right-bar:hover) .calendar-detail-group-default {
+  opacity: 0;
+}
+
+.calendar-schedule-card:has(.calendar-card-right-bar:hover) .calendar-detail-group-hover {
+  opacity: 1;
+}
+
+/* Ensure items inside groups are flex */
+.calendar-detail-group-default .calendar-detail-item,
+.calendar-detail-group-hover {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.calendar-detail-separator {
+  margin: 0 5px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Students Empty State (for YouHub empty states) */
+.students-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 16px;
+  box-sizing: border-box;
+  min-height: 400px;
+  width: 100%;
+}
+
+.students-empty-icon {
+  width: 120px;
+  height: 120px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.students-empty-text-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+.students-empty-title {
+  color: #BEEB8B;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.students-empty-subtitle {
+  color: #E5FDCB;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Fade animation structure - Refactored for JS hover class */
+.calendar-card-details {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  min-height: 24px; /* Fix height jumping */
+}
+
+.calendar-detail-group-default,
+.calendar-detail-group-hover {
+  grid-area: 1 / 1;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  transition: opacity 0.3s ease-in-out;
+  height: 100%; /* Fill container */
+}
+
+.calendar-detail-group-default {
+  opacity: 1;
+}
+
+.calendar-detail-group-hover {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Hover trigger via JS class on parent */
+.calendar-schedule-card.hover-active .calendar-detail-group-default {
+  opacity: 0;
+}
+
+.calendar-schedule-card.hover-active .calendar-detail-group-hover {
+  opacity: 1;
+}
+
+.calendar-detail-group-default .calendar-detail-item,
+.calendar-detail-group-hover {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.calendar-detail-separator {
+  margin: 0 5px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Students Empty State (for YouHub empty states) */
+.students-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 16px;
+  box-sizing: border-box;
+  min-height: 400px;
+  width: 100%;
+}
+
+.students-empty-icon {
+  width: 120px;
+  height: 120px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.students-empty-text-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+.students-empty-title {
+  color: #BEEB8B;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.students-empty-subtitle {
+  color: #E5FDCB;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
 }

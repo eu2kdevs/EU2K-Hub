@@ -420,7 +420,15 @@
         "special_sequence": "Spezielle Wiederholungssequenz",
         "special_sequence_help": "(Wenn Sie ein Datum eingeben, wird es bis zu diesem Tag wiederholt; bei einem Bereich wird es vom Start- bis zum Enddatum wiederholt.)",
         "apply": "Anwenden",
-        "variation_confirm_title": "Variation bestätigen"
+        "variation_confirm_title": "Variation bestätigen",
+        "reset_day": "Tag löschen",
+        "reset_popup_title": "Tag löschen",
+        "reset_popup_subtitle": "Wählen Sie den Tag zum Löschen:",
+        "reset_confirm": "Löschen",
+        "reset_cancel": "Abbrechen",
+        "publish_loading_title": "Stundenplan wird veröffentlicht",
+        "publish_loading_subtitle": "Bitte schließen Sie diese Seite nicht!",
+        "publish_success": "Stundenplan veröffentlicht!"
       }
     },
     "students": {

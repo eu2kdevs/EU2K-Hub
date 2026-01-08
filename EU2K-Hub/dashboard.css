@@ -2270,6 +2270,12 @@ body {
   overflow: visible;
 }
 
+/* Header with title and dropdown */
+.calendar-lessons-header {
+  position: relative;
+  z-index: 100;
+}
+
 .calendar-lessons-wrapper {
   display: flex;
   position: relative;
@@ -2359,6 +2365,11 @@ body {
   align-items: center;
   justify-content: center;
   transition: all 0.15s ease;
+}
+
+.disabled-btn {
+  opacity: 50% !important;
+  pointer-events: none !important;
 }
 
 .calendar-lesson-card:hover .calendar-lesson-delete-btn {

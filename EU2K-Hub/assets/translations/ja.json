@@ -221,7 +221,15 @@
         "special_sequence": "特別な繰り返しシーケンス",
         "special_sequence_help": "(1つの日付を入力すると、その日まで繰り返されます。範囲を入力すると、開始日から終了日まで繰り返されます。)",
         "apply": "適用",
-        "variation_confirm_title": "バリエーションの確認"
+        "variation_confirm_title": "バリエーションの確認",
+        "reset_day": "日を削除",
+        "reset_popup_title": "日を削除",
+        "reset_popup_subtitle": "削除する日を選択してください:",
+        "reset_confirm": "削除",
+        "reset_cancel": "キャンセル",
+        "publish_loading_title": "時間割を公開中",
+        "publish_loading_subtitle": "このページを閉じないでください!",
+        "publish_success": "時間割が公開されました!"
       }
     },
     "general": {

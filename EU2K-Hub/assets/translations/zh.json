@@ -221,7 +221,15 @@
         "special_sequence": "特殊重复序列",
         "special_sequence_help": "(如果输入一个日期，将重复到该日；如果输入范围，将从开始日期重复到结束日期。)",
         "apply": "应用",
-        "variation_confirm_title": "确认变体"
+        "variation_confirm_title": "确认变体",
+        "reset_day": "删除日期",
+        "reset_popup_title": "删除日期",
+        "reset_popup_subtitle": "选择要删除的日期:",
+        "reset_confirm": "删除",
+        "reset_cancel": "取消",
+        "publish_loading_title": "正在发布课程表",
+        "publish_loading_subtitle": "请不要关闭此页面!",
+        "publish_success": "课程表已发布!"
       }
     },
     "general": {

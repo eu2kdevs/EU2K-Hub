@@ -221,7 +221,15 @@
         "special_sequence": "Séquence de répétition spéciale",
         "special_sequence_help": "(si vous entrez une date, elle sera répétée jusqu'à ce jour; si vous entrez une plage, elle sera répétée de la date de début à la date de fin.)",
         "apply": "Appliquer",
-        "variation_confirm_title": "Confirmer la variation"
+        "variation_confirm_title": "Confirmer la variation",
+        "reset_day": "Supprimer le jour",
+        "reset_popup_title": "Supprimer le jour",
+        "reset_popup_subtitle": "Sélectionnez le jour à supprimer:",
+        "reset_confirm": "Supprimer",
+        "reset_cancel": "Annuler",
+        "publish_loading_title": "Publication de l'emploi du temps",
+        "publish_loading_subtitle": "Veuillez ne pas fermer cette page!",
+        "publish_success": "Emploi du temps publié!"
       }
     },
     "general": {

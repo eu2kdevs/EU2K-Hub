@@ -221,7 +221,15 @@
         "special_sequence": "Secuencia especial de repetición",
         "special_sequence_help": "(si introduces una fecha, se repetirá hasta ese día; si introduces un rango, se repetirá desde la fecha de inicio hasta la fecha de fin.)",
         "apply": "Aplicar",
-        "variation_confirm_title": "Confirmar variación"
+        "variation_confirm_title": "Confirmar variación",
+        "reset_day": "Eliminar día",
+        "reset_popup_title": "Eliminar día",
+        "reset_popup_subtitle": "Selecciona el día a eliminar:",
+        "reset_confirm": "Eliminar",
+        "reset_cancel": "Cancelar",
+        "publish_loading_title": "Publicando horario",
+        "publish_loading_subtitle": "¡Por favor no cierres esta página!",
+        "publish_success": "¡Horario publicado!"
       }
     },
     "general": {

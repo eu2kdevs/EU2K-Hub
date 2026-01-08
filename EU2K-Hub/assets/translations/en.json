@@ -417,7 +417,15 @@
         "special_sequence": "Special repeat sequence",
         "special_sequence_help": "(if you enter one date, it will repeat until that day; if you enter a range, it will repeat from start to end date.)",
         "apply": "Apply",
-        "variation_confirm_title": "Confirm variation"
+        "variation_confirm_title": "Confirm variation",
+        "reset_day": "Delete day",
+        "reset_popup_title": "Delete day",
+        "reset_popup_subtitle": "Select the day to delete:",
+        "reset_confirm": "Delete",
+        "reset_cancel": "Cancel",
+        "publish_loading_title": "Publishing timetable",
+        "publish_loading_subtitle": "Please do not close this page!",
+        "publish_success": "Timetable published!"
       }
     },
     "students": {

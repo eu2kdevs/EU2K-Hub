@@ -74,6 +74,7 @@
   <script src="assets/js/youhub-notification-toaster.js" type="module"></script>
   <script src="assets/js/admin-console.js"></script>
   <script src="assets/js/consent-banner.js"></script>
+  <script type="module" src="assets/js/student-calendar.js"></script>
 
   <script type="text/javascript" data-gdpr-required>
     // Clarity tracking - silently fail if blocked by adblocker
@@ -514,7 +515,7 @@
                 </div>
                 <!-- Bottom Section (duplicated top-section) -->
                 <div class="myclass-bottom-section">
-                  <div class="myclass-navbar">
+                  <div class="myclass-navbar myclass-navbar--scope-myclass">
                     <button class="myclass-nav-item active" data-tab="month">
                       <img src="assets/youhub/myclass/graph.svg" alt="Osztályom Hónapja">
                       <span data-translate="youhub.myclass.month" data-translate-fallback="Osztályom Hónapja">Osztályom
@@ -601,7 +602,8 @@
                 </div>
                 <div class="suggestions-middle-section">
                   <div class="suggestions-nav-shell">
-                    <div class="myclass-navbar" role="tablist" aria-label="Javaslatok navigáció">
+                    <div class="myclass-navbar myclass-navbar--scope-suggestions" role="tablist"
+                      aria-label="Javaslatok navigáció">
                       <button class="myclass-nav-item suggestions-nav-item active" data-suggestion-nav="suggestions"
                         type="button">
                         <img src="assets/youhub/suggestions/suggestion.svg" alt=""
@@ -926,7 +928,8 @@
                 <div class="suggestions-middle-section">
                   <!-- Navigation -->
                   <div class="calendar-nav-shell">
-                    <div class="myclass-navbar calendar-navbar" role="tablist" aria-label="Naptár navigáció">
+                    <div class="myclass-navbar calendar-navbar myclass-navbar--scope-calendar" role="tablist"
+                      aria-label="Naptár navigáció">
                       <button class="myclass-nav-item calendar-nav-item active" data-calendar-nav="timetable"
                         type="button">
                         <img src="assets/youhub/calendar/class_sheet.svg" alt=""
@@ -3564,6 +3567,22 @@
       }
 
       window.updateMyClassUI = function (gradesMap) {
+        const forceEmpty = localStorage.getItem('forceEmptyState') === 'true';
+        
+        // If empty state is forced OR no data, show empty state
+        if (forceEmpty || !gradesMap || Object.keys(gradesMap).length === 0) {
+          console.log('[YouHub][MyClass] Showing empty state:', forceEmpty ? 'FORCED' : 'NO DATA');
+          const middleSection = document.querySelector('.myclass-middle-section');
+          if (middleSection) {
+            middleSection.innerHTML = buildEmptyStateTemplate(
+              'assets/youhub/myclass/class.svg',
+              'Nincs osztályod!',
+              'Beszélj az osztályfőnököddel hogy fejezze be az osztályod regisztrálását a Hubra!'
+            );
+          }
+          return;
+        }
+        
         myClassGradesData = gradesMap || null;
         updateMyClassIndicators();
         updateMyClassChartHeights();
@@ -3585,7 +3604,7 @@
       let currentMode = 'myclass-graph';
       const middleSection = document.querySelector('.myclass-middle-section');
       const arrowBtn = document.querySelector('.myclass-arrow-btn');
-      const navItems = document.querySelectorAll('.myclass-nav-item');
+      const navItems = document.querySelectorAll('.myclass-navbar--scope-myclass .myclass-nav-item');
       const graphTemplate = middleSection ? middleSection.innerHTML : '';
 
       const buildMyClassStateTemplate = (tagLabel, title, description, extra = '') => `
@@ -3596,6 +3615,98 @@
           ${extra}
         </div>
       `;
+
+      // Build students-style empty state for sections with no data
+      const buildEmptyStateTemplate = (iconSrc, title, subtitle) => `
+        <div class="students-empty-state" style="display: flex;">
+          <img src="${iconSrc}" alt="${title}" class="students-empty-icon">
+          <div class="students-empty-text-container">
+            <p class="students-empty-title">${title}</p>
+            <p class="students-empty-subtitle">${subtitle}</p>
+          </div>
+        </div>
+      `;
+
+      // Console commands for empty state testing
+      window.emptyState = {
+        enable: () => {
+          localStorage.setItem('forceEmptyState', 'true');
+          console.log('[YouHub] Empty states ENABLED - Reload page to see effect');
+        },
+        disable: () => {
+          localStorage.removeItem('forceEmptyState');
+          console.log('[YouHub] Empty states DISABLED - Reload page to see effect');
+        },
+        status: () => {
+          const enabled = localStorage.getItem('forceEmptyState') === 'true';
+          console.log(`[YouHub] Empty states: ${enabled ? 'ENABLED ✅' : 'DISABLED ❌'}`);
+          return enabled;
+        },
+        check: () => {
+          return localStorage.getItem('forceEmptyState') === 'true';
+        }
+      };
+
+      // Log available commands
+      console.log('%c[YouHub] Empty State Commands Available:', 'color: #CEFF97; font-weight: bold;');
+      console.log('  emptyState.enable()  - Force all sections to show empty states');
+      console.log('  emptyState.disable() - Disable forced empty states');
+      console.log('  emptyState.status()  - Check current status');
+      console.log('  emptyState.check()   - Returns true/false');
+
+      // Check and apply empty state for suggestions on load
+      (function checkSuggestionsEmptyState() {
+        const forceEmpty = localStorage.getItem('forceEmptyState') === 'true';
+        if (forceEmpty) {
+          console.log('[YouHub][Suggestions] Empty state FORCED - replacing hardcoded cards');
+          const suggestionsGrid = document.querySelector('.suggestions-grid[data-suggestions-section="suggestions"]');
+          if (suggestionsGrid) {
+            suggestionsGrid.innerHTML = buildEmptyStateTemplate(
+              'assets/youhub/suggestions/suggestion.svg',
+              'Nincsenek Javaslatok!',
+              'Legyél te az első, inspiráld valamivel a közösséget!'
+            );
+          }
+        }
+      })();
+
+      // Check and apply empty states for calendar views (exams, rp, bell)
+      (function checkCalendarViewsEmptyState() {
+        const forceEmpty = localStorage.getItem('forceEmptyState') === 'true';
+        if (forceEmpty) {
+          console.log('[YouHub][Calendar] Empty states FORCED for all calendar views');
+          
+          // Exams view
+          const examsView = document.getElementById('calendar-view-exams');
+          if (examsView) {
+            examsView.innerHTML = buildEmptyStateTemplate(
+              'assets/youhub/calendar/exams.svg',
+              'Nincsenek dolgozatok!',
+              'Itt jelennek meg majd a közelgő dolgozatok és vizsgák.'
+            );
+          }
+          
+          // Reading Progress view
+          const rpView = document.getElementById('calendar-view-rp');
+          if (rpView) {
+            rpView.innerHTML = buildEmptyStateTemplate(
+              'assets/youhub/calendar/rp.svg',
+              'Nincs Reading Progress!',
+              'Itt jelennek meg majd az olvasási előrehaladásod adatai.'
+            );
+          }
+          
+          // Bell (Csengetési rend) view
+          const bellView = document.getElementById('calendar-view-bell');
+          if (bellView) {
+            bellView.innerHTML = buildEmptyStateTemplate(
+              'assets/youhub/calendar/bell.svg',
+              'Nincs csengetési rend!',
+              'Itt jelenik meg majd az órák csengetési rendje.'
+            );
+          }
+        }
+      })();
 
       // Calculate days until school starts (September 1 or nearest Monday)
       function getDaysUntilSchoolStarts() {

@@ -221,7 +221,15 @@
         "special_sequence": "Специальная последовательность повторения",
         "special_sequence_help": "(если вы вводите одну дату, повторение будет до этого дня; если вы вводите диапазон, повторение будет от начальной до конечной даты.)",
         "apply": "Применить",
-        "variation_confirm_title": "Подтвердить вариацию"
+        "variation_confirm_title": "Подтвердить вариацию",
+        "reset_day": "Удалить день",
+        "reset_popup_title": "Удалить день",
+        "reset_popup_subtitle": "Выберите день для удаления:",
+        "reset_confirm": "Удалить",
+        "reset_cancel": "Отмена",
+        "publish_loading_title": "Публикация расписания",
+        "publish_loading_subtitle": "Пожалуйста, не закрывайте эту страницу!",
+        "publish_success": "Расписание опубликовано!"
       }
     },
     "general": {

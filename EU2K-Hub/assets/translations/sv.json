@@ -221,7 +221,15 @@
         "special_sequence": "Speciell upprepningssekvens",
         "special_sequence_help": "(om du anger ett datum upprepas det till den dagen; om du anger ett intervall upprepas det från startdatum till slutdatum.)",
         "apply": "Tillämpa",
-        "variation_confirm_title": "Bekräfta variation"
+        "variation_confirm_title": "Bekräfta variation",
+        "reset_day": "Ta bort dag",
+        "reset_popup_title": "Ta bort dag",
+        "reset_popup_subtitle": "Välj dag att ta bort:",
+        "reset_confirm": "Ta bort",
+        "reset_cancel": "Avbryt",
+        "publish_loading_title": "Publicerar schema",
+        "publish_loading_subtitle": "Stäng inte denna sida!",
+        "publish_success": "Schema publicerat!"
       }
     },
     "general": {

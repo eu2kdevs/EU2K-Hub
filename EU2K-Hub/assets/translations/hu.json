@@ -430,7 +430,15 @@
         "special_sequence": "Speciális ismétlődési szekvencia",
         "special_sequence_help": "(ha egy dátumot írsz be csak addig a napig fogja ismételni a variációt a kiválasztott napodon, de ha egy tartományt írsz be a kezdődátumtól a befejeződátumig fogja ismételni.)",
         "apply": "Alkalmazás",
-        "variation_confirm_title": "Variáció megerősítése"
+        "variation_confirm_title": "Variáció megerősítése",
+        "reset_day": "Nap törlése",
+        "reset_popup_title": "Nap törlése",
+        "reset_popup_subtitle": "Válaszd ki a törölni kívánt napot:",
+        "reset_confirm": "Törlés",
+        "reset_cancel": "Mégse",
+        "publish_loading_title": "Órarend publikálása",
+        "publish_loading_subtitle": "Kérjük ne zárd be ezt az oldalt!",
+        "publish_success": "Órarend publikálva!"
       }
     },
     "students": {

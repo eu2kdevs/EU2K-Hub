@@ -136,6 +136,14 @@
     window.createHttpsCallable = (name) => httpsCallable(functions, name);
     window.storage = storage;
 
+    // Helper for monolithic Calendar API calls
+    window.calendarApiCall = async function (action, data = {}) {
+      const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
+      const calFunctions = getFunctions(window.app, 'europe-west3');
+      const calendarApi = httpsCallable(calFunctions, 'calendarApi');
+      return calendarApi({ action, ...data });
+    };
+
     window.addEventListener("load", () => {
       try {
         const INFO_BANNER_KEY = 'eu2k-hide-info-banner';
@@ -657,6 +665,13 @@
                       maxlength="5" readonly>
                   </div>
                 </div>
+
+                <!-- Place Dropdown -->
+                <div class="calendar-assign-dropdown-group">
+                  <label class="calendar-assign-label"
+                    data-translate="pages.dashboard.assign_calendars.place">Helyszín</label>
+                  <div id="calendarPlaceDropdown" class="language-dropdown"></div>
+                </div>
               </div>
 
               <!-- Navigation Buttons -->
@@ -675,7 +690,12 @@
           <!-- Calendar Assignment Page - Step 4: Lessons View -->
           <div id="calendar-lessons-page" class="dashboard-page" style="display: none;">
             <div class="calendar-assign-container calendar-lessons-container">
-              <span class="calendar-assign-title" id="calendarLessonsTitle">Órák - Hétfő</span>
+              <div class="calendar-lessons-header"
+                style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 16px;">
+                <span class="calendar-assign-title" id="calendarLessonsTitle" style="margin: 0;">Órák - Hétfő</span>
+                <div id="calendarModifiedDaysDropdown" class="calendar-modified-days-dropdown"
+                  style="display: none; min-width: 150px;"></div>
+              </div>
 
               <!-- Lesson Cards Wrapper -->
               <div class="calendar-lessons-wrapper">
@@ -689,6 +709,9 @@
                     <span class="calendar-lesson-info"><span
                         data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
                         class="lesson-teacher-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.place">Helyszín</span>: <span
+                        class="lesson-place-value">-</span></span>
                     <span class="calendar-lesson-info"><span
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
@@ -706,6 +729,9 @@
                         data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
                         class="lesson-teacher-value">-</span></span>
                     <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.place">Helyszín</span>: <span
+                        class="lesson-place-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
                     <button class="calendar-lesson-delete-btn" onclick="event.stopPropagation(); deleteLessonCard(1)">
@@ -720,6 +746,9 @@
                     <span class="calendar-lesson-info"><span
                         data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
                         class="lesson-teacher-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.place">Helyszín</span>: <span
+                        class="lesson-place-value">-</span></span>
                     <span class="calendar-lesson-info"><span
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
@@ -736,6 +765,9 @@
                         data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
                         class="lesson-teacher-value">-</span></span>
                     <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.place">Helyszín</span>: <span
+                        class="lesson-place-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
                     <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(3)">
@@ -750,6 +782,9 @@
                     <span class="calendar-lesson-info"><span
                         data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
                         class="lesson-teacher-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.place">Helyszín</span>: <span
+                        class="lesson-place-value">-</span></span>
                     <span class="calendar-lesson-info"><span
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
@@ -766,6 +801,9 @@
                         data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
                         class="lesson-teacher-value">-</span></span>
                     <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.place">Helyszín</span>: <span
+                        class="lesson-place-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
                     <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(5)">
@@ -780,6 +818,9 @@
                     <span class="calendar-lesson-info"><span
                         data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
                         class="lesson-teacher-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.place">Helyszín</span>: <span
+                        class="lesson-place-value">-</span></span>
                     <span class="calendar-lesson-info"><span
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
@@ -796,6 +837,9 @@
                         data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
                         class="lesson-teacher-value">-</span></span>
                     <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.place">Helyszín</span>: <span
+                        class="lesson-place-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
                     <button class="calendar-lesson-delete-btn" onclick="deleteLessonCard(7)">
@@ -810,6 +854,9 @@
                     <span class="calendar-lesson-info"><span
                         data-translate="pages.dashboard.assign_calendars.teacher_name">Szaktanár</span>: <span
                         class="lesson-teacher-value">-</span></span>
+                    <span class="calendar-lesson-info"><span
+                        data-translate="pages.dashboard.assign_calendars.place">Helyszín</span>: <span
+                        class="lesson-place-value">-</span></span>
                     <span class="calendar-lesson-info"><span
                         data-translate="pages.dashboard.assign_calendars.timeline">Idővonal</span>: <span
                         class="lesson-timeline-value">-</span></span>
@@ -828,21 +875,68 @@
               </div>
 
               <!-- Navigation Buttons -->
-              <div class="calendar-assign-nav-buttons">
+              <div class="calendar-assign-nav-buttons" style="justify-content: space-between;">
                 <button class="calendar-assign-btn calendar-assign-btn-back" onclick="calendarBackToStep2()">
                   <img src="assets/onboarding/back_arrow.svg" alt="Vissza">
                   <span data-translate="common.back">Vissza</span>
                 </button>
 
-                <!-- Modified Days Dropdown (Visible only if multiple days have data) -->
-                <div id="calendarModifiedDaysDropdown" class="calendar-modified-days-dropdown"
-                  style="display: none; min-width: 150px;"></div>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                  <button class="calendar-assign-btn calendar-assign-btn-next" id="calendarStep4Next"
+                    onclick="calendarApplyChanges()">
+                    <span data-translate="common.next">Tovább</span>
+                  </button>
+                  <button class="calendar-assign-btn"
+                    style="background: #FF8181; color: #210A0A; border: 1px solid #FF5555;"
+                    onclick="openResetDayPopup()">
+                    <img src="assets/youhub/notifications/trahscan_red.svg" alt="Reset"
+                      style="width: 16px; height: 16px;">
+                    <span data-translate="pages.dashboard.assign_calendars.reset_day">Nap törlése</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
 
-                <button class="calendar-assign-btn calendar-assign-btn-next" id="calendarStep4Next"
-                  onclick="calendarApplyChanges()">
-                  <span data-translate="common.next">Tovább</span>
+          <!-- Calendar Reset Confirmation Popup -->
+          <div id="calendarResetPopup" class="news-publish-popup">
+            <div class="news-publish-popup-content" style="max-width: 420px;">
+              <h3 class="news-publish-popup-title" style="color: #FF8181;">Nap törlése</h3>
+              <p class="news-publish-popup-subtitle">Válaszd ki a törölni kívánt napot:</p>
+              <div id="calendarResetDayDropdown" style="margin-bottom: 24px;"></div>
+              <div style="display: flex; gap: 12px; justify-content: center;">
+                <button class="calendar-assign-btn calendar-assign-btn-back" onclick="closeResetDayPopup()">
+                  <span>Mégse</span>
+                </button>
+                <button class="calendar-assign-btn"
+                  style="background: #FF8181; color: #210A0A; border: 1px solid #FF5555;" onclick="confirmResetDay()">
+                  <span>Törlés</span>
                 </button>
               </div>
+            </div>
+          </div>
+
+          <!-- Calendar Publish Loading Popup -->
+          <div id="calendarPublishPopup" class="news-publish-popup">
+            <div class="news-publish-popup-content" style="max-width: 400px;">
+              <!-- Loader animation -->
+              <div class="onboarding-loader" style="
+                width: 80px;
+                aspect-ratio: 1;
+                border: 10px solid #0000;
+                padding: 5px;
+                box-sizing: border-box;
+                background: 
+                  radial-gradient(farthest-side,#fff 98%,#0000 ) 0 0/20px 20px no-repeat,
+                  conic-gradient(from 90deg at 10px 10px,#0000 90deg,#fff 0) content-box,
+                  conic-gradient(from -90deg at 40px 40px,#0000 90deg,#fff 0) content-box,
+                  #000;
+                filter: blur(4px) contrast(10);
+                animation: loaderAnim 2s infinite;
+                margin: 0 auto;
+              "></div>
+              <h3 class="news-publish-popup-title" style="margin-top: 24px;">Órarend publikálása</h3>
+              <p class="news-publish-popup-subtitle">Kérjük ne zárd be ezt az oldalt!</p>
             </div>
           </div>
 
@@ -1123,7 +1217,8 @@
       timetable: {},         // { lesson1: { startTime, finishTime }, ... }
       lessonData: {},        // saved lesson data { day: { lessonNum: data } }
       variationData: null,   // current variation being edited
-      firstSchoolDay: null   // first day of school year
+      firstSchoolDay: null,  // first day of school year
+      sessionId: null        // unique session ID for temp data validation
     };
 
     // Restore state from session storage
@@ -1271,11 +1366,14 @@
     async function loadClassesForDropdown() {
       console.log('[Calendar] Loading classes via Cloud Function...');
       try {
-        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
-        const functions = getFunctions(window.app, 'europe-west3');
-        const loadClasses = httpsCallable(functions, 'loadClasses');
+        // Generate a new sessionId for this calendar editing session
+        if (!calendarState.sessionId) {
+          const sessionResult = await window.calendarApiCall('generateSessionId');
+          calendarState.sessionId = sessionResult.data.sessionId;
+          console.log('[Calendar] Generated sessionId:', calendarState.sessionId);
+        }
 
-        const result = await loadClasses();
+        const result = await window.calendarApiCall('loadClasses');
         const { classes } = result.data;
 
         // Store class data
@@ -1363,11 +1461,7 @@
 
       // Send selection to Cloud Function
       try {
-        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
-        const functions = getFunctions(window.app, 'europe-west3');
-        const selectClass = httpsCallable(functions, 'selectClass');
-
-        const result = await selectClass({ className: calendarState.selectedClassName });
+        const result = await window.calendarApiCall('selectClass', { className: calendarState.selectedClassName });
         calendarState.selectedClassId = result.data.classId;
         console.log('[Calendar] Class selected:', result.data);
       } catch (e) {
@@ -1472,11 +1566,7 @@
 
       // Send selection to Cloud Function
       try {
-        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
-        const functions = getFunctions(window.app, 'europe-west3');
-        const selectTimeSlot = httpsCallable(functions, 'selectTimeSlot');
-
-        const result = await selectTimeSlot({
+        const result = await window.calendarApiCall('selectTimeSlot', {
           day: calendarState.selectedDay,
           hour: calendarState.selectedHour,
           process: calendarState.selectedProcess
@@ -1519,6 +1609,8 @@
         calendarState.selectedTeacher2 = savedData.teacher2;
         calendarState.selectedTeacherName2 = savedData.teacherName2;
         calendarState.studentGroup = savedData.studentGroup;
+        calendarState.selectedPlace = savedData.placeid;
+        calendarState.selectedPlaceName = savedData.placeName;
       } else {
         // CLEAR state for new/empty slot
         console.log('[Calendar] No data for this slot - CLEARING state');
@@ -1529,6 +1621,8 @@
         calendarState.selectedTeacher2 = null;
         calendarState.selectedTeacherName2 = null;
         calendarState.studentGroup = null;
+        calendarState.selectedPlace = null;
+        calendarState.selectedPlaceName = null;
 
         // CRITICAL: Clear DOM inputs to prevent bleeding
         const startInput = document.getElementById('calendarTimelineStart');
@@ -1549,14 +1643,17 @@
       const lessonDropdown = document.getElementById('calendarLessonTypeDropdown');
       const teacherDropdown = document.getElementById('calendarTeacherDropdown');
       const teacher2Dropdown = document.getElementById('calendarTeacher2Dropdown');
+      const placeDropdown = document.getElementById('calendarPlaceDropdown');
 
       if (lessonDropdown) lessonDropdown.innerHTML = '';
       if (teacherDropdown) teacherDropdown.innerHTML = '';
       if (teacher2Dropdown) teacher2Dropdown.innerHTML = '';
+      if (placeDropdown) placeDropdown.innerHTML = '';
 
       // Load lesson types and teachers (they will use the cleared/loaded calendarState to set initial selection)
       loadLessonTypes();
       loadTeachers();
+      loadPlaces();
     }
 
     function updateScheduleAssignTitle() {
@@ -1592,13 +1689,7 @@
     async function loadLessonTypes() {
       console.log('[Calendar] Loading lesson types via Cloud Function...');
       try {
-        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
-        const functions = getFunctions(window.app, 'europe-west3');
-        const loadLessonTypesFunc = httpsCallable(functions, 'loadLessonTypes');
-
-        // Pass selectedHour explicitly to ensure server uses the correct hour for defaults
-        // (Server fails to sync session session fast enough otherwise)
-        const result = await loadLessonTypesFunc({ selectedHour: calendarState.selectedHour });
+        const result = await window.calendarApiCall('loadLessonTypes', { selectedHour: calendarState.selectedHour });
         const { lessons, defaultTimeline } = result.data;
 
         // Store lesson data
@@ -1669,21 +1760,17 @@
     async function loadTeachers() {
       console.log('[Calendar] Loading teachers via Cloud Function...');
       try {
-        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
-        const functions = getFunctions(window.app, 'europe-west3');
-        const loadTeachersFunc = httpsCallable(functions, 'loadTeachers');
-
-        const result = await loadTeachersFunc();
+        const result = await window.calendarApiCall('loadTeachers');
         const { teachers } = result.data;
 
         const teacherNames = ['Válassz szaktanárt...'];
-        const teacherIds = [null]; // Stores normalized names
+        const teacherIds = [null]; // Stores normalizedNames
         let initialIndex = 0;
 
         teachers.forEach((t, index) => {
           calendarState.teachers[t.normalizedName] = t.fullName;
           teacherNames.push(t.fullName);
-          teacherIds.push(t.normalizedName);
+          teacherIds.push(t.normalizedName); // Store normalizedName
 
           // Check if this matches current selection (for editing)
           if (calendarState.selectedTeacher === t.normalizedName || calendarState.selectedTeacherName === t.fullName) {
@@ -1764,6 +1851,52 @@
     }
 
 
+    // Calendar dropdown instance for Place
+    let calendarPlaceDropdownInstance = null;
+
+    // Load places via Cloud Function
+    async function loadPlaces() {
+      console.log('[Calendar] Loading places via Cloud Function...');
+      try {
+        const result = await window.calendarApiCall('loadPlaces');
+        const { places } = result.data;
+
+        const placeNames = ['Válassz helyszínt...'];
+        const placeIds = [null];
+        let initialIndex = 0;
+
+        places.forEach((p, index) => {
+          calendarState.places = calendarState.places || {};
+          calendarState.places[p.placeid] = p.name;
+          placeNames.push(p.name);
+          placeIds.push(p.placeid);
+
+          if (calendarState.selectedPlace === p.placeid || calendarState.selectedPlaceName === p.name) {
+            initialIndex = index + 1;
+            calendarState.selectedPlace = p.placeid;
+          }
+        });
+
+        const container = document.getElementById('calendarPlaceDropdown');
+        if (container && window.LanguageDropdown) {
+          container.innerHTML = '';
+          calendarPlaceDropdownInstance = new window.LanguageDropdown(container, {
+            options: placeNames,
+            selectedIndex: initialIndex,
+            onChange: (value, index) => {
+              calendarState.selectedPlace = index > 0 ? placeIds[index] : null;
+              calendarState.selectedPlaceName = index > 0 ? value : null;
+              updateStep3NextButton();
+            }
+          });
+        }
+        console.log('[Calendar] Loaded', places.length, 'places. Selected index:', initialIndex);
+        updateStep3NextButton();
+      } catch (e) {
+        console.error('[Calendar] Failed to load places:', e);
+      }
+    }
+
     // Update Step 3 next button state
     function updateStep3NextButton() {
       const nextBtn = document.getElementById('calendarStep3Next');
@@ -1779,15 +1912,10 @@
 
       try {
         console.log('[Calendar] Resolving timeline on server...');
-        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
-        const functions = getFunctions(window.app, 'europe-west3');
-        const validateTimelineFunc = httpsCallable(functions, 'validateTimeline');
-
-        // Call server to resolve/validate time
-        const result = await validateTimelineFunc({
+        const result = await window.calendarApiCall('validateTimeline', {
           startTime: inputStartTime || null,
           endTime: inputEndTime || null,
-          lessonNumber: typeof calendarState.selectedHour === 'number' ? calendarState.selectedHour + 1 : calendarState.selectedHour,
+          lessonNumber: calendarState.selectedHour,
           lessonType: calendarState.selectedLessonType
         });
 
@@ -1818,12 +1946,25 @@
           teacherName2: calendarState.selectedTeacherName2 || null,
           studentGroup: document.getElementById('calendarStudentSearchInput')?.value || null,
           timelineStart: startTime, // Use server resolved time
-          timelineEnd: endTime      // Use server resolved time
+          timelineEnd: endTime,      // Use server resolved time
+          placeid: calendarState.selectedPlace || null,
+          placeName: calendarState.selectedPlaceName || null
         };
 
         console.log('[Calendar] Updated state snapshot:', JSON.parse(JSON.stringify(calendarState.lessonData)));
 
         sessionStorage.setItem('calendar_lessonData', JSON.stringify(calendarState.lessonData));
+
+        // Track this day as edited in current session
+        let editedDays = [];
+        try {
+          const stored = sessionStorage.getItem('calendar_editedDays');
+          if (stored) editedDays = JSON.parse(stored);
+        } catch (e) { editedDays = []; }
+        if (!editedDays.includes(selectedDay)) {
+          editedDays.push(selectedDay);
+          sessionStorage.setItem('calendar_editedDays', JSON.stringify(editedDays));
+        }
 
         hideAllCalendarPages();
         const page = document.getElementById('calendar-lessons-page');
@@ -1836,11 +1977,74 @@
         updateLessonPageHeader();
 
         // Populate lesson cards
+        await fetchDayLessons(calendarState.selectedDay); // Fetch latest from server
+        updateModifiedDaysDropdown(); // Use sessionStorage-based dropdown
+        initResetDayDropdown(); // Initialize reset dropdown
         populateLessonCards();
 
       } catch (e) {
         console.error('[Calendar] Failed to resolve timeline:', e);
         alert('Hiba történt az idővonal ellenőrzésekor. Kérlek próbáld újra.');
+      }
+    }
+
+    async function fetchModifiedDays() {
+      try {
+        const result = await window.calendarApiCall('getModifiedDays');
+        calendarState.serverModifiedDays = result.data.days || [];
+        console.log('[Calendar] Server modified days:', calendarState.serverModifiedDays);
+        updateModifiedDaysDropdown();
+      } catch (e) {
+        console.error('[Calendar] Failed to fetch modified days:', e);
+      }
+    }
+
+    // Load lessons for a specific day from server
+    async function fetchDayLessons(day) {
+      if (!day) return;
+      try {
+        console.log(`[Calendar] Fetching lessons for ${day}...`);
+        const result = await window.calendarApiCall('getLessonCards', { day, sessionId: calendarState.sessionId });
+        const { cards } = result.data;
+
+        if (cards && cards.length > 0) {
+          if (!calendarState.lessonData[day]) {
+            calendarState.lessonData[day] = {};
+          }
+
+          cards.forEach(card => {
+            // Map card data back to state structure
+            if (card.typeName !== '-') { // Only saved lessons
+              // Use existing local state if available (to avoid overwriting user edits not yet saved? No, server is truth)
+              // But usually we want to merge. Server < Local < Input
+              // If we just saved, Local is accurate. 
+              // If we reloaded, Server is accurate.
+              // We should probably ONLY overwrite if we don't have local changes?
+              // But collision logic overwrites anyway.
+              const lessonNum = card.number;
+
+              // Only update if not currently being edited? 
+              // Actually, overwrite everything to be safe and consistent with "Loading".
+
+              calendarState.lessonData[day][lessonNum] = {
+                lessonType: card.lessonType,
+                lessonTypeName: card.typeName,
+                teacher: card.teacherId || card.teacher, // Use ID if available
+                teacherName: card.teacher,
+                teacher2: card.teacher2,
+                // teacherName2? 
+                studentGroup: card.studentGroup,
+                timelineStart: card.startTime,
+                timelineEnd: card.finishTime
+              };
+            }
+          });
+          console.log(`[Calendar] Fetched and updated ${cards.length} cards for ${day}`);
+          // Update session storage
+          sessionStorage.setItem('calendar_lessonData', JSON.stringify(calendarState.lessonData));
+        }
+      } catch (e) {
+        console.error('[Calendar] Failed to fetch lessons:', e);
       }
     }
 
@@ -1869,6 +2073,7 @@
 
         const typeValue = card.querySelector('.lesson-type-value');
         const teacherValue = card.querySelector('.lesson-teacher-value');
+        const placeValue = card.querySelector('.lesson-place-value');
         const timelineValue = card.querySelector('.lesson-timeline-value');
 
         if (data) {
@@ -1881,6 +2086,9 @@
             }
             teacherValue.textContent = tText;
           }
+          if (placeValue) {
+            placeValue.textContent = data.placeName || '-';
+          }
           if (timelineValue) {
             timelineValue.textContent = (data.timelineStart && data.timelineEnd)
               ? `${data.timelineStart} - ${data.timelineEnd}`
@@ -1890,6 +2098,7 @@
           card.classList.add('incomplete');
           if (typeValue) typeValue.textContent = '-';
           if (teacherValue) teacherValue.textContent = '-';
+          if (placeValue) placeValue.textContent = '-';
           if (timelineValue) timelineValue.textContent = '-';
         }
 
@@ -1965,6 +2174,7 @@
       // Load dropdowns
       loadLessonTypes();
       loadTeachers();
+      loadPlaces();
     }
 
     function deleteLessonCard(lessonNum) {
@@ -1986,32 +2196,34 @@
         thursday: 'Csütörtök', friday: 'Péntek'
       };
 
-      // Get all days that have data - ITERATE ALL KEYS
-      const daysWithData = Object.keys(calendarState.lessonData).filter(day => {
-        const data = calendarState.lessonData[day];
-        // Ensure day has at least one lesson
-        return data && Object.keys(data).length > 0;
-      });
-
-      console.log('[Calendar] Days with data:', daysWithData);
+      // Get edited days from sessionStorage (current session only)
+      let editedDays = [];
+      try {
+        const stored = sessionStorage.getItem('calendar_editedDays');
+        if (stored) editedDays = JSON.parse(stored);
+      } catch (e) { editedDays = []; }
 
       // Ensure current day is included
       const currentDay = calendarState.selectedDay;
-      const allDays = Array.from(new Set([...daysWithData, currentDay]));
+      const allDays = Array.from(new Set([...editedDays, currentDay]));
 
-      // Filter out non-day keys if any (e.g. if migration failed and numbers are keys)
+      // Filter and sort
       const validDays = allDays.filter(d => ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].includes(d));
-
-      // Sort days
       const dayOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
       validDays.sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b));
 
-      if (validDays.length > 0) {
+      console.log('[Calendar] Edited days (session):', validDays);
+
+      if (validDays.length > 1) {
         container.style.display = 'block';
+        container.style.opacity = '1';
+        container.style.pointerEvents = 'auto';
         container.innerHTML = '';
 
         const options = validDays.map(day => dayNames[day] || day);
         const selectedIndex = validDays.indexOf(currentDay);
+
+        console.log('[Calendar] Dropdown options:', options, 'selectedIndex:', selectedIndex);
 
         new window.LanguageDropdown(container, {
           options: options,
@@ -2021,19 +2233,131 @@
             if (newDay !== calendarState.selectedDay) {
               console.log('[Calendar] Switching day to:', newDay);
               calendarState.selectedDay = newDay;
-
-              // Also update day dropdown in step 2 so if we go back it is correct
-              const dayDropdown = document.getElementById('calendarDayDropdown');
-              // We can't easily update LanguageDropdown externally without a reference or recreating it
-              // But we can update the state that matters
-
+              sessionStorage.setItem('calendar_day', newDay);
               updateLessonPageHeader();
-              populateLessonCards();
+              fetchDayLessons(newDay).then(() => {
+                populateLessonCards();
+              });
             }
           }
         });
+      } else if (validDays.length === 1) {
+        container.style.display = 'block';
+        container.style.opacity = '0.5';
+        container.style.pointerEvents = 'none';
+        container.innerHTML = '';
+        const options = [dayNames[validDays[0]] || validDays[0]];
+        new window.LanguageDropdown(container, {
+          options: options,
+          selectedIndex: 0,
+          onChange: () => { }
+        });
       } else {
         container.style.display = 'none';
+      }
+    }
+
+    // Reset day dropdown state
+    let calendarResetSelectedDay = null;
+
+    function initResetDayDropdown() {
+      const container = document.getElementById('calendarResetDayDropdown');
+      if (!container || !window.LanguageDropdown) return;
+
+      const dayNames = {
+        monday: 'Hétfő', tuesday: 'Kedd', wednesday: 'Szerda',
+        thursday: 'Csütörtök', friday: 'Péntek'
+      };
+
+      // Get edited days from sessionStorage
+      let editedDays = [];
+      try {
+        const stored = sessionStorage.getItem('calendar_editedDays');
+        if (stored) editedDays = JSON.parse(stored);
+      } catch (e) { editedDays = []; }
+
+      const dayOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+      const validDays = editedDays.filter(d => dayOrder.includes(d));
+      validDays.sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b));
+
+      if (validDays.length === 0) {
+        container.innerHTML = '<span style="color: #E5FDCB;">Nincs szerkesztett nap</span>';
+        calendarResetSelectedDay = null;
+        return;
+      }
+
+      container.innerHTML = '';
+
+      const options = validDays.map(day => dayNames[day] || day);
+      calendarResetSelectedDay = validDays[0];
+
+      new window.LanguageDropdown(container, {
+        options: options,
+        selectedIndex: 0,
+        onChange: (value, index) => {
+          calendarResetSelectedDay = validDays[index];
+        }
+      });
+    }
+
+    function openResetDayPopup() {
+      initResetDayDropdown();
+      const popup = document.getElementById('calendarResetPopup');
+      if (popup) popup.classList.add('active');
+    }
+
+    function closeResetDayPopup() {
+      const popup = document.getElementById('calendarResetPopup');
+      if (popup) popup.classList.remove('active');
+    }
+
+    async function confirmResetDay() {
+      if (!calendarResetSelectedDay) return;
+
+      const dayNames = {
+        monday: 'Hétfő', tuesday: 'Kedd', wednesday: 'Szerda',
+        thursday: 'Csütörtök', friday: 'Péntek'
+      };
+      const dayName = dayNames[calendarResetSelectedDay] || calendarResetSelectedDay;
+
+      try {
+        console.log('[Calendar] Resetting day:', calendarResetSelectedDay);
+        await window.calendarApiCall('clearTempLessons', { day: calendarResetSelectedDay });
+
+        // Remove from local state
+        delete calendarState.lessonData[calendarResetSelectedDay];
+        sessionStorage.setItem('calendar_lessonData', JSON.stringify(calendarState.lessonData));
+
+        // Update edited days
+        let editedDays = [];
+        try {
+          const stored = sessionStorage.getItem('calendar_editedDays');
+          if (stored) editedDays = JSON.parse(stored);
+        } catch (e) { editedDays = []; }
+        editedDays = editedDays.filter(d => d !== calendarResetSelectedDay);
+        sessionStorage.setItem('calendar_editedDays', JSON.stringify(editedDays));
+
+        // Close popup
+        closeResetDayPopup();
+
+        // Refresh UI
+        updateModifiedDaysDropdown();
+
+        // If we deleted current day, switch to another
+        if (calendarState.selectedDay === calendarResetSelectedDay && editedDays.length > 0) {
+          calendarState.selectedDay = editedDays[0];
+          updateLessonPageHeader();
+          await fetchDayLessons(editedDays[0]);
+        }
+        populateLessonCards();
+
+        if (window.showToastDirectly) {
+          window.showToastDirectly('Siker', `${dayName} nap órái törölve!`, 'positive');
+        }
+      } catch (e) {
+        console.error('[Calendar] Failed to reset day:', e);
+        closeResetDayPopup();
+        alert('Hiba történt a törléskor!');
       }
     }
 
@@ -2074,6 +2398,7 @@
       // Load dropdowns
       loadLessonTypes();
       loadTeachers();
+      loadPlaces();
     }
 
     function calendarApplyVariation() {
@@ -2145,55 +2470,73 @@
     async function calendarApplyChanges() {
       console.log('[Calendar] Applying changes...');
       console.log('[Calendar] Lesson data:', calendarState.lessonData);
+      console.log('[Calendar] Class ID:', calendarState.selectedClassId);
+
+      // Show loading popup
+      const popup = document.getElementById('calendarPublishPopup');
+      if (popup) popup.classList.add('active');
 
       const nextBtn = document.getElementById('calendarStep4Next');
       if (nextBtn) {
         nextBtn.disabled = true;
-        // Spinner?
-        nextBtn.innerHTML = '<span class="loading-spinner"></span> Mentés...';
       }
 
       try {
-        const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js');
-        const functions = getFunctions(window.app, 'europe-west3');
-        const saveLessonAssignmentFunc = httpsCallable(functions, 'saveLessonAssignment');
-
-        // Prepare payload
-        const payload = {
+        // Step 1: Save all data to temp first
+        const savePayload = {
           classId: calendarState.selectedClassId,
           className: calendarState.selectedClassName,
           day: calendarState.selectedDay,
-          lessons: calendarState.lessonData
+          lessons: calendarState.lessonData,
+          sessionId: calendarState.sessionId
         };
 
-        const result = await saveLessonAssignmentFunc(payload);
-        console.log('[Calendar] Saved successfully', result.data);
+        await window.calendarApiCall('saveLessonAssignment', savePayload);
+        console.log('[Calendar] Saved to temp successfully');
 
-        // Success Feedback
+        // Step 2: Publish to class
+        const publishResult = await window.calendarApiCall('publishTimetable', {
+          classId: calendarState.selectedClassId
+        });
+        console.log('[Calendar] Published successfully:', publishResult.data);
+
+        // Hide popup
+        if (popup) popup.classList.remove('active');
+
+        // Clear local state
+        calendarState.lessonData = {};
+        calendarState.sessionId = null;
+        sessionStorage.removeItem('calendar_editedDays');
+        sessionStorage.removeItem('calendar_lessonData');
+
+        // Redirect to dashboard
+        window.location.href = 'dashboard.html';
+        hideAllCalendarPages();
+
+        // Show success toast
         if (window.showToastDirectly) {
           window.showToastDirectly(
-            getTranslation('common.success', 'Siker'),
-            getTranslation('pages.dashboard.assign_calendars.success_save', 'Az órarend mentése sikeres!'),
+            'Siker',
+            'Órarend publikálva!',
             'positive'
           );
-        } else {
-          alert(getTranslation('pages.dashboard.assign_calendars.success_save', 'Az órarend mentése sikeres!'));
         }
 
-        calendarAssignBack();
-
       } catch (error) {
-        console.error('[Calendar] Save failed:', error);
+        console.error('[Calendar] Publish failed:', error);
+
+        // Hide popup
+        if (popup) popup.classList.remove('active');
+
         const msg = error.message || 'Ismeretlen hiba';
         if (window.showToastDirectly) {
-          window.showToastDirectly('Hiba', 'Hiba a mentés során: ' + msg, 'danger');
+          window.showToastDirectly('Hiba', 'Hiba a publikálás során: ' + msg, 'danger');
         } else {
-          alert('Hiba a mentés során: ' + msg);
+          alert('Hiba a publikálás során: ' + msg);
         }
 
         if (nextBtn) {
           nextBtn.disabled = false;
-          nextBtn.innerHTML = '<span data-translate="common.next">Tovább</span>';
         }
       }
     }
@@ -2831,19 +3174,17 @@
     async function loadUserSuggestions() {
       if (userSuggestionsLoaded) return;
       try {
-        const db = window.db;
-        if (!db) return;
-        const { collection, getDocs, query, limit } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
-        const usersSnap = await getDocs(query(collection(db, 'public/users/nevek'), limit(100)));
-        userSuggestions = usersSnap.docs.map((docSnap) => {
-          const data = docSnap.data() || {};
-          const displayName = data.name || data.displayName || docSnap.id;
-          return {
-            id: docSnap.id,
-            display: displayName,
-            match: displayName.toLowerCase()
-          };
-        });
+        console.log('[Dashboard] Loading user suggestions via Cloud Function...');
+        const result = await window.calendarApiCall('searchUsers');
+        const { users } = result.data;
+
+        userSuggestions = (users || []).map(user => ({
+          id: user.id,
+          display: user.fullName,
+          match: (user.fullName || '').toLowerCase()
+        }));
+
+        console.log('[Dashboard] Loaded', userSuggestions.length, 'user suggestions');
         userSuggestionsLoaded = true;
       } catch (err) {
         console.warn('[Dashboard] Failed to load user suggestions', err);
@@ -2853,10 +3194,14 @@
 
     function findUserSuggestion(rawValue) {
       const value = (rawValue || '').trim().toLowerCase();
+      console.log('[Ghost] findUserSuggestion called with:', value, 'suggestions count:', userSuggestions.length);
       if (!value || userSuggestions.length === 0) return null;
 
       let match = userSuggestions.find((item) => item && item.match && item.match.startsWith(value));
-      if (match) return match;
+      if (match) {
+        console.log('[Ghost] Found exact match:', match.display);
+        return match;
+      }
 
       const words = value.split(/\s+/);
       const scored = userSuggestions
