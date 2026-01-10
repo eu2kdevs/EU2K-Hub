@@ -63,6 +63,7 @@
   </script>
   <script src="assets/js/permissions.js"></script>
   <script src="assets/js/translations.js"></script>
+  <script src="assets/js/day-greetings.js"></script>
   <script src="assets/js/account-tooltip.js"></script>
   <link rel="stylesheet" href="assets/css/staff-access.css">
   <script src="assets/js/staff-access.js"></script>
@@ -840,7 +841,7 @@
               <div class="settings-item notifications-card">
                 <div class="settings-card-content">
                   <div class="settings-card-text">
-                    <h2 data-translate="pages.settings.functions.descriptive_texts_title"
+                    <h2 data-translate="pages.settings.functions_options.descriptive_texts_title"
                       data-translate-fallback="Leíró szövegek">Leíró szövegek</h2>
                   </div>
                   <div class="settings-card-control">
@@ -848,7 +849,7 @@
                       <button class="language-dropdown-trigger single-item" type="button" aria-haspopup="true"
                         aria-expanded="false" style="opacity: 0.65; pointer-events: none;">
                         <span class="language-dropdown-text"
-                          data-translate="pages.settings.functions.descriptive_texts_default"
+                          data-translate="pages.settings.functions_options.descriptive_texts_default"
                           data-translate-fallback="Alapértelmezett">Alapértelmezett</span>
                         <img class="language-dropdown-icon" src="assets/general/components/arrow_down.svg"
                           alt="Dropdown">
@@ -857,17 +858,75 @@
                         <div class="language-dropdown-menu-wrapper">
                           <button class="language-dropdown-item" role="menuitem" data-index="0">
                             <div class="language-dropdown-item-content"
-                              data-translate="pages.settings.functions.descriptive_texts_default"
+                              data-translate="pages.settings.functions_options.descriptive_texts_default"
                               data-translate-fallback="Alapértelmezett">Alapértelmezett</div>
                           </button>
                           <button class="language-dropdown-item" role="menuitem" data-index="1">
                             <div class="language-dropdown-item-content"
-                              data-translate="pages.settings.functions.descriptive_texts_reduced"
+                              data-translate="pages.settings.functions_options.descriptive_texts_reduced"
                               data-translate-fallback="Csökkentett">Csökkentett</div>
                           </button>
                         </div>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Napszak szerinti üdvözlések -->
+              <div class="settings-item notifications-card">
+                <div class="settings-card-content">
+                  <div class="settings-card-text">
+                    <h2 data-translate="onboarding.last_things.day_greetings_title"
+                      data-translate-fallback="Napszak szerinti üdvözlések">Napszak szerinti üdvözlések</h2>
+                    <p data-translate="onboarding.last_things.day_greetings_desc"
+                      data-translate-fallback="Reggel jó reggelt, délben jó napot, este jó estét. Ha gyorsan visszanyitod a Hubot, akkor viszlátot.">Reggel jó reggelt, délben jó napot, este jó estét. Ha gyorsan visszanyitod a Hubot, akkor viszlátot.</p>
+                  </div>
+                  <div class="settings-card-control">
+                    <md-switch class="settings-switch" icons id="dayDependentGreetingsSwitch"
+                      aria-label="Napszak szerinti üdvözlések"></md-switch>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Üdvözlés mutatási ideje -->
+              <div class="settings-item notifications-card functions-card-grouped-item">
+                <div class="settings-card-content">
+                  <div class="settings-card-text">
+                    <h2 data-translate="pages.settings.functions_options.greeting_display_time_title"
+                      data-translate-fallback="Mutatási idő">Mutatási idő</h2>
+                    <p data-translate="pages.settings.functions_options.greeting_display_time_desc"
+                      data-translate-fallback="A napszak szerinti üdvözlések megmutatásának ideje.">A napszak szerinti üdvözlések megmutatásának ideje.</p>
+                  </div>
+                  <div class="settings-card-control">
+                    <div class="greeting-time-input-wrapper">
+                      <button type="button" class="greeting-time-btn" id="greetingTimeDown" aria-label="Csökkentés">
+                        <img src="assets/general/components/arrow_down.svg" alt="Down">
+                      </button>
+                      <div class="greeting-time-value-wrapper">
+                        <span class="greeting-time-value" id="greetingDisplayTimeValue">2</span>
+                        <span class="greeting-time-unit" data-translate="pages.settings.functions_options.seconds" data-translate-fallback="mp">mp</span>
+                      </div>
+                      <button type="button" class="greeting-time-btn greeting-time-btn-up" id="greetingTimeUp" aria-label="Növelés">
+                        <img src="assets/general/components/arrow_down.svg" alt="Up">
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dinamikus Tartalmak fordítása -->
+              <div class="settings-item notifications-card">
+                <div class="settings-card-content">
+                  <div class="settings-card-text">
+                    <h2 data-translate="pages.settings.functions_options.ai_translation_title"
+                      data-translate-fallback="Dinamikus Tartalmak fordítása">Dinamikus Tartalmak fordítása</h2>
+                    <p data-translate="pages.settings.functions_options.ai_translation_desc"
+                      data-translate-fallback="AI-jal való fordítás a dinamikusan változó tartalmaknál, például javaslatok vagy értesítések.">AI-jal való fordítás a dinamikusan változó tartalmaknál, például javaslatok vagy értesítések.</p>
+                  </div>
+                  <div class="settings-card-control">
+                    <md-switch class="settings-switch" icons id="aiTranslationSwitch"
+                      aria-label="Dinamikus Tartalmak fordítása" disabled></md-switch>
                   </div>
                 </div>
               </div>
@@ -906,19 +965,19 @@
               <div class="pages-containers-wrapper">
                 <!-- Otthon konténer -->
                 <div class="pages-container">
-                  <h2 class="pages-container-title" data-translate="pages.settings.pages.home_title"
+                  <h2 class="pages-container-title" data-translate="pages.settings.pages_options.home_title"
                     data-translate-fallback="Otthon">Otthon</h2>
                   <div class="settings-item notifications-card">
                     <div class="settings-card-content">
                       <div class="settings-card-text">
-                        <h2 data-translate="pages.settings.pages.layout_title" data-translate-fallback="Elrendezés">
+                        <h2 data-translate="pages.settings.pages_options.layout_title" data-translate-fallback="Elrendezés">
                           Elrendezés</h2>
                       </div>
                       <div class="settings-card-control">
                         <div class="language-dropdown" id="homeLayoutDropdown">
                           <button class="language-dropdown-trigger single-item" type="button" aria-haspopup="true"
                             aria-expanded="false" style="opacity: 0.5; pointer-events: none;">
-                            <span class="language-dropdown-text" data-translate="pages.settings.pages.layout_default"
+                            <span class="language-dropdown-text" data-translate="pages.settings.pages_options.layout_default"
                               data-translate-fallback="Alapértelmezett">Alapértelmezett</span>
                             <img class="language-dropdown-icon" src="assets/general/components/arrow_down.svg"
                               alt="Dropdown">
@@ -927,12 +986,12 @@
                             <div class="language-dropdown-menu-wrapper">
                               <button class="language-dropdown-item" role="menuitem" data-index="0">
                                 <div class="language-dropdown-item-content"
-                                  data-translate="pages.settings.pages.layout_default"
+                                  data-translate="pages.settings.pages_options.layout_default"
                                   data-translate-fallback="Alapértelmezett">Alapértelmezett</div>
                               </button>
                               <button class="language-dropdown-item" role="menuitem" data-index="1">
                                 <div class="language-dropdown-item-content"
-                                  data-translate="pages.settings.pages.layout_custom" data-translate-fallback="Egyéni">
+                                  data-translate="pages.settings.pages_options.layout_custom" data-translate-fallback="Egyéni">
                                   Egyéni</div>
                               </button>
                             </div>
@@ -944,7 +1003,7 @@
                 </div>
                 <!-- YouHub konténer -->
                 <div class="pages-container pages-container-with-border">
-                  <h2 class="pages-container-title" data-translate="pages.settings.pages.youhub_title"
+                  <h2 class="pages-container-title" data-translate="pages.settings.pages_options.youhub_title"
                     data-translate-fallback="YouHub">YouHub</h2>
                   <!-- YouHub kártyák konténer -->
                   <div class="youhub-cards-container">
@@ -952,12 +1011,12 @@
                     <div class="settings-item notifications-card">
                       <div class="settings-card-content">
                         <div class="settings-card-text">
-                          <h2 data-translate="pages.settings.pages.reset_layout_title"
+                          <h2 data-translate="pages.settings.pages_options.reset_layout_title"
                             data-translate-fallback="Elrendezés visszaállítása">Elrendezés visszaállítása</h2>
                         </div>
                         <div class="settings-card-control">
                           <button class="youhub-revert-btn" id="settingsRevertBtn" type="button">
-                            <span class="youhub-revert-text" data-translate="pages.settings.pages.reset_button"
+                            <span class="youhub-revert-text" data-translate="pages.settings.pages_options.reset_button"
                               data-translate-fallback="Visszaállítás">Visszaállítás</span>
                           </button>
                         </div>
@@ -967,12 +1026,12 @@
                     <div class="settings-item notifications-card">
                       <div class="settings-card-content">
                         <div class="settings-card-text">
-                          <h2 data-translate="pages.settings.pages.custom_cards_title"
+                          <h2 data-translate="pages.settings.pages_options.custom_cards_title"
                             data-translate-fallback="Egyéni kártyák">Egyéni kártyák</h2>
                         </div>
                         <div class="settings-card-control">
                           <button class="youhub-revert-btn" id="settingsCustomCardsBtn" type="button" disabled>
-                            <span class="youhub-revert-text" data-translate="pages.settings.pages.view_button"
+                            <span class="youhub-revert-text" data-translate="pages.settings.pages_options.view_button"
                               data-translate-fallback="Megtekintés">Megtekintés</span>
                           </button>
                         </div>
@@ -982,7 +1041,7 @@
                     <div class="settings-item notifications-card">
                       <div class="settings-card-content">
                         <div class="settings-card-text">
-                          <h2 data-translate="pages.settings.pages.date_format_title"
+                          <h2 data-translate="pages.settings.pages_options.date_format_title"
                             data-translate-fallback="Dátumformátum">Dátumformátum</h2>
                         </div>
                         <div class="settings-card-control">
@@ -990,7 +1049,7 @@
                             <button class="language-dropdown-trigger single-item" type="button" aria-haspopup="true"
                               aria-expanded="false" style="opacity: 0.5; pointer-events: none;">
                               <span class="language-dropdown-text"
-                                data-translate="pages.settings.pages.date_format_yyyy_mm_dd"
+                                data-translate="pages.settings.pages_options.date_format_yyyy_mm_dd"
                                 data-translate-fallback="éééé.hh.nn">éééé.hh.nn</span>
                               <img class="language-dropdown-icon" src="assets/general/components/arrow_down.svg"
                                 alt="Dropdown">
@@ -999,27 +1058,27 @@
                               <div class="language-dropdown-menu-wrapper">
                                 <button class="language-dropdown-item" role="menuitem" data-index="0">
                                   <div class="language-dropdown-item-content"
-                                    data-translate="pages.settings.pages.date_format_yyyy_mm_dd"
+                                    data-translate="pages.settings.pages_options.date_format_yyyy_mm_dd"
                                     data-translate-fallback="éééé.hh.nn">éééé.hh.nn</div>
                                 </button>
                                 <button class="language-dropdown-item" role="menuitem" data-index="1">
                                   <div class="language-dropdown-item-content"
-                                    data-translate="pages.settings.pages.date_format_yyyy_dd_mm"
+                                    data-translate="pages.settings.pages_options.date_format_yyyy_dd_mm"
                                     data-translate-fallback="éééé.nn.hh">éééé.nn.hh</div>
                                 </button>
                                 <button class="language-dropdown-item" role="menuitem" data-index="2">
                                   <div class="language-dropdown-item-content"
-                                    data-translate="pages.settings.pages.date_format_mm_yyyy_dd"
+                                    data-translate="pages.settings.pages_options.date_format_mm_yyyy_dd"
                                     data-translate-fallback="hh.éééé.nn">hh.éééé.nn</div>
                                 </button>
                                 <button class="language-dropdown-item" role="menuitem" data-index="3">
                                   <div class="language-dropdown-item-content"
-                                    data-translate="pages.settings.pages.date_format_mm_dd_yyyy"
+                                    data-translate="pages.settings.pages_options.date_format_mm_dd_yyyy"
                                     data-translate-fallback="hh.nn.éééé">hh.nn.éééé</div>
                                 </button>
                                 <button class="language-dropdown-item" role="menuitem" data-index="4">
                                   <div class="language-dropdown-item-content"
-                                    data-translate="pages.settings.pages.date_format_dd_mm_yyyy"
+                                    data-translate="pages.settings.pages_options.date_format_dd_mm_yyyy"
                                     data-translate-fallback="nn.hh.éééé">nn.hh.éééé</div>
                                 </button>
                               </div>
@@ -2101,8 +2160,16 @@
             if (window.saveNotificationSettings) {
               await window.saveNotificationSettings();
             }
+            // Save day greetings settings
+            if (window.saveDayGreetingsSettings) {
+              await window.saveDayGreetingsSettings();
+            }
+            // Save AI translation settings
+            if (window.saveAiTranslationSettings) {
+              await window.saveAiTranslationSettings();
+            }
           } catch (e) {
-            console.error('[Settings] saveNotificationSettings error:', e);
+            console.error('[Settings] save error:', e);
           } finally {
             await applyPendingLanguage();
           }
@@ -2445,9 +2512,9 @@
 
           const getOptions = () => {
             if (window.translationManager && window.translationManager.translations) {
-              const defaultOpt = window.translationManager.getTranslation('pages.settings.pages.layout_default');
-              const customOpt = window.translationManager.getTranslation('pages.settings.pages.layout_custom');
-              if (defaultOpt && defaultOpt !== 'pages.settings.pages.layout_default') {
+              const defaultOpt = window.translationManager.getTranslation('pages.settings.pages_options.layout_default');
+              const customOpt = window.translationManager.getTranslation('pages.settings.pages_options.layout_custom');
+              if (defaultOpt && defaultOpt !== 'pages.settings.pages_options.layout_default') {
                 return [defaultOpt, customOpt].filter(Boolean);
               }
             }
@@ -2509,12 +2576,12 @@
 
           const getOptions = () => {
             if (window.translationManager && window.translationManager.translations) {
-              const yyyy_mm_dd = window.translationManager.getTranslation('pages.settings.pages.date_format_yyyy_mm_dd');
-              const yyyy_dd_mm = window.translationManager.getTranslation('pages.settings.pages.date_format_yyyy_dd_mm');
-              const mm_yyyy_dd = window.translationManager.getTranslation('pages.settings.pages.date_format_mm_yyyy_dd');
-              const mm_dd_yyyy = window.translationManager.getTranslation('pages.settings.pages.date_format_mm_dd_yyyy');
-              const dd_mm_yyyy = window.translationManager.getTranslation('pages.settings.pages.date_format_dd_mm_yyyy');
-              if (yyyy_mm_dd && yyyy_mm_dd !== 'pages.settings.pages.date_format_yyyy_mm_dd') {
+              const yyyy_mm_dd = window.translationManager.getTranslation('pages.settings.pages_options.date_format_yyyy_mm_dd');
+              const yyyy_dd_mm = window.translationManager.getTranslation('pages.settings.pages_options.date_format_yyyy_dd_mm');
+              const mm_yyyy_dd = window.translationManager.getTranslation('pages.settings.pages_options.date_format_mm_yyyy_dd');
+              const mm_dd_yyyy = window.translationManager.getTranslation('pages.settings.pages_options.date_format_mm_dd_yyyy');
+              const dd_mm_yyyy = window.translationManager.getTranslation('pages.settings.pages_options.date_format_dd_mm_yyyy');
+              if (yyyy_mm_dd && yyyy_mm_dd !== 'pages.settings.pages_options.date_format_yyyy_mm_dd') {
                 return [yyyy_mm_dd, yyyy_dd_mm, mm_yyyy_dd, mm_dd_yyyy, dd_mm_yyyy].filter(Boolean);
               }
             }
@@ -3446,6 +3513,242 @@
 
   <script src="assets/js/developer-mode.js"></script>
   <script src="assets/js/account-tooltip.js"></script>
+
+  <!-- Day Greetings Settings -->
+  <script type="module">
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import { doc, getDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    let currentUserId = null;
+    let pendingDayDependentGreetings = null;
+    let pendingDdgDisappearingTime = null;
+    let currentDisplayTime = 2;
+
+    async function initDayGreetingsSettings() {
+      const dayGreetingsSwitch = document.getElementById('dayDependentGreetingsSwitch');
+      const displayTimeValue = document.getElementById('greetingDisplayTimeValue');
+      const btnUp = document.getElementById('greetingTimeUp');
+      const btnDown = document.getElementById('greetingTimeDown');
+      
+      if (!dayGreetingsSwitch || !displayTimeValue) {
+        console.log('[Settings] Day greetings elements not found');
+        return;
+      }
+
+      const auth = getAuth();
+      
+      const updateDisplayValue = (value) => {
+        currentDisplayTime = Math.max(1, Math.min(30, value));
+        displayTimeValue.textContent = currentDisplayTime;
+        pendingDdgDisappearingTime = currentDisplayTime;
+        if (window.setApplyEnabled) window.setApplyEnabled(true);
+      };
+      
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          dayGreetingsSwitch.disabled = true;
+          if (btnUp) btnUp.disabled = true;
+          if (btnDown) btnDown.disabled = true;
+          return;
+        }
+        
+        currentUserId = user.uid;
+        dayGreetingsSwitch.disabled = false;
+        if (btnUp) btnUp.disabled = false;
+        if (btnDown) btnDown.disabled = false;
+        
+        try {
+          // Load dayDependentGreetings from users/{userid}
+          const userRef = doc(window.db, 'users', user.uid);
+          const userSnap = await getDoc(userRef);
+          
+          if (userSnap.exists()) {
+            const data = userSnap.data();
+            dayGreetingsSwitch.selected = !!data.dayDependentGreetings;
+          }
+          
+          // Load ddgDisappearingTime from users/{userid}/settings/functions
+          const functionsRef = doc(window.db, 'users', user.uid, 'settings', 'functions');
+          const functionsSnap = await getDoc(functionsRef);
+          
+          if (functionsSnap.exists()) {
+            const functionsData = functionsSnap.data();
+            currentDisplayTime = functionsData.ddgDisappearingTime || 2;
+            displayTimeValue.textContent = currentDisplayTime;
+          } else {
+            currentDisplayTime = 2;
+            displayTimeValue.textContent = 2;
+          }
+        } catch (e) {
+          console.error('[Settings] Error loading day greetings settings:', e);
+        }
+      });
+      
+      // Handle switch toggle - only update UI, save on Apply
+      dayGreetingsSwitch.addEventListener('click', () => {
+        if (!currentUserId) return;
+        
+        const newValue = !dayGreetingsSwitch.selected;
+        dayGreetingsSwitch.selected = newValue;
+        pendingDayDependentGreetings = newValue;
+        if (window.setApplyEnabled) window.setApplyEnabled(true);
+      });
+      
+      // Handle up button
+      if (btnUp) {
+        btnUp.addEventListener('click', () => {
+          if (!currentUserId) return;
+          updateDisplayValue(currentDisplayTime + 1);
+        });
+      }
+      
+      // Handle down button
+      if (btnDown) {
+        btnDown.addEventListener('click', () => {
+          if (!currentUserId) return;
+          updateDisplayValue(currentDisplayTime - 1);
+        });
+      }
+      
+      // Handle scroll on wrapper for increment/decrement
+      const wrapper = displayTimeValue.closest('.greeting-time-input-wrapper');
+      if (wrapper) {
+        wrapper.addEventListener('wheel', (e) => {
+          e.preventDefault();
+          if (!currentUserId) return;
+          const delta = e.deltaY < 0 ? 1 : -1;
+          updateDisplayValue(currentDisplayTime + delta);
+        });
+      }
+    }
+    
+    // Save function to be called by Apply button
+    async function saveDayGreetingsSettings() {
+      if (!currentUserId) return;
+      
+      try {
+        // Save dayDependentGreetings to users/{userid}
+        if (pendingDayDependentGreetings !== null) {
+          const userRef = doc(window.db, 'users', currentUserId);
+          await updateDoc(userRef, { dayDependentGreetings: pendingDayDependentGreetings });
+          console.log('[Settings] dayDependentGreetings saved:', pendingDayDependentGreetings);
+          pendingDayDependentGreetings = null;
+        }
+        
+        // Save ddgDisappearingTime to users/{userid}/settings/functions
+        if (pendingDdgDisappearingTime !== null) {
+          const functionsRef = doc(window.db, 'users', currentUserId, 'settings', 'functions');
+          const functionsSnap = await getDoc(functionsRef);
+          
+          if (functionsSnap.exists()) {
+            await updateDoc(functionsRef, { ddgDisappearingTime: pendingDdgDisappearingTime });
+          } else {
+            await setDoc(functionsRef, { ddgDisappearingTime: pendingDdgDisappearingTime });
+          }
+          
+          console.log('[Settings] ddgDisappearingTime saved:', pendingDdgDisappearingTime);
+          pendingDdgDisappearingTime = null;
+        }
+      } catch (e) {
+        console.error('[Settings] Error saving day greetings settings:', e);
+      }
+    }
+    
+    // Expose save function globally
+    window.saveDayGreetingsSettings = saveDayGreetingsSettings;
+    
+    document.addEventListener('DOMContentLoaded', initDayGreetingsSettings);
+  </script>
+
+  <!-- AI Translation Settings Script -->
+  <script type="module">
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    
+    let pendingAiTranslation = null;
+    
+    async function initAiTranslationSettings() {
+      const aiTranslationSwitch = document.getElementById('aiTranslationSwitch');
+      
+      if (!aiTranslationSwitch) {
+        console.log('[Settings] AI Translation switch not found');
+        return;
+      }
+      
+      const auth = getAuth();
+      
+      // AI Translation is disabled - keep switch disabled and off
+      aiTranslationSwitch.disabled = true;
+      aiTranslationSwitch.selected = false;
+      
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          return;
+        }
+        
+        // Keep disabled - feature not available
+        aiTranslationSwitch.disabled = true;
+        
+        try {
+          // Load aiTranslation from users/{userid}/settings/functions
+          const functionsRef = doc(window.db, 'users', user.uid, 'settings', 'functions');
+          const functionsSnap = await getDoc(functionsRef);
+          
+          if (functionsSnap.exists()) {
+            const data = functionsSnap.data();
+            // Default to false
+            aiTranslationSwitch.selected = data.aiTranslation === true;
+          } else {
+            // Default to false
+            aiTranslationSwitch.selected = false;
+          }
+        } catch (e) {
+          console.error('[Settings] Error loading AI translation settings:', e);
+          aiTranslationSwitch.selected = false;
+        }
+      });
+      
+      // Handle switch toggle
+      aiTranslationSwitch.addEventListener('click', () => {
+        const auth = getAuth();
+        if (!auth.currentUser) return;
+        
+        const newValue = !aiTranslationSwitch.selected;
+        aiTranslationSwitch.selected = newValue;
+        pendingAiTranslation = newValue;
+        if (window.setApplyEnabled) window.setApplyEnabled(true);
+      });
+    }
+    
+    // Save function to be called by Apply button
+    async function saveAiTranslationSettings() {
+      const auth = getAuth();
+      if (!auth.currentUser) return;
+      
+      try {
+        if (pendingAiTranslation !== null) {
+          const functionsRef = doc(window.db, 'users', auth.currentUser.uid, 'settings', 'functions');
+          const functionsSnap = await getDoc(functionsRef);
+          
+          if (functionsSnap.exists()) {
+            await updateDoc(functionsRef, { aiTranslation: pendingAiTranslation });
+          } else {
+            await setDoc(functionsRef, { aiTranslation: pendingAiTranslation });
+          }
+          
+          console.log('[Settings] aiTranslation saved:', pendingAiTranslation);
+          pendingAiTranslation = null;
+        }
+      } catch (e) {
+        console.error('[Settings] Error saving AI translation settings:', e);
+      }
+    }
+    
+    // Expose save function globally
+    window.saveAiTranslationSettings = saveAiTranslationSettings;
+    
+    document.addEventListener('DOMContentLoaded', initAiTranslationSettings);
+  </script>
 </body>
 
 </html>

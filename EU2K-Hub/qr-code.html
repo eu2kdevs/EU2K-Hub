@@ -109,6 +109,7 @@
   </script>
   <script src="assets/js/permissions.js"></script>
   <script src="assets/js/translations.js"></script>
+  <script src="assets/js/day-greetings.js"></script>
   <script src="assets/js/account-tooltip.js"></script>
   <script>
     // Fordítási rendszer inicializálása
@@ -390,7 +391,7 @@
             <!-- Control Buttons Container on the right -->
             <div class="qr-controls-container">
               <!-- Top Left: Participation Confirmation Button -->
-              <button class="qr-control-btn qr-btn-green qr-btn-participation" onclick="startAuth()">
+              <button class="qr-control-btn qr-btn-green qr-btn-participation disabled" onclick="startAuth()">
                 <img src="assets/qr-code/auth.svg" class="qr-control-icon" alt="Részvétel Igazolása">
                 <span data-translate="pages.qr.auth">Részvétel Igazolása</span>
               </button>
@@ -417,7 +418,7 @@
               </button>
 
               <!-- Bottom Right: Start Game Button -->
-              <button class="qr-control-btn qr-btn-green qr-btn-game" onclick="startGame()">
+              <button class="qr-control-btn qr-btn-green qr-btn-game disabled" onclick="startGame()">
                 <img src="assets/qr-code/game_start.svg" class="qr-control-icon" alt="Játék Indítása">
                 <span data-translate="pages.qr.game_start">Játék Indítása</span>
               </button>

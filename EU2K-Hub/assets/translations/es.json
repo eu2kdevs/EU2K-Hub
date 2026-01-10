@@ -289,7 +289,12 @@
       "functions_options": {
         "descriptive_texts_title": "Textos Descriptivos",
         "descriptive_texts_default": "Predeterminado",
-        "descriptive_texts_reduced": "Reducido"
+        "descriptive_texts_reduced": "Reducido",
+        "greeting_display_time_title": "Tiempo de visualización",
+        "greeting_display_time_desc": "Duración para mostrar saludos según la hora del día.",
+        "seconds": "seg",
+        "ai_translation_title": "Traducción de contenido dinámico",
+        "ai_translation_desc": "Traducción con IA para contenido dinámico, como sugerencias o notificaciones."
       },
       "pages_options": {
         "home_title": "Inicio",
@@ -791,6 +796,7 @@
     "notifications": {
       "title": "Notificaciones",
       "history": "Historial",
+      "more": "Más notificaciones",
       "empty": {
         "title": "No tienes notificaciones",
         "subtitle": "Vuelve más tarde :D"
@@ -828,8 +834,10 @@
           "heading": "Mostrar a quién",
           "user_label": "Mostrar a quién",
           "user_placeholder": "Escribe aquí...",
+          "user_description": "Deja vacío para una sugerencia pública.",
           "group_label": "Grupo objetivo",
           "group_placeholder": "Escribe aquí...",
+          "group_description": "Deja vacío para una sugerencia pública.",
           "share_heading": "Compartir",
           "share_title": "Compartir externamente",
           "share_description": "Permite que la escuela comparta tu Sugerencia también en plataformas externas."
@@ -885,6 +893,15 @@
       }
     },
     "calendar": {
+      "title": "Calendario",
+      "full": "Calendario Completo",
+      "lunch": "Almuerzo",
+      "nav": {
+        "timetable": "Horario",
+        "exams": "Exámenes",
+        "rp": "Progreso de Lectura",
+        "bell": "Horario de Timbres"
+      },
       "empty": {
         "title": "El calendario aún no está disponible.",
         "subtitle": "¡Vuelve más tarde!"
@@ -1044,5 +1061,66 @@
   "staff": {
     "password_created_title": "Contraseña creada",
     "password_created_message": "Ahora puedes iniciar sesión con tu nueva contraseña."
+  },
+  "greetings": {
+    "morning": "¡Buenos días {name}!",
+    "afternoon": "¡Buenas tardes {name}!",
+    "evening": "¡Buenas noches {name}!"
+  },
+  "calendar": {
+    "months": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+    "months_long": {
+      "0": "Enero",
+      "1": "Febrero",
+      "2": "Marzo",
+      "3": "Abril",
+      "4": "Mayo",
+      "5": "Junio",
+      "6": "Julio",
+      "7": "Agosto",
+      "8": "Septiembre",
+      "9": "Octubre",
+      "10": "Noviembre",
+      "11": "Diciembre"
+    },
+    "days": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+    "days_long": {
+      "sunday": "Domingo",
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado"
+    },
+    "days_short": {
+      "sunday": "D",
+      "monday": "L",
+      "tuesday": "M",
+      "wednesday": "X",
+      "thursday": "J",
+      "friday": "V",
+      "saturday": "S"
+    },
+    "today": "Hoy",
+    "select": "Seleccionar",
+    "no_class": "No tienes una clase configurada.",
+    "no_class_desc": "¡Habla con tu profesor!",
+    "no_lessons_weekend": "¡Hoy no hay clases, disfruta del descanso! ☕",
+    "no_lessons_weekend_desc": "",
+    "no_lessons_today": "No hay lecciones para hoy.",
+    "no_lessons_today_desc": "",
+    "not_found": "¡No pudimos encontrar tu horario!",
+    "not_found_desc": "Reporta el problema a Turóczi Ádám o Hegyi Marianna.",
+    "lunch_break": "Almuerzo",
+    "reading_progress": "Progreso de lectura",
+    "exams": "Exámenes",
+    "bell_schedule": "Horario de timbres",
+    "no_exams": "Sin exámenes",
+    "no_exams_desc": "No hay exámenes programados.",
+    "no_reading_progress": "Sin progreso de lectura",
+    "no_reading_progress_desc": "Aún no has empezado a leer.",
+    "no_bell_schedule": "Horario de timbres no encontrado",
+    "no_bell_schedule_desc": "Reporta el problema a la administración."
   }
 }

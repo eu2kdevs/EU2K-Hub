@@ -1244,3 +1244,61 @@ exports.saveOnboardingNames = onCall({ region }, async (request) => {
     throw new HttpsError('internal', error.message);
   }
 });
+
+/**
+ * Get profile picture URL from Firebase Storage
+ * Checks if profile picture exists and returns the download URL
+ */
+exports.getProfilePicture = onCall({ region }, async (request) => {
+  try {
+    const { userId } = request.data;
+
+    if (!userId || typeof userId !== 'string') {
+      throw new HttpsError('invalid-argument', 'userId is required');
+    }
+
+    const bucket = admin.storage().bucket();
+    
+    // Try with .jpg extension first
+    const filePathJpg = `profilePhotos/${userId}.jpg`;
+    const fileJpg = bucket.file(filePathJpg);
+    
+    const [existsJpg] = await fileJpg.exists();
+    
+    if (existsJpg) {
+      // Get signed URL (valid for 1 hour)
+      const [url] = await fileJpg.getSignedUrl({
+        action: 'read',
+        expires: Date.now() + 60 * 60 * 1000 // 1 hour
+      });
+      
+      console.log(`[getProfilePicture] Found profile picture for user ${userId} (jpg)`);
+      return { success: true, url, exists: true };
+    }
+    
+    // Try without extension
+    const filePath = `profilePhotos/${userId}`;
+    const file = bucket.file(filePath);
+    
+    const [exists] = await file.exists();
+    
+    if (exists) {
+      const [url] = await file.getSignedUrl({
+        action: 'read',
+        expires: Date.now() + 60 * 60 * 1000
+      });
+      
+      console.log(`[getProfilePicture] Found profile picture for user ${userId} (no ext)`);
+      return { success: true, url, exists: true };
+    }
+    
+    // No profile picture found
+    console.log(`[getProfilePicture] No profile picture for user ${userId}`);
+    return { success: true, url: null, exists: false };
+
+  } catch (error) {
+    console.error('[getProfilePicture] Error:', error);
+    if (error instanceof HttpsError) throw error;
+    throw new HttpsError('internal', error.message);
+  }
+});

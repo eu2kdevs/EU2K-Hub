@@ -111,7 +111,7 @@ class StudentCalendar {
 
         const dayName = this.getCurrentDayName();
         if (!dayName) {
-            this.renderEmpty('Ma nincs tanítás, jó pihenést! ☕');
+            this.renderEmpty(null, 'calendar.no_lessons_weekend');
             return;
         }
 
@@ -265,11 +265,14 @@ class StudentCalendar {
         this.container.innerHTML = '';
 
         if (lessons.length === 0) {
-            this.renderEmpty('Mára nincsenek órák.');
+            const msg = window.translationManager?.getTranslation('calendar.no_lessons_today') || 'Mára nincsenek órák.';
+            this.renderEmpty(msg);
             return;
         }
 
-        const hasLesson4 = lessons.some(l => l.number === 4);
+        // Check if we have lesson 5 or higher (need lunch break)
+        const hasLesson5OrMore = lessons.some(l => l.number >= 5);
+        
         // Compact mode: 6 or more lesson cards
         const isCompact = lessons.length >= 6;
 
@@ -284,26 +287,31 @@ class StudentCalendar {
         const col2 = document.createElement('div');
         col2.className = 'calendar-column';
 
-        // Split lessons: 1,2,3 -> left ; 4,5,6+ -> right
-        const leftLessons = lessons.filter(l => l.number <= 3);
-        const rightLessons = lessons.filter(l => l.number >= 4);
+        // Split lessons evenly: left gets more if odd number
+        // E.g., 7 lessons -> 4 left, 3 right
+        // E.g., 6 lessons -> 3 left, 3 right
+        // E.g., 5 lessons -> 3 left, 2 right
+        const totalLessons = lessons.length;
+        const leftCount = Math.ceil(totalLessons / 2);
+        
+        const leftLessons = lessons.slice(0, leftCount);
+        const rightLessons = lessons.slice(leftCount);
 
-        // Create cards asynchronously
+        // Create cards for left column
         for (const l of leftLessons) {
             const card = await this.createCard(l);
             col1.appendChild(card);
         }
 
-        // Insert lunch AFTER lesson 4 (not before)
-        let lunchInserted = false;
+        // Insert lunch BEFORE lesson 5 (first item in right column if lesson 5+ exists)
+        if (hasLesson5OrMore) {
+            col2.appendChild(this.createLunchCard(isCompact));
+        }
+
+        // Create cards for right column
         for (const l of rightLessons) {
             const card = await this.createCard(l);
             col2.appendChild(card);
-            // Insert lunch after lesson 4
-            if (l.number === 4 && hasLesson4 && !lunchInserted) {
-                col2.appendChild(this.createLunchCard(isCompact));
-                lunchInserted = true;
-            }
         }
 
         this.container.appendChild(col1);
@@ -479,17 +487,44 @@ class StudentCalendar {
         });
     }
 
-    renderEmpty(msg) {
+    renderEmpty(msg, translateKey) {
         // Enhanced empty state similar to students.html - fills the grid area
+        let title, titleTranslateKey, subtitle, subtitleTranslateKey;
+        
+        if (translateKey === 'calendar.no_lessons_weekend') {
+            // Weekend or no school day
+            title = window.translationManager?.getTranslation('calendar.no_lessons_today') || 'Ma nincs tanítás';
+            titleTranslateKey = 'calendar.no_lessons_today';
+            subtitle = window.translationManager?.getTranslation('calendar.no_lessons_weekend') || 'Jó pihenést! ☕';
+            subtitleTranslateKey = 'calendar.no_lessons_weekend';
+        } else if (msg) {
+            // Generic message (e.g., "Mára nincsenek órák")
+            title = msg;
+            titleTranslateKey = 'calendar.no_lessons_today';
+            subtitle = window.translationManager?.getTranslation('calendar.no_lessons_weekend') || 'Jó pihenést! ☕';
+            subtitleTranslateKey = 'calendar.no_lessons_weekend';
+        } else {
+            // No timetable data at all
+            title = window.translationManager?.getTranslation('calendar.not_found') || 'Nem találtuk az órarended!';
+            titleTranslateKey = 'calendar.not_found';
+            subtitle = window.translationManager?.getTranslation('calendar.not_found_desc') || 'Ha tanítási nap van, jelezd a hibát Turóczi Ádámnak vagy Hegyi Marianna titkárnőnek!';
+            subtitleTranslateKey = 'calendar.not_found_desc';
+        }
+        
         this.container.innerHTML = `
       <div class="calendar-empty-state students-empty-state" style="display:flex;grid-column:span 2;height:100%;min-height:0;overflow:hidden;">
-        <img src="assets/youhub/calendar/calendar.svg" alt="Nem találtuk az órarended" class="students-empty-icon">
+        <img src="assets/youhub/calendar/calendar.svg" alt="Nincsenek órák" class="students-empty-icon">
         <div class="students-empty-text-container">
-          <p class="students-empty-title">Nem találtuk az órarended!</p>
-          <p class="students-empty-subtitle">Jelezd a hibát Turóczi Ádámnak vagy Hegyi Marianna titkárnőnek!</p>
+          <p class="students-empty-title" data-translate="${titleTranslateKey}" data-translate-fallback="${title}">${title}</p>
+          <p class="students-empty-subtitle" data-translate="${subtitleTranslateKey}" data-translate-fallback="${subtitle}">${subtitle}</p>
         </div>
       </div>
     `;
+        
+        // Apply translations if available
+        if (window.translationManager) {
+            window.translationManager.applyTranslationsToElement(this.container);
+        }
     }
 
     renderError(msg) {
@@ -511,6 +546,9 @@ class StudentCalendar {
 }
 
 const studentCalendar = new StudentCalendar();
+// Export to window so date picker can access it
+window.studentCalendar = studentCalendar;
+
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => studentCalendar.init());
 } else {

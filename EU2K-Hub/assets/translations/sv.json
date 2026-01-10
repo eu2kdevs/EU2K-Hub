@@ -289,7 +289,12 @@
       "functions_options": {
         "descriptive_texts_title": "Beskrivande Texter",
         "descriptive_texts_default": "Standard",
-        "descriptive_texts_reduced": "Reducerad"
+        "descriptive_texts_reduced": "Reducerad",
+        "greeting_display_time_title": "Visningstid",
+        "greeting_display_time_desc": "Visningslängd för tidsberoende hälsningar.",
+        "seconds": "sek",
+        "ai_translation_title": "Dynamisk innehållsöversättning",
+        "ai_translation_desc": "AI-driven översättning för dynamiskt föränderligt innehåll, till exempel förslag eller aviseringar."
       },
       "pages_options": {
         "home_title": "Hem",
@@ -803,6 +808,7 @@
     "notifications": {
       "title": "Aviseringar",
       "history": "Historik",
+      "more": "Fler aviseringar",
       "empty": {
         "title": "Du har inga aviseringar",
         "subtitle": "Kom tillbaka senare :D"
@@ -840,8 +846,10 @@
           "heading": "Visa för vem",
           "user_label": "Visa för vem",
           "user_placeholder": "Skriv här...",
+          "user_description": "Lämna tomt för ett offentligt förslag.",
           "group_label": "Målgrupp",
           "group_placeholder": "Skriv här...",
+          "group_description": "Lämna tomt för ett offentligt förslag.",
           "share_heading": "Delning",
           "share_title": "Extern delning",
           "share_description": "Tillåt skolan att dela ditt Förslag även på externa plattformar."
@@ -897,6 +905,15 @@
       }
     },
     "calendar": {
+      "title": "Kalender",
+      "full": "Fullständig Kalender",
+      "lunch": "Lunchrast",
+      "nav": {
+        "timetable": "Schema",
+        "exams": "Prov",
+        "rp": "Läsframsteg",
+        "bell": "Ringschema"
+      },
       "empty": {
         "title": "Kalendern är inte tillgänglig ännu.",
         "subtitle": "Kom tillbaka senare!"
@@ -1042,5 +1059,66 @@
   "staff": {
     "password_created_title": "Lösenord skapat",
     "password_created_message": "Du kan nu logga in med ditt nya lösenord."
+  },
+  "greetings": {
+    "morning": "God morgon {name}!",
+    "afternoon": "God eftermiddag {name}!",
+    "evening": "God kväll {name}!"
+  },
+  "calendar": {
+    "months": ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"],
+    "months_long": {
+      "0": "Januari",
+      "1": "Februari",
+      "2": "Mars",
+      "3": "April",
+      "4": "Maj",
+      "5": "Juni",
+      "6": "Juli",
+      "7": "Augusti",
+      "8": "September",
+      "9": "Oktober",
+      "10": "November",
+      "11": "December"
+    },
+    "days": ["Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag"],
+    "days_long": {
+      "sunday": "Söndag",
+      "monday": "Måndag",
+      "tuesday": "Tisdag",
+      "wednesday": "Onsdag",
+      "thursday": "Torsdag",
+      "friday": "Fredag",
+      "saturday": "Lördag"
+    },
+    "days_short": {
+      "sunday": "S",
+      "monday": "M",
+      "tuesday": "Ti",
+      "wednesday": "O",
+      "thursday": "To",
+      "friday": "F",
+      "saturday": "L"
+    },
+    "today": "Idag",
+    "select": "Välj",
+    "no_class": "Du har ingen klass inställd.",
+    "no_class_desc": "Prata med din klasslärare!",
+    "no_lessons_weekend": "Inga lektioner idag, njut av vilan! ☕",
+    "no_lessons_weekend_desc": "",
+    "no_lessons_today": "Inga lektioner idag.",
+    "no_lessons_today_desc": "",
+    "not_found": "Vi kunde inte hitta ditt schema!",
+    "not_found_desc": "Rapportera problemet till Turóczi Ádám eller Hegyi Marianna.",
+    "lunch_break": "Lunchrast",
+    "reading_progress": "Läsframsteg",
+    "exams": "Prov",
+    "bell_schedule": "Ringschema",
+    "no_exams": "Inga prov",
+    "no_exams_desc": "Det finns inga schemalagda prov.",
+    "no_reading_progress": "Inga läsframsteg",
+    "no_reading_progress_desc": "Du har inte börjat läsa ännu.",
+    "no_bell_schedule": "Ringschema hittades inte",
+    "no_bell_schedule_desc": "Rapportera problemet till administrationen."
   }
 }

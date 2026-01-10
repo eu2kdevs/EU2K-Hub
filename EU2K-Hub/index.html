@@ -108,6 +108,7 @@
   </script>
   <script src="assets/js/permissions.js"></script>
   <script src="assets/js/translations.js"></script>
+  <script src="assets/js/day-greetings.js"></script>
   <script src="assets/js/account-tooltip.js"></script>
   <script>
     // Fordítási rendszer inicializálása
@@ -327,6 +328,81 @@
     }
 
 
+    // AI Translation cache
+    let indexAiTranslationEnabled = null;
+    
+    async function checkAiTranslationEnabled() {
+      if (indexAiTranslationEnabled !== null) return indexAiTranslationEnabled;
+      try {
+        const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
+        const auth = getAuth();
+        if (auth.currentUser && db) {
+          const functionsRef = doc(db, 'users', auth.currentUser.uid, 'settings', 'functions');
+          const functionsSnap = await getDoc(functionsRef);
+          indexAiTranslationEnabled = functionsSnap.exists() ? functionsSnap.data().aiTranslation === true : false;
+        } else {
+          indexAiTranslationEnabled = false;
+        }
+      } catch (e) {
+        indexAiTranslationEnabled = false;
+      }
+      return indexAiTranslationEnabled;
+    }
+
+    async function translateContentBatch(items, fields, targetLang) {
+      const enabled = await checkAiTranslationEnabled();
+      if (!enabled || targetLang === 'hu' || items.length === 0) return items;
+
+      const textsToTranslate = [];
+      const mapping = []; // { itemIndex, field }
+      
+      items.forEach((item, itemIndex) => {
+        fields.forEach(field => {
+          const value = item[field];
+          if (value && typeof value === 'string' && value.trim()) {
+            mapping.push({ itemIndex, field, textIndex: textsToTranslate.length });
+            textsToTranslate.push(value);
+          }
+        });
+      });
+
+      if (textsToTranslate.length === 0) return items;
+
+      try {
+        const { getFunctions, httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+        const functions = getFunctions(window.firebaseApp || window.app, 'europe-west1');
+        const translateBatch = httpsCallable(functions, 'translateBatch');
+
+        const LANGUAGE_NAMES = {
+          'hu': 'Hungarian', 'en': 'English', 'de': 'German', 'es': 'Spanish',
+          'fr': 'French', 'zh': 'Chinese', 'ja': 'Japanese', 'sv': 'Swedish', 'ru': 'Russian'
+        };
+
+        const result = await translateBatch({
+          texts: textsToTranslate,
+          targetLanguage: LANGUAGE_NAMES[targetLang] || 'English'
+        });
+
+        if (result.data.success && result.data.translated) {
+          const translations = Array.isArray(result.data.translated) 
+            ? result.data.translated 
+            : [result.data.translated];
+
+          mapping.forEach(({ itemIndex, field, textIndex }) => {
+            if (textIndex < translations.length) {
+              items[itemIndex][field] = translations[textIndex];
+            }
+          });
+
+          console.log('[Index] Content translated successfully');
+        }
+      } catch (error) {
+        console.error('[Index] Translation error:', error);
+      }
+
+      return items;
+    }
+
     // Hírek betöltése Firebase-ből
     async function loadNews() {
       console.log('🔄 Loading news...');
@@ -349,6 +425,12 @@
             const idB = parseInt(b.id) || 0;
             return idB - idA;
           });
+
+        // AI Translation for news if not Hungarian
+        const currentLang = localStorage.getItem('eu2k_language') || 'hu';
+        if (currentLang !== 'hu') {
+          allNewsData = await translateContentBatch(allNewsData, ['title', 'description', 'desc'], currentLang);
+        }
 
         console.log('📰 Loaded', allNewsData.length, 'news items');
         initNewsRow();
@@ -404,12 +486,12 @@
 
       const eventsRef = collection(db, 'homePageData', 'events', 'esemenyek');
 
-      onSnapshot(eventsRef, (snapshot) => {
+      onSnapshot(eventsRef, async (snapshot) => {
         try {
           const now = new Date();
           now.setHours(0, 0, 0, 0); // Mai nap 00:00:00
 
-          const docs = snapshot.docs
+          let docs = snapshot.docs
             .map(doc => {
               const data = doc.data();
               const dateFrom = data['date-from']?.toDate ? data['date-from'].toDate() : (data['date-from'] ? new Date(data['date-from']) : null);
@@ -432,6 +514,18 @@
               return d >= now;
             }) // Csak mai vagy jövőbeli események
             .sort((a, b) => a.dateFrom - b.dateFrom); // Dátum szerint növekvő (legközelebbi először)
+
+          // AI Translation for events if not Hungarian
+          const currentLang = localStorage.getItem('eu2k_language') || 'hu';
+          if (currentLang !== 'hu' && docs.length > 0) {
+            // Extract data objects for translation
+            const dataObjects = docs.map(d => d.data);
+            const translatedData = await translateContentBatch(dataObjects, ['title', 'description', 'place'], currentLang);
+            // Apply back
+            docs.forEach((d, i) => {
+              d.data = translatedData[i];
+            });
+          }
 
           // Első 3 legközelebbi jövőbeli esemény
           const orderedEvents = [

@@ -299,9 +299,15 @@ body {
 }
 
 .welcome-icon {
-  width: 45%;
-  height: 45%;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  max-width: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  flex-shrink: 0;
   margin-bottom: 10px;
+  object-fit: contain;
 }
 
 .welcome-text {
@@ -682,7 +688,7 @@ body {
   .main-area { margin-left: 0; }
 }
 ::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-thumb { background: #232823; border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: #8BC34A; border-radius: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 
 
@@ -1900,4 +1906,9 @@ body {
   font-size: 1rem;
   font-weight: 500;
   transition: all 0.2s ease;
+}
+
+.disabled {
+  pointer-events: none !important;
+  opacity: 0.5 !important;
 }

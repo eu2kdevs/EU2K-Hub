@@ -44,6 +44,7 @@
   </script>
   <script src="assets/js/permissions.js"></script>
   <script src="assets/js/translations.js"></script>
+  <script src="assets/js/day-greetings.js"></script>
   <script src="assets/js/account-tooltip.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
@@ -245,11 +246,6 @@
             </div>
             <div class="header-icon-container">
               <div class="header-icon-gradient">
-                <!-- Vissza gomb (50% opacity a fő dashboardon, aktív a formokon) -->
-                <button class="header-edit-mode-btn" id="dashboardBackBtn" style="opacity: 0.5; pointer-events: none;">
-                  <img class="header-edit-mode-icon" src="assets/onboarding/back_arrow.svg" alt="Vissza">
-                  <span class="header-edit-mode-text" data-translate="pages.settings.back">Vissza</span>
-                </button>
                 <div class="header-icon-wrapper" id="headerSettingsWrapper">
                   <a href="settings.html" class="header-icon-btn" id="headerSettingsBtn">
                     <img src="assets/general/settings.svg" alt="Settings">
@@ -317,11 +313,11 @@
               <div class="qr-controls-row qr-controls-2x2">
                 <!-- Column 1 -->
                 <div class="qr-buttons-column">
-                  <button class="qr-control-btn qr-btn-green qr-btn-participation" onclick="openSuggestionCenter()">
+                  <button class="qr-control-btn qr-btn-green qr-btn-participation" onclick="openSuggestionCenter()" style="opacity: 0.5; pointer-events: none;">
                     <img src="assets/dashboard/suggestion-center.svg" class="qr-control-icon" alt="Javaslat-központ">
                     <span data-translate="pages.dashboard.suggestion_center">Javaslat-központ</span>
                   </button>
-                  <button class="qr-control-btn qr-btn-blue qr-btn-restart" onclick="openNotificationCenter()">
+                  <button class="qr-control-btn qr-btn-blue qr-btn-restart" onclick="openNotificationCenter()" style="opacity: 0.5; pointer-events: none;">
                     <img src="assets/dashboard/notification-center.svg" class="qr-control-icon" alt="Értesítésközpont">
                     <span data-translate="pages.dashboard.notification_center">Értesítésközpont</span>
                   </button>
@@ -3355,6 +3351,91 @@
 
           if (searchValue) {
             const simplifiedName = simplifyName(searchValue);
+            await lookupAndReplaceUserName(input, simplifiedName, searchValue);
+          }
+        }
+      });
+
+      input.addEventListener('keydown', async (event) => {
+        if (event.key === 'Tab' && !event.shiftKey) {
+          const fullValue = input.value;
+          const lastCommaIndex = fullValue.lastIndexOf(',');
+          const searchValue = lastCommaIndex >= 0 ? fullValue.slice(lastCommaIndex + 1).trim() : fullValue.trim();
+          const suggestion = findUserSuggestion(searchValue);
+          if (suggestion && suggestion.display) {
+            event.preventDefault();
+            const simplifiedName = simplifyName(searchValue);
+            const result = await lookupAndReplaceUserName(input, simplifiedName, searchValue);
+            if (result && result.fullName) {
+              updateUserGhost();
+            } else {
+              const newName = suggestion.display;
+              if (lastCommaIndex >= 0) {
+                const beforeComma = fullValue.slice(0, lastCommaIndex + 1).trim();
+                input.value = `${beforeComma} ${newName}`;
+              } else {
+                input.value = newName;
+              }
+              updateUserGhost();
+            }
+          }
+        } else if (event.key === ' ' && !lastCommaSpaceDeleted) {
+          const fullValue = input.value;
+          const cursorPos = input.selectionStart || 0;
+          if (cursorPos > 0 && fullValue.slice(cursorPos - 1, cursorPos + 1) === ', ') {
+            lastCommaSpaceDeleted = true;
+          }
+        } else if (event.key === 'Backspace') {
+          const fullValue = input.value;
+          const cursorPos = input.selectionStart || 0;
+          if (cursorPos > 0 && fullValue.slice(cursorPos - 2, cursorPos) === ', ') {
+            lastCommaSpaceDeleted = true;
+          }
+        }
+      });
+    }
+
+    async function checkSessionAndUpdateBlur() {
+      const scrollArea = document.querySelector('.main-scroll-area');
+      if (!scrollArea) return;
+      try {
+        let retries = 0;
+        while ((!window.firebaseApp || !window.functions) && retries < 50) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          retries++;
+        }
+        if (!window.firebaseApp || !window.functions) {
+          scrollArea.classList.add('session-inactive');
+          return;
+        }
+        const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
+        const auth = getAuth(window.firebaseApp);
+        await new Promise(resolve => {
+          if (auth.currentUser) resolve();
+          else { const u = auth.onAuthStateChanged(() => { u(); resolve(); }); }
+        });
+        if (!auth.currentUser) {
+          scrollArea.classList.add('session-inactive');
+          return;
+        }
+        const { httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+        const checkSession = httpsCallable(window.functions, 'staffSessionCheck');
+        const result = await checkSession();
+        if (result.data.active) scrollArea.classList.remove('session-inactive');
+        else scrollArea.classList.add('session-inactive');
+      } catch (error) {
+        scrollArea.classList.add('session-inactive');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkSessionAndUpdateBlur();
+      setInterval(checkSessionAndUpdateBlur, 5000);
+    });
+  </script>
+</body>
+
+</html>
             await lookupAndReplaceUserName(input, simplifiedName, searchValue);
           }
         }

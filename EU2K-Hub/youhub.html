@@ -66,6 +66,7 @@
   <script src="assets/js/permissions.js"></script>
   <script src="assets/js/translations.js"></script>
   <script src="assets/js/account-tooltip.js"></script>
+  <script src="assets/js/day-greetings.js"></script>
   <script src="assets/js/staff-timer.js"></script>
   <script src="assets/js/staff-nav-items.js"></script>
   <script src="assets/js/auth-state.js"></script>
@@ -134,6 +135,43 @@
     window.functions = functions;
     window.createHttpsCallable = (name) => httpsCallable(functions, name);
     window.storage = storage;
+    
+    // Helper function to load profile picture via Cloud Function
+    const profilePicCache = new Map();
+    
+    async function loadProfilePicture(userId, targetElement) {
+      if (!userId || !targetElement) return;
+      
+      // Check cache first
+      if (profilePicCache.has(userId)) {
+        const cachedUrl = profilePicCache.get(userId);
+        if (cachedUrl) {
+          targetElement.style.backgroundImage = `url(${cachedUrl})`;
+          targetElement.style.backgroundSize = 'cover';
+          targetElement.style.backgroundPosition = 'center';
+        }
+        return;
+      }
+      
+      try {
+        const getProfilePic = httpsCallable(functions, 'getProfilePicture');
+        const result = await getProfilePic({ userId });
+        
+        if (result.data.exists && result.data.url) {
+          profilePicCache.set(userId, result.data.url);
+          targetElement.style.backgroundImage = `url(${result.data.url})`;
+          targetElement.style.backgroundSize = 'cover';
+          targetElement.style.backgroundPosition = 'center';
+        } else {
+          profilePicCache.set(userId, null);
+          console.log('[ProfilePic] No profile picture for user:', userId);
+        }
+      } catch (e) {
+        console.error('[ProfilePic] Error loading profile picture:', e);
+        profilePicCache.set(userId, null);
+      }
+    }
+    window.loadProfilePicture = loadProfilePicture;
 
     // Helper function to show notification using toaster system
     // priority: 'positive' (confirmations), 'warning' (missing info), 'danger' (errors, wrong data, deletions)
@@ -432,6 +470,49 @@
           </div>
         </div>
 
+        <!-- Notification History Popup -->
+        <div id="notificationHistoryPopup" class="permission-overlay-scroll-area notification-history-popup">
+          <div class="permission-container notification-history-container">
+            <button class="permission-close-btn" onclick="closeNotificationHistoryPopup()">
+              <img src="assets/general/close.svg" alt="Bezárás">
+            </button>
+            <div class="permission-content notification-history-content">
+              <div class="notification-history-header">
+                <img src="assets/youhub/notifications/history.svg" class="permission-icon-large notification-history-icon"
+                  alt="Előzmények">
+                <h2 class="permission-title" data-translate="youhub.notifications.history"
+                  data-translate-fallback="Előzmények">Előzmények</h2>
+              </div>
+              <div class="notification-history-columns">
+                <div class="notification-history-left">
+                  <div class="notifications-header-container">
+                    <span class="notifications-header-text" data-translate="youhub.notifications.title"
+                      data-translate-fallback="Értesítések">Értesítések</span>
+                  </div>
+                  <div class="notification-history-list" id="notificationHistoryList">
+                    <!-- Items will be generated here -->
+                  </div>
+                </div>
+                <div class="notification-history-right" id="notificationHistoryDetailView">
+                  <div class="notifications-empty-state" id="notificationHistoryEmptyState">
+                    <img src="assets/youhub/notifications/bell.svg" alt="Értesítések"
+                      class="notifications-empty-icon notifications-empty-icon--right">
+                    <div class="notifications-empty-text-container">
+                      <p class="notifications-empty-title" data-translate="youhub.notifications.detail.title"
+                        data-translate-fallback="Értesítések">Értesítések</p>
+                      <p class="notifications-empty-subtitle" data-translate="youhub.notifications.detail.subtitle"
+                        data-translate-fallback="Válassz ki egy értesítést">Válassz ki egy értesítést</p>
+                    </div>
+                  </div>
+                  <div class="notification-history-detail-content" id="notificationHistoryDetailContent" style="display: none;">
+                    <!-- Detail content will be generated here -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Developer Mode Popup -->
         <div id="devModePopup" class="permission-overlay-scroll-area" style="display: none;">
           <div class="permission-container">
@@ -648,7 +729,7 @@
                                 </div>
                               </div>
                               <div class="suggestion-card-action">
-                                <button class="suggestion-card-more-btn" type="button" aria-label="További lehetőségek">
+                                <button class="suggestion-card-more-btn suggestions-more-btn-disabled" type="button" aria-label="További lehetőségek">
                                   <span class="suggestion-card-more-icon"></span>
                                 </button>
                               </div>
@@ -676,7 +757,7 @@
                                 </div>
                               </div>
                               <div class="suggestion-card-action">
-                                <button class="suggestion-card-more-btn" type="button" aria-label="További lehetőségek">
+                                <button class="suggestion-card-more-btn suggestions-more-btn-disabled" type="button" aria-label="További lehetőségek">
                                   <span class="suggestion-card-more-icon"></span>
                                 </button>
                               </div>
@@ -706,7 +787,7 @@
                                 </div>
                               </div>
                               <div class="suggestion-card-action">
-                                <button class="suggestion-card-more-btn" type="button" aria-label="További lehetőségek">
+                                <button class="suggestion-card-more-btn suggestions-more-btn-disabled" type="button" aria-label="További lehetőségek">
                                   <span class="suggestion-card-more-icon"></span>
                                 </button>
                               </div>
@@ -738,7 +819,7 @@
                                 </div>
                               </div>
                               <div class="suggestion-card-action">
-                                <button class="suggestion-card-more-btn" type="button" aria-label="További lehetőségek">
+                                <button class="suggestion-card-more-btn suggestions-more-btn-disabled" type="button" aria-label="További lehetőségek">
                                   <span class="suggestion-card-more-icon"></span>
                                 </button>
                               </div>
@@ -830,6 +911,10 @@
                                   <img src="assets/general/components/search.svg" alt="" aria-hidden="true"
                                     class="suggestions-search-icon">
                                 </div>
+                                <p class="suggestions-checkbox-desc"
+                                  data-translate="youhub.suggestions.submit_steps.step2.user_description"
+                                  data-translate-fallback="Hagyd üresen a publikus javaslathoz.">
+                                  Hagyd üresen a publikus javaslathoz.</p>
                               </label>
                               <label class="suggestions-input-field suggestions-input-field--grow">
                                 <span class="suggestions-input-label"
@@ -844,6 +929,10 @@
                                   <img src="assets/general/components/search.svg" alt="" aria-hidden="true"
                                     class="suggestions-search-icon">
                                 </div>
+                                <p class="suggestions-checkbox-desc"
+                                  data-translate="youhub.suggestions.submit_steps.step2.group_description"
+                                  data-translate-fallback="Hagyd üresen a publikus javaslathoz.">
+                                  Hagyd üresen a publikus javaslathoz.</p>
                               </label>
                             </div>
                             <div class="suggestions-step-column suggestions-step-column--type">
@@ -899,7 +988,7 @@
                     <img src="assets/youhub/calendar/calendar.svg" alt="Naptár" class="calendar-icon">
                     <h2 class="calendar-title" data-translate="youhub.calendar.title" data-translate-fallback="Naptár">
                       Naptár</h2>
-                    <button class="notifications-history-btn" type="button">
+                    <button class="notifications-history-btn calendar-full-btn" type="button">
                       <img src="assets/youhub/calendar/calendar_dark.svg" alt="Teljes Naptár"
                         class="calendar-full-icon">
                       <span class="calendar-full-text" data-translate="youhub.calendar.full"
@@ -914,10 +1003,37 @@
                     <div class="calendar-date-controls">
                       <span class="calendar-month-text" data-translate="youhub.calendar.month_placeholder"
                         data-translate-fallback="Január 2026.">Január 2026.</span>
-                      <button class="calendar-month-pill" type="button" aria-label="Hónap választása">
-                        <img src="assets/youhub/calendar/arrow_down.svg" alt="" aria-hidden="true">
+                      <button class="calendar-month-pill calendar-date-picker-btn" type="button" aria-label="Dátum választása" id="calendarDatePickerBtn">
+                        <img src="assets/youhub/calendar/arrow_down.svg" alt="" aria-hidden="true" class="calendar-date-picker-icon">
                       </button>
-                      <button class="calendar-more-btn" type="button" aria-label="Szerkesztés">
+                      
+                      <!-- Custom Date Picker -->
+                      <div class="custom-date-picker" id="customDatePicker">
+                        <div class="date-picker-header">
+                          <button class="date-picker-nav-btn prev" type="button" id="datePickerPrev" aria-label="Előző hónap">
+                            <img src="assets/youhub/calendar/arrow_down.svg" alt="">
+                          </button>
+                          <div class="date-picker-month-year">
+                            <span class="date-picker-month" id="datePickerMonth">Január</span>
+                            <span class="date-picker-year" id="datePickerYear">2026</span>
+                          </div>
+                          <button class="date-picker-nav-btn next" type="button" id="datePickerNext" aria-label="Következő hónap">
+                            <img src="assets/youhub/calendar/arrow_down.svg" alt="">
+                          </button>
+                        </div>
+                        <div class="date-picker-weekdays" id="datePickerWeekdays">
+                          <!-- Will be populated by JS -->
+                        </div>
+                        <div class="date-picker-days" id="datePickerDays">
+                          <!-- Will be populated by JS -->
+                        </div>
+                        <div class="date-picker-actions">
+                          <button class="date-picker-action-btn" type="button" id="datePickerToday" data-translate="calendar.today" data-translate-fallback="Ma">Ma</button>
+                          <button class="date-picker-action-btn primary" type="button" id="datePickerSelect" data-translate="calendar.select" data-translate-fallback="Kiválasztás">Kiválasztás</button>
+                        </div>
+                      </div>
+                      
+                      <button class="calendar-more-btn" type="button" aria-label="Szerkesztés" id="calendarEditBtn">
                         <img src="assets/youhub/calendar/edit.svg" alt="" aria-hidden="true">
                       </button>
                     </div>
@@ -1166,7 +1282,7 @@
             const globalSubmitBtn = globalActions?.querySelector('[data-step-action="submit"]');
             const allowedAccessLevels = new Set(['owner', 'administrator', 'teacher', 'admin']);
             const auth = getAuth();
-            const suggestionsDb = window.db || getFirestore();
+            const suggestionsDb = window.db || getFirestore(window.firebaseApp || window.app);
             const suggestionCardElements = Array.from(document.querySelectorAll('.suggestion-card'));
 
             const SUBMIT_FORM_STORAGE_KEY = 'youhub-submit-form-state';
@@ -1254,6 +1370,7 @@
               restoreFormState();
               hideGhost(formElements.userGhost);
               hideGhost(formElements.groupGhost);
+              updateInputExclusivity();
             }
 
             function setSubmitStep(step) {
@@ -1304,6 +1421,50 @@
               });
             }
 
+            // Mutual exclusivity: if one has content, disable the other
+            function updateInputExclusivity() {
+              const userValue = (formElements.userSearchInput?.value || '').trim();
+              const groupValue = (formElements.groupSearchInput?.value || '').trim();
+              
+              const userWrapper = formElements.userSearchInput?.closest('.suggestions-input-field');
+              const groupWrapper = formElements.groupSearchInput?.closest('.suggestions-input-field');
+              
+              if (groupValue && !userValue) {
+                // Group has content, disable user
+                if (formElements.userSearchInput) {
+                  formElements.userSearchInput.style.opacity = '0.5';
+                  formElements.userSearchInput.style.pointerEvents = 'none';
+                }
+                if (userWrapper) userWrapper.style.opacity = '0.5';
+              } else {
+                // Enable user
+                if (formElements.userSearchInput) {
+                  formElements.userSearchInput.style.opacity = '1';
+                  formElements.userSearchInput.style.pointerEvents = 'auto';
+                }
+                if (userWrapper) userWrapper.style.opacity = '1';
+              }
+              
+              if (userValue && !groupValue) {
+                // User has content, disable group
+                if (formElements.groupSearchInput) {
+                  formElements.groupSearchInput.style.opacity = '0.5';
+                  formElements.groupSearchInput.style.pointerEvents = 'none';
+                }
+                if (groupWrapper) groupWrapper.style.opacity = '0.5';
+              } else {
+                // Enable group
+                if (formElements.groupSearchInput) {
+                  formElements.groupSearchInput.style.opacity = '1';
+                  formElements.groupSearchInput.style.pointerEvents = 'auto';
+                }
+                if (groupWrapper) groupWrapper.style.opacity = '1';
+              }
+            }
+            
+            // Call on init
+            updateInputExclusivity();
+
             if (formElements.userSearchInput) {
               let lastCommaSpaceDeleted = false; // Flag to track if comma+space was deleted
 
@@ -1311,6 +1472,7 @@
                 submitFormState.restrictUsers = formElements.userSearchInput.value;
                 persistFormState();
                 updateUserGhost();
+                updateInputExclusivity();
                 // Reset flag when user types
                 lastCommaSpaceDeleted = false;
               };
@@ -1330,19 +1492,33 @@
                   const suggestion = findUserSuggestion(searchValue);
                   if (suggestion && suggestion.display) {
                     event.preventDefault();
-                    const newName = suggestion.display;
-                    // Replace the last part with the full name
+                    const displayName = suggestion.display; // fullName to display
+                    const normalizedName = suggestion.normalizedName || simplifyName(suggestion.display); // normalizedName to save
+                    
+                    // Build values: display shows fullName, save uses normalizedName
+                    let displayValue;
+                    let saveValue;
+                    
                     if (lastCommaIndex >= 0) {
                       // There's a comma, replace the part after it
                       const beforeComma = fullValue.slice(0, lastCommaIndex + 1).trim();
-                      const updatedValue = `${beforeComma} ${newName}`;
-                      formElements.userSearchInput.value = updatedValue;
-                      submitFormState.restrictUsers = updatedValue;
+                      displayValue = `${beforeComma} ${displayName}`;
+                      // Extract existing normalizedNames and add new one
+                      const existingSave = submitFormState.restrictUsers || '';
+                      const existingParts = existingSave.split(',').map(s => s.trim()).filter(s => s);
+                      // Remove the last entry if it was being typed
+                      if (existingParts.length > 0) {
+                        existingParts.pop();
+                      }
+                      saveValue = [...existingParts, normalizedName].join(', ');
                     } else {
                       // No comma, replace the entire value
-                      formElements.userSearchInput.value = newName;
-                      submitFormState.restrictUsers = newName;
+                      displayValue = displayName;
+                      saveValue = normalizedName;
                     }
+                    
+                    formElements.userSearchInput.value = displayValue;
+                    submitFormState.restrictUsers = saveValue;
                     persistFormState();
                     updateUserGhost();
                     lastCommaSpaceDeleted = false; // Reset after Tab
@@ -1358,10 +1534,19 @@
                   if (suggestion && suggestion.display && suggestion.display.toLowerCase() === searchValue.toLowerCase()) {
                     // The current value is a complete name, add comma+space
                     event.preventDefault();
+                    const displayName = suggestion.display;
+                    const normalizedName = suggestion.normalizedName || simplifyName(suggestion.display);
                     const beforeComma = lastCommaIndex >= 0 ? fullValue.slice(0, lastCommaIndex + 1).trim() : '';
-                    const updatedValue = beforeComma ? `${beforeComma} ${suggestion.display}, ` : `${suggestion.display}, `;
-                    formElements.userSearchInput.value = updatedValue;
-                    submitFormState.restrictUsers = updatedValue;
+                    const displayValue = beforeComma ? `${beforeComma} ${displayName}, ` : `${displayName}, `;
+                    
+                    // Update save value
+                    const existingSave = submitFormState.restrictUsers || '';
+                    const existingParts = existingSave.split(',').map(s => s.trim()).filter(s => s);
+                    if (existingParts.length > 0) existingParts.pop();
+                    const saveValue = [...existingParts, normalizedName].join(', ') + ', ';
+                    
+                    formElements.userSearchInput.value = displayValue;
+                    submitFormState.restrictUsers = saveValue.replace(/,\s*$/, ''); // Remove trailing comma
                     persistFormState();
                     updateUserGhost();
                   }
@@ -1381,6 +1566,7 @@
                 submitFormState.restrictGroups = formElements.groupSearchInput.value;
                 persistFormState();
                 updateGroupGhost();
+                updateInputExclusivity();
               };
               formElements.groupSearchInput.addEventListener('input', handleGroupInput);
               formElements.groupSearchInput.addEventListener('focus', () => {
@@ -1397,19 +1583,30 @@
                   const suggestion = findClassOrGroupSuggestion(searchValue);
                   if (suggestion && suggestion.display) {
                     event.preventDefault();
-                    const newItem = suggestion.display;
-                    // Replace the last part with the full name
+                    const displayName = suggestion.display; // Formatted class name or group name to display
+                    const saveId = suggestion.id; // classId or groupId to save
+                    
+                    // Build values: display shows formatted name, save uses id
+                    let displayValue;
+                    let saveValue;
+                    
                     if (lastCommaIndex >= 0) {
                       // There's a comma, replace the part after it
                       const beforeComma = fullValue.slice(0, lastCommaIndex + 1).trim();
-                      const updatedValue = `${beforeComma} ${newItem}`;
-                      formElements.groupSearchInput.value = updatedValue;
-                      submitFormState.restrictGroups = updatedValue;
+                      displayValue = `${beforeComma} ${displayName}`;
+                      // Extract existing IDs and add new one
+                      const existingSave = submitFormState.restrictGroups || '';
+                      const existingParts = existingSave.split(',').map(s => s.trim()).filter(s => s);
+                      if (existingParts.length > 0) existingParts.pop();
+                      saveValue = [...existingParts, saveId].join(', ');
                     } else {
                       // No comma, replace the entire value
-                      formElements.groupSearchInput.value = newItem;
-                      submitFormState.restrictGroups = newItem;
+                      displayValue = displayName;
+                      saveValue = saveId;
                     }
+                    
+                    formElements.groupSearchInput.value = displayValue;
+                    submitFormState.restrictGroups = saveValue;
                     persistFormState();
                     updateGroupGhost();
                   }
@@ -1475,7 +1672,7 @@
 
             setActiveNav(DEFAULT_NAV_ID);
             setSubmitStep(1);
-            loadLatestSuggestions();
+            // loadLatestSuggestions will be called in onAuthStateChanged below
 
             function updateGlobalActionsVisibility() {
               if (!globalActions) return;
@@ -1511,7 +1708,7 @@
               const lastCommaIndex = fullValue.lastIndexOf(',');
               const searchValue = lastCommaIndex >= 0 ? fullValue.slice(lastCommaIndex + 1).trim() : fullValue.trim();
               const suggestion = findUserSuggestion(searchValue);
-              applyGhostToElement(formElements.userGhost, searchValue, suggestion?.display, formElements.userSearchInput);
+              applyGhostToElement(formElements.userGhost, fullValue, searchValue, suggestion?.display, formElements.userSearchInput);
             }
 
             function updateGroupGhost() {
@@ -1521,18 +1718,18 @@
               const lastCommaIndex = fullValue.lastIndexOf(',');
               const searchValue = lastCommaIndex >= 0 ? fullValue.slice(lastCommaIndex + 1).trim() : fullValue.trim();
               const suggestion = findClassOrGroupSuggestion(searchValue);
-              applyGhostToElement(formElements.groupGhost, searchValue, suggestion?.display, formElements.groupSearchInput);
+              applyGhostToElement(formElements.groupGhost, fullValue, searchValue, suggestion?.display, formElements.groupSearchInput);
             }
 
-            function applyGhostToElement(element, currentValue, suggestionText, inputEl) {
+            function applyGhostToElement(element, fullValue, searchValue, suggestionText, inputEl) {
               if (!element) return;
               const isFocused = inputEl ? document.activeElement === inputEl : true;
-              if (!currentValue || !suggestionText || !isFocused) {
+              if (!searchValue || !suggestionText || !isFocused) {
                 hideGhost(element);
                 return;
               }
 
-              const markup = buildGhostMarkup(currentValue, suggestionText);
+              const markup = buildGhostMarkup(fullValue, searchValue, suggestionText);
               if (!markup) {
                 hideGhost(element);
                 return;
@@ -1542,14 +1739,18 @@
               element.classList.add('is-visible');
             }
 
-            function buildGhostMarkup(currentValue, suggestionText) {
-              if (!currentValue || !suggestionText) return '';
-              const normalizedInput = currentValue.toLowerCase();
+            function buildGhostMarkup(fullValue, searchValue, suggestionText) {
+              if (!searchValue || !suggestionText) return '';
+              const normalizedInput = searchValue.toLowerCase();
               const normalizedSuggestion = suggestionText.toLowerCase();
               if (!normalizedSuggestion.startsWith(normalizedInput)) return '';
-              const prefix = suggestionText.slice(0, currentValue.length);
-              const remainder = suggestionText.slice(currentValue.length);
-              return `<span class="ghost-prefix">${escapeHtml(prefix)}</span>${escapeHtml(remainder)}`;
+              
+              // Calculate the prefix (everything before the suggestion remainder)
+              const lastCommaIndex = fullValue.lastIndexOf(',');
+              const prefixBeforeSearch = lastCommaIndex >= 0 ? fullValue.slice(0, lastCommaIndex + 1) + ' ' : '';
+              const remainder = suggestionText.slice(searchValue.length);
+              // Ghost shows: invisible prefix + searchValue + visible remainder
+              return `<span class="ghost-prefix">${escapeHtml(prefixBeforeSearch)}${escapeHtml(searchValue)}</span>${escapeHtml(remainder)}`;
             }
 
             function escapeHtml(value) {
@@ -1681,8 +1882,24 @@
             // Calendar Date Update Logic
             function updateCalendarDate() {
               const now = new Date();
-              const months = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'];
-              const days = ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'];
+              
+              // Get translated months and days from translation manager
+              const defaultMonths = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'];
+              const defaultDays = ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'];
+              
+              let months = defaultMonths;
+              let days = defaultDays;
+              
+              if (window.translationManager?.isInitialized) {
+                const translatedMonths = window.translationManager.getTranslation('calendar.months');
+                const translatedDays = window.translationManager.getTranslation('calendar.days');
+                if (Array.isArray(translatedMonths) && translatedMonths.length === 12) {
+                  months = translatedMonths;
+                }
+                if (Array.isArray(translatedDays) && translatedDays.length === 7) {
+                  days = translatedDays;
+                }
+              }
 
               const monthName = months[now.getMonth()];
               const dayName = days[now.getDay()];
@@ -1701,18 +1918,34 @@
 
               if (dateEl) {
                 dateEl.textContent = dateText;
-                // Update fallback as well to prevent flicker if translation kicks in late/fails
                 dateEl.setAttribute('data-translate-fallback', dateText);
               }
               if (monthEl) {
                 monthEl.textContent = monthText;
                 monthEl.setAttribute('data-translate-fallback', monthText);
-                monthEl.setAttribute('data-translate-fallback', monthText);
               }
             }
 
-            // Call immediately
-            updateCalendarDate();
+            // Wait for translations before calling
+            async function initCalendarDate() {
+              // Wait for translation manager
+              let retries = 0;
+              while ((!window.translationManager || !window.translationManager.isInitialized) && retries < 50) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                retries++;
+              }
+              // Wait a bit more for translations to fully load
+              await new Promise(resolve => setTimeout(resolve, 200));
+              updateCalendarDate();
+              
+              // Apply translations to calendar section
+              const calendarCard = document.querySelector('.youhub-card-calendar');
+              if (calendarCard && window.translationManager?.applyTranslationsToElement) {
+                window.translationManager.applyTranslationsToElement(calendarCard);
+                console.log('[Calendar] Applied translations to calendar card');
+              }
+            }
+            initCalendarDate();
 
             // Re-run periodically just in case date changes while open (optional, but good for midnight crossover)
             setInterval(updateCalendarDate, 60000);
@@ -1745,6 +1978,70 @@
                     view.style.display = (key === targetKey) ? 'grid' : 'none';
                   }
                 });
+                
+                // 3. Check empty states for the active view (exams, rp, bell only - not timetable)
+                if (targetKey !== 'timetable') {
+                  setTimeout(() => {
+                    const activeView = views[targetKey];
+                    if (activeView) {
+                      const forceEmpty = localStorage.getItem('forceEmptyState') === 'true';
+                      // Check if already has empty state or has no content
+                      const hasEmptyState = activeView.querySelector('.students-empty-state');
+                      const hasContent = !hasEmptyState && activeView.children.length > 0 && Array.from(activeView.children).some(child => {
+                        return child.textContent.trim().length > 0 || child.querySelector('img, svg, canvas');
+                      });
+                      
+                      if (forceEmpty || !hasContent) {
+                        // Helper to get translation
+                        const t = (key, fallback) => {
+                          if (window.translationManager?.isInitialized) {
+                            const result = window.translationManager.getTranslation(key);
+                            if (result) return result;
+                          }
+                          return fallback;
+                        };
+                        
+                        let icon, titleKey, descKey, titleFallback, descFallback;
+                        if (targetKey === 'exams') {
+                          icon = 'assets/youhub/calendar/exams.svg';
+                          titleKey = 'calendar.no_exams';
+                          descKey = 'calendar.no_exams_desc';
+                          titleFallback = 'Nincsenek dolgozatok!';
+                          descFallback = 'Itt jelennek meg majd a közelgő dolgozatok és vizsgák.';
+                        } else if (targetKey === 'rp') {
+                          icon = 'assets/youhub/calendar/rp.svg';
+                          titleKey = 'calendar.no_reading_progress';
+                          descKey = 'calendar.no_reading_progress_desc';
+                          titleFallback = 'Nincs OE (Olvasási előrehaladás)!';
+                          descFallback = 'Itt jelennek meg majd az OE (Olvasási előrehaladás) feladataid adatai.';
+                        } else if (targetKey === 'bell') {
+                          icon = 'assets/youhub/calendar/bell.svg';
+                          titleKey = 'calendar.no_bell_schedule';
+                          descKey = 'calendar.no_bell_schedule_desc';
+                          titleFallback = 'Nincs csengetési rend!';
+                          descFallback = 'Ajjaj! Nem találtuk meg a csengetési rendedet. Jelezd a hibát Turóczi Ádámnak!';
+                        }
+                        
+                        if (icon && titleKey) {
+                          const title = t(titleKey, titleFallback);
+                          const description = t(descKey, descFallback);
+                          // Build empty state inline (since buildEmptyStateTemplate is defined later)
+                          activeView.innerHTML = `
+                            <div class="students-empty-state" style="display: flex; grid-column: span 2; height: 100%; min-height: 0; overflow: hidden;">
+                              <img src="${icon}" alt="" class="students-empty-icon">
+                              <div class="students-empty-text-container">
+                                <p class="students-empty-title" data-translate="${titleKey}" data-translate-fallback="${titleFallback}">${title}</p>
+                                <p class="students-empty-subtitle" data-translate="${descKey}" data-translate-fallback="${descFallback}">${description}</p>
+                              </div>
+                            </div>
+                          `;
+                          // Change grid to flex display for empty state
+                          activeView.style.display = 'flex';
+                        }
+                      }
+                    }
+                  }, 100);
+                }
               }
 
               navItems.forEach(item => {
@@ -1761,185 +2058,595 @@
             // Initialize Navigation
             setupCalendarNavigation();
 
+            // Load timetable for selected date
+            async function loadTimetableForDate(date) {
+              const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+              const dayName = days[date.getDay()];
+              
+              // If weekend, show empty
+              if (dayName === 'sunday' || dayName === 'saturday') {
+                if (window.studentCalendar) {
+                  window.studentCalendar.renderEmpty(null, 'calendar.no_lessons_weekend');
+                }
+                return;
+              }
+              
+              // Load for weekday
+              if (window.studentCalendar) {
+                try {
+                  console.log('[DatePicker] Loading timetable for day:', dayName);
+                  await window.studentCalendar.fetchAndRenderTimetable(dayName);
+                  console.log('[DatePicker] Timetable loaded successfully');
+                } catch (e) {
+                  console.error('[DatePicker] Error loading timetable:', e);
+                }
+              } else {
+                console.warn('[DatePicker] studentCalendar not available');
+              }
+            }
+
+            // Custom Date Picker Init
+            function initCustomDatePicker() {
+              const datePickerBtn = document.getElementById('calendarDatePickerBtn');
+              const customDatePicker = document.getElementById('customDatePicker');
+              const datePickerIcon = datePickerBtn?.querySelector('.calendar-date-picker-icon');
+              const datePickerMonth = document.getElementById('datePickerMonth');
+              const datePickerYear = document.getElementById('datePickerYear');
+              const datePickerWeekdays = document.getElementById('datePickerWeekdays');
+              const datePickerDays = document.getElementById('datePickerDays');
+              const datePickerPrev = document.getElementById('datePickerPrev');
+              const datePickerNext = document.getElementById('datePickerNext');
+              const datePickerToday = document.getElementById('datePickerToday');
+              const datePickerSelect = document.getElementById('datePickerSelect');
+              const dateTextEl = document.querySelector('.calendar-date-text');
+              const editBtn = document.getElementById('calendarEditBtn');
+              
+              if (!datePickerBtn || !customDatePicker) return;
+
+              let datePickerOpen = false;
+              let displayDate = new Date();
+              
+              // Get month and day names from translation manager or use defaults
+              function getMonthNames() {
+                if (!window.translationManager) {
+                  return ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'];
+                }
+                const months = [];
+                for (let i = 0; i < 12; i++) {
+                  const key = `calendar.months_long.${i}`;
+                  const translated = window.translationManager.getTranslation(key);
+                  if (translated && !translated.includes('calendar.months_long')) {
+                    months.push(translated);
+                  } else {
+                    // Fallback to hardcoded
+                    const defaults = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'];
+                    months.push(defaults[i]);
+                  }
+                }
+                return months;
+              }
+              
+              function getDayNames() {
+                if (!window.translationManager) {
+                  return ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'];
+                }
+                const days = [];
+                const dayKeys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                for (let i = 0; i < 7; i++) {
+                  const key = `calendar.days_long.${dayKeys[i]}`;
+                  const translated = window.translationManager.getTranslation(key);
+                  if (translated && !translated.includes('calendar.days_long')) {
+                    days.push(translated);
+                  } else {
+                    const defaults = ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'];
+                    days.push(defaults[i]);
+                  }
+                }
+                return days;
+              }
+              
+              function getShortDayNames() {
+                if (!window.translationManager) {
+                  return ['V', 'H', 'K', 'Sz', 'Cs', 'P', 'Sz'];
+                }
+                const days = [];
+                const dayKeys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                for (let i = 0; i < 7; i++) {
+                  const key = `calendar.days_short.${dayKeys[i]}`;
+                  const translated = window.translationManager.getTranslation(key);
+                  if (translated && !translated.includes('calendar.days_short')) {
+                    days.push(translated);
+                  } else {
+                    const defaults = ['V', 'H', 'K', 'Sz', 'Cs', 'P', 'Sz'];
+                    days.push(defaults[i]);
+                  }
+                }
+                return days;
+              }
+              
+              let monthNames = getMonthNames();
+              let dayNames = getDayNames();
+              let shortDayNames = getShortDayNames();
+
+              function renderCalendar() {
+                // Update month/year header
+                datePickerMonth.textContent = monthNames[displayDate.getMonth()];
+                datePickerYear.textContent = displayDate.getFullYear();
+
+                // Render weekday headers
+                datePickerWeekdays.innerHTML = '';
+                shortDayNames.forEach(day => {
+                  const dayEl = document.createElement('div');
+                  dayEl.className = 'date-picker-weekday';
+                  dayEl.textContent = day;
+                  datePickerWeekdays.appendChild(dayEl);
+                });
+
+                // Render days
+                datePickerDays.innerHTML = '';
+                const firstDay = new Date(displayDate.getFullYear(), displayDate.getMonth(), 1).getDay();
+                const daysInMonth = new Date(displayDate.getFullYear(), displayDate.getMonth() + 1, 0).getDate();
+                const daysInPrevMonth = new Date(displayDate.getFullYear(), displayDate.getMonth(), 0).getDate();
+
+                // Previous month days
+                for (let i = firstDay - 1; i >= 0; i--) {
+                  const dayEl = document.createElement('button');
+                  dayEl.className = 'date-picker-day other-month';
+                  dayEl.textContent = daysInPrevMonth - i;
+                  dayEl.type = 'button';
+                  datePickerDays.appendChild(dayEl);
+                }
+
+                // Current month days
+                const today = new Date();
+                for (let i = 1; i <= daysInMonth; i++) {
+                  const dayEl = document.createElement('button');
+                  dayEl.className = 'date-picker-day';
+                  dayEl.textContent = i;
+                  dayEl.type = 'button';
+
+                  const isToday = i === today.getDate() && displayDate.getMonth() === today.getMonth() && displayDate.getFullYear() === today.getFullYear();
+                  if (isToday) dayEl.classList.add('today');
+                  
+                  // Highlight selected date
+                  const isSelected = i === displayDate.getDate() && displayDate.getMonth() === displayDate.getMonth() && displayDate.getFullYear() === displayDate.getFullYear();
+                  if (isSelected) dayEl.classList.add('selected');
+
+                  dayEl.addEventListener('click', async () => {
+                    const selected = new Date(displayDate.getFullYear(), displayDate.getMonth(), i);
+                    updateDateDisplay(selected);
+                    await loadTimetableForDate(selected);
+                    datePickerOpen = false;
+                    customDatePicker.classList.remove('open');
+                    if (datePickerIcon) datePickerIcon.style.transform = 'rotate(0deg)';
+                  });
+
+                  datePickerDays.appendChild(dayEl);
+                }
+
+                // Next month days
+                const totalCells = datePickerDays.children.length + firstDay;
+                const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+                for (let i = 1; i <= remainingCells; i++) {
+                  const dayEl = document.createElement('button');
+                  dayEl.className = 'date-picker-day other-month';
+                  dayEl.textContent = i;
+                  dayEl.type = 'button';
+                  datePickerDays.appendChild(dayEl);
+                }
+              }
+
+              function updateDateDisplay(date) {
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                const day = date.getDate();
+                const dayName = dayNames[date.getDay()];
+                const monthText = monthNames[month];
+                
+                const dateStr = `${monthText} ${String(day).padStart(2, '0')}. - ${dayName}`;
+                if (dateTextEl) {
+                  dateTextEl.textContent = dateStr;
+                  dateTextEl.setAttribute('data-translate-fallback', dateStr);
+                  
+                  // Update month text
+                  const monthEl = document.querySelector('.calendar-month-text');
+                  if (monthEl) {
+                    const monthStr = `${monthText} ${year}.`;
+                    monthEl.textContent = monthStr;
+                    monthEl.setAttribute('data-translate-fallback', monthStr);
+                  }
+                  
+                  // Apply translations to the calendar card
+                  const calendarCard = document.querySelector('.youhub-card-calendar');
+                  if (calendarCard && window.translationManager?.applyTranslationsToElement) {
+                    window.translationManager.applyTranslationsToElement(calendarCard);
+                    console.log('[DatePicker] Applied translations after date change');
+                  }
+                }
+              }
+
+              // Toggle date picker
+              datePickerBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                datePickerOpen = !datePickerOpen;
+                if (datePickerOpen) {
+                  customDatePicker.classList.add('open');
+                  if (datePickerIcon) datePickerIcon.style.transform = 'rotate(180deg)';
+                  renderCalendar();
+                } else {
+                  customDatePicker.classList.remove('open');
+                  if (datePickerIcon) datePickerIcon.style.transform = 'rotate(0deg)';
+                }
+              });
+
+              // Previous month
+              datePickerPrev?.addEventListener('click', async () => {
+                displayDate.setMonth(displayDate.getMonth() - 1);
+                // Keep the same day if possible
+                const daysInNewMonth = new Date(displayDate.getFullYear(), displayDate.getMonth() + 1, 0).getDate();
+                const newDate = new Date(displayDate.getFullYear(), displayDate.getMonth(), Math.min(displayDate.getDate(), daysInNewMonth));
+                displayDate = newDate;
+                updateDateDisplay(newDate);
+                await loadTimetableForDate(newDate);
+                renderCalendar();
+              });
+
+              // Next month
+              datePickerNext?.addEventListener('click', async () => {
+                displayDate.setMonth(displayDate.getMonth() + 1);
+                // Keep the same day if possible
+                const daysInNewMonth = new Date(displayDate.getFullYear(), displayDate.getMonth() + 1, 0).getDate();
+                const newDate = new Date(displayDate.getFullYear(), displayDate.getMonth(), Math.min(displayDate.getDate(), daysInNewMonth));
+                displayDate = newDate;
+                updateDateDisplay(newDate);
+                await loadTimetableForDate(newDate);
+                renderCalendar();
+              });
+
+              // Today button
+              datePickerToday?.addEventListener('click', async () => {
+                const today = new Date();
+                updateDateDisplay(today);
+                await loadTimetableForDate(today);
+                displayDate = new Date(today);
+                datePickerOpen = false;
+                customDatePicker.classList.remove('open');
+                if (datePickerIcon) datePickerIcon.style.transform = 'rotate(0deg)';
+                renderCalendar();
+              });
+
+              // Select button
+              datePickerSelect?.addEventListener('click', () => {
+                datePickerOpen = false;
+                customDatePicker.classList.remove('open');
+                if (datePickerIcon) datePickerIcon.style.transform = 'rotate(0deg)';
+              });
+
+              // Close on outside click
+              document.addEventListener('click', (e) => {
+                if (!customDatePicker.contains(e.target) && e.target !== datePickerBtn && !datePickerBtn.contains(e.target)) {
+                  if (datePickerOpen) {
+                    datePickerOpen = false;
+                    customDatePicker.classList.remove('open');
+                    if (datePickerIcon) datePickerIcon.style.transform = 'rotate(0deg)';
+                  }
+                }
+              });
+
+              // Edit button - make date text editable
+              if (editBtn && dateTextEl) {
+                editBtn.addEventListener('click', () => {
+                  dateTextEl.contentEditable = true;
+                  dateTextEl.focus();
+                  dateTextEl.style.outline = '1px dashed rgba(180, 255, 94, 0.5)';
+                  dateTextEl.style.borderRadius = '4px';
+                  dateTextEl.style.padding = '2px 6px';
+                  dateTextEl.style.cursor = 'text';
+                });
+
+                // Parse and load date when edited
+                async function parseAndLoadEditedDate() {
+                  const text = dateTextEl.textContent.trim();
+                  console.log('[DatePicker] Parsing edited date:', text);
+                  
+                  // Refresh month/day names from current language
+                  const currentMonthNames = getMonthNames();
+                  
+                  // Try to parse the date from the text
+                  // Expected format: "Month DD. - DayName"
+                  // Example: "Január 09. - Szombat"
+                  
+                  let parsedDate = null;
+                  
+                  // Try matching "Month DD. - DayName"
+                  const match = text.match(/(.+?)\s+(\d{1,2})\.\s*-\s*(.+)/);
+                  if (match) {
+                    const [, monthStr, dayStr, dayNameStr] = match;
+                    const day = parseInt(dayStr, 10);
+                    
+                    // Find month index from current language monthNames
+                    const monthIndex = currentMonthNames.findIndex(m => m.trim().toLowerCase() === monthStr.trim().toLowerCase());
+                    
+                    if (monthIndex !== -1 && day >= 1 && day <= 31) {
+                      parsedDate = new Date(displayDate.getFullYear(), monthIndex, day);
+                      console.log('[DatePicker] Parsed date:', parsedDate);
+                    } else {
+                      console.warn('[DatePicker] Month not found. Input:', monthStr, 'Available:', currentMonthNames);
+                    }
+                  }
+                  
+                  if (parsedDate) {
+                    // Update display with parsed date
+                    displayDate = parsedDate;
+                    updateDateDisplay(parsedDate);
+                    await loadTimetableForDate(parsedDate);
+                    renderCalendar(); // Re-render calendar to show selected day
+                    console.log('[DatePicker] Date loaded successfully');
+                  } else {
+                    // Reset to previous date if parsing failed
+                    console.warn('[DatePicker] Failed to parse date, resetting');
+                    updateDateDisplay(displayDate);
+                  }
+                }
+                
+                // Save when lose focus or press Enter
+                dateTextEl.addEventListener('blur', async () => {
+                  dateTextEl.contentEditable = false;
+                  dateTextEl.style.outline = 'none';
+                  dateTextEl.style.padding = '0';
+                  dateTextEl.style.cursor = 'default';
+                  
+                  // Parse and load the edited date
+                  await parseAndLoadEditedDate();
+                });
+
+                dateTextEl.addEventListener('keydown', async (e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    await parseAndLoadEditedDate();
+                    dateTextEl.blur();
+                  }
+                });
+              }
+
+              // Initial render
+              renderCalendar();
+
+              // Apply translations
+              if (window.translationManager?.applyTranslationsToElement) {
+                window.translationManager.applyTranslationsToElement(customDatePicker);
+              }
+            }
+            initCustomDatePicker();
 
             async function preloadSubmitReferenceData() {
               if (referenceDataLoaded || referenceDataLoading) return;
-              if (!suggestionsDb) return;
               referenceDataLoading = true;
 
               try {
-                const { collection, getDocs, limit, query } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
-
-                try {
-                  const classesSnap = await getDocs(query(collection(suggestionsDb, 'classes'), limit(3)));
-                  classSuggestions = classesSnap.docs.map((docSnap) => ({
-                    id: docSnap.id,
-                    display: formatClassLabel(docSnap.id),
-                    match: docSnap.id.toLowerCase()
-                  }));
-                } catch (err) {
-                  console.warn('[SuggestionsForm] Failed to load classes', err);
+                const { httpsCallable, getFunctions } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+                
+                // Wait for Firebase to be ready
+                let retries = 0;
+                while (!window.firebaseApp && retries < 50) {
+                  await new Promise(resolve => setTimeout(resolve, 100));
+                  retries++;
                 }
-
-                try {
-                  const groupsSnap = await getDocs(query(collection(suggestionsDb, 'groups'), limit(3)));
-                  groupSuggestions = groupsSnap.docs.map((docSnap) => ({
-                    id: docSnap.id,
-                    display: docSnap.id,
-                    match: docSnap.id.toLowerCase()
-                  }));
-                } catch (err) {
-                  console.warn('[SuggestionsForm] Failed to load groups', err);
+                
+                if (!window.firebaseApp) {
+                  console.warn('[SuggestionsForm] Firebase not ready for autocomplete');
+                  return;
                 }
-
-                try {
-                  const usersSnap = await getDocs(query(collection(suggestionsDb, 'public/users/nevek'), limit(50)));
-                  userSuggestions = usersSnap.docs.map((docSnap) => {
-                    const data = docSnap.data() || {};
-                    const displayName = data.name || data.displayName || docSnap.id;
-                    return {
-                      id: docSnap.id,
-                      display: displayName,
-                      match: displayName.toLowerCase()
-                    };
-                  });
-                } catch (err) {
-                  console.warn('[SuggestionsForm] Failed to load user suggestions', err);
-                  userSuggestions = [];
-                }
+                
+                // Call Cloud Function for autocomplete data
+                const functionsWest3 = getFunctions(window.firebaseApp, 'europe-west3');
+                const suggestionsApi = httpsCallable(functionsWest3, 'suggestions');
+                const result = await suggestionsApi({ action: 'autocomplete' });
+                
+                const data = result.data || {};
+                userSuggestions = data.users || [];
+                classSuggestions = data.classes || [];
+                groupSuggestions = data.groups || [];
+                
+                console.log(`[SuggestionsForm] Loaded autocomplete: ${userSuggestions.length} users, ${classSuggestions.length} classes, ${groupSuggestions.length} groups`);
+                
+              } catch (err) {
+                console.warn('[SuggestionsForm] Failed to load autocomplete data', err);
+                userSuggestions = [];
+                classSuggestions = [];
+                groupSuggestions = [];
               } finally {
                 referenceDataLoading = false;
                 referenceDataLoaded = true;
               }
             }
 
+            // Simplify name: remove accents, lowercase, replace spaces with underscores
+            function simplifyName(fullName) {
+              if (!fullName) return '';
+              const normalized = fullName.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+              const lowercased = normalized.toLowerCase();
+              const simplified = lowercased.replace(/\s+/g, '_');
+              return simplified;
+            }
+
             function formatClassLabel(classId) {
               if (!classId) return '';
-              const match = classId.match(/^(\d{1,2})([a-zA-Z])/);
-              if (!match) return classId;
-              const grade = match[1];
-              const letter = match[2].toUpperCase();
-              const classLabel = window.translationManager?.getTranslation('youhub.myclass.title', 'Osztályom')?.replace('Osztályom', 'Osztály') || 'Osztály';
-              return `${grade}.${letter} ${classLabel}`;
+              
+              // Extract year and letter from class name (e.g., "2030e" -> year: 2030, letter: "e")
+              const classMatch = classId.match(/^(\d{4})(.+)$/);
+              if (!classMatch) return classId;
+              
+              const graduationYear = parseInt(classMatch[1], 10);
+              const classLetter = classMatch[2]; // e.g., "e", "g"
+              
+              // Calculate current grade from graduation year
+              const now = new Date();
+              const currentYear = now.getFullYear();
+              const currentMonth = now.getMonth() + 1; // 1-12
+              
+              // Years remaining = graduationYear - currentYear
+              // Grade = 12 - yearsRemaining
+              // If we're in September-December (month >= 9), new school year started, so grade + 1
+              const yearsRemaining = graduationYear - currentYear;
+              let gradeNumber = 12 - yearsRemaining;
+              
+              if (currentMonth >= 9) {
+                gradeNumber += 1;
+              }
+              
+              // Format: {grade}.{letter uppercase} (e.g., "8.E")
+              if (gradeNumber >= 1 && gradeNumber <= 12) {
+                const letterUpper = classLetter.charAt(0).toUpperCase();
+                const displayClassName = `${gradeNumber}.${letterUpper}`;
+                
+                // Get class word with translation
+                const currentLang = (window.translationManager?.getLanguage && window.translationManager.getLanguage()) || 
+                                    localStorage.getItem('eu2k-language') || 'hu';
+                const classWord = window.translationManager?.getTranslation('account.tooltip.class', 'Osztály') || 'Osztály';
+                
+                if (currentLang === 'en') {
+                  return `${classWord} ${displayClassName}`;
+                } else {
+                  return `${displayClassName} ${classWord}`;
+                }
+              } else {
+                return classId;
+              }
+            }
+
+            // AI Translation for suggestions
+            let aiTranslationEnabledCache = null;
+            
+            async function translateSuggestions(suggestions, targetLang) {
+              // Check if AI translation is enabled
+              if (aiTranslationEnabledCache === null) {
+                try {
+                  const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
+                  const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+                  const auth = getAuth();
+                  if (auth.currentUser && window.db) {
+                    const functionsRef = doc(window.db, 'users', auth.currentUser.uid, 'settings', 'functions');
+                    const functionsSnap = await getDoc(functionsRef);
+                    aiTranslationEnabledCache = functionsSnap.exists() ? functionsSnap.data().aiTranslation === true : false;
+                  } else {
+                    aiTranslationEnabledCache = false;
+                  }
+                } catch (e) {
+                  console.warn('[Suggestions] Could not load AI translation setting:', e);
+                  aiTranslationEnabledCache = false;
+                }
+              }
+
+              if (!aiTranslationEnabledCache) {
+                console.log('[Suggestions] AI translation disabled');
+                return suggestions;
+              }
+
+              console.log('[Suggestions] Translating suggestions to:', targetLang);
+
+              // Collect texts to translate (titles and descriptions)
+              const textsToTranslate = [];
+              suggestions.forEach(s => {
+                if (s.title) textsToTranslate.push(s.title);
+                if (s.description) textsToTranslate.push(s.description);
+              });
+
+              if (textsToTranslate.length === 0) return suggestions;
+
+              try {
+                const { getFunctions, httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+                const functions = getFunctions(window.firebaseApp, 'europe-west1');
+                const translateBatch = httpsCallable(functions, 'translateBatch');
+
+                const LANGUAGE_NAMES = {
+                  'hu': 'Hungarian', 'en': 'English', 'de': 'German', 'es': 'Spanish',
+                  'fr': 'French', 'zh': 'Chinese', 'ja': 'Japanese', 'sv': 'Swedish', 'ru': 'Russian'
+                };
+
+                const result = await translateBatch({
+                  texts: textsToTranslate,
+                  targetLanguage: LANGUAGE_NAMES[targetLang] || 'English'
+                });
+
+                if (result.data.success && result.data.translated) {
+                  const translations = Array.isArray(result.data.translated) 
+                    ? result.data.translated 
+                    : [result.data.translated];
+
+                  // Apply translations back
+                  let idx = 0;
+                  suggestions.forEach(s => {
+                    if (s.title && idx < translations.length) {
+                      s.title = translations[idx++];
+                    }
+                    if (s.description && idx < translations.length) {
+                      s.description = translations[idx++];
+                    }
+                  });
+
+                  console.log('[Suggestions] Translated successfully');
+                }
+              } catch (error) {
+                console.error('[Suggestions] Translation error:', error);
+              }
+
+              return suggestions;
             }
 
             async function loadLatestSuggestions() {
-              if (!suggestionsDb) return;
               try {
-                const { collection, query, orderBy, limit, getDocs, doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
                 const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
+                const { httpsCallable, getFunctions } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
                 const auth = getAuth();
                 const currentUser = auth.currentUser;
 
-                const suggestionsQuery = query(collection(suggestionsDb, 'suggestions'), orderBy('createdAt', 'desc'), limit(20));
-                const snapshot = await getDocs(suggestionsQuery);
-                const items = [];
-
-                for (const docSnap of snapshot.docs) {
-                  const data = docSnap.data() || {};
-
-                  // Check restrictToUsers
-                  const restrictToUsers = (data.restrictToUsers || '').trim();
-                  if (restrictToUsers) {
-                    // Check if current user's name is in the list
-                    let userAllowed = false;
-                    if (currentUser) {
-                      try {
-                        // Get current user's name from public/users/nevek/{userId}
-                        const userNameRef = doc(suggestionsDb, `public/users/nevek/${currentUser.uid}`);
-                        const userNameSnap = await getDoc(userNameRef);
-                        if (userNameSnap.exists()) {
-                          const userNameData = userNameSnap.data() || {};
-                          const userName = (userNameData.name || userNameData.displayName || '').trim();
-                          if (userName) {
-                            // Check if the user's name is in the restrictToUsers list
-                            const restrictedNames = restrictToUsers.split(',').map(n => n.trim().toLowerCase());
-                            userAllowed = restrictedNames.includes(userName.toLowerCase());
-                          }
-                        }
-                      } catch (err) {
-                        console.warn('[Suggestions] Failed to check user restriction', err);
-                      }
-                    }
-                    if (!userAllowed) {
-                      continue; // Skip this suggestion
-                    }
-                  }
-
-                  // Check restrictToGroups
-                  const restrictToGroups = (data.restrictToGroups || '').trim();
-                  if (restrictToGroups) {
-                    // Check if current user is in any of the restricted groups/classes
-                    let groupAllowed = false;
-                    if (currentUser) {
-                      try {
-                        const restrictedGroups = restrictToGroups.split(',').map(g => g.trim());
-                        for (const groupName of restrictedGroups) {
-                          // Try to find the class/group ID from the name
-                          // Format: "8.E Osztály" -> need to find matching class
-                          const classMatch = groupName.match(/(\d+)\.([a-zA-Z])/i);
-                          if (classMatch) {
-                            const grade = parseInt(classMatch[1]);
-                            const letter = classMatch[2].toLowerCase();
-                            // Try to find the class in classes collection
-                            const classesRef = collection(suggestionsDb, 'classes');
-                            const classesSnap = await getDocs(classesRef);
-                            for (const classDoc of classesSnap.docs) {
-                              const classData = classDoc.data() || {};
-                              const classType = (classData.classType || '').toLowerCase();
-                              const classFinishes = classData.classFinishes || new Date().getFullYear() + 4;
-                              const currentYear = new Date().getFullYear();
-                              const currentMonth = new Date().getMonth() + 1;
-                              let calculatedGrade = classFinishes - currentYear;
-                              if (currentMonth >= 1 && currentMonth <= 8) {
-                                calculatedGrade -= 1;
-                              }
-                              if (calculatedGrade < 1) calculatedGrade = 1;
-                              if (calculatedGrade > 12) calculatedGrade = 12;
-
-                              // Check if this class matches
-                              if (classType === letter && calculatedGrade === grade) {
-                                // Check if user is in this class
-                                const classUsersRef = collection(suggestionsDb, `classes/${classDoc.id}/users`);
-                                const classUsersSnap = await getDocs(classUsersRef);
-                                const userInClass = classUsersSnap.docs.some(userDoc => userDoc.id === currentUser.uid);
-                                if (userInClass) {
-                                  groupAllowed = true;
-                                  break;
-                                }
-                              }
-                            }
-                          } else {
-                            // Direct group/class ID match (e.g., "2030e")
-                            const classUsersRef = collection(suggestionsDb, `classes/${groupName}/users`);
-                            const classUsersSnap = await getDocs(classUsersRef);
-                            const userInClass = classUsersSnap.docs.some(userDoc => userDoc.id === currentUser.uid);
-                            if (userInClass) {
-                              groupAllowed = true;
-                              break;
-                            }
-                          }
-                          if (groupAllowed) break;
-                        }
-                      } catch (err) {
-                        console.warn('[Suggestions] Failed to check group restriction', err);
-                      }
-                    }
-                    if (!groupAllowed) {
-                      continue; // Skip this suggestion
-                    }
-                  }
-
-                  const ownerProfile = await fetchUserProfile(data.ownerId, doc, getDoc);
-                  items.push({
-                    id: docSnap.id,
-                    data,
-                    ownerProfile
-                  });
-
-                  // Stop after we have 4 items
-                  if (items.length >= 4) break;
+                if (!currentUser) {
+                  console.warn('[Suggestions] No user logged in');
+                  return;
                 }
+
+                // Wait for Firebase to be ready
+                let retries = 0;
+                while (!window.firebaseApp && retries < 50) {
+                  await new Promise(resolve => setTimeout(resolve, 100));
+                  retries++;
+                }
+
+                if (!window.firebaseApp) {
+                  console.error('[Suggestions] Firebase not ready');
+                  return;
+                }
+
+                // Call Cloud Function to load suggestions (europe-west3)
+                const functionsWest3 = getFunctions(window.firebaseApp, 'europe-west3');
+                const suggestionsApi = httpsCallable(functionsWest3, 'suggestions');
+                const result = await suggestionsApi({ action: 'load' });
+                let suggestions = result.data.suggestions || [];
+
+                console.log(`[Suggestions] Function returned ${suggestions.length} suggestions`);
+
+                // AI Translation for suggestions if enabled and not Hungarian
+                const currentLang = localStorage.getItem('eu2k_language') || 'hu';
+                if (currentLang !== 'hu' && suggestions.length > 0) {
+                  suggestions = await translateSuggestions(suggestions, currentLang);
+                }
+
+                // Convert to items format for updateSuggestionCards
+                const items = suggestions.map(suggestion => ({
+                  id: suggestion.id,
+                  data: {
+                    title: suggestion.title,
+                    content: suggestion.description,
+                    hive: suggestion.hive,
+                    createdAt: suggestion.createdAt
+                  },
+                  ownerProfile: {
+                    name: suggestion.ownerName,
+                    picture: null
+                  },
+                  dateString: suggestion.dateString
+                }));
 
                 updateSuggestionCards(items);
               } catch (error) {
@@ -1948,15 +2655,45 @@
             }
 
             function updateSuggestionCards(items) {
-              suggestionCardElements.forEach((card, index) => {
+              // Re-fetch card elements in case DOM wasn't ready when script loaded
+              const cards = Array.from(document.querySelectorAll('.suggestion-card'));
+              
+              console.log(`[Suggestions] 📊 Found ${cards.length} suggestion cards in DOM`);
+              cards.forEach((card, i) => {
+                console.log(`[Suggestions] 📦 Card ${i}: index=${card.dataset.cardIndex}, variant=${card.dataset.cardVariant}`);
+              });
+              
+              if (cards.length === 0) {
+                console.warn('[Suggestions] ❌ No suggestion cards found in DOM');
+                return;
+              }
+              
+              // Sort cards by data-card-index to ensure correct order
+              cards.sort((a, b) => {
+                const indexA = parseInt(a.dataset.cardIndex || '999', 10);
+                const indexB = parseInt(b.dataset.cardIndex || '999', 10);
+                return indexA - indexB;
+              });
+              
+              console.log(`[Suggestions] 🔄 Updating ${cards.length} cards with ${items.length} items`);
+              console.log(`[Suggestions] 📋 Items:`, items.map(i => ({ id: i.id, title: i.data?.title, owner: i.ownerProfile?.name })));
+              
+              // Update each card
+              for (let index = 0; index < cards.length; index++) {
+                const card = cards[index];
                 const payload = items[index];
+                const cardIndex = card.dataset.cardIndex;
                 const titleEl = card.querySelector('.suggestion-card-title');
                 const descEl = card.querySelector('.suggestion-card-description');
                 const authorEl = card.querySelector('.suggestion-meta-label--author');
                 const typeEl = card.querySelector('.suggestion-meta-label--type');
                 const avatarEl = card.querySelector('.suggestion-meta-avatar');
 
+                console.log(`[Suggestions] 🎯 Processing card[${index}] (data-card-index=${cardIndex}), payload:`, payload ? { id: payload.id, title: payload.data?.title } : 'EMPTY');
+                console.log(`[Suggestions] 🔍 Card elements: title=${!!titleEl}, desc=${!!descEl}, author=${!!authorEl}, type=${!!typeEl}, avatar=${!!avatarEl}`);
+
                 if (!payload) {
+                  console.log(`[Suggestions] ⚠️ No payload for card[${index}], using placeholder`);
                   const getTranslation = (key, fallback) => window.translationManager?.getTranslation(key) || fallback;
                   if (titleEl) titleEl.textContent = getTranslation('youhub.suggestions.card.placeholder_title', 'Javaslat');
                   if (descEl) descEl.textContent = getTranslation('youhub.suggestions.card.placeholder_description', 'Ide fognak kerülni az új javaslataid.');
@@ -1966,13 +2703,16 @@
                     avatarEl.style.backgroundImage = '';
                     avatarEl.style.backgroundColor = '#7B7F78';
                   }
-                  return;
+                  continue;
                 }
 
                 const data = payload.data || {};
                 const getTranslation = (key, fallback) => window.translationManager?.getTranslation(key) || fallback;
                 const unknownUser = getTranslation('youhub.unknown_user', 'Ismeretlen felhasználó');
                 const owner = payload.ownerProfile || { name: unknownUser, picture: null };
+                
+                console.log(`[Suggestions] ✅ Filling card[${index}]: title="${data.title}", author="${owner.name}"`);
+                
                 if (titleEl) titleEl.textContent = data.title || getTranslation('youhub.suggestions.card.placeholder_title', 'Javaslat');
                 if (descEl) descEl.textContent = data.content || '';
                 if (authorEl) authorEl.textContent = owner.name || unknownUser;
@@ -1982,12 +2722,18 @@
                     avatarEl.style.backgroundImage = `url('${owner.picture}')`;
                     avatarEl.style.backgroundSize = 'cover';
                     avatarEl.style.backgroundPosition = 'center';
+                  } else if (data.ownerId) {
+                    // Try to load from Firebase Storage
+                    avatarEl.style.backgroundColor = '#7B7F78';
+                    loadProfilePicture(data.ownerId, avatarEl);
                   } else {
                     avatarEl.style.backgroundImage = '';
                     avatarEl.style.backgroundColor = '#7B7F78';
                   }
                 }
-              });
+              }
+              
+              console.log(`[Suggestions] ✨ Finished updating all cards`);
             }
 
             async function fetchUserProfile(userId, docFn, getDocFn) {
@@ -2126,7 +2872,30 @@
 
               try {
                 if (globalSubmitBtn) globalSubmitBtn.disabled = true;
-                const { doc, setDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+                const { doc, setDoc, getDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+
+                // Get user's normalizedName for ownerId
+                let ownerNormalizedName = '';
+                try {
+                  const userDocRef = doc(suggestionsDb, 'users', auth.currentUser.uid);
+                  const userDocSnap = await getDoc(userDocRef);
+                  if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    // If user has normalizedName, use it; otherwise generate from fullName
+                    if (userData.normalizedName) {
+                      ownerNormalizedName = userData.normalizedName;
+                    } else if (userData.fullName) {
+                      ownerNormalizedName = simplifyName(userData.fullName);
+                    }
+                  }
+                } catch (err) {
+                  console.warn('[Suggestions] Failed to get user normalizedName:', err);
+                }
+                
+                // Fallback: generate from display name
+                if (!ownerNormalizedName && auth.currentUser.displayName) {
+                  ownerNormalizedName = simplifyName(auth.currentUser.displayName);
+                }
 
                 const suggestionId = await generateSequentialSuggestionId(auth.currentUser.uid);
                 const payload = {
@@ -2136,7 +2905,7 @@
                   share: !!submitFormState.share,
                   restrictToUsers: normalizeList(submitFormState.restrictUsers),
                   restrictToGroups: normalizeList(submitFormState.restrictGroups),
-                  ownerId: auth.currentUser.uid,
+                  ownerId: ownerNormalizedName || auth.currentUser.uid,
                   createdAt: serverTimestamp()
                 };
 
@@ -2208,6 +2977,10 @@
                 // Ensure "Javaslatok" is active by default
                 if (activeNavId !== 'submit' && activeNavId !== 'hive') {
                   setActiveNav(DEFAULT_NAV_ID);
+                }
+                // Load suggestions when auth is ready
+                if (user) {
+                  loadLatestSuggestions();
                 }
               });
             } catch (error) {
@@ -2505,6 +3278,15 @@
         if (isEditMode) {
           grid.classList.add('edit-mode');
           editIcon.src = 'assets/youhub/x.svg';
+          
+          // Disable all buttons in cards when in edit mode
+          currentCards.forEach(card => {
+            const buttons = card.querySelectorAll('button, a, [role="button"]');
+            buttons.forEach(btn => {
+              btn.style.pointerEvents = 'none';
+              btn.style.opacity = '0.5';
+            });
+          });
           updateEditButtonText();
           if (revertBtn) revertBtn.style.display = 'flex';
 
@@ -2521,6 +3303,13 @@
                 }
               });
             }
+            
+            // Disable all buttons in cards when in edit mode (zsebrezési mód)
+            const buttons = card.querySelectorAll('button, a, [role="button"]');
+            buttons.forEach(btn => {
+              btn.style.pointerEvents = 'none';
+              btn.style.opacity = '0.5';
+            });
           });
         } else {
           grid.classList.remove('edit-mode', 'dragging-active');
@@ -2536,6 +3325,13 @@
             if (handle) {
               handle.removeEventListener('mousedown', startDrag);
             }
+            
+            // Re-enable all buttons in cards when exiting edit mode
+            const buttons = card.querySelectorAll('button, a, [role="button"]');
+            buttons.forEach(btn => {
+              btn.style.pointerEvents = '';
+              btn.style.opacity = '';
+            });
           });
 
           // Save order
@@ -3671,41 +4467,81 @@
       })();
 
       // Check and apply empty states for calendar views (exams, rp, bell)
-      (function checkCalendarViewsEmptyState() {
+      // Note: This runs on page load, switchTab also handles empty states when switching tabs
+      (async function checkCalendarViewsEmptyState() {
+        // Wait for translations
+        let retries = 0;
+        while ((!window.translationManager || !window.translationManager.isInitialized) && retries < 50) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          retries++;
+        }
+        
         const forceEmpty = localStorage.getItem('forceEmptyState') === 'true';
-        if (forceEmpty) {
-          console.log('[YouHub][Calendar] Empty states FORCED for all calendar views');
-          
-          // Exams view
-          const examsView = document.getElementById('calendar-view-exams');
-          if (examsView) {
-            examsView.innerHTML = buildEmptyStateTemplate(
-              'assets/youhub/calendar/exams.svg',
-              'Nincsenek dolgozatok!',
-              'Itt jelennek meg majd a közelgő dolgozatok és vizsgák.'
-            );
+        
+        // Helper to get translation
+        function t(key, fallback) {
+          if (window.translationManager?.isInitialized) {
+            const result = window.translationManager.getTranslation(key);
+            if (result) return result;
           }
+          return fallback;
+        }
+        
+        // Helper function to check if view is empty and show empty state
+        function checkAndShowEmptyState(viewId, icon, titleKey, descKey, titleFallback, descFallback) {
+          const view = document.getElementById(viewId);
+          if (!view) return;
           
-          // Reading Progress view
-          const rpView = document.getElementById('calendar-view-rp');
-          if (rpView) {
-            rpView.innerHTML = buildEmptyStateTemplate(
-              'assets/youhub/calendar/rp.svg',
-              'Nincs Reading Progress!',
-              'Itt jelennek meg majd az olvasási előrehaladásod adatai.'
-            );
-          }
+          // Check if view is empty (no children or only whitespace)
+          const hasEmptyState = view.querySelector('.students-empty-state');
+          const hasContent = hasEmptyState || (view.children.length > 0 && Array.from(view.children).some(child => {
+            return child.textContent.trim().length > 0 || child.querySelector('img, svg, canvas');
+          }));
           
-          // Bell (Csengetési rend) view
-          const bellView = document.getElementById('calendar-view-bell');
-          if (bellView) {
-            bellView.innerHTML = buildEmptyStateTemplate(
-              'assets/youhub/calendar/bell.svg',
-              'Nincs csengetési rend!',
-              'Itt jelenik meg majd az órák csengetési rendje.'
-            );
+          if (forceEmpty || !hasContent) {
+            const title = t(titleKey, titleFallback);
+            const description = t(descKey, descFallback);
+            view.innerHTML = `
+              <div class="students-empty-state" style="display: flex; grid-column: span 2; height: 100%; min-height: 0; overflow: hidden;">
+                <img src="${icon}" alt="" class="students-empty-icon">
+                <div class="students-empty-text-container">
+                  <p class="students-empty-title" data-translate="${titleKey}" data-translate-fallback="${titleFallback}">${title}</p>
+                  <p class="students-empty-subtitle" data-translate="${descKey}" data-translate-fallback="${descFallback}">${description}</p>
+                </div>
+              </div>
+            `;
           }
         }
+        
+        // Check exams view
+        checkAndShowEmptyState(
+          'calendar-view-exams',
+          'assets/youhub/calendar/exams.svg',
+          'calendar.no_exams',
+          'calendar.no_exams_desc',
+          'Nincsenek dolgozatok!',
+          'Itt jelennek meg majd a közelgő dolgozatok és vizsgák.'
+        );
+        
+        // Check Reading Progress view
+        checkAndShowEmptyState(
+          'calendar-view-rp',
+          'assets/youhub/calendar/rp.svg',
+          'calendar.no_reading_progress',
+          'calendar.no_reading_progress_desc',
+          'Nincs Reading Progress!',
+          'Itt jelennek meg majd az olvasási előrehaladásod adatai.'
+        );
+        
+        // Check Bell (Csengetési rend) view
+        checkAndShowEmptyState(
+          'calendar-view-bell',
+          'assets/youhub/calendar/bell.svg',
+          'calendar.no_bell_schedule',
+          'calendar.no_bell_schedule_desc',
+          'Nincs csengetési rend!',
+          'Itt jelenik meg majd az órák csengetési rendje.'
+        );
       })();
 
       // Calculate days until school starts (September 1 or nearest Monday)
@@ -4155,6 +4991,90 @@
       window.notificationsData = [];
       window.selectedNotificationId = null;
 
+      // AI Translation for notifications
+      let notifAiTranslationEnabled = null;
+      
+      async function translateNotifications(notifications, targetLang) {
+        // Check if enabled
+        if (notifAiTranslationEnabled === null) {
+          try {
+            const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
+            const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
+            const auth = getAuth();
+            if (auth.currentUser && window.db) {
+              const functionsRef = doc(window.db, 'users', auth.currentUser.uid, 'settings', 'functions');
+              const functionsSnap = await getDoc(functionsRef);
+              notifAiTranslationEnabled = functionsSnap.exists() ? functionsSnap.data().aiTranslation === true : false;
+            } else {
+              notifAiTranslationEnabled = false;
+            }
+          } catch (e) {
+            notifAiTranslationEnabled = false;
+          }
+        }
+
+        if (!notifAiTranslationEnabled || targetLang === 'hu' || notifications.length === 0) {
+          return notifications;
+        }
+
+        console.log('[Notifications] Translating notifications to:', targetLang);
+
+        // Collect texts to translate
+        const textsToTranslate = [];
+        const mapping = [];
+
+        notifications.forEach((notif, notifIndex) => {
+          if (notif.data?.title) {
+            mapping.push({ notifIndex, field: 'title', textIndex: textsToTranslate.length });
+            textsToTranslate.push(notif.data.title);
+          }
+          if (notif.data?.description) {
+            mapping.push({ notifIndex, field: 'description', textIndex: textsToTranslate.length });
+            textsToTranslate.push(notif.data.description);
+          }
+          if (notif.data?.content) {
+            mapping.push({ notifIndex, field: 'content', textIndex: textsToTranslate.length });
+            textsToTranslate.push(notif.data.content);
+          }
+        });
+
+        if (textsToTranslate.length === 0) return notifications;
+
+        try {
+          const { getFunctions, httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+          const functions = getFunctions(window.firebaseApp, 'europe-west1');
+          const translateBatch = httpsCallable(functions, 'translateBatch');
+
+          const LANGUAGE_NAMES = {
+            'hu': 'Hungarian', 'en': 'English', 'de': 'German', 'es': 'Spanish',
+            'fr': 'French', 'zh': 'Chinese', 'ja': 'Japanese', 'sv': 'Swedish', 'ru': 'Russian'
+          };
+
+          const result = await translateBatch({
+            texts: textsToTranslate,
+            targetLanguage: LANGUAGE_NAMES[targetLang] || 'English'
+          });
+
+          if (result.data.success && result.data.translated) {
+            const translations = Array.isArray(result.data.translated) 
+              ? result.data.translated 
+              : [result.data.translated];
+
+            mapping.forEach(({ notifIndex, field, textIndex }) => {
+              if (textIndex < translations.length) {
+                notifications[notifIndex].data[field] = translations[textIndex];
+              }
+            });
+
+            console.log('[Notifications] Translated successfully');
+          }
+        } catch (error) {
+          console.error('[Notifications] Translation error:', error);
+        }
+
+        return notifications;
+      }
+
       async function loadNotifications(userId) {
         if (!window.db || !userId) {
           console.warn('[Notifications] No db or userId available');
@@ -4176,7 +5096,7 @@
           }
 
           // Parse document IDs as numbers and sort descending (larger numbers first)
-          const docs = snapshot.docs.map(doc => ({
+          let docs = snapshot.docs.map(doc => ({
             id: doc.id,
             numericId: parseInt(doc.id) || 0,
             data: doc.data()
@@ -4186,7 +5106,15 @@
           docs.sort((a, b) => b.numericId - a.numericId);
 
           // Take first 10
-          window.notificationsData = docs.slice(0, 10);
+          docs = docs.slice(0, 10);
+
+          // AI Translation if not Hungarian
+          const currentLang = localStorage.getItem('eu2k_language') || 'hu';
+          if (currentLang !== 'hu') {
+            docs = await translateNotifications(docs, currentLang);
+          }
+
+          window.notificationsData = docs;
           console.log('[Notifications] Loaded', window.notificationsData.length, 'notifications');
 
           updateNotificationsView();
@@ -4262,7 +5190,51 @@
             return;
           }
 
-          const notifData = notifSnap.data();
+          let notifData = notifSnap.data();
+          
+          // AI Translation for notification detail if not Hungarian
+          const currentLang = localStorage.getItem('eu2k_language') || 'hu';
+          if (currentLang !== 'hu' && notifAiTranslationEnabled !== false) {
+            try {
+              const textsToTranslate = [];
+              const fields = [];
+              
+              if (notifData.title) { textsToTranslate.push(notifData.title); fields.push('title'); }
+              if (notifData.content) { textsToTranslate.push(notifData.content); fields.push('content'); }
+              
+              if (textsToTranslate.length > 0) {
+                const { getFunctions, httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+                const functions = getFunctions(window.firebaseApp, 'europe-west1');
+                const translateBatch = httpsCallable(functions, 'translateBatch');
+                
+                const LANGUAGE_NAMES = {
+                  'hu': 'Hungarian', 'en': 'English', 'de': 'German', 'es': 'Spanish',
+                  'fr': 'French', 'zh': 'Chinese', 'ja': 'Japanese', 'sv': 'Swedish', 'ru': 'Russian'
+                };
+                
+                const result = await translateBatch({
+                  texts: textsToTranslate,
+                  targetLanguage: LANGUAGE_NAMES[currentLang] || 'English'
+                });
+                
+                if (result.data.success && result.data.translated) {
+                  const translations = Array.isArray(result.data.translated) 
+                    ? result.data.translated 
+                    : [result.data.translated];
+                  
+                  fields.forEach((field, idx) => {
+                    if (idx < translations.length) {
+                      notifData[field] = translations[idx];
+                    }
+                  });
+                  console.log('[Notifications] Detail view translated');
+                }
+              }
+            } catch (err) {
+              console.warn('[Notifications] Detail translation error:', err);
+            }
+          }
+          
           const title = notifData.title || '';
           const content = notifData.content || '';
           const sender = notifData.sender || '';
@@ -4682,13 +5654,22 @@
           return;
         }
 
-        window.notificationsData.forEach((notif) => {
+        // Only show first 15 items in main list
+        const maxItems = 15;
+        const itemsToShow = window.notificationsData.slice(0, maxItems);
+
+        itemsToShow.forEach((notif) => {
           const item = document.createElement('div');
           item.className = 'notification-item';
           item.dataset.notificationId = notif.id;
 
           const avatar = document.createElement('div');
           avatar.className = 'notification-avatar';
+          
+          // Load profile picture from Firebase Storage if ownerId exists
+          if (notif.data.ownerId) {
+            loadProfilePicture(notif.data.ownerId, avatar);
+          }
 
           const content = document.createElement('div');
           content.className = 'notification-content';
@@ -4724,8 +5705,132 @@
           list.appendChild(item);
         });
 
+        // Add "More notifications" button if there are more than 15
+        if (window.notificationsData.length > maxItems) {
+          const moreBtn = document.createElement('button');
+          moreBtn.className = 'notifications-more-btn';
+          moreBtn.textContent = window.translationManager?.getTranslation('youhub.notifications.more') || 'További értesítések';
+          moreBtn.addEventListener('click', () => {
+            openNotificationHistoryPopup();
+          });
+          list.appendChild(moreBtn);
+        }
+
         attemptPendingNotificationSelection();
       }
+
+      // Notification History Popup Functions
+      function openNotificationHistoryPopup() {
+        const popup = document.getElementById('notificationHistoryPopup');
+        const historyList = document.getElementById('notificationHistoryList');
+        const detailContent = document.getElementById('notificationHistoryDetailContent');
+        const emptyState = document.getElementById('notificationHistoryEmptyState');
+        if (!popup || !historyList) return;
+
+        historyList.innerHTML = '';
+        
+        // Reset detail view to empty state
+        if (detailContent) detailContent.style.display = 'none';
+        if (emptyState) emptyState.style.display = 'flex';
+
+        if (!window.notificationsData || window.notificationsData.length === 0) {
+          historyList.innerHTML = '<p style="color: #8BA86A; text-align: center;">Nincsenek értesítések</p>';
+        } else {
+          // Show ALL notifications in popup
+          window.notificationsData.forEach((notif) => {
+            const item = document.createElement('div');
+            item.className = 'notification-item';
+            item.dataset.notificationId = notif.id;
+
+            const avatar = document.createElement('div');
+            avatar.className = 'notification-avatar';
+            
+            // Load profile picture from Firebase Storage if ownerId exists
+            if (notif.data.ownerId) {
+              loadProfilePicture(notif.data.ownerId, avatar);
+            }
+
+            const content = document.createElement('div');
+            content.className = 'notification-content';
+
+            const name = document.createElement('p');
+            name.className = 'notification-name';
+            const defaultNotificationTitle = window.translationManager?.getTranslation('youhub.default_notification_title') || 'Értesítés';
+            name.textContent = notif.data.title || defaultNotificationTitle;
+
+            const preview = document.createElement('p');
+            preview.className = 'notification-preview';
+            const contentText = notif.data.content || notif.data.description || '';
+            preview.textContent = contentText.substring(0, 50) + (contentText.length > 50 ? '...' : '');
+
+            content.appendChild(name);
+            content.appendChild(preview);
+
+            item.appendChild(avatar);
+            item.appendChild(content);
+
+            item.addEventListener('click', () => {
+              // Show detail in popup's right column
+              document.querySelectorAll('#notificationHistoryList .notification-item').forEach(it => it.classList.remove('notification-item--active'));
+              item.classList.add('notification-item--active');
+              updateHistoryDetailView(notif);
+            });
+
+            historyList.appendChild(item);
+          });
+        }
+
+        popup.style.display = 'flex';
+        
+        // Scroll to top
+        popup.scrollTop = 0;
+        historyList.scrollTop = 0;
+      }
+      
+      function updateHistoryDetailView(notif) {
+        const detailContent = document.getElementById('notificationHistoryDetailContent');
+        const emptyState = document.getElementById('notificationHistoryEmptyState');
+        if (!detailContent || !notif) return;
+        
+        if (emptyState) emptyState.style.display = 'none';
+        detailContent.style.display = 'flex';
+        
+        const dateValue = notif.data.date || notif.data.timestamp;
+        let dateStr = '';
+        if (dateValue && dateValue.toDate) {
+          const dateObj = dateValue.toDate();
+          dateStr = dateObj.toLocaleDateString('hu-HU', { year: 'numeric', month: '2-digit', day: '2-digit' });
+        }
+        
+        // Same structure as main notifications detail view
+        detailContent.innerHTML = `
+          <div class="notification-detail-header">
+            <div class="notification-detail-header-text">
+              <p class="notification-detail-title">${notif.data.title || 'Értesítés'}</p>
+              <p class="notification-detail-date">${dateStr}</p>
+              <p class="notification-detail-sender">${notif.data.sender || 'Ismeretlen'}</p>
+            </div>
+            <div class="notification-detail-avatar" id="historyDetailAvatar"></div>
+          </div>
+          <div class="notification-detail-content-container">
+            <p class="notification-detail-message">${notif.data.content || notif.data.description || ''}</p>
+          </div>
+        `;
+        
+        // Load profile picture for avatar
+        if (notif.data.ownerId) {
+          const avatarEl = document.getElementById('historyDetailAvatar');
+          if (avatarEl) loadProfilePicture(notif.data.ownerId, avatarEl);
+        }
+      }
+
+      function closeNotificationHistoryPopup() {
+        const popup = document.getElementById('notificationHistoryPopup');
+        if (popup) {
+          popup.style.display = 'none';
+        }
+      }
+      window.closeNotificationHistoryPopup = closeNotificationHistoryPopup;
 
       window.addEventListener('youhub-open-notification', (event) => {
         const targetId = event?.detail?.id;
@@ -4768,6 +5873,14 @@
         // Also check if user is already logged in
         if (auth.currentUser) {
           loadNotifications(auth.currentUser.uid);
+        }
+
+        // Setup history button click handler
+        const historyBtn = document.querySelector('.notifications-top-section .notifications-history-btn');
+        if (historyBtn) {
+          historyBtn.addEventListener('click', () => {
+            openNotificationHistoryPopup();
+          });
         }
       })();
 

@@ -289,7 +289,12 @@
       "functions_options": {
         "descriptive_texts_title": "描述性文本",
         "descriptive_texts_default": "默认",
-        "descriptive_texts_reduced": "减少"
+        "descriptive_texts_reduced": "减少",
+        "greeting_display_time_title": "显示时间",
+        "greeting_display_time_desc": "根据时间显示问候语的持续时间。",
+        "seconds": "秒",
+        "ai_translation_title": "动态内容翻译",
+        "ai_translation_desc": "使用AI翻译动态变化的内容，例如建议或通知。"
       },
       "pages_options": {
         "home_title": "首页",
@@ -791,6 +796,7 @@
     "notifications": {
       "title": "通知",
       "history": "历史",
+      "more": "更多通知",
       "empty": {
         "title": "你没有通知",
         "subtitle": "稍后再来 :D"
@@ -828,8 +834,10 @@
           "heading": "显示给谁",
           "user_label": "显示给谁",
           "user_placeholder": "在这里输入...",
+          "user_description": "留空以创建公开建议。",
           "group_label": "目标群体",
           "group_placeholder": "在这里输入...",
+          "group_description": "留空以创建公开建议。",
           "share_heading": "分享",
           "share_title": "外部分享",
           "share_description": "允许学校也在外部平台上分享你的建议。"
@@ -885,6 +893,15 @@
       }
     },
     "calendar": {
+      "title": "日历",
+      "full": "完整日历",
+      "lunch": "午休",
+      "nav": {
+        "timetable": "课程表",
+        "exams": "考试",
+        "rp": "阅读进度",
+        "bell": "上课铃时间表"
+      },
       "empty": {
         "title": "日历尚不可用。",
         "subtitle": "稍后再来！"
@@ -1030,5 +1047,66 @@
   "staff": {
     "password_created_title": "密码已创建",
     "password_created_message": "您现在可以使用新密码登录。"
+  },
+  "greetings": {
+    "morning": "早上好 {name}！",
+    "afternoon": "下午好 {name}！",
+    "evening": "晚上好 {name}！"
+  },
+  "calendar": {
+    "months": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+    "months_long": {
+      "0": "一月",
+      "1": "二月",
+      "2": "三月",
+      "3": "四月",
+      "4": "五月",
+      "5": "六月",
+      "6": "七月",
+      "7": "八月",
+      "8": "九月",
+      "9": "十月",
+      "10": "十一月",
+      "11": "十二月"
+    },
+    "days": ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+    "days_long": {
+      "sunday": "星期日",
+      "monday": "星期一",
+      "tuesday": "星期二",
+      "wednesday": "星期三",
+      "thursday": "星期四",
+      "friday": "星期五",
+      "saturday": "星期六"
+    },
+    "days_short": {
+      "sunday": "日",
+      "monday": "一",
+      "tuesday": "二",
+      "wednesday": "三",
+      "thursday": "四",
+      "friday": "五",
+      "saturday": "六"
+    },
+    "today": "今天",
+    "select": "选择",
+    "no_class": "您还没有设置班级。",
+    "no_class_desc": "请与班主任沟通！",
+    "no_lessons_weekend": "今天没有课，好好休息吧！☕",
+    "no_lessons_weekend_desc": "",
+    "no_lessons_today": "今天没有课程。",
+    "no_lessons_today_desc": "",
+    "not_found": "我们找不到您的课程表！",
+    "not_found_desc": "请向 Turóczi Ádám 或 Hegyi Marianna 报告问题。",
+    "lunch_break": "午休",
+    "reading_progress": "阅读进度",
+    "exams": "考试",
+    "bell_schedule": "上课铃时间表",
+    "no_exams": "没有考试",
+    "no_exams_desc": "目前没有安排考试。",
+    "no_reading_progress": "没有阅读进度",
+    "no_reading_progress_desc": "您还没有开始阅读。",
+    "no_bell_schedule": "找不到上课铃时间表",
+    "no_bell_schedule_desc": "请向管理处报告问题。"
   }
 }

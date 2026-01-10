@@ -289,7 +289,12 @@
       "functions_options": {
         "descriptive_texts_title": "Textes Descriptifs",
         "descriptive_texts_default": "Par défaut",
-        "descriptive_texts_reduced": "Réduit"
+        "descriptive_texts_reduced": "Réduit",
+        "greeting_display_time_title": "Temps d'affichage",
+        "greeting_display_time_desc": "Durée d'affichage des salutations selon l'heure.",
+        "seconds": "sec",
+        "ai_translation_title": "Traduction de contenu dynamique",
+        "ai_translation_desc": "Traduction par IA pour le contenu dynamique, comme les suggestions ou les notifications."
       },
       "pages_options": {
         "home_title": "Accueil",
@@ -791,6 +796,7 @@
     "notifications": {
       "title": "Notifications",
       "history": "Historique",
+      "more": "Plus de notifications",
       "empty": {
         "title": "Tu n'as pas de notifications",
         "subtitle": "Reviens plus tard :D"
@@ -828,8 +834,10 @@
           "heading": "Afficher à qui",
           "user_label": "Afficher à qui",
           "user_placeholder": "Tape ici...",
+          "user_description": "Laisse vide pour une suggestion publique.",
           "group_label": "Groupe cible",
           "group_placeholder": "Tape ici...",
+          "group_description": "Laisse vide pour une suggestion publique.",
           "share_heading": "Partage",
           "share_title": "Partage externe",
           "share_description": "Permets à l'école de partager ta Suggestion également sur des plateformes externes."
@@ -885,6 +893,15 @@
       }
     },
     "calendar": {
+      "title": "Calendrier",
+      "full": "Calendrier Complet",
+      "lunch": "Pause Déjeuner",
+      "nav": {
+        "timetable": "Emploi du temps",
+        "exams": "Examens",
+        "rp": "Progrès de Lecture",
+        "bell": "Horaire des Sonneries"
+      },
       "empty": {
         "title": "Le calendrier n'est pas encore disponible.",
         "subtitle": "Reviens plus tard !"
@@ -1030,5 +1047,66 @@
   "staff": {
     "password_created_title": "Mot de passe créé",
     "password_created_message": "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe."
+  },
+  "greetings": {
+    "morning": "Bonjour {name}!",
+    "afternoon": "Bon après-midi {name}!",
+    "evening": "Bonsoir {name}!"
+  },
+  "calendar": {
+    "months": ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+    "months_long": {
+      "0": "Janvier",
+      "1": "Février",
+      "2": "Mars",
+      "3": "Avril",
+      "4": "Mai",
+      "5": "Juin",
+      "6": "Juillet",
+      "7": "Août",
+      "8": "Septembre",
+      "9": "Octobre",
+      "10": "Novembre",
+      "11": "Décembre"
+    },
+    "days": ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"],
+    "days_long": {
+      "sunday": "Dimanche",
+      "monday": "Lundi",
+      "tuesday": "Mardi",
+      "wednesday": "Mercredi",
+      "thursday": "Jeudi",
+      "friday": "Vendredi",
+      "saturday": "Samedi"
+    },
+    "days_short": {
+      "sunday": "D",
+      "monday": "L",
+      "tuesday": "M",
+      "wednesday": "M",
+      "thursday": "J",
+      "friday": "V",
+      "saturday": "S"
+    },
+    "today": "Aujourd'hui",
+    "select": "Sélectionner",
+    "no_class": "Vous n'avez pas de classe configurée.",
+    "no_class_desc": "Parlez à votre professeur!",
+    "no_lessons_weekend": "Pas de cours aujourd'hui, profitez du repos! ☕",
+    "no_lessons_weekend_desc": "",
+    "no_lessons_today": "Pas de cours pour aujourd'hui.",
+    "no_lessons_today_desc": "",
+    "not_found": "Nous n'avons pas trouvé votre emploi du temps!",
+    "not_found_desc": "Signalez le problème à Turóczi Ádám ou Hegyi Marianna.",
+    "lunch_break": "Pause déjeuner",
+    "reading_progress": "Progrès de lecture",
+    "exams": "Examens",
+    "bell_schedule": "Horaire des sonneries",
+    "no_exams": "Pas d'examens",
+    "no_exams_desc": "Aucun examen prévu.",
+    "no_reading_progress": "Pas de progrès de lecture",
+    "no_reading_progress_desc": "Vous n'avez pas encore commencé à lire.",
+    "no_bell_schedule": "Horaire des sonneries non trouvé",
+    "no_bell_schedule_desc": "Signalez le problème à l'administration."
   }
 }

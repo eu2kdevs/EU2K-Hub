@@ -1,175 +1,133 @@
 // Navigation State Manager
-// Elmenti és visszaállítja, honnan jöttünk egy oldalra, hogy nyelvváltoztatás után is működjön
+// Elmenti és visszaállítja, honnan jöttünk egy oldalra - localStorage-ban tárolja, frissítéskor is megmarad
 
 (function() {
   'use strict';
   
-  // Teljes script try-catch blokkal védve, hogy ne állítsa meg a többi script futását
   try {
-    // Konstansok
     const STORAGE_KEY = 'eu2k_navigation_from';
     const STORAGE_TIMESTAMP_KEY = 'eu2k_navigation_timestamp';
-    const STORAGE_TIMEOUT = 5 * 60 * 1000; // 5 perc
+    const STORAGE_TIMEOUT = 30 * 60 * 1000; // 30 perc (hosszabb, mert localStorage)
   
-  // Elmenti, honnan jöttünk
-  function saveNavigationState() {
-    try {
-      console.log('[NavigationState] saveNavigationState called');
-      console.log('[NavigationState] Current URL:', window.location.href);
-      console.log('[NavigationState] Document referrer:', document.referrer);
-      
-      // Próbáljuk meg az URL paraméterből
-      const urlParams = new URLSearchParams(window.location.search);
-      let fromPath = urlParams.get('from');
-      console.log('[NavigationState] From URL param:', fromPath);
-      
-      // Ha nincs URL paraméter, próbáljuk a referrer-t
-      if (!fromPath && document.referrer) {
-        try {
-          const referrerUrl = new URL(document.referrer);
-          fromPath = referrerUrl.pathname;
-          console.log('[NavigationState] From referrer pathname:', fromPath);
-        } catch (e) {
-          // Ha nem valid URL, próbáljuk meg úgy használni
-          fromPath = document.referrer;
-          console.log('[NavigationState] From referrer (raw):', fromPath);
-        }
-      }
-      
-      // Ha még mindig nincs, akkor a főoldalról jöttünk
-      if (!fromPath || fromPath === '' || fromPath === '/' || fromPath === '/index' || fromPath === '/index.html') {
-        fromPath = '/index.html';
-        console.log('[NavigationState] Defaulting to index.html');
-      }
-      
-      // Normalizáljuk a path-ot - eltávolítjuk az /EU2K-Hub/ prefixet ha van
-      fromPath = fromPath.replace(/^\/EU2K-Hub/, '').replace(/^\/+/, '/').replace(/\/+$/, '');
-      if (fromPath === '/' || fromPath === '') {
-        fromPath = '/index.html';
-      }
-      
-      console.log('[NavigationState] Final normalized path:', fromPath);
-      
-      // Elmentjük sessionStorage-ba (try-catch a biztonságért)
-      try {
-        sessionStorage.setItem(STORAGE_KEY, fromPath);
-        sessionStorage.setItem(STORAGE_TIMESTAMP_KEY, Date.now().toString());
-        console.log('[NavigationState] ✅ Saved navigation state to sessionStorage:', fromPath);
-      } catch (e) {
-        console.warn('[NavigationState] Could not save to sessionStorage:', e);
-      }
-    } catch (e) {
-      console.error('[NavigationState] Error in saveNavigationState:', e);
+    // Aktuális oldal neve
+    function getCurrentPage() {
+      return window.location.pathname.split('/').pop() || 'index.html';
     }
-  }
 
-  // Visszaolvassa, honnan jöttünk
-  function getNavigationState() {
-    try {
-      console.log('[NavigationState] getNavigationState called');
-      let timestamp = null;
+    // Elmenti, honnan jöttünk
+    function saveNavigationState(forcePath) {
       try {
-        timestamp = sessionStorage.getItem(STORAGE_TIMESTAMP_KEY);
-        console.log('[NavigationState] Timestamp from storage:', timestamp);
+        const currentPage = getCurrentPage();
+        
+        // Settings.html-en NE frissítsd - ott maradjon a régi state
+        if (currentPage === 'settings.html') {
+          console.log('[NavigationState] On settings.html, keeping existing state');
+          return;
+        }
+        
+        let fromPath = forcePath;
+        
+        if (!fromPath) {
+          // Próbáljuk meg az URL paraméterből
+          const urlParams = new URLSearchParams(window.location.search);
+          fromPath = urlParams.get('from');
+          
+          // Ha nincs URL paraméter, próbáljuk a referrer-t
+          if (!fromPath && document.referrer) {
+            try {
+              const referrerUrl = new URL(document.referrer);
+              fromPath = referrerUrl.pathname.split('/').pop() || 'index.html';
+            } catch (e) {
+              fromPath = null;
+            }
+          }
+        }
+        
+        // Normalizáljuk
+        if (!fromPath || fromPath === '' || fromPath === '/') {
+          fromPath = 'index.html';
+        }
+        fromPath = fromPath.replace(/^\/+/, '').replace(/\/+$/, '');
+        if (!fromPath.endsWith('.html')) {
+          fromPath = fromPath + '.html';
+        }
+        
+        // Ne mentse el önmagát
+        if (fromPath === currentPage) {
+          return;
+        }
+        
+        localStorage.setItem(STORAGE_KEY, fromPath);
+        localStorage.setItem(STORAGE_TIMESTAMP_KEY, Date.now().toString());
+        console.log('[NavigationState] ✅ Saved to localStorage:', fromPath);
       } catch (e) {
-        console.warn('[NavigationState] Could not read from sessionStorage:', e);
+        console.error('[NavigationState] Error saving:', e);
+      }
+    }
+
+    // Visszaolvassa, honnan jöttünk
+    function getNavigationState() {
+      try {
+        const timestamp = localStorage.getItem(STORAGE_TIMESTAMP_KEY);
+        
+        // Ellenőrizzük a timeout-ot
+        if (timestamp) {
+          const age = Date.now() - parseInt(timestamp, 10);
+          if (age > STORAGE_TIMEOUT) {
+            localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(STORAGE_TIMESTAMP_KEY);
+            console.log('[NavigationState] State expired');
+            return null;
+          }
+        }
+        
+        const fromPath = localStorage.getItem(STORAGE_KEY);
+        if (fromPath) {
+          console.log('[NavigationState] ✅ Retrieved:', fromPath);
+          return '/' + fromPath;
+        }
+        
+        return null;
+      } catch (e) {
+        console.error('[NavigationState] Error reading:', e);
         return null;
       }
-      
-      // Ellenőrizzük, hogy nem régi-e az adat (timeout)
-      if (timestamp) {
-        const age = Date.now() - parseInt(timestamp, 10);
-        console.log('[NavigationState] Navigation state age:', age, 'ms');
-        if (age > STORAGE_TIMEOUT) {
-          // Túl régi, töröljük
-          try {
-            sessionStorage.removeItem(STORAGE_KEY);
-            sessionStorage.removeItem(STORAGE_TIMESTAMP_KEY);
-          } catch (e) {
-            // Ignore
-          }
-          console.log('[NavigationState] ⚠️ Navigation state expired');
-          return null;
-        }
-      }
-      
-      const fromPath = sessionStorage.getItem(STORAGE_KEY);
-      if (fromPath) {
-        console.log('[NavigationState] ✅ Retrieved navigation state:', fromPath);
-        return fromPath;
-      }
-      
-      console.log('[NavigationState] ⚠️ No navigation state found in storage');
-      return null;
-    } catch (e) {
-      console.error('[NavigationState] Error in getNavigationState:', e);
-      return null;
     }
-  }
 
-  // Törli a navigation state-et
-  function clearNavigationState() {
-    try {
-      sessionStorage.removeItem(STORAGE_KEY);
-      sessionStorage.removeItem(STORAGE_TIMESTAMP_KEY);
-      console.log('[NavigationState] Cleared navigation state');
-    } catch (e) {
-      console.warn('[NavigationState] Could not clear from sessionStorage:', e);
+    // Törli a navigation state-et
+    function clearNavigationState() {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(STORAGE_TIMESTAMP_KEY);
+        console.log('[NavigationState] Cleared');
+      } catch (e) {
+        console.warn('[NavigationState] Could not clear:', e);
+      }
     }
-  }
 
-  // Publikus API létrehozása
-  try {
+    // Publikus API
     window.NavigationState = {
       save: saveNavigationState,
       get: getNavigationState,
       clear: clearNavigationState
     };
 
-    // Automatikusan elmentjük, amikor az oldal betöltődik (ha még nincs mentve)
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        try {
-          // Csak akkor mentjük el, ha még nincs mentve
-          if (!getNavigationState()) {
-            // Ha a referrer a settings.html-re mutat, akkor valószínűleg nyelvváltoztatás után vagyunk
-            // Ilyenkor ne mentjük el újra, hanem használjuk a meglévőt
-            const referrer = document.referrer;
-            if (referrer && !referrer.includes('settings.html')) {
-              saveNavigationState();
-            }
-          }
-        } catch (e) {
-          console.error('[NavigationState] Error in DOMContentLoaded handler:', e);
-        }
-      });
-    } else {
-      // Ha már betöltődött, azonnal
-      try {
-        if (!getNavigationState()) {
-          // Ha a referrer a settings.html-re mutat, akkor valószínűleg nyelvváltoztatás után vagyunk
-          // Ilyenkor ne mentjük el újra, hanem használjuk a meglévőt
-          const referrer = document.referrer;
-          if (referrer && !referrer.includes('settings.html')) {
-            saveNavigationState();
-          }
-        }
-      } catch (e) {
-        console.error('[NavigationState] Error in immediate save:', e);
+    // Automatikusan elmentjük minden oldalváltáskor (kivéve settings.html)
+    const currentPage = getCurrentPage();
+    if (currentPage !== 'settings.html') {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => saveNavigationState());
+      } else {
+        saveNavigationState();
       }
     }
+    
   } catch (e) {
-    // Ha bármi kritikus hiba van, legalább létrehozzuk az API-t, hogy ne legyen undefined
-    console.error('[NavigationState] Fatal error, creating fallback API:', e);
-    try {
-      window.NavigationState = {
-        save: function() {},
-        get: function() { return null; },
-        clear: function() {}
-      };
-    } catch (e2) {
-      // Ha még ez sem megy, akkor semmi
-      console.error('[NavigationState] Could not create fallback API:', e2);
-    }
+    console.error('[NavigationState] Fatal error:', e);
+    window.NavigationState = {
+      save: function() {},
+      get: function() { return null; },
+      clear: function() {}
+    };
   }
 })();

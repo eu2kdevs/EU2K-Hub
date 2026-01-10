@@ -240,7 +240,12 @@
       "functions_options": {
         "descriptive_texts_title": "Beschreibende Texte",
         "descriptive_texts_default": "Standard",
-        "descriptive_texts_reduced": "Reduziert"
+        "descriptive_texts_reduced": "Reduziert",
+        "greeting_display_time_title": "Anzeigezeit",
+        "greeting_display_time_desc": "Anzeigedauer der tageszeitabhängigen Grüße.",
+        "seconds": "Sek",
+        "ai_translation_title": "Dynamische Inhaltsübersetzung",
+        "ai_translation_desc": "KI-gestützte Übersetzung für dynamisch wechselnde Inhalte wie Vorschläge oder Benachrichtigungen."
       },
       "pages_options": {
         "home_title": "Zuhause",
@@ -786,6 +791,7 @@
     "notifications": {
       "title": "Benachrichtigungen",
       "history": "Verlauf",
+      "more": "Weitere Benachrichtigungen",
       "empty": {
         "title": "Du hast keine Benachrichtigungen",
         "subtitle": "Schau später noch einmal vorbei :D"
@@ -823,8 +829,10 @@
           "heading": "Anzeige für wen",
           "user_label": "Anzeige für wen",
           "user_placeholder": "Hier eingeben...",
+          "user_description": "Leer lassen für einen öffentlichen Vorschlag.",
           "group_label": "Zielgruppe",
           "group_placeholder": "Hier eingeben...",
+          "group_description": "Leer lassen für einen öffentlichen Vorschlag.",
           "share_heading": "Teilen",
           "share_title": "Externes Teilen",
           "share_description": "Erlaube der Schule, deinen Vorschlag auch auf externen Plattformen zu teilen."
@@ -880,6 +888,15 @@
       }
     },
     "calendar": {
+      "title": "Kalender",
+      "full": "Vollständiger Kalender",
+      "lunch": "Mittagspause",
+      "nav": {
+        "timetable": "Stundenplan",
+        "exams": "Prüfungen",
+        "rp": "Lesefortschritt",
+        "bell": "Klingelplan"
+      },
       "empty": {
         "title": "Kalender ist noch nicht verfügbar.",
         "subtitle": "Schau später noch einmal vorbei!"
@@ -1039,5 +1056,66 @@
   "staff": {
     "password_created_title": "Passwort erstellt",
     "password_created_message": "Sie können sich jetzt mit Ihrem neuen Passwort anmelden."
+  },
+  "greetings": {
+    "morning": "Guten Morgen {name}!",
+    "afternoon": "Guten Tag {name}!",
+    "evening": "Guten Abend {name}!"
+  },
+  "calendar": {
+    "months": ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+    "months_long": {
+      "0": "Januar",
+      "1": "Februar",
+      "2": "März",
+      "3": "April",
+      "4": "Mai",
+      "5": "Juni",
+      "6": "Juli",
+      "7": "August",
+      "8": "September",
+      "9": "Oktober",
+      "10": "November",
+      "11": "Dezember"
+    },
+    "days": ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
+    "days_long": {
+      "sunday": "Sonntag",
+      "monday": "Montag",
+      "tuesday": "Dienstag",
+      "wednesday": "Mittwoch",
+      "thursday": "Donnerstag",
+      "friday": "Freitag",
+      "saturday": "Samstag"
+    },
+    "days_short": {
+      "sunday": "S",
+      "monday": "M",
+      "tuesday": "D",
+      "wednesday": "M",
+      "thursday": "D",
+      "friday": "F",
+      "saturday": "S"
+    },
+    "today": "Heute",
+    "select": "Auswählen",
+    "no_class": "Sie haben keine Klasse eingerichtet.",
+    "no_class_desc": "Sprechen Sie mit Ihrem Klassenlehrer!",
+    "no_lessons_weekend": "Heute kein Unterricht, genießen Sie die Ruhe! ☕",
+    "no_lessons_weekend_desc": "",
+    "no_lessons_today": "Heute keine Stunden.",
+    "no_lessons_today_desc": "",
+    "not_found": "Wir konnten Ihren Stundenplan nicht finden!",
+    "not_found_desc": "Melden Sie das Problem an Turóczi Ádám oder Hegyi Marianna.",
+    "lunch_break": "Mittagspause",
+    "reading_progress": "Lesefortschritt",
+    "exams": "Prüfungen",
+    "bell_schedule": "Klingelplan",
+    "no_exams": "Keine Prüfungen",
+    "no_exams_desc": "Es sind keine Prüfungen geplant.",
+    "no_reading_progress": "Kein Lesefortschritt",
+    "no_reading_progress_desc": "Sie haben noch nicht mit dem Lesen begonnen.",
+    "no_bell_schedule": "Klingelplan nicht gefunden",
+    "no_bell_schedule_desc": "Melden Sie das Problem der Verwaltung."
   }
 }

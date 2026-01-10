@@ -248,7 +248,11 @@ class TranslationManager {
             }
         }
         
-        return typeof value === 'string' ? value : null;
+        // Return strings and arrays, but not objects
+        if (typeof value === 'string' || Array.isArray(value)) {
+            return value;
+        }
+        return null;
     }
 
     // Switch language (force újratöltés opcionális)
@@ -373,44 +377,31 @@ function setLanguage(lang) {
   }
 }
 
-// Gemini AI API configuration
-const GEMINI_API_KEY = 'no peeking bruh';
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
-
-// AI Translation function
+// AI Translation function using Cloud Function (API key secured server-side)
 async function translateWithAI(text, targetLanguage) {
     if (!text) return '';
     
     try {
         const prompt = `Translate the following text to ${targetLanguage}: "${text}", only answer with the translated text, no other text or explanation.`;
 
-        const response = await fetch(GEMINI_API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-goog-api-key': GEMINI_API_KEY
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
-                }]
-            })
+        // Use Cloud Function to call Gemini API - API key is stored securely in the function
+        const { getFunctions, httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+        const functions = getFunctions(window.firebaseApp || window.app, 'europe-west1');
+        const generateContent = httpsCallable(functions, 'generateContent');
+        
+        const result = await generateContent({
+            prompt: prompt,
+            model: 'gemini-2.5-flash',
+            thinkingBudget: 0 // Disable thinking for faster translations
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const translatedText = data.candidates[0].content.parts[0].text.trim();
+        const translatedText = result.data.text?.trim() || text;
 
         console.log(`AI Translation: "${text}" → "${translatedText}"`);
 
         return translatedText;
     } catch (error) {
-        console.error('Xelp API error:', error);
+        console.error('AI Translation error:', error);
         return text; // Return original text on error
     }
 }

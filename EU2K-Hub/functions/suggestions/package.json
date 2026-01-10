@@ -1,0 +1,16 @@
+{
+  "name": "suggestions",
+  "version": "1.0.0",
+  "main": "index.js",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "lint": "echo \"No linting configured\""
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.2",
+    "firebase-functions": "^6.3.0"
+  }
+}
+

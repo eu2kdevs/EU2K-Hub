@@ -289,7 +289,12 @@
       "functions_options": {
         "descriptive_texts_title": "説明テキスト",
         "descriptive_texts_default": "デフォルト",
-        "descriptive_texts_reduced": "削減"
+        "descriptive_texts_reduced": "削減",
+        "greeting_display_time_title": "表示時間",
+        "greeting_display_time_desc": "時間帯による挨拶の表示時間。",
+        "seconds": "秒",
+        "ai_translation_title": "動的コンテンツ翻訳",
+        "ai_translation_desc": "提案や通知など、動的に変化するコンテンツのAI翻訳。"
       },
       "pages_options": {
         "home_title": "ホーム",
@@ -791,6 +796,7 @@
     "notifications": {
       "title": "通知",
       "history": "履歴",
+      "more": "その他の通知",
       "empty": {
         "title": "通知がありません",
         "subtitle": "後で戻ってきてください :D"
@@ -828,8 +834,10 @@
           "heading": "誰に表示するか",
           "user_label": "誰に表示するか",
           "user_placeholder": "ここに入力...",
+          "user_description": "公開提案の場合は空のままにしてください。",
           "group_label": "ターゲットグループ",
           "group_placeholder": "ここに入力...",
+          "group_description": "公開提案の場合は空のままにしてください。",
           "share_heading": "共有",
           "share_title": "外部共有",
           "share_description": "学校があなたの提案を外部プラットフォームでも共有できるようにします。"
@@ -885,6 +893,15 @@
       }
     },
     "calendar": {
+      "title": "カレンダー",
+      "full": "カレンダー全体",
+      "lunch": "昼休み",
+      "nav": {
+        "timetable": "時間割",
+        "exams": "試験",
+        "rp": "読書の進捗",
+        "bell": "チャイムスケジュール"
+      },
       "empty": {
         "title": "カレンダーはまだ利用できません。",
         "subtitle": "後で戻ってきてください！"
@@ -1030,5 +1047,66 @@
   "staff": {
     "password_created_title": "パスワードが作成されました",
     "password_created_message": "新しいパスワードでログインできます。"
+  },
+  "greetings": {
+    "morning": "おはようございます {name}さん！",
+    "afternoon": "こんにちは {name}さん！",
+    "evening": "こんばんは {name}さん！"
+  },
+  "calendar": {
+    "months": ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+    "months_long": {
+      "0": "1月",
+      "1": "2月",
+      "2": "3月",
+      "3": "4月",
+      "4": "5月",
+      "5": "6月",
+      "6": "7月",
+      "7": "8月",
+      "8": "9月",
+      "9": "10月",
+      "10": "11月",
+      "11": "12月"
+    },
+    "days": ["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"],
+    "days_long": {
+      "sunday": "日曜日",
+      "monday": "月曜日",
+      "tuesday": "火曜日",
+      "wednesday": "水曜日",
+      "thursday": "木曜日",
+      "friday": "金曜日",
+      "saturday": "土曜日"
+    },
+    "days_short": {
+      "sunday": "日",
+      "monday": "月",
+      "tuesday": "火",
+      "wednesday": "水",
+      "thursday": "木",
+      "friday": "金",
+      "saturday": "土"
+    },
+    "today": "今日",
+    "select": "選択",
+    "no_class": "クラスが設定されていません。",
+    "no_class_desc": "担任の先生に相談してください！",
+    "no_lessons_weekend": "今日は授業がありません、ゆっくり休んでください！☕",
+    "no_lessons_weekend_desc": "",
+    "no_lessons_today": "今日の授業はありません。",
+    "no_lessons_today_desc": "",
+    "not_found": "時間割が見つかりません！",
+    "not_found_desc": "Turóczi Ádám または Hegyi Marianna に問題を報告してください。",
+    "lunch_break": "昼休み",
+    "reading_progress": "読書の進捗",
+    "exams": "試験",
+    "bell_schedule": "チャイムスケジュール",
+    "no_exams": "試験なし",
+    "no_exams_desc": "予定されている試験はありません。",
+    "no_reading_progress": "読書の進捗なし",
+    "no_reading_progress_desc": "まだ読書を始めていません。",
+    "no_bell_schedule": "チャイムスケジュールが見つかりません",
+    "no_bell_schedule_desc": "管理部門に問題を報告してください。"
   }
 }

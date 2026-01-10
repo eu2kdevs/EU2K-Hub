@@ -37,17 +37,18 @@
    * Initialize timer
    */
   function initTimer() {
+    // Prevent multiple initializations
+    if (window._staffTimerInitialized) {
+      console.log('[StaffTimer] Already initialized, skipping...');
+      return;
+    }
+    window._staffTimerInitialized = true;
+    
     console.log('[StaffTimer] 🚀 Initializing timer...');
     // Get device ID
     getDeviceId();
-    // Create timer element immediately (even if session is not active)
-    if (!timerElement || !document.getElementById('staffSessionTimer')) {
-      console.log('[StaffTimer] Creating timer element...');
-      createTimerElement();
-    } else {
-      console.log('[StaffTimer] Timer element already exists');
-    }
-    // Check if session is active
+    // Don't create timer element until we know there's an active session
+    // Check if session is active first
     checkAndStartTimer();
   }
 
@@ -126,13 +127,27 @@
         startTimer(result.data.endTime);
       } else {
         console.log('[StaffTimer] ❌ Session is not active');
-        // No active session - check if we're on a protected page
+        // No active session - hide timer completely
+        if (timerElement) {
+          timerElement.style.display = 'none';
+        }
+        // Stop counting
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+        if (syncInterval) {
+          clearInterval(syncInterval);
+          syncInterval = null;
+        }
+        sessionEndTime = null;
+        
+        // Check if we're on a protected page
         const currentPage = window.location.pathname.split('/').pop();
         if (currentPage === 'dashboard.html' || currentPage === 'students.html') {
           handleSessionExpired();
         } else {
-          // On other pages, just stop timer and hide nav items
-          stopTimer();
+          // On other pages, just hide nav items
           if (window.staffNavItems && window.staffNavItems.hide) {
             window.staffNavItems.hide();
           }
@@ -183,8 +198,9 @@
       };
       waitForElement();
     } else {
-      // Element already exists, just show it
+      // Element already exists, just show it with full opacity when active
       timerElement.style.display = 'flex';
+      timerElement.style.opacity = '1';
       console.log('[StaffTimer] Timer element already exists, displaying');
     }
 
@@ -220,6 +236,7 @@
       syncInterval = null;
     }
 
+    // Hide timer element completely when stopped
     if (timerElement) {
       timerElement.style.display = 'none';
     }

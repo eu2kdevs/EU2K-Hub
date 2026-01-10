@@ -519,11 +519,15 @@ body {
 }
 
 .welcome-icon {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  max-width: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  flex-shrink: 0;
   margin-bottom: 10px;
   object-fit: contain;
-  flex-shrink: 0;
 }
 
 .welcome-text {
@@ -1277,7 +1281,7 @@ body {
   .main-area { margin-left: 0; }
 }
 ::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-thumb { background: #232823; border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: #8BC34A; border-radius: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 
 /* Új dolgok Popup */
@@ -1873,6 +1877,16 @@ body {
   overflow: visible; /* Ne legyen saját görgetés, a szülő görget */
 }
 
+/* Kollégáknak kártya - 16px margin felette */
+#staffAccessCard {
+  margin-top: 16px;
+}
+
+/* Minden munkamenet megszakítása kártya - nincs margin felette */
+#staffEndAllCard {
+  margin-top: 0;
+}
+
 /* Generikus elrejtő helper – Csendes mód bannerhez is használjuk */
 .is-hidden {
   display: none !important;
@@ -1982,6 +1996,10 @@ body {
   padding: 14px 18px;
 }
 
+.functions-card-grouped-item{
+  margin-top: -16px;
+}
+
 .pages-card {
   padding: 7px 12px;
 }
@@ -2076,6 +2094,72 @@ body {
 .settings-switch::part(icon) {
   mask-size: 16px 16px;
   -webkit-mask-size: 16px 16px;
+}
+
+/* Greeting time input with custom buttons */
+.greeting-time-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #142204;
+  border: 1px solid #4B6231;
+  border-radius: 14px;
+  padding: 4px;
+}
+
+.greeting-time-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.greeting-time-btn:hover {
+  background: rgba(180, 255, 94, 0.15);
+}
+
+.greeting-time-btn:active {
+  background: rgba(180, 255, 94, 0.25);
+}
+
+.greeting-time-btn img {
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+}
+
+.greeting-time-btn-up img {
+  transform: rotate(180deg);
+}
+
+.greeting-time-value-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  min-width: 48px;
+  justify-content: center;
+}
+
+.greeting-time-value {
+  color: #E5FDCB;
+  font-size: 16px;
+  font-weight: 500;
+  min-width: 20px;
+  text-align: center;
+}
+
+.greeting-time-unit {
+  color: #E5FDCB;
+  opacity: 0.6;
+  font-size: 13px;
+  font-weight: 400;
 }
 
 /* Control row (2 dropdown esetén) */

@@ -249,7 +249,12 @@
       "functions_options": {
         "descriptive_texts_title": "Leíró szövegek",
         "descriptive_texts_default": "Alapértelmezett",
-        "descriptive_texts_reduced": "Csökkentett"
+        "descriptive_texts_reduced": "Csökkentett",
+        "greeting_display_time_title": "Mutatási idő",
+        "greeting_display_time_desc": "A napszak szerinti üdvözlések megmutatásának ideje.",
+        "seconds": "mp",
+        "ai_translation_title": "Dinamikus Tartalmak fordítása",
+        "ai_translation_desc": "AI-jal való fordítás a dinamikusan változó tartalmaknál, például javaslatok vagy értesítések."
       },
       "pages_options": {
         "home_title": "Otthon",
@@ -809,6 +814,7 @@
     "notifications": {
       "title": "Értesítések",
       "history": "Előzmények",
+      "more": "További értesítések",
       "empty": {
         "title": "Nincsenek értesítéseid",
         "subtitle": "Nézz vissza később :D"
@@ -846,8 +852,10 @@
           "heading": "Megjelenítés kinek",
           "user_label": "Megjelenítés kinek",
           "user_placeholder": "Ide írj...",
+          "user_description": "Hagyd üresen a publikus javaslathoz.",
           "group_label": "Célcsoport",
           "group_placeholder": "Ide írj...",
+          "group_description": "Hagyd üresen a publikus javaslathoz.",
           "share_heading": "Megosztás",
           "share_title": "Külső Megosztás",
           "share_description": "Engedélyezed az iskolának hogy a Javaslatodat külsős platformokra is megoszthatja -e."
@@ -904,6 +912,15 @@
       }
     },
     "calendar": {
+      "title": "Naptár",
+      "full": "Teljes Naptár",
+      "lunch": "Ebédszünet",
+      "nav": {
+        "timetable": "Órarend",
+        "exams": "Dolgozatok",
+        "rp": "Reading Progressek",
+        "bell": "Csengetési Rend"
+      },
       "empty": {
         "title": "A Naptár még nem elérhető.",
         "subtitle": "Nézz vissza később!"
@@ -1072,5 +1089,66 @@
   "staff": {
     "password_created_title": "Jelszó létrehozva",
     "password_created_message": "Most már bejelentkezhetsz az új jelszavaddal."
+  },
+  "greetings": {
+    "morning": "Jóreggelt {name}!",
+    "afternoon": "Jónapot {name}!",
+    "evening": "Jóestét {name}!"
+  },
+  "calendar": {
+    "months": ["Január", "Február", "Március", "Április", "Május", "Június", "Július", "Augusztus", "Szeptember", "Október", "November", "December"],
+    "months_long": {
+      "0": "Január",
+      "1": "Február",
+      "2": "Március",
+      "3": "Április",
+      "4": "Május",
+      "5": "Június",
+      "6": "Július",
+      "7": "Augusztus",
+      "8": "Szeptember",
+      "9": "Október",
+      "10": "November",
+      "11": "December"
+    },
+    "days": ["Vasárnap", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"],
+    "days_long": {
+      "sunday": "Vasárnap",
+      "monday": "Hétfő",
+      "tuesday": "Kedd",
+      "wednesday": "Szerda",
+      "thursday": "Csütörtök",
+      "friday": "Péntek",
+      "saturday": "Szombat"
+    },
+    "days_short": {
+      "sunday": "V",
+      "monday": "H",
+      "tuesday": "K",
+      "wednesday": "Sz",
+      "thursday": "Cs",
+      "friday": "P",
+      "saturday": "Sz"
+    },
+    "today": "Ma",
+    "select": "Kiválasztás",
+    "no_class": "Nincs osztályod beállítva.",
+    "no_class_desc": "Beszélj az osztályfőnököddel!",
+    "no_lessons_weekend": "Ma nincs tanítás, jó pihenést! ☕",
+    "no_lessons_weekend_desc": "",
+    "no_lessons_today": "Mára nincsenek órák.",
+    "no_lessons_today_desc": "",
+    "not_found": "Nem találtuk az órarended!",
+    "not_found_desc": "Jelezd a hibát Turóczi Ádámnak vagy Hegyi Marianna titkárnőnek!",
+    "lunch_break": "Ebédszünet",
+    "reading_progress": "Olvasási előrehaladás",
+    "exams": "Dolgozatok",
+    "bell_schedule": "Csengetési rend",
+    "no_exams": "Nincsenek dolgozataid",
+    "no_exams_desc": "Jelenleg nincs bejelentett dolgozat.",
+    "no_reading_progress": "Nincs olvasási előrehaladás",
+    "no_reading_progress_desc": "Még nem kezdtél el olvasni.",
+    "no_bell_schedule": "Nem találtuk a csengetési rendet",
+    "no_bell_schedule_desc": "Jelezd a hibát az adminisztrációnak."
   }
 }
