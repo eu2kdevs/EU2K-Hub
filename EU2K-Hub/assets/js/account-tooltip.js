@@ -314,14 +314,14 @@
 
       // Load profile picture from Firebase Storage or avatars
       let profilePictureURL = null;
-      
+
       // Try to load from Firebase Storage (school profile picture)
       // Try with .jpg extension first, then without
       const storagePaths = [
         `profilePhotos/${uid}.jpg`,
         `profilePhotos/${uid}`
       ];
-      
+
       let storageError = null;
       for (const path of storagePaths) {
         try {
@@ -332,10 +332,10 @@
         } catch (error) {
           storageError = error;
           // Check if it's a 404/not found error
-          const isNotFound = error.code === 'storage/object-not-found' || 
-                            error.code === '404' || 
+          const isNotFound = error.code === 'storage/object-not-found' ||
+                            error.code === '404' ||
                             (error.message && (error.message.includes('404') || error.message.includes('not found')));
-          
+
           if (!isNotFound) {
             // Other error (permission, network, etc.) - log and break
             console.warn('[AccountTooltip] Error loading profile picture from Storage:', error.code || error.message);
@@ -344,7 +344,7 @@
           // 404 error - try next path silently
         }
       }
-      
+
       // If no profile picture found in Storage, use avatar fallback
       if (!profilePictureURL && userData.avatarColor) {
         profilePictureURL = `assets/avatars/${userData.avatarColor}.png`;

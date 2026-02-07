@@ -97,18 +97,72 @@ async function handleLoadClasses(request) {
         throw new HttpsError('permission-denied', 'Admin, teacher or owner access required');
     }
 
-    const classesSnapshot = await db.collection('classes').get();
     const classMapping = {};
     const classes = [];
-    classesSnapshot.forEach(doc => {
-        const classId = doc.id;
+
+    // Own class lookup: users/{uid}/groups/ownclass
+    let ownClassId = null;
+    const ownClassDoc = await db.collection('users').doc(uid).collection('groups').doc('ownclass').get();
+    if (ownClassDoc.exists) {
+        const data = ownClassDoc.data() || {};
+        if (data.classFinishes && data.classType) {
+            ownClassId = `${data.classFinishes}${data.classType}`.toLowerCase();
+        }
+    }
+
+    // Permitted class lookup: users/{uid}/groups/permittedClass
+    let permittedClassId = null;
+    let permittedRoles = null;
+    const permittedDoc = await db.collection('users').doc(uid).collection('groups').doc('permittedClass').get();
+    if (permittedDoc.exists) {
+        const data = permittedDoc.data() || {};
+        if (data.classFinishes && data.classType) {
+            permittedClassId = `${data.classFinishes}${data.classType}`.toLowerCase();
+            permittedRoles = {
+                homeroomDeputy: data.homeroomDeputy === true,
+                subjectTeacher: data.subjectTeacher === true,
+                substituteTeacher: data.substituteTeacher === true,
+                adminColleague: data.adminColleague === true
+            };
+        }
+    }
+
+    const targetClassIds = new Set([ownClassId, permittedClassId].filter(Boolean));
+    for (const classId of targetClassIds) {
+        const classDoc = await db.collection('classes').doc(classId).get();
+        if (!classDoc.exists) continue;
         const formatted = formatClassName(classId);
-        classes.push({ id: classId, name: formatted });
+        const isOwn = ownClassId === classId;
+        let accessRole = isOwn ? 'owner' : null;
+        let canEdit = isOwn;
+
+        if (!isOwn && permittedClassId === classId && permittedRoles) {
+            if (permittedRoles.homeroomDeputy) {
+                accessRole = 'homeroomDeputy';
+                canEdit = true;
+                // TODO: if notification system is added later, notify class leader on changes
+            } else if (permittedRoles.adminColleague) {
+                accessRole = 'adminColleague';
+                canEdit = token.admin === true || token.owner === true;
+            } else if (permittedRoles.subjectTeacher) {
+                accessRole = 'subjectTeacher';
+                canEdit = false;
+            } else if (permittedRoles.substituteTeacher) {
+                accessRole = 'substituteTeacher';
+                canEdit = false;
+            }
+        }
+
+        classes.push({ id: classId, name: formatted, accessRole, canEdit });
         classMapping[formatted] = classId;
-    });
+    }
     classes.sort((a, b) => a.name.localeCompare(b.name, 'hu'));
     await db.collection(SESSION_COLLECTION).doc(uid).set({
         classMapping,
+        classAccess: classes.reduce((acc, cls) => {
+            acc[cls.id] = { accessRole: cls.accessRole, canEdit: cls.canEdit };
+            return acc;
+        }, {}),
         updatedAt: admin.firestore.FieldValue.serverTimestamp()
     }, { merge: true });
     return { classes };
@@ -292,6 +346,8 @@ async function handleSaveLessonAssignment(request) {
                 if (!lData) {
                     batch.delete(docRef);
                 } else {
+                    const hasOptionalStudents = lData.optionalLessonStudents && typeof lData.optionalLessonStudents === 'string' && lData.optionalLessonStudents.trim().length > 0;
+                    const optionalClass = lData.optionalClass === true || hasOptionalStudents;
                     batch.set(docRef, {
                         lessonTitle: lData.lessonTypeName || lData.lessonType || '',
                         teacherTitle: lData.teacherName || lData.teacher || '',
@@ -304,6 +360,8 @@ async function handleSaveLessonAssignment(request) {
                         studentGroupName: lData.studentGroupName || lData.studentGroup || null, // Display name
                         placeid: lData.placeid || null,
                         placeName: lData.placeName || null,
+                        optionalLessonStudents: lData.optionalLessonStudents || null,
+                        optionalClass: optionalClass,
                         sessionId: sessionId,
                         updatedAt: admin.firestore.FieldValue.serverTimestamp()
                     });
@@ -392,17 +450,83 @@ async function handleGetLessonCards(request) {
                 lessonType: d.lessonType,
                 teacherId: d.teacher,
                 startTime: d.startTime,
-                finishTime: d.finishTime
+                finishTime: d.finishTime,
+                optionalClass: d.optionalClass === true // Load optionalClass boolean
             });
         }
     });
 
     const normalizedCards = [];
     for (let i = 0; i <= 8; i++) {
-        const found = cards.find(c => c.number === i);
-        normalizedCards.push(found || { number: i, typeName: '-', teacher: '-', timeline: '-', complete: false });
+        const found = cards.find(c => c.number === i);        normalizedCards.push(found || { number: i, typeName: '-', teacher: '-', timeline: '-', complete: false, optionalClass: false });
     }
     return { cards: normalizedCards };
+}
+
+async function handleGetClassTimetableCards(request) {
+    const { classId, day } = request.data;
+    if (!classId || !day) {
+        throw new HttpsError('invalid-argument', 'classId and day are required');
+    }
+
+    const dayColRef = db.collection('classes').doc(classId)
+        .collection('calendar').doc('timetable').collection(day);
+    const snapshot = await dayColRef.get();
+
+    const cards = [];
+    snapshot.forEach(doc => {
+        const d = doc.data();
+        const num = parseInt(doc.id.replace('lesson', ''), 10);
+        if (!isNaN(num)) {
+            cards.push({
+                number: num,
+                lessonType: d.lessonType || null,
+                lessonTypeName: d.lessonTypeName || d.lessonType || '-',
+                lessonIcon: d.lessonIcon || 'smile',
+                teacherId: d.teacherId || d.teacher || null,
+                teacherName: d.teacherName || '-',
+                teacher2: d.teacher2 || null,
+                teacher2Name: d.teacher2Name || null,
+                studentGroup: d.studentGroup || null,
+                studentGroupName: d.studentGroupName || null,
+                placeName: d.placeName || '-',
+                timelineStart: d.timelineStart || null,
+                timelineEnd: d.timelineEnd || null,
+                optionalClass: d.optionalClass === true,
+                optionalLessonStudents: d.optionalLessonStudents || null
+            });
+        }
+    });
+
+    cards.sort((a, b) => a.number - b.number);
+    return { cards };
+}
+
+async function handleDeleteClassTimetableLesson(request) {
+    const uid = request.auth.uid;
+    const token = request.auth.token;
+    const isAuthorized = token.admin === true || token.teacher === true || token.owner === true;
+    if (!isAuthorized) {
+        throw new HttpsError('permission-denied', 'Admin, teacher or owner access required');
+    }
+
+    const { classId, day, lessonNumber } = request.data;
+    if (!classId || !day || lessonNumber === undefined || lessonNumber === null) {
+        throw new HttpsError('invalid-argument', 'classId, day and lessonNumber are required');
+    }
+
+    const lessonNum = parseInt(lessonNumber, 10);
+    if (Number.isNaN(lessonNum)) {
+        throw new HttpsError('invalid-argument', 'lessonNumber must be a number');
+    }
+
+    const docRef = db.collection('classes').doc(classId)
+        .collection('calendar').doc('timetable').collection(day)
+        .doc(`lesson${lessonNum}`);
+
+    await docRef.delete();
+    console.log(`[CalendarAPI] Deleted lesson${lessonNum} from ${classId}/${day} by ${uid}`);
+    return { success: true };
 }
 
 async function handleSaveVariation(request) {
@@ -512,6 +636,264 @@ async function handleSearchUsers(request) {
 
     console.log(`[CalendarAPI] searchUsers: Found ${users.length} users`);
     return { users };
+}
+
+async function handleSearchTeacherCandidates(request) {
+    // Return combined teacher + name lookup candidates
+    const results = [];
+    const seen = new Set();
+
+    const teachersRoot = db.collection('usrlookup').doc('teachers');
+    const teacherCollections = await teachersRoot.listCollections();
+    for (const col of teacherCollections) {
+        const normalizedName = col.id;
+        const docsSnapshot = await col.limit(1).get();
+        if (!docsSnapshot.empty) {
+            const doc = docsSnapshot.docs[0];
+            const data = doc.data();
+            if (data.fullName && !seen.has(normalizedName)) {
+                results.push({
+                    id: doc.id,
+                    normalizedName,
+                    fullName: data.fullName,
+                    source: 'teachers'
+                });
+                seen.add(normalizedName);
+            }
+        }
+    }
+
+    const namesRoot = db.collection('usrlookup').doc('names');
+    const nameCollections = await namesRoot.listCollections();
+    for (const col of nameCollections) {
+        const normalizedName = col.id;
+        if (seen.has(normalizedName)) continue;
+        const docsSnapshot = await col.limit(1).get();
+        if (!docsSnapshot.empty) {
+            const doc = docsSnapshot.docs[0];
+            const data = doc.data();
+            if (data.fullName) {
+                results.push({
+                    id: doc.id,
+                    normalizedName,
+                    fullName: data.fullName,
+                    source: 'names'
+                });
+                seen.add(normalizedName);
+            }
+        }
+    }
+
+    console.log(`[CalendarAPI] searchTeacherCandidates: Found ${results.length} users`);
+    return { users: results };
+}
+
+async function handleGrantClassAccess(request) {
+    const uid = request.auth.uid;
+    const token = request.auth.token;
+    const isAuthorized = token.admin === true || token.teacher === true || token.owner === true;
+    if (!isAuthorized) {
+        throw new HttpsError('permission-denied', 'Admin, teacher or owner access required');
+    }
+
+    const { fullName, roles } = request.data;
+    if (!fullName || typeof fullName !== 'string') {
+        throw new HttpsError('invalid-argument', 'fullName is required');
+    }
+    if (!roles || typeof roles !== 'object') {
+        throw new HttpsError('invalid-argument', 'roles are required');
+    }
+
+    const ownClassDoc = await db.collection('users').doc(uid).collection('groups').doc('ownclass').get();
+    if (!ownClassDoc.exists) {
+        throw new HttpsError('failed-precondition', 'Own class not found');
+    }
+    const ownData = ownClassDoc.data() || {};
+    const classFinishes = (ownData.classFinishes || '').toString().trim();
+    const classType = (ownData.classType || '').toString().trim().toLowerCase();
+    if (!classFinishes || !classType) {
+        throw new HttpsError('failed-precondition', 'Own class data missing');
+    }
+
+    // Non-admin/owner can only grant for own class
+    if (!(token.admin === true || token.owner === true)) {
+        const classId = `${classFinishes}${classType}`.toLowerCase();
+        const classDoc = await db.collection('classes').doc(classId).get();
+        if (!classDoc.exists) {
+            throw new HttpsError('failed-precondition', 'Own class not found in classes');
+        }
+    }
+
+    // Normalize name (same as optional lookup)
+    const normalizedName = fullName
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9\s]/g, '')
+        .trim()
+        .replace(/\s+/g, '_');
+
+    let targetUserId = null;
+    // Try teachers first
+    const teachersCol = db.collection('usrlookup').doc('teachers').collection(normalizedName);
+    const teachersSnap = await teachersCol.limit(1).get();
+    if (!teachersSnap.empty) {
+        targetUserId = teachersSnap.docs[0].id;
+    } else {
+        // Fallback to names
+        const namesCol = db.collection('usrlookup').doc('names').collection(normalizedName);
+        const namesSnap = await namesCol.limit(1).get();
+        if (!namesSnap.empty) {
+            targetUserId = namesSnap.docs[0].id;
+        }
+    }
+
+    if (!targetUserId) {
+        throw new HttpsError('not-found', 'User not found for provided name');
+    }
+
+    await db.collection('users').doc(targetUserId).collection('groups').doc('permittedClass').set({
+        classFinishes: classFinishes,
+        classType: classType,
+        homeroomDeputy: roles.homeroomDeputy === true,
+        subjectTeacher: roles.subjectTeacher === true,
+        substituteTeacher: roles.substituteTeacher === true,
+        adminColleague: roles.adminColleague === true,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        grantedBy: uid
+    }, { merge: true });
+
+    return { success: true, targetUserId };
+}
+
+async function handleLookupOptionalLessonStudents(request) {
+    // Look up students by fullName and return normalizedNames
+    // Input: { fullNames: "Name1, Name2, Name3" } (comma-separated string)
+    // Output: { normalizedNames: "name1, name2, name3" } or null if empty/not found
+    
+    const { fullNames } = request.data;
+    
+    if (!fullNames || typeof fullNames !== 'string') {
+        return { normalizedNames: null };
+    }
+    
+    // Parse names: split by comma and trim
+    const nameArray = fullNames.split(',').map(n => n.trim()).filter(n => n);
+    
+    if (nameArray.length === 0) {
+        return { normalizedNames: null };
+    }
+    
+    // Helper function to simplify name (convert to normalizedName format)
+    function simplifyName(fullName) {
+        return fullName
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+            .replace(/[^a-z0-9\s]/g, '') // Remove special chars
+            .trim()
+            .replace(/\s+/g, '_'); // Replace spaces with underscores
+    }
+    
+    const foundNormalizedNames = [];
+    
+    for (const fullName of nameArray) {
+        const normalizedName = simplifyName(fullName);
+        
+        try {
+            // Look up in usrlookup/names/{normalizedName}/{userId}
+            const namesCollectionRef = db.collection('usrlookup').doc('names').collection(normalizedName);
+            const userDocs = await namesCollectionRef.limit(1).get();
+            
+            if (!userDocs.empty) {
+                // Found - add normalizedName
+                foundNormalizedNames.push(normalizedName);
+                console.log(`[CalendarAPI] Found student: ${fullName} -> ${normalizedName}`);
+            } else {
+                console.log(`[CalendarAPI] Student not found: ${fullName} (${normalizedName})`);
+            }
+        } catch (error) {
+            console.error(`[CalendarAPI] Error looking up name ${fullName}:`, error);
+        }
+    }
+    
+    // Return comma-separated string or null
+    if (foundNormalizedNames.length > 0) {
+        return { normalizedNames: foundNormalizedNames.join(', ') };
+    } else {
+        return { normalizedNames: null };
+    }
+}
+
+async function handleGetOptionalLessonStudents(request) {
+    // Get fullNames for normalizedNames
+    // Input: { normalizedNames: "name1, name2, name3" } (comma-separated string)
+    // Output: { fullNames: ["Full Name 1", "Full Name 2", "Full Name 3"] } or []
+    
+    const { normalizedNames } = request.data;
+    
+    if (!normalizedNames || typeof normalizedNames !== 'string') {
+        return { fullNames: [] };
+    }
+    
+    // Parse normalizedNames: split by comma and trim
+    const normalizedNameArray = normalizedNames.split(',').map(n => n.trim()).filter(n => n);
+    
+    if (normalizedNameArray.length === 0) {
+        return { fullNames: [] };
+    }
+    
+    const fullNames = [];
+    
+    for (const normalizedName of normalizedNameArray) {
+        try {
+            // Look up in usrlookup/names/{normalizedName}/{userId}
+            const namesCollectionRef = db.collection('usrlookup').doc('names').collection(normalizedName);
+            const userDocs = await namesCollectionRef.limit(1).get();
+            
+            if (!userDocs.empty) {
+                const userDoc = userDocs.docs[0];
+                const userData = userDoc.data();
+                const fullName = userData.fullName || normalizedName;
+                fullNames.push(fullName);
+                console.log(`[CalendarAPI] Found fullName: ${normalizedName} -> ${fullName}`);
+            } else {
+                console.log(`[CalendarAPI] FullName not found for: ${normalizedName}`);
+            }
+        } catch (error) {
+            console.error(`[CalendarAPI] Error looking up normalizedName ${normalizedName}:`, error);
+        }
+    }
+    
+    return { fullNames };
+}
+
+async function handleGetCurrentUserNormalizedName(request) {
+    // Get current user's normalizedName from usrlookup/names
+    const uid = request.auth.uid;
+    if (!uid) {
+        throw new HttpsError('unauthenticated', 'User must be authenticated');
+    }
+
+    try {
+        // Look up in usrlookup/names - find collection where userId matches
+        const namesDocRef = db.collection('usrlookup').doc('names');
+        const collections = await namesDocRef.listCollections();
+        
+        for (const col of collections) {
+            const userDoc = await col.doc(uid).get();
+            if (userDoc.exists) {
+                console.log(`[CalendarAPI] Found normalizedName for user ${uid}: ${col.id}`);
+                return { normalizedName: col.id };
+            }
+        }
+        
+        console.log(`[CalendarAPI] No normalizedName found for user ${uid}`);
+        return { normalizedName: null };
+    } catch (error) {
+        console.error(`[CalendarAPI] Error getting normalizedName for user ${uid}:`, error);
+        throw new HttpsError('internal', `Failed to get normalizedName: ${error.message}`);
+    }
 }
 
 async function handleGenerateSessionId(request) {
@@ -717,7 +1099,7 @@ async function handlePublishTimetable(request) {
                 const lessonData = await fetchLesson(d.lessonType);
                 const placeName = d.placeid ? await fetchPlace(d.placeid) : (d.placeName || d.room || null);
 
-                completeLessons.push({
+                const lessonObj = {
                     id: doc.id, // Keep the original ID (e.g., lesson0, lesson6)
                     lessonType: d.lessonType,
                     lessonTypeName: lessonData.name || d.lessonType,
@@ -731,7 +1113,18 @@ async function handlePublishTimetable(request) {
                     placeName: placeName, // Resolved place name (no placeid or room in published data)
                     timelineStart: d.startTime,
                     timelineEnd: d.finishTime
-                });
+                };
+                
+                // Add optionalClass boolean and optionalLessonStudents
+                if (d.optionalClass === true) {
+                    lessonObj.optionalClass = true;
+                }
+                if (d.optionalLessonStudents && typeof d.optionalLessonStudents === 'string' && d.optionalLessonStudents.trim().length > 0) {
+                    lessonObj.optionalClass = true;
+                    lessonObj.optionalLessonStudents = d.optionalLessonStudents; // Keep the normalizedNames for client-side checking
+                }
+                
+                completeLessons.push(lessonObj);
             }
         }
 
@@ -744,13 +1137,7 @@ async function handlePublishTimetable(request) {
         const classCalendarRef = db.collection('classes').doc(classId)
             .collection('calendar').doc('timetable').collection(dayName);
 
-        // First, delete existing lessons for this day
-        const existingLessons = await classCalendarRef.get();
-        existingLessons.forEach(doc => {
-            batch.delete(doc.ref);
-        });
-
-        // Now add complete lessons using their original IDs (lesson0, lesson6 etc.)
+        // Add/overwrite complete lessons using their original IDs (lesson0, lesson6 etc.)
         completeLessons.forEach((lesson) => {
             const docRef = classCalendarRef.doc(lesson.id);
             batch.set(docRef, {
@@ -781,6 +1168,112 @@ async function handlePublishTimetable(request) {
     return { success: true, totalLessons };
 }
 
+// ========== EXAM PUBLISHING ==========
+
+async function handlePublishExam(request) {
+    const uid = request.auth.uid;
+    const token = request.auth.token;
+
+    // Check custom claims for authorization
+    const isAuthorized = token.admin === true || token.teacher === true || token.owner === true;
+    if (!isAuthorized) {
+        throw new HttpsError('permission-denied', 'Admin, teacher or owner access required');
+    }
+
+    const { classId, dayName, lessonType, examType, examDate } = request.data;
+    
+    if (!classId || !dayName || !lessonType || !examType || !examDate) {
+        throw new HttpsError('invalid-argument', 'Missing required fields: classId, dayName, lessonType, examType, examDate');
+    }
+
+    console.log(`[CalendarAPI] Publishing exam for class ${classId}, day ${dayName}`);
+    console.log(`[CalendarAPI] Exam details: lessonType=${lessonType}, examType=${examType}, examDate=${examDate}`);
+
+    // Fetch lesson data for icon and name
+    const lessonRef = db.collection('lessons').doc(lessonType);
+    const lessonSnap = await lessonRef.get();
+    const lessonData = lessonSnap.exists ? lessonSnap.data() : { name: lessonType, icon: 'smile' };
+
+    // Get or create exams document and latestId
+    const examsRef = db.collection('classes').doc(classId).collection('calendar').doc('exams');
+    const examsDoc = await examsRef.get();
+    
+    let latestId = 0;
+    if (examsDoc.exists && examsDoc.data().latestId) {
+        latestId = parseInt(examsDoc.data().latestId) || 0;
+    }
+    
+    const newExamId = latestId + 1;
+    const examDocId = `exam${newExamId}`;
+    
+    console.log(`[CalendarAPI] Creating ${examDocId} (latestId was ${latestId})`);
+
+    // Parse exam date
+    let examTimestamp;
+    try {
+        examTimestamp = admin.firestore.Timestamp.fromDate(new Date(examDate));
+    } catch (e) {
+        throw new HttpsError('invalid-argument', 'Invalid examDate format');
+    }
+
+    // Create the exam document in /classes/{classId}/calendar/exams/{dayName}/exam{id}
+    const dayRef = examsRef.collection(dayName).doc(examDocId);
+    
+    const examObj = {
+        examId: newExamId,
+        examType: examType, // temazaro, ropdolgozat, feleles, prezentacio
+        lessonType: lessonType,
+        lessonTypeName: lessonData.name || lessonType,
+        lessonIcon: lessonData.icon || 'smile',
+        examDate: examTimestamp,
+        publishedAt: admin.firestore.FieldValue.serverTimestamp(),
+        publishedBy: uid
+    };
+
+    const batch = db.batch();
+    
+    // Set the exam document
+    batch.set(dayRef, examObj);
+    
+    // Update latestId in exams document
+    batch.set(examsRef, { latestId: newExamId.toString() }, { merge: true });
+    
+    await batch.commit();
+    
+    console.log(`[CalendarAPI] Published exam ${examDocId} to class ${classId}/${dayName}`);
+
+    return { success: true, examId: newExamId, examDocId };
+}
+
+async function handleGetExamCards(request) {
+    const uid = request.auth.uid;
+    const { classId, dayName } = request.data;
+
+    if (!classId || !dayName) {
+        throw new HttpsError('invalid-argument', 'Missing classId or dayName');
+    }
+
+    console.log(`[CalendarAPI] Getting exam cards for class ${classId}, day ${dayName}`);
+
+    const examsRef = db.collection('classes').doc(classId)
+        .collection('calendar').doc('exams').collection(dayName);
+    
+    const snapshot = await examsRef.orderBy('examDate', 'asc').get();
+    
+    const exams = [];
+    snapshot.forEach(doc => {
+        const data = doc.data();
+        exams.push({
+            id: doc.id,
+            ...data,
+            examDate: data.examDate ? data.examDate.toDate().toISOString() : null
+        });
+    });
+
+    console.log(`[CalendarAPI] Found ${exams.length} exams for ${dayName}`);
+    return { exams };
+}
+
 // ========== SINGLE EXPORTED API ==========
 
 const actionHandlers = {
@@ -794,13 +1287,22 @@ const actionHandlers = {
     saveLessonAssignment: handleSaveLessonAssignment,
     getModifiedDays: handleGetModifiedDays,
     getLessonCards: handleGetLessonCards,
+    getClassTimetableCards: handleGetClassTimetableCards,
+    deleteClassTimetableLesson: handleDeleteClassTimetableLesson,
     saveVariation: handleSaveVariation,
     getVariationPreview: handleGetVariationPreview,
     getSessionData: handleGetSessionData,
     searchUsers: handleSearchUsers,
+    lookupOptionalLessonStudents: handleLookupOptionalLessonStudents,
+    getOptionalLessonStudents: handleGetOptionalLessonStudents,
+    getCurrentUserNormalizedName: handleGetCurrentUserNormalizedName,
+    searchTeacherCandidates: handleSearchTeacherCandidates,
+    grantClassAccess: handleGrantClassAccess,
     generateSessionId: handleGenerateSessionId,
     clearTempLessons: handleClearTempLessons,
-    publishTimetable: handlePublishTimetable
+    publishTimetable: handlePublishTimetable,
+    publishExam: handlePublishExam,
+    getExamCards: handleGetExamCards
 };
 
 exports.calendarApi = onCall(runtimeOpts, async (request) => {

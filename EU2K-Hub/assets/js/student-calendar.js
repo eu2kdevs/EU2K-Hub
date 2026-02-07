@@ -69,6 +69,11 @@ class StudentCalendar {
     }
 
     updateDateHeader() {
+        // Skip if user has selected a custom date (handled by youhub.html date picker)
+        if (window.calendarUserSelectedDate) {
+            return;
+        }
+        
         const now = new Date();
         const year = now.getFullYear();
         const monthIndex = now.getMonth();
@@ -339,6 +344,7 @@ class StudentCalendar {
         console.log('[StudentCalendar] Raw - teacher:', lesson.teacher);
         console.log('[StudentCalendar] Raw - placeName:', lesson.placeName);
         console.log('[StudentCalendar] Raw - placeid:', lesson.placeid);
+        console.log('[StudentCalendar] Raw - optionalLessonStudents:', lesson.optionalLessonStudents);
         console.log('[StudentCalendar] ================================');
         
         const startTime = lesson.timelineStart || '';
@@ -352,6 +358,27 @@ class StudentCalendar {
 
         const iconPath = `assets/youhub/calendar/classes/notactive/${iconName}.svg`;
 
+        // Check if optional lesson - use optionalClass boolean
+        const isOptionalClass = lesson.optionalClass === true;
+        
+        // Check if current user is in optionalLessonStudents list
+        let shouldShowOptionalIndicator = false;
+        if (isOptionalClass && lesson.optionalLessonStudents && typeof lesson.optionalLessonStudents === 'string' && lesson.optionalLessonStudents.trim().length > 0) {
+            try {
+                const currentUserId = this.auth?.currentUser?.uid;
+                if (currentUserId) {
+                    const normalizedNames = lesson.optionalLessonStudents.split(',').map(n => n.trim()).filter(n => n.length > 0);
+                    shouldShowOptionalIndicator = await this.isUserInOptionalList(normalizedNames, currentUserId);
+                    console.log('[StudentCalendar] Optional lesson check:', { isOptionalClass, normalizedNames, currentUserId, shouldShowOptionalIndicator });
+                }
+            } catch (error) {
+                console.error('[StudentCalendar] Error checking optional lesson students:', error);
+            }
+        } else if (isOptionalClass) {
+            // If optionalClass is true but no optionalLessonStudents, show indicator anyway
+            shouldShowOptionalIndicator = true;
+        }
+
         div.innerHTML = `
       <div class="calendar-card-icon-container">
         <img src="${iconPath}" alt="" class="calendar-card-icon" data-icon="${iconName}">
@@ -360,14 +387,14 @@ class StudentCalendar {
         <span class="calendar-subject-name">${name}</span>
         <div class="calendar-card-details">
           <div class="calendar-detail-group-default">
-            <div class="calendar-detail-item">
+            <div class="calendar-detail-item calendar-teacher-item">
               <img src="assets/youhub/calendar/notactive/person.svg" alt="" class="detail-icon-teacher">
-              <span>${teacher}</span>
+              <span class="calendar-teacher-text">${teacher}</span>
             </div>
             <span class="calendar-detail-separator">|</span>
-            <div class="calendar-detail-item">
+            <div class="calendar-detail-item calendar-place-item">
               <img src="assets/youhub/calendar/notactive/place.svg" alt="" class="detail-icon-place">
-              <span>${room}</span>
+              <span class="calendar-place-text">${room}</span>
             </div>
           </div>
           <div class="calendar-detail-group-hover">
@@ -376,8 +403,11 @@ class StudentCalendar {
           </div>
         </div>
       </div>
-      <div class="calendar-card-right-bar">
-        <img src="assets/youhub/calendar/notactive/clock.svg" alt="" class="detail-icon-clock">
+      <div class="calendar-card-bars-container">
+        ${shouldShowOptionalIndicator ? '<div class="calendar-card-left-bar"><span class="calendar-optional-question">?</span></div>' : ''}
+        <div class="calendar-card-right-bar">
+          <img src="assets/youhub/calendar/notactive/clock.svg" alt="" class="detail-icon-clock">
+        </div>
       </div>
     `;
         
@@ -390,6 +420,60 @@ class StudentCalendar {
             rightBar.addEventListener('mouseleave', () => {
                 div.classList.remove('hover-active');
             });
+        }
+
+        // Handle optional lesson hover
+        if (shouldShowOptionalIndicator) {
+            const leftBar = div.querySelector('.calendar-card-left-bar');
+            const teacherItem = div.querySelector('.calendar-teacher-item');
+            const placeItem = div.querySelector('.calendar-place-item');
+            const separator = div.querySelector('.calendar-detail-separator');
+            
+            if (leftBar) {
+                const optionalLabel = window.translationManager?.getTranslation('pages.dashboard.assign_calendars.optional_lesson_label') || 'Opcionális óra';
+                
+                leftBar.addEventListener('mouseenter', () => {
+                    // Hide teacher and place items, show "Opcionális óra" instead
+                    if (teacherItem) {
+                        teacherItem.style.display = 'none';
+                    }
+                    if (placeItem) {
+                        placeItem.style.display = 'none';
+                    }
+                    if (separator) {
+                        separator.style.display = 'none';
+                    }
+                    
+                    // Create and show "Opcionális óra" text
+                    const optionalText = document.createElement('div');
+                    optionalText.className = 'calendar-detail-item calendar-optional-text';
+                    optionalText.innerHTML = `<span>${optionalLabel}</span>`;
+                    optionalText.style.display = 'flex';
+                    const detailGroup = div.querySelector('.calendar-detail-group-default');
+                    if (detailGroup) {
+                        detailGroup.appendChild(optionalText);
+                    }
+                });
+
+                leftBar.addEventListener('mouseleave', () => {
+                    // Restore original teacher and place items
+                    if (teacherItem) {
+                        teacherItem.style.display = '';
+                    }
+                    if (placeItem) {
+                        placeItem.style.display = '';
+                    }
+                    if (separator) {
+                        separator.style.display = '';
+                    }
+                    
+                    // Remove optional text
+                    const optionalText = div.querySelector('.calendar-optional-text');
+                    if (optionalText) {
+                        optionalText.remove();
+                    }
+                });
+            }
         }
         
         return div;
@@ -535,6 +619,70 @@ class StudentCalendar {
     `;
     }
 
+    async isUserInOptionalList(normalizedNames, userId) {
+        if (!normalizedNames || normalizedNames.length === 0 || !userId) return false;
+        
+        try {
+            for (const normalizedName of normalizedNames) {
+                // Try usrlookup/names/{normalizedName}/{userId}
+                try {
+                    const namesDocRef = doc(this.db, 'usrlookup', 'names', normalizedName, userId);
+                    const namesSnap = await getDoc(namesDocRef);
+                    if (namesSnap.exists()) {
+                        console.log(`[StudentCalendar] Found user ${userId} in usrlookup/names/${normalizedName}`);
+                        return true;
+                    }
+                } catch (e) {
+                    // Continue to next check
+                }
+                
+                // Try usrlookup/teachers/{normalizedName}/{userId}
+                try {
+                    const teachersDocRef = doc(this.db, 'usrlookup', 'teachers', normalizedName, userId);
+                    const teachersSnap = await getDoc(teachersDocRef);
+                    if (teachersSnap.exists()) {
+                        console.log(`[StudentCalendar] Found user ${userId} in usrlookup/teachers/${normalizedName}`);
+                        return true;
+                    }
+                } catch (e) {
+                    // Continue to next normalizedName
+                }
+            }
+            
+            return false;
+        } catch (error) {
+            console.error('[StudentCalendar] Error checking optional list:', error);
+            return false;
+        }
+    }
+
+    async getCurrentUserNormalizedName() {
+        if (!this.auth || !this.auth.currentUser) return null;
+        
+        try {
+            // Use window.calendarApiCall if available (from dashboard.html), otherwise create our own wrapper
+            if (window.calendarApiCall) {
+                const result = await window.calendarApiCall('getCurrentUserNormalizedName');
+                return result.data?.normalizedName || null;
+            }
+            
+            // Fallback: Use Cloud Function directly with correct region
+            const { httpsCallable } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+            const { getFunctions } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+            const functions = getFunctions(this.app, 'europe-west3'); // Use correct region
+            const getCurrentUserNormalizedNameFn = httpsCallable(functions, 'calendarApi');
+            
+            const result = await getCurrentUserNormalizedNameFn({
+                action: 'getCurrentUserNormalizedName'
+            });
+            
+            return result.data?.normalizedName || null;
+        } catch (error) {
+            console.error('[StudentCalendar] Error getting normalizedName from Cloud Function:', error);
+            return null;
+        }
+    }
+
     activateTimetableNav() {
         // Find and click the Órarend nav item
         const timetableNavItem = document.querySelector('.calendar-nav-item[data-calendar-nav="timetable"]');
@@ -542,6 +690,315 @@ class StudentCalendar {
             timetableNavItem.click();
             console.log('[StudentCalendar] Auto-activated Órarend nav');
         }
+    }
+
+    // ========== EXAMS FUNCTIONALITY ==========
+
+    async fetchAndRenderExams(day) {
+        if (!this.classId) {
+            console.error('[StudentCalendar] No classId for fetching exams');
+            return;
+        }
+
+        const examsContainer = document.getElementById('calendar-view-exams');
+        if (!examsContainer) {
+            console.error('[StudentCalendar] Exams container not found');
+            return;
+        }
+
+        console.log('[StudentCalendar] Fetching exams for classId:', this.classId, 'day:', day);
+        console.log('[StudentCalendar] Firestore path: classes/' + this.classId + '/calendar/exams/' + day);
+
+        examsContainer.innerHTML = '<div class="calendar-loading" style="display:flex;justify-content:center;align-items:center;height:100%;grid-column:span 2;"><div class="onboarding-loader"></div></div>';
+
+        try {
+            const examsRef = collection(this.db, 'classes', this.classId, 'calendar', 'exams', day);
+            const snapshot = await getDocs(examsRef);
+            console.log('[StudentCalendar] Exams snapshot empty?', snapshot.empty, 'size:', snapshot.size);
+
+            if (snapshot.empty) {
+                examsContainer.innerHTML = `
+                    <div class="calendar-empty-state students-empty-state" style="display:flex;grid-column:span 2;height:100%;min-height:0;overflow:hidden;">
+                        <img src="assets/youhub/calendar/calendar.svg" alt="Nincsenek dolgozatok" class="students-empty-icon">
+                        <div class="students-empty-text-container">
+                            <p class="students-empty-title">Nincsenek bejelentett dolgozatok</p>
+                            <p class="students-empty-subtitle">Erre a napra nem jelentettek be dolgozatot.</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const exams = [];
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                data.id = docSnap.id;
+                exams.push(data);
+            });
+
+            // Sort by examDate
+            exams.sort((a, b) => {
+                const dateA = a.examDate ? new Date(a.examDate) : new Date(0);
+                const dateB = b.examDate ? new Date(b.examDate) : new Date(0);
+                return dateA - dateB;
+            });
+
+            console.log('[StudentCalendar] Exams from Firestore:', exams);
+            await this.renderExamCards(exams, examsContainer);
+        } catch (e) {
+            console.error('[StudentCalendar] Error fetching exams:', e);
+            examsContainer.innerHTML = `
+                <div class="calendar-error-state" style="display:flex;justify-content:center;align-items:center;height:100%;grid-column:span 2;">
+                    <p style="color:#ff5555;text-align:center;">Hiba történt a dolgozatok betöltésekor.</p>
+                </div>
+            `;
+        }
+    }
+
+    getWeekRange(baseDate) {
+        const d = new Date(baseDate);
+        const day = d.getDay(); // Sunday=0
+        const diffToMonday = (day + 6) % 7;
+        const start = new Date(d);
+        start.setDate(d.getDate() - diffToMonday);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(start);
+        end.setDate(start.getDate() + 4);
+        end.setHours(23, 59, 59, 999);
+        return { start, end };
+    }
+
+    async fetchAndRenderExamsForWeek(selectedDate) {
+        if (!this.classId) {
+            console.error('[StudentCalendar] No classId for fetching exams');
+            return;
+        }
+
+        const examsContainer = document.getElementById('calendar-view-exams');
+        if (!examsContainer) {
+            console.error('[StudentCalendar] Exams container not found');
+            return;
+        }
+
+        const { start, end } = this.getWeekRange(selectedDate || new Date());
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        const weekDays = [];
+        for (let i = 0; i < 5; i++) {
+            const d = new Date(start);
+            d.setDate(start.getDate() + i);
+            weekDays.push(dayNames[d.getDay()]);
+        }
+
+        examsContainer.innerHTML = '<div class="calendar-loading" style="display:flex;justify-content:center;align-items:center;height:100%;grid-column:span 2;"><div class="onboarding-loader"></div></div>';
+
+        try {
+            const exams = [];
+            for (const day of weekDays) {
+                const examsRef = collection(this.db, 'classes', this.classId, 'calendar', 'exams', day);
+                const snapshot = await getDocs(examsRef);
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    data.id = docSnap.id;
+                    exams.push(data);
+                });
+            }
+
+            const filtered = exams.filter(exam => {
+                if (!exam.examDate) return false;
+                const d = exam.examDate.seconds
+                    ? new Date(exam.examDate.seconds * 1000)
+                    : (exam.examDate.toDate ? exam.examDate.toDate() : new Date(exam.examDate));
+                if (isNaN(d.getTime())) return false;
+                return d >= today && d >= start && d <= end;
+            });
+
+            filtered.sort((a, b) => {
+                const dateA = a.examDate ? new Date(a.examDate.seconds ? a.examDate.seconds * 1000 : a.examDate) : new Date(0);
+                const dateB = b.examDate ? new Date(b.examDate.seconds ? b.examDate.seconds * 1000 : b.examDate) : new Date(0);
+                return dateA - dateB;
+            });
+
+            await this.renderExamCards(filtered, examsContainer);
+        } catch (e) {
+            console.error('[StudentCalendar] Error fetching exams for week:', e);
+            examsContainer.innerHTML = `
+                <div class="calendar-error-state" style="display:flex;justify-content:center;align-items:center;height:100%;grid-column:span 2;">
+                    <p style="color:#ff5555;text-align:center;">Hiba történt a dolgozatok betöltésekor.</p>
+                </div>
+            `;
+        }
+    }
+
+    async renderExamCards(exams, container) {
+        container.innerHTML = '';
+
+        // Get translations
+        const t = (key, fallback) => window.translationManager?.getTranslation(key) || fallback;
+        const noExamsTitle = t('calendar.no_exams', 'Nincsenek bejelentett dolgozatok');
+        const noExamsDesc = t('calendar.no_exams_desc', 'Erre a napra nem jelentettek be dolgozatot.');
+        const thatsAllTitle = t('calendar.exams_thats_all', 'Itt ennyi van');
+        const thatsAllDesc = t('calendar.exams_thats_all_desc', 'Nézz vissza később ha ennyire szeretsz tanulni :)');
+
+        if (exams.length === 0) {
+            container.innerHTML = `
+                <div class="calendar-empty-state students-empty-state" style="display:flex;grid-column:span 2;height:100%;min-height:0;overflow:hidden;">
+                    <img src="assets/youhub/calendar/calendar.svg" alt="Nincsenek dolgozatok" class="students-empty-icon">
+                    <div class="students-empty-text-container">
+                        <p class="students-empty-title" data-translate="calendar.no_exams">${noExamsTitle}</p>
+                        <p class="students-empty-subtitle" data-translate="calendar.no_exams_desc">${noExamsDesc}</p>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        // Two column layout
+        const col1 = document.createElement('div');
+        col1.className = 'calendar-column';
+        const col2 = document.createElement('div');
+        col2.className = 'calendar-column';
+
+        // Fill: left 3, right 3, then alternate left/right
+        const leftExams = [];
+        const rightExams = [];
+        exams.forEach((exam, index) => {
+            if (index < 3) {
+                leftExams.push(exam);
+            } else if (index < 6) {
+                rightExams.push(exam);
+            } else {
+                const isLeft = (index - 6) % 2 === 0;
+                (isLeft ? leftExams : rightExams).push(exam);
+            }
+        });
+
+        // Create cards for left column
+        for (const exam of leftExams) {
+            const card = this.createExamCard(exam);
+            col1.appendChild(card);
+        }
+
+        // Create cards for right column
+        for (const exam of rightExams) {
+            const card = this.createExamCard(exam);
+            col2.appendChild(card);
+        }
+
+        if (rightExams.length === 0) {
+            // Add filler extension to left column (connects to right)
+            const fillerExtension = document.createElement('div');
+            fillerExtension.className = 'calendar-exam-filler-extension';
+            col1.appendChild(fillerExtension);
+        }
+
+        const hasBalancedColumns = leftExams.length === rightExams.length && (leftExams.length === 3 || leftExams.length === 4);
+        if (!hasBalancedColumns) {
+            const thatsAllCard = document.createElement('div');
+            const fixedHeight = rightExams.length > 0 && leftExams.length > rightExams.length;
+            thatsAllCard.className = fixedHeight
+                ? 'calendar-exam-thats-all-card calendar-exam-thats-all-card--fixed'
+                : 'calendar-exam-thats-all-card';
+            thatsAllCard.innerHTML = `
+                <img src="assets/youhub/calendar/nothing_seems_to_be_here.svg" alt="" class="calendar-thats-all-icon">
+                <span class="calendar-thats-all-title" data-translate="calendar.exams_thats_all">${thatsAllTitle}</span>
+                <span class="calendar-thats-all-desc" data-translate="calendar.exams_thats_all_desc">${thatsAllDesc}</span>
+            `;
+            col2.appendChild(thatsAllCard);
+        }
+
+        container.appendChild(col1);
+        container.appendChild(col2);
+        
+        // Apply translations
+        if (window.translationManager) {
+            window.translationManager.applyTranslationsToElement(container);
+        }
+    }
+
+    createExamCard(exam, isHighlighted = false) {
+        const div = document.createElement('div');
+        div.className = 'calendar-schedule-card calendar-exam-card';
+        if (isHighlighted) div.classList.add('calendar-schedule-card--highlight');
+
+        const name = exam.lessonTypeName || exam.lessonType || 'Dolgozat';
+        const lessonIconName = exam.lessonIcon || 'smile';
+        
+        // Format exam type for display
+        const examTypeMap = {
+            'temazaro': 'Témazáró',
+            'ropdolgozat': 'Röpdolgozat',
+            'feleles': 'Felelés',
+            'prezentacio': 'Prezentáció'
+        };
+        const examTypeDisplay = examTypeMap[exam.examType] || exam.examType || '-';
+        const examTypeIcon = exam.examType || 'temazaro';
+
+        // Format date as YYYY.MM.DD from Firestore timestamp or ISO string
+        let dateDisplay = '-';
+        if (exam.examDate) {
+            let date;
+            // Handle Firestore timestamp
+            if (exam.examDate.seconds) {
+                date = new Date(exam.examDate.seconds * 1000);
+            } else if (exam.examDate.toDate) {
+                date = exam.examDate.toDate();
+            } else {
+                date = new Date(exam.examDate);
+            }
+            
+            if (!isNaN(date.getTime())) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                dateDisplay = `${year}.${month}.${day}`;
+            }
+        }
+
+        const lessonIconFolder = isHighlighted ? 'active' : 'notactive';
+        const lessonIconPath = `assets/youhub/calendar/classes/${lessonIconFolder}/${lessonIconName}.svg`;
+        
+        const examTypeIconFolder = isHighlighted ? 'active' : 'notactive';
+        const examTypeIconPath = `assets/youhub/calendar/icons/${examTypeIconFolder}/${examTypeIcon}.svg`;
+        
+        div.dataset.icon = lessonIconName;
+        div.dataset.examType = examTypeIcon;
+
+        div.innerHTML = `
+            <div class="calendar-card-icon-container">
+                <img src="${lessonIconPath}" alt="" class="calendar-card-icon" data-icon="${lessonIconName}">
+            </div>
+            <div class="calendar-card-middle">
+                <span class="calendar-subject-name">${name}</span>
+                <div class="calendar-card-details">
+                    <div class="calendar-detail-group-default">
+                        <div class="calendar-detail-item">
+                            <img src="assets/youhub/calendar/notactive/clock.svg" alt="" class="detail-icon-clock">
+                            <span>${dateDisplay}</span>
+                        </div>
+                        <span class="calendar-detail-separator">|</span>
+                        <div class="calendar-detail-item calendar-exam-type-item">
+                            <img src="${examTypeIconPath}" alt="" class="detail-icon-exam-type" data-exam-type="${examTypeIcon}">
+                            <span>${examTypeDisplay}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="calendar-card-bars-container">
+                <div class="calendar-card-right-bar calendar-exam-right-bar">
+                    <img src="assets/youhub/calendar/exams.svg" alt="" class="detail-icon-exams">
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
+
+    async switchToExamsView() {
+        const selected = window.calendarUserSelectedDate || new Date();
+        await this.fetchAndRenderExamsForWeek(selected);
     }
 }
 

@@ -74,6 +74,20 @@
   --font-weight-bold: 700;
 }
 
+@keyframes banner-btn-pop {
+  0% {
+    transform: scaleY(1.00);
+  }
+  70% {
+    transform: scaleY(1.32);
+  }
+  /* overshoot */
+  100% {
+    transform: scaleY(1.25);
+  }
+  /* settle */
+}
+
 html,
 body {
   height: 100%;
@@ -987,6 +1001,11 @@ body {
   flex-shrink: 0;
 }
 
+.permission-ok-btn.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .permission-ok-btn:hover {
   background: #42587B;
   color: #DBE8FF;
@@ -1415,6 +1434,13 @@ body {
   height: 32px;
 }
 
+.masked-students-icon {
+  background-color: #142204;
+  -webkit-mask: url("assets/navbar/students.svg") center/contain no-repeat;
+  mask: url("assets/navbar/students.svg") center/contain no-repeat;
+  display: inline-block;
+}
+
 
 /* Footer links spacing */
 .footer-center {
@@ -1448,6 +1474,10 @@ body {
   display: flex;
   flex-direction: row;
   gap: 16px;
+  width: 100%;
+}
+
+.qr-controls-single .qr-control-btn {
   width: 100%;
 }
 
@@ -2087,6 +2117,24 @@ body {
   width: 100%;
 }
 
+/* Optional lesson toggle - switch on left, text on right */
+.calendar-assign-dropdown-group .suggestions-checkbox--with-switch {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.calendar-assign-dropdown-group .suggestions-checkbox--with-switch md-switch {
+  flex-shrink: 0;
+  order: -1; /* Switch comes first */
+}
+
+.calendar-assign-dropdown-group .suggestions-checkbox--with-switch .suggestions-checkbox-text {
+  flex: 1;
+  order: 1; /* Text comes after switch */
+}
+
 .calendar-assign-label {
   color: #8FA274;
   font-size: 13px;
@@ -2243,6 +2291,41 @@ body {
   transition: all 0.2s ease;
 }
 
+.calendar-date-input {
+  flex: 1;
+  padding: 12px 16px;
+  background: #2A3521;
+  border: 2px solid #445A2D;
+  border-radius: 12px;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-family: inherit;
+  text-align: start;
+  transition: all 0.2s ease;
+}
+
+.calendar-date-input:focus {
+  outline: none;
+  border-color: #D3FFA1;
+  background: #344025;
+}
+
+.calendar-date-input[readonly] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.calendar-date-input.warning {
+  border-color: #FFA94D;
+  background: #3A3521;
+}
+
+.calendar-date-separator {
+  color: #E5FDCB;
+  font-size: 16px;
+  font-weight: 600;
+}
+
 .calendar-timeline-input:focus {
   outline: none;
   border-color: #D3FFA1;
@@ -2345,6 +2428,44 @@ body {
   font-weight: 700;
 }
 
+.calendar-lesson-optional-indicator {
+  display: inline-block;
+  margin-left: 8px;
+  color: #D3FFA1;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: help;
+  position: relative;
+}
+
+.calendar-lesson-optional-row {
+  display: block;
+  color: #E5FDCB;
+  font-size: 12px;
+  font-weight: 300;
+  margin-top: 4px;
+}
+
+.calendar-lesson-optional-row .lesson-optional-students-value {
+  color: #CEFF97;
+  font-weight: 400;
+}
+
+.calendar-optional-tooltip {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #223013;
+  color: #E5FDCB;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
 .calendar-lesson-info {
   color: #E5FDCB;
   font-size: 12px;
@@ -2391,17 +2512,30 @@ body {
   flex-shrink: 0;
   display: flex;
   align-items: stretch;
-  padding-left: 24px;
+  padding-left: 0;
+  width: 100%;
+  justify-content: flex-start;
+  align-self: flex-start;
+}
+
+.manage-calendars-add-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.manage-calendars-back-btn {
+  height: 52px;
 }
 
 .calendar-add-lesson-container::before {
-  content: '';
+  content: none;
   position: absolute;
   left: -40px;
   top: 0;
   bottom: 0;
   width: 64px;
-  background: linear-gradient(to right, transparent 0%, #223013 70%, #223013 100%);
+  background: none;
   pointer-events: none;
 }
 
@@ -2409,7 +2543,7 @@ body {
   padding: 16px 24px;
   background: #C1EA93;
   color: #334521;
-  border: 2px solid #57703B;
+  border: none;
   border-radius: 16px;
   font-weight: 600;
   font-size: 14px;
@@ -2421,6 +2555,9 @@ body {
 .calendar-add-lesson-btn:hover {
   background: #DEFFBA;
   transform: scaleY(1.08);
+}
+.calendar-add-lesson-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
 }
 
 /* Variation specific */
@@ -2635,4 +2772,734 @@ body {
   z-index: 4;
 }
 
-/* Student Group */
+/* Search icon now uses flexbox in .suggestions-search-wrapper */
+.suggestions-checkbox {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: flex-start;
+}
+.suggestions-checkbox--with-switch {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.suggestions-checkbox-toggle {
+  width: 32px;
+  height: 23px;
+  border-radius: 6px;
+  border: 1px solid #4B6231;
+  background: #D3FFA1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 4px;
+}
+.suggestions-checkbox-toggle img {
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.suggestions-checkbox-toggle.is-checked img {
+  opacity: 1;
+}
+.suggestions-checkbox.is-static .suggestions-checkbox-toggle {
+  cursor: default;
+}
+.suggestions-checkbox-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.suggestions-checkbox-title {
+  color: #CEFF97;
+  font-weight: 600;
+  font-size: 15px;
+}
+.suggestions-checkbox-desc {
+  color: #E5FDCB;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.suggestions-share-switch {
+  --md-switch-selected-track-color: #D3FFA1;
+  --md-switch-selected-handle-color: #142204;
+  --md-switch-selected-focus-track-color: #D3FFA1;
+  --md-switch-selected-pressed-track-color: #D3FFA1;
+  --md-switch-selected-focus-handle-color: #142204;
+  --md-switch-selected-pressed-handle-color: #142204;
+  --md-switch-unselected-track-color: #465A2F;
+  --md-switch-unselected-handle-color: #B4FF5E;
+  --md-switch-unselected-focus-track-color: #465A2F;
+  --md-switch-unselected-pressed-track-color: #465A2F;
+  --md-switch-unselected-focus-handle-color: #B4FF5E;
+  --md-switch-unselected-pressed-handle-color: #B4FF5E;
+  /* Hover állapotok: ugyanazok a színek, ne változzon meg */
+  --md-switch-selected-hover-track-color: #D3FFA1;
+  --md-switch-selected-hover-handle-color: #142204;
+  --md-switch-unselected-hover-track-color: #465A2F;
+  --md-switch-unselected-hover-handle-color: #B4FF5E;
+  width: 56px;
+  height: 32px;
+}
+.suggestions-share-switch::part(icon) {
+  mask-size: 16px 16px;
+  -webkit-mask-size: 16px 16px;
+}
+.suggestions-share-switch[selected]::part(icon) {
+  background-color: currentColor;
+  mask: url("assets/youhub/suggestions/check.svg") center/contain no-repeat;
+  -webkit-mask: url("assets/youhub/suggestions/check.svg") center/contain no-repeat;
+}
+.suggestions-share-switch:not([selected])::part(icon) {
+  background-color: currentColor;
+  mask: url("assets/youhub/suggestions/check_dark.svg") center/contain no-repeat;
+  -webkit-mask: url("assets/youhub/suggestions/check_dark.svg") center/contain no-repeat;
+}
+
+/* ============================================
+   MANAGE CALENDARS PAGE STYLES
+   ============================================ */
+
+#manage-calendars-page {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+.manage-calendars-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.manage-myclass-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.manage-myclass-card {
+  position: relative;
+}
+
+.manage-myclass-back-btn {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.manage-myclass-access-container {
+  max-width: 520px;
+}
+
+.manage-myclass-step {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.manage-myclass-step.active {
+  display: flex;
+}
+
+.manage-myclass-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 2px solid #445A2D;
+  background: #2A3521;
+  color: #E5FDCB;
+  font-size: 14px;
+}
+
+.dev-mode-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: #2A3521;
+  border: 2px solid #445A2D;
+  border-radius: 12px;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-family: inherit;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+.dev-mode-input:focus {
+  outline: none;
+  border-color: #D3FFA1;
+  background: #344025;
+}
+.dev-mode-input::placeholder {
+  color: #8FA274;
+}
+
+.manage-myclass-suggestions {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  background: #243114;
+  border: 1px solid #4B6231;
+  border-radius: 10px;
+  padding: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.manage-myclass-suggestions.active {
+  display: flex;
+}
+
+.manage-myclass-suggestion-item {
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #E5FDCB;
+}
+
+.manage-myclass-suggestion-item:hover {
+  background: #2D3A21;
+}
+
+.manage-myclass-role-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.manage-myclass-role-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.manage-myclass-role-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 2px solid #4B6231;
+  background: #D3FFA1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.manage-myclass-role-checkbox.is-checked {
+  background: #D3FFA1;
+  border-color: #4B6231;
+}
+
+.manage-myclass-role-checkbox.is-checked::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: #142204;
+  border-radius: 2px;
+}
+
+.manage-myclass-role-label {
+  color: #E5FDCB;
+  font-size: 14px;
+}
+
+.manage-myclass-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.manage-myclass-btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.manage-myclass-btn.primary {
+  background: #C1EA93;
+  color: #334521;
+}
+
+.manage-myclass-btn.secondary {
+  background: #2D3A21;
+  color: #E5FDCB;
+  border: 1px solid #4B6231;
+}
+
+.manage-myclass-btn.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.manage-myclass-tooltip {
+  position: absolute;
+  background: #243114;
+  border: 1px solid #4B6231;
+  color: #E5FDCB;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  z-index: 100;
+  display: none;
+  max-width: 260px;
+}
+
+/* Top Dropdowns Row */
+.manage-calendars-dropdowns {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
+.manage-calendars-dropdown-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  max-width: 300px;
+}
+
+.manage-calendars-label {
+  color: #CEFF97;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Main Card Container */
+.manage-calendars-card {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.manage-calendars-middle-section {
+  flex: 1;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: #3A4D28;
+  position: relative;
+  overflow: hidden;
+}
+
+.manage-calendars-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 80px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.manage-calendars-fade--top {
+  top: 0;
+  background: linear-gradient(to bottom, #465A2F 0%, rgba(70, 90, 47, 0.95) 20%, rgba(70, 90, 47, 0.7) 50%, rgba(70, 90, 47, 0.3) 80%, rgba(70, 90, 47, 0) 100%);
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 12px;
+  height: 110px;
+  pointer-events: auto;
+}
+
+.manage-calendars-fade--bottom {
+  bottom: 0;
+  background: linear-gradient(to top, #465A2F 0%, rgba(70, 90, 47, 0.95) 20%, rgba(70, 90, 47, 0.7) 50%, rgba(70, 90, 47, 0.3) 80%, rgba(70, 90, 47, 0) 100%);
+  border-radius: 0 0 16px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 12px;
+  pointer-events: auto;
+}
+
+/* Cards Container */
+.manage-calendars-column {
+  flex: 1;
+  overflow-y: auto;
+  padding: 110px 8px 80px;
+  min-height: 0;
+}
+
+.manage-calendars-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Empty State */
+.manage-calendars-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 100px 20px 40px;
+  text-align: center;
+}
+
+.manage-calendars-empty-icon {
+  width: 64px;
+  height: 64px;
+  opacity: 0.7;
+}
+
+.manage-calendars-empty-text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.manage-calendars-empty-title {
+  color: #E5FDCB;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.manage-calendars-empty-subtitle {
+  color: #B4D896;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Lesson Card */
+.manage-calendars-lesson-card {
+  background: #243114;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  cursor: default;
+  transition: background 0.15s ease, transform 0.15s ease;
+  position: relative;
+}
+
+/* Delete Lesson Button (copied from students) */
+.students-delete-class-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #FFADB0;
+  border: 1px solid #F4776A;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+  min-width: 140px;
+  height: 52px;
+  justify-content: center;
+}
+
+.students-delete-class-btn-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.students-delete-class-btn-text {
+  color: #210A0A;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.students-delete-class-btn:hover,
+.students-delete-class-btn:active {
+  background: #FF97B4;
+  transform: scaleY(1.12);
+  transform-origin: center;
+}
+
+.students-delete-class-btn:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+.manage-calendars-lesson-card:hover {
+  background: #243114;
+  transform: none;
+}
+
+.manage-calendars-lesson-card.selected {
+  background: #243114;
+  outline: none;
+}
+
+.manage-calendars-card-checkbox {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.manage-calendars-card-number {
+  color: #D3FFA1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.manage-calendars-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.manage-calendars-card-icon img {
+  width: 36px;
+  height: 36px;
+}
+
+.manage-calendars-card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.manage-calendars-card-name {
+  color: #E5FDCB;
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.manage-calendars-card-detail {
+  color: #B4D896;
+  font-size: 12px;
+}
+
+.manage-calendars-card-optional {
+  padding: 0;
+  background: none;
+  border-radius: 0;
+}
+
+.manage-calendars-card-edit {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: #D3FFA1;
+  color: #344521;
+  border: 1px solid #57703B;
+}
+
+.manage-calendars-card-edit:hover {
+  background: #DEFFBA;
+  transform: scaleY(1.08);
+}
+.manage-calendars-card-edit:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2, 0, .2, 1) forwards;
+}
+
+.manage-calendars-card-edit img {
+  width: 16px;
+  height: 16px;
+}
+
+.manage-calendars-card-optional span {
+  color: #D3FFA1;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.manage-calendars-card-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.manage-calendars-card-action-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  background: none;
+}
+
+.manage-calendars-delete-lesson-btn {
+  min-width: auto;
+  height: 32px;
+  padding: 6px 10px;
+}
+
+.manage-calendars-delete-lesson-btn .students-delete-class-btn-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.manage-calendars-delete-lesson-btn .students-delete-class-btn-text {
+  font-size: 12px;
+}
+
+/* ============================================
+   DATE BAR STYLES
+   ============================================ */
+
+.manage-calendars-date-bar {
+  background: #243114;
+  border: 1px solid #4B6231;
+  border-radius: 16px;
+  padding: 8px 12px;
+  width: 100%;
+  max-width: 95%;
+  overflow: hidden;
+  min-height: 60px;
+}
+
+.manage-calendars-date-bar-scroll {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  padding: 4px 0;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.manage-calendars-date-bar-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.manage-calendars-date-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  position: relative;
+  min-width: 36px;
+}
+
+.manage-calendars-date-line {
+  width: 4px;
+  height: 24px;
+  background: #D3FFA1;
+  border-radius: 9999px;
+  transition: width 0.2s ease, height 0.2s ease;
+}
+
+.manage-calendars-date-text {
+  color: #E5FDCB;
+  font-size: 10px;
+  font-weight: 400;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  opacity: 1;
+}
+
+.manage-calendars-date-hover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #465A2F;
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.manage-calendars-date-hover-day {
+  color: #E5FDCB;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.manage-calendars-date-hover-text {
+  color: #B4D896;
+  font-size: 10px;
+}
+
+/* Date Item Hover */
+.manage-calendars-date-item:hover .manage-calendars-date-line {
+  width: 6px;
+}
+
+.manage-calendars-date-item:hover .manage-calendars-date-hover {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.manage-calendars-date-item:hover .manage-calendars-date-text {
+  transform: translateY(-2px);
+  opacity: 0.2;
+}
+
+/* Current Date Highlight */
+.manage-calendars-date-item.current .manage-calendars-date-line {
+  background: #B4FF5E;
+  width: 6px;
+}
+
+.manage-calendars-date-item.current .manage-calendars-date-text {
+  color: #B4FF5E;
+  font-weight: 600;
+}
+
+/* Selected Date */
+.manage-calendars-date-item.selected .manage-calendars-date-line {
+  background: #CEFF97;
+  width: 8px;
+  height: 20px;
+}
+
+.manage-calendars-date-item.selected .manage-calendars-date-text {
+  color: #CEFF97;
+  font-weight: 600;
+}
+
+.language-dropdown{
+  min-width: 300px !important;
+}

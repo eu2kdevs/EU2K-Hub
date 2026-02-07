@@ -122,7 +122,7 @@
     "qr": "QR-kod",
     "youhub": "YouHub",
     "event_hub": "Event Hub",
-    "dashboard": "Instrumentpanel",
+    "dashboard": "Kontrollpanel",
     "students": "Mina Elever"
   },
   "pages": {
@@ -155,7 +155,7 @@
       "blocked_title": "Hoppsan!",
       "blocked_text": "Vi kan inte använda kameran eftersom du inte har beviljat tillstånd. Vänligen aktivera den så att denna funktion fungerar!",
       "enable_button": "Aktivera",
-      "auth": "Deltagandebekräftelse",
+      "auth": "Närvarobekräftelse",
       "switch_camera": "Växla Kamera",
       "off_camera": "Stäng Av Kamera",
       "on_camera": "Sätt På Kamera",
@@ -169,7 +169,7 @@
       "permission_list_4": "Om du beviljar tillstånd nu kommer denna funktion att bli tillgänglig.",
       "permission_list_5": "Andra kamerabaserade funktioner kommer också att aktiveras.",
       "game_notice": "Spelfunktionen stöds inte ännu i Hub.",
-      "auth_notice": "Deltagandebekräftelsefunktionen kommer snart att vara tillgänglig.",
+      "auth_notice": "Närvarobekräftelsefunktionen kommer snart att vara tillgänglig.",
       "banner": {
         "title": "Detta är det nya designen.",
         "description": "Vi hoppas att du gillar Europa Design System. Om du har några frågor, vänligen ge feedback, även härifrån.",
@@ -185,7 +185,7 @@
       "heading": "Kontrollpanel",
       "quick_commands": "Snabbkommandon",
       "suggestion_center": "Förslagscenter",
-      "notification_center": "Notifikationscenter",
+      "notification_center": "Aviseringscenter",
       "publish": "Publicera",
       "manage_calendars": "Hantera kalendrar",
       "assign_calendars": {
@@ -211,6 +211,15 @@
         "lesson_type": "Lektionstyp",
         "teacher_name": "Lärarnamn",
         "timeline": "Tidslinje",
+        "place": "Plats",
+        "optional_lesson_title": "Ändra till valfri lektion",
+        "optional_lesson_description": "I nästa steg kan du, om du vill, tilldela enskilda elever för att ange att denna lektion är obligatorisk för dem.",
+        "optional_lesson_popup_title": "Tilldelning av valfri lektion",
+        "optional_lesson_popup_description": "Du kan nu tilldela elever efter deras namn för att ange att denna lektion är obligatorisk för dem, precis som alla andra lektioner. Om du inte vill ange detta, lämna inmatningsfältet tomt och klicka på fortsätt-knappen.",
+        "optional_lesson_popup_description_dynamic": "Du lade till en valfri {type} lektion till {day} {lesson}:e timmen. Du kan nu tilldela elever efter deras namn för att ange att denna lektion är obligatorisk för dem, precis som alla andra lektioner. Om du inte vill ange detta, lämna inmatningsfältet tomt och klicka på fortsätt-knappen.",
+        "optional_lesson_label": "Valfri lektion",
+        "optional_lesson_hover": "Valfri lektion",
+        "optional_lesson_mandatory_for_you": "Regelbunden undervisningslektion för dig",
         "lessons_title": "Lektioner",
         "add_lesson": "Lägg till lektion",
         "add_variation": "Lägg till variation",
@@ -283,7 +292,7 @@
       "back_to_terms": "Användarvillkor",
       "back_to_est": "EST",
       "back_to_onboarding": "Introduktion",
-      "back_to_dashboard": "Instrumentpanel",
+      "back_to_dashboard": "Kontrollpanel",
       "back_to_students": "Mina elever",
       "back": "Tillbaka till",
       "functions_options": {
@@ -369,9 +378,9 @@
       }
     },
     "dashboard": {
-      "title": "Instrumentpanel",
-      "heading": "Instrumentpanel",
-      "heading_publish": "Instrumentpanel - Publicera",
+      "title": "Kontrollpanel",
+      "heading": "Kontrollpanel",
+      "heading_publish": "Kontrollpanel - Publicera",
       "description": "Denna sida är under utveckling.",
       "quick_commands": "Snabbkommandon",
       "suggestion_center": "Förslagscenter",
@@ -381,8 +390,8 @@
       "news": "Nyheter",
       "event": "Evenemang",
       "beta_banner": {
-        "title": "Instrumentpanelen kan vara ofullständig i tidig beta.",
-        "description": "Instrumentpanelens funktioner är ofullständiga i beta. Fler delar kommer att finnas i den fullständiga versionen."
+        "title": "Kontrollpanelen kan vara ofullständig i tidig beta.",
+        "description": "Kontrollpanelens funktioner är ofullständiga i beta. Fler delar kommer att finnas i den fullständiga versionen."
       },
       "news_publish": {
         "title": "Publicera Nyhet",
@@ -509,8 +518,8 @@
         "teacher": "Lärare"
       },
       "logged_in_with": "Inloggad med: {{method}}",
-      "sounds_audible": "Notifikationsljud är hörbara för {{displayName}}.",
-      "sounds_not_audible": "Notifikationsljud är inte hörbara för {{displayName}}.",
+      "sounds_audible": "Aviseringsljud är hörbara för {{displayName}}.",
+      "sounds_not_audible": "Aviseringsljud är inte hörbara för {{displayName}}.",
       "class_registration": {
         "loading_title": "Din klassregistrering pågår",
         "loading_message": "Stäng inte denna sida. Det kommer inte att ta lång tid."
@@ -1114,8 +1123,10 @@
     "reading_progress": "Läsframsteg",
     "exams": "Prov",
     "bell_schedule": "Ringschema",
-    "no_exams": "Inga prov",
-    "no_exams_desc": "Det finns inga schemalagda prov.",
+    "no_exams": "Inga schemalagda prov",
+    "no_exams_desc": "Inga prov har annonserats för den här dagen.",
+    "exams_thats_all": "Det är allt",
+    "exams_thats_all_desc": "Kom tillbaka senare om du älskar att studera så mycket :)",
     "no_reading_progress": "Inga läsframsteg",
     "no_reading_progress_desc": "Du har inte börjat läsa ännu.",
     "no_bell_schedule": "Ringschema hittades inte",

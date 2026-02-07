@@ -856,11 +856,36 @@ body {
   width: 22px;
   height: 22px;
   border-radius: 999px;
-  background: #7B7F78;
+  background: linear-gradient(135deg, #B4FF5E 0%, #8BC34A 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.suggestion-meta-avatar::after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background-image: url('assets/youhub/notifications/bell.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: brightness(0);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s ease;
+}
+.suggestion-meta-avatar.has-photo::after {
+  display: none;
+}
+.suggestion-meta-avatar.has-photo {
+  background: transparent;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 .suggestion-meta-icon {
   width: 18px;
@@ -1629,9 +1654,27 @@ body {
   width: 60px;
   height: 60px;
   border-radius: 9999px;
-  background: #808080;
+  background: linear-gradient(135deg, #B4FF5E 0%, #8BC34A 100%);
   flex-shrink: 0;
   order: 2;
+  position: relative;
+  overflow: hidden;
+}
+.notification-detail-avatar::after {
+  content: '';
+  width: 26px;
+  height: 26px;
+  background-image: url('assets/youhub/notifications/bell.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: brightness(0);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.notification-detail-avatar.has-photo::after {
+  display: none;
 }
 .notification-detail-title {
   color: #CEFF97;
@@ -1747,6 +1790,24 @@ body {
   margin-left: -16px;
   position: relative;
   z-index: 1;
+  overflow: hidden;
+  background: linear-gradient(135deg, #B4FF5E 0%, #8BC34A 100%);
+}
+.notification-detail-avatar-small::after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background-image: url('assets/youhub/notifications/bell.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: brightness(0);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.notification-detail-avatar-small.has-photo::after {
+  display: none;
 }
 .notification-detail-avatar-small:first-child {
   margin-left: 0;
@@ -1983,8 +2044,30 @@ body {
   height: 100%;
   aspect-ratio: 1;
   border-radius: 9999px;
-  background: #808080;
+  background: linear-gradient(135deg, #B4FF5E 0%, #8BC34A 100%);
   flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.notification-avatar::after {
+  content: '';
+  width: 18px;
+  height: 18px;
+  background-image: url('assets/youhub/notifications/bell.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: brightness(0);
+}
+.notification-avatar.has-photo {
+  background: transparent;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.notification-avatar.has-photo::after {
+  display: none;
 }
 .notification-content {
   flex: 1;
@@ -3543,7 +3626,7 @@ body {
   width: 100%;
   height: 100%; /* Force grid to take parent's full height */
   min-height: 0;
-  overflow: hidden;
+  overflow: visible; /* Allow filler extension to extend */
   padding-bottom: 2px;
 }
 .calendar-column {
@@ -3553,6 +3636,11 @@ body {
   min-height: 0; /* Important for flex child overflow */
   max-height: 100%; /* Don't exceed grid cell */
   overflow: hidden; /* Prevent column itself from overflowing */
+  position: relative;
+}
+/* Allow first column to overflow if it has filler extension */
+.calendar-column:first-child:has(.calendar-exam-filler-extension) {
+  overflow: visible;
 }
 /* First column cards should fill available height equally */
 .calendar-column:first-child .calendar-schedule-card {
@@ -3615,10 +3703,48 @@ body {
   align-items: center;
   justify-content: center;
   width: 24px;
+  position: relative;
 }
 .calendar-card-icon {
   width: 24px;
   height: 24px;
+}
+.calendar-lesson-optional-indicator {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  display: inline-block;
+  color: #D3FFA1;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: help;
+  line-height: 1;
+  z-index: 1;
+}
+.calendar-optional-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 6px 12px;
+  background: #243114;
+  color: #CEFF97;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}
+.calendar-optional-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #243114;
 }
 .calendar-card-middle {
   flex: 1;
@@ -3663,6 +3789,40 @@ body {
   font-size: 13px;
   opacity: 0.6;
 }
+.calendar-card-bars-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  height: 100%;
+}
+.calendar-card-left-bar {
+  background: #465A2F;
+  width: 32px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 100%;
+  cursor: help;
+}
+.calendar-optional-question {
+  color: #B4FF5E;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+.calendar-optional-text {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.calendar-optional-text span {
+  color: #CEFF97;
+  font-size: 13px;
+  font-weight: 400;
+}
 .calendar-card-right-bar {
   background: #465A2F;
   width: 32px;
@@ -3676,6 +3836,115 @@ body {
 .calendar-card-right-bar img {
   width: 16px;
   height: 16px;
+}
+/* Exam Card Styles */
+.calendar-exam-card .calendar-exam-right-bar {
+  cursor: default;
+}
+.calendar-exam-card .calendar-exam-right-bar:hover {
+  background: #465A2F; /* Same as default, no hover effect */
+}
+.calendar-view-exams .calendar-column,
+#calendar-view-exams .calendar-column {
+  overflow: visible;
+}
+
+#calendar-view-exams {
+  overflow-x: visible;
+}
+
+#calendar-view-exams .calendar-exam-card {
+  min-height: 110px;
+  flex: 1 1 0;
+}
+
+.calendar-exam-placeholder {
+  min-height: 110px;
+  flex: 1 1 0;
+}
+.calendar-exam-right-bar img.detail-icon-exams {
+  width: 16px;
+  height: 16px;
+}
+/* Exam type icon */
+.calendar-exam-type-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.detail-icon-exam-type {
+  width: 14px;
+  height: 14px;
+}
+/* Disable hover swap for exam cards */
+.calendar-exam-card .calendar-detail-group-hover {
+  display: none !important;
+}
+.calendar-exam-card:has(.calendar-card-right-bar:hover) .calendar-detail-default,
+.calendar-exam-card:has(.calendar-card-right-bar:hover) .calendar-detail-group-default {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  display: flex !important;
+}
+/* Override all hover rules for exam cards */
+.calendar-exam-card:has(.calendar-card-right-bar:hover) .calendar-card-details,
+.calendar-exam-card:has(.calendar-card-right-bar:hover) .calendar-card-middle {
+  opacity: 1 !important;
+}
+/* Exam filler extension (connects left to right) */
+.calendar-exam-filler-extension {
+  background: #243114;
+  border-radius: 24px 0 0 24px; /* Top-left: 24px, top-right: 0, bottom-right: 0, bottom-left: 24px */
+  height: 110px;
+  min-height: 110px;
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.calendar-exam-filler-extension::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -12px;
+  width: 12px;
+  height: 100%;
+  background: #243114;
+}
+/* "That's all" card for right column */
+.calendar-exam-thats-all-card {
+  background: #243114;
+  border-radius: 24px 24px 24px 0;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  flex: 1 1 0;
+  min-height: 110px;
+}
+.calendar-exam-thats-all-card--fixed {
+  flex: 0 0 auto;
+  min-height: 110px;
+}
+/* When filler extension exists, adjust its border-radius */
+.calendar-column:has(.calendar-exam-filler-extension) .calendar-exam-filler-extension {
+  border-radius: 24px 0 0 24px;
+}
+.calendar-thats-all-icon {
+  width: 48px;
+  height: 48px;
+}
+.calendar-thats-all-title {
+  color: #CEFF97;
+  font-size: 16px;
+  font-weight: 500;
+}
+.calendar-thats-all-desc {
+  color: #E5FDCB;
+  font-size: 13px;
+  font-weight: 400;
 }
 /* Calendar Nav Item Sizing */
 .calendar-nav-item[data-calendar-nav="timetable"],
@@ -3929,10 +4198,10 @@ body {
 .calendar-schedule-card .calendar-card-right-bar {
   cursor: pointer;
 }
-.calendar-schedule-card:has(.calendar-card-right-bar:hover) .calendar-detail-default {
+.calendar-schedule-card:not(.calendar-exam-card):has(.calendar-card-right-bar:hover) .calendar-detail-default {
   display: none !important;
 }
-.calendar-schedule-card:has(.calendar-card-right-bar:hover) .calendar-detail-hover {
+.calendar-schedule-card:not(.calendar-exam-card):has(.calendar-card-right-bar:hover) .calendar-detail-hover {
   display: flex !important;
 }
 /* Center icons vertically in calendar cards */
@@ -3949,7 +4218,7 @@ body {
 .calendar-detail-hover {
   transition: opacity 0.2s ease-in-out;
 }
-.calendar-schedule-card:has(.calendar-card-right-bar:hover) .calendar-detail-default {
+.calendar-schedule-card:not(.calendar-exam-card):has(.calendar-card-right-bar:hover) .calendar-detail-default {
   opacity: 0;
   pointer-events: none;
 }
@@ -3958,7 +4227,7 @@ body {
   position: absolute;
   pointer-events: none;
 }
-.calendar-schedule-card:has(.calendar-card-right-bar:hover) .calendar-detail-hover {
+.calendar-schedule-card:not(.calendar-exam-card):has(.calendar-card-right-bar:hover) .calendar-detail-hover {
   opacity: 1;
   position: relative;
   pointer-events: auto;
@@ -3985,10 +4254,10 @@ body {
   pointer-events: none;
 }
 /* Hover trigger from right bar */
-.calendar-schedule-card:has(.calendar-card-right-bar:hover) .calendar-detail-group-default {
+.calendar-schedule-card:not(.calendar-exam-card):has(.calendar-card-right-bar:hover) .calendar-detail-group-default {
   opacity: 0;
 }
-.calendar-schedule-card:has(.calendar-card-right-bar:hover) .calendar-detail-group-hover {
+.calendar-schedule-card:not(.calendar-exam-card):has(.calendar-card-right-bar:hover) .calendar-detail-group-hover {
   opacity: 1;
 }
 /* Ensure items inside groups are flex */
@@ -4163,8 +4432,9 @@ body {
 }
 .notification-history-popup .notification-history-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
+  flex-direction: column;
 }
 .notification-history-popup .notification-history-icon {
   width: 48px;
@@ -4178,60 +4448,17 @@ body {
   min-height: 0;
   overflow: hidden;
 }
-.notification-history-popup .notification-history-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-height: 0;
-  overflow: hidden;
+.notification-history-popup .notification-history-left-col {
+  flex: 4 1 0;
 }
-.notification-history-popup .notification-history-right {
-  flex: 1.2;
-  background: rgba(0, 0, 0, 0.15);
-  border-radius: 16px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
+.notification-history-popup .notifications-column--right {
+  flex: 6 1 0;
 }
 .notification-history-popup .notification-history-list {
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-right: 4px;
-}
-.notification-history-popup .notification-history-list::-webkit-scrollbar {
-  width: 6px;
-}
-.notification-history-popup .notification-history-list::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
+  max-height: 400px;
 }
 .notification-history-popup .notification-history-list::-webkit-scrollbar-thumb {
   background: #8BC34A;
-  border-radius: 3px;
-}
-.notification-history-popup .notification-history-detail-content {
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.notification-history-popup .notification-history-detail-content::-webkit-scrollbar {
-  width: 6px;
-}
-.notification-history-popup .notification-history-detail-content::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-}
-.notification-history-popup .notification-history-detail-content::-webkit-scrollbar-thumb {
-  background: #8BC34A;
-  border-radius: 3px;
 }
 .notification-history-popup .notification-item {
   background: rgba(0, 0, 0, 0.2);
@@ -4265,6 +4492,9 @@ body {
   background-repeat: no-repeat;
   filter: brightness(0);
 }
+.notification-history-popup .notification-avatar.has-photo::after {
+  display: none;
+}
 .notification-history-popup .notification-content {
   flex: 1;
   min-width: 0;
@@ -4289,72 +4519,6 @@ body {
 .notification-history-popup .notification-item--active {
   background: rgba(180, 255, 94, 0.15);
   border: 1px solid rgba(180, 255, 94, 0.3);
-}
-/* History popup detail view - same as main notifications card */
-.notification-history-popup .notification-detail-header {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 10px;
-  border-radius: 8px;
-  background: #465A2F;
-  margin-bottom: 12px;
-  box-sizing: border-box;
-}
-.notification-history-popup .notification-detail-header-text {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-  order: 1;
-}
-.notification-history-popup .notification-detail-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 9999px;
-  background: #808080;
-  flex-shrink: 0;
-  order: 2;
-  background-size: cover;
-  background-position: center;
-}
-.notification-history-popup .notification-detail-title {
-  color: #CEFF97;
-  font-size: 16px;
-  font-weight: 700;
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.notification-history-popup .notification-detail-date {
-  color: #E5FDCB;
-  font-size: 12px;
-  font-weight: 400;
-  margin: 0;
-}
-.notification-history-popup .notification-detail-sender {
-  color: #CEFF97;
-  font-size: 12px;
-  font-weight: 400;
-  margin: 0;
-}
-.notification-history-popup .notification-detail-content-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-height: 0;
-  overflow-y: auto;
-  flex: 1;
-}
-.notification-history-popup .notification-detail-message {
-  color: #BEEB8B;
-  font-size: 14px;
-  font-weight: 400;
-  margin: 0;
-  line-height: 1.5;
 }
 /* More notifications button in list */
 .notifications-more-btn {

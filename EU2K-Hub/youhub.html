@@ -136,39 +136,134 @@
     window.createHttpsCallable = (name) => httpsCallable(functions, name);
     window.storage = storage;
     
-    // Helper function to load profile picture via Cloud Function
-    const profilePicCache = new Map();
-    
-    async function loadProfilePicture(userId, targetElement) {
-      if (!userId || !targetElement) return;
-      
+    // Helper function to load profile picture (via Cloud Function so we get a working token URL)
+    const profilePicCache = new Map(); // cacheKey -> {url: string|null, exists: boolean}
+    const pendingPromises = new Map(); // cacheKey -> Promise<{url: string|null, exists: boolean}>
+
+    function clearProfilePhoto(targetElement) {
+      targetElement.classList.remove('has-photo');
+      targetElement.style.backgroundImage = '';
+      targetElement.style.backgroundSize = '';
+      targetElement.style.backgroundPosition = '';
+      targetElement.style.backgroundRepeat = '';
+      // do not force background color here; CSS will show the fallback (green bell / gray)
+    }
+
+    function canLoadImage(url, timeoutMs = 4000) {
+      return new Promise((resolve) => {
+        if (!url) return resolve(false);
+        const img = new Image();
+        let done = false;
+        const finish = (ok) => {
+          if (done) return;
+          done = true;
+          try { img.onload = null; img.onerror = null; } catch (_) { /* no-op */ }
+          resolve(ok);
+        };
+        const t = setTimeout(() => finish(false), timeoutMs);
+        img.onload = () => { clearTimeout(t); finish(true); };
+        img.onerror = () => { clearTimeout(t); finish(false); };
+        img.src = url;
+      });
+    }
+
+    function applyProfilePhoto(targetElement, url) {
+      targetElement.classList.add('has-photo');
+      targetElement.style.backgroundImage = `url('${url}')`;
+      targetElement.style.backgroundSize = 'cover';
+      targetElement.style.backgroundPosition = 'center';
+      targetElement.style.backgroundRepeat = 'no-repeat';
+      // IMPORTANT: don't set `background` shorthand here, it would wipe background-image.
+    }
+
+    async function loadProfilePicture(userIdOrNormalizedName, targetElement, isNormalizedName = false) {
+      if (!userIdOrNormalizedName || !targetElement) return;
+
+      // Cache key: prefix with 'name:' if it's a normalized name
+      const cacheKey = isNormalizedName ? `name:${userIdOrNormalizedName}` : userIdOrNormalizedName;
+
       // Check cache first
-      if (profilePicCache.has(userId)) {
-        const cachedUrl = profilePicCache.get(userId);
-        if (cachedUrl) {
-          targetElement.style.backgroundImage = `url(${cachedUrl})`;
-          targetElement.style.backgroundSize = 'cover';
-          targetElement.style.backgroundPosition = 'center';
+      if (profilePicCache.has(cacheKey)) {
+        const cachedResult = profilePicCache.get(cacheKey);
+        if (cachedResult && cachedResult.url) {
+          console.log('[ProfilePic] Using cached URL:', cachedResult.url);
+          applyProfilePhoto(targetElement, cachedResult.url);
+          return;
+        } else if (cachedResult && cachedResult.url === null) {
+          console.log('[ProfilePic] Cached as not found, using fallback');
+          clearProfilePhoto(targetElement);
+          return;
+        }
+      }
+
+      // Check if there's already a pending Promise for this key
+      if (pendingPromises.has(cacheKey)) {
+        console.log('[ProfilePic] Reusing pending Promise for key:', cacheKey);
+        const pendingResult = await pendingPromises.get(cacheKey);
+        if (pendingResult && pendingResult.url) {
+          applyProfilePhoto(targetElement, pendingResult.url);
+        } else {
+          clearProfilePhoto(targetElement);
         }
         return;
       }
-      
-      try {
-        const getProfilePic = httpsCallable(functions, 'getProfilePicture');
-        const result = await getProfilePic({ userId });
-        
-        if (result.data.exists && result.data.url) {
-          profilePicCache.set(userId, result.data.url);
-          targetElement.style.backgroundImage = `url(${result.data.url})`;
-          targetElement.style.backgroundSize = 'cover';
-          targetElement.style.backgroundPosition = 'center';
-        } else {
-          profilePicCache.set(userId, null);
-          console.log('[ProfilePic] No profile picture for user:', userId);
+
+      // Create new Promise for this key
+      console.log('[ProfilePic] Creating new Promise for key:', cacheKey);
+      const promise = (async () => {
+        try {
+          console.log('[ProfilePic] Calling getProfilePicture with:', isNormalizedName ? { normalizedName: userIdOrNormalizedName } : { userId: userIdOrNormalizedName });
+          const fn = httpsCallable(functions, 'getProfilePicture');
+          const requestData = isNormalizedName
+            ? { normalizedName: userIdOrNormalizedName }
+            : { userId: userIdOrNormalizedName };
+          const res = await fn(requestData);
+          console.log('[ProfilePic] getProfilePicture response:', res?.data);
+          console.log('[ProfilePic] Response details - url:', res?.data?.url, 'exists:', res?.data?.exists, 'success:', res?.data?.success);
+          const url = res?.data?.url || null;
+          const exists = !!res?.data?.exists;
+
+          const result = { url: url, exists: exists };
+          console.log('[ProfilePic] Processed result:', result);
+          
+          // Cache the result
+          profilePicCache.set(cacheKey, result);
+          
+          // Remove from pending promises
+          pendingPromises.delete(cacheKey);
+          
+          return result;
+        } catch (e) {
+          console.warn('[ProfilePic] getProfilePicture failed:', e);
+          const result = { url: null, exists: false };
+          profilePicCache.set(cacheKey, result);
+          pendingPromises.delete(cacheKey);
+          return result;
         }
-      } catch (e) {
-        console.error('[ProfilePic] Error loading profile picture:', e);
-        profilePicCache.set(userId, null);
+      })();
+
+      // Store the pending Promise
+      pendingPromises.set(cacheKey, promise);
+
+      // Wait for the result and apply it
+      const result = await promise;
+      if (result && result.url) {
+        applyProfilePhoto(targetElement, result.url);
+
+        // Set up error handling in case the image fails to load
+        const img = new Image();
+        img.onload = () => {
+          // Image loaded successfully - keep has-photo class
+        };
+        img.onerror = () => {
+          // Image failed to load - remove has-photo class and clear background
+          console.warn('[ProfilePic] Image failed to load, reverting to fallback:', result.url);
+          profilePicCache.set(cacheKey, { url: null, exists: false });
+          clearProfilePhoto(targetElement);
+        };
+        img.src = result.url;
+      } else {
+        clearProfilePhoto(targetElement);
       }
     }
     window.loadProfilePicture = loadProfilePicture;
@@ -484,16 +579,18 @@
                   data-translate-fallback="Előzmények">Előzmények</h2>
               </div>
               <div class="notification-history-columns">
-                <div class="notification-history-left">
+                <div class="notifications-column notifications-column--left notification-history-left-col">
                   <div class="notifications-header-container">
                     <span class="notifications-header-text" data-translate="youhub.notifications.title"
                       data-translate-fallback="Értesítések">Értesítések</span>
                   </div>
-                  <div class="notification-history-list" id="notificationHistoryList">
-                    <!-- Items will be generated here -->
+                  <div class="notifications-list-container" style="display: block;">
+                    <div class="notifications-list notification-history-list" id="notificationHistoryList">
+                      <!-- Items will be generated here -->
+                    </div>
                   </div>
                 </div>
-                <div class="notification-history-right" id="notificationHistoryDetailView">
+                <div class="notifications-column notifications-column--right">
                   <div class="notifications-empty-state" id="notificationHistoryEmptyState">
                     <img src="assets/youhub/notifications/bell.svg" alt="Értesítések"
                       class="notifications-empty-icon notifications-empty-icon--right">
@@ -504,7 +601,7 @@
                         data-translate-fallback="Válassz ki egy értesítést">Válassz ki egy értesítést</p>
                     </div>
                   </div>
-                  <div class="notification-history-detail-content" id="notificationHistoryDetailContent" style="display: none;">
+                  <div class="notifications-detail-view" id="notificationHistoryDetailView" style="display: none;">
                     <!-- Detail content will be generated here -->
                   </div>
                 </div>
@@ -649,7 +746,7 @@
                       </div>
                     </div>
                     <div class="notifications-list-container" id="notificationsListContainer" style="display: none;">
-                      <div class="notifications-list">
+                      <div class="notifications-list" id="notificationsList">
                         <!-- Items will be generated here -->
                       </div>
                       <div class="notifications-list-fade"></div>
@@ -1880,8 +1977,29 @@
             }
 
             // Calendar Date Update Logic
-            function updateCalendarDate() {
-              const now = new Date();
+            // Track if user has manually changed the date - if so, don't auto-update
+            window.calendarUserSelectedDate = null;
+
+            function getWeekRange(baseDate) {
+              const d = new Date(baseDate);
+              const day = d.getDay(); // 0-6, Sunday=0
+              const diffToMonday = (day + 6) % 7; // Monday=0
+              const start = new Date(d);
+              start.setDate(d.getDate() - diffToMonday);
+              start.setHours(0, 0, 0, 0);
+              const end = new Date(start);
+              end.setDate(start.getDate() + 4); // Friday
+              end.setHours(23, 59, 59, 999);
+              return { start, end };
+            }
+            
+            function updateCalendarDate(forceDate = null) {
+              // If user has selected a different date, don't auto-update unless forced
+              if (!forceDate && window.calendarUserSelectedDate) {
+                return;
+              }
+              
+              const now = forceDate || new Date();
               
               // Get translated months and days from translation manager
               const defaultMonths = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'];
@@ -1901,17 +2019,29 @@
                 }
               }
 
+              const activeView = window.calendarActiveView || document.querySelector('.calendar-nav-item.active')?.getAttribute('data-calendar-nav');
               const monthName = months[now.getMonth()];
               const dayName = days[now.getDay()];
               const dayNum = now.getDate();
               const year = now.getFullYear();
 
-              // Format: "Január 02. - Péntek"
-              const dayPadded = dayNum < 10 ? `0${dayNum}` : dayNum;
-              const dateText = `${monthName} ${dayPadded}. - ${dayName}`;
+              let dateText = '';
+              let monthText = '';
+              if (activeView === 'exams') {
+                const { start, end } = getWeekRange(now);
+                const startDay = String(start.getDate()).padStart(2, '0');
+                const endDay = String(end.getDate()).padStart(2, '0');
+                const startMonthName = months[start.getMonth()];
+                dateText = `${startMonthName} ${startDay}. - ${endDay}.`;
+                monthText = `${monthName} ${String(dayNum).padStart(2, '0')}. - ${dayName}`;
+              } else {
+                // Format: "Január 02. - Péntek"
+                const dayPadded = dayNum < 10 ? `0${dayNum}` : dayNum;
+                dateText = `${monthName} ${dayPadded}. - ${dayName}`;
 
-              // Format: "Január 2026."
-              const monthText = `${monthName} ${year}.`;
+                // Format: "Január 2026."
+                monthText = `${monthName} ${year}.`;
+              }
 
               const dateEl = document.querySelector('.calendar-date-text');
               const monthEl = document.querySelector('.calendar-month-text');
@@ -1970,6 +2100,8 @@
                     nav.classList.remove('active');
                   }
                 });
+                window.calendarActiveView = targetKey;
+                updateCalendarDate(window.calendarUserSelectedDate || new Date());
 
                 // 2. Switch View
                 Object.keys(views).forEach(key => {
@@ -1978,9 +2110,15 @@
                     view.style.display = (key === targetKey) ? 'grid' : 'none';
                   }
                 });
+
+                // 2b. If switching to exams, load exams data
+                if (targetKey === 'exams' && window.studentCalendar) {
+                  window.studentCalendar.switchToExamsView();
+                  return; // Don't check empty state, let switchToExamsView handle it
+                }
                 
-                // 3. Check empty states for the active view (exams, rp, bell only - not timetable)
-                if (targetKey !== 'timetable') {
+                // 3. Check empty states for the active view (rp, bell only - not timetable or exams)
+                if (targetKey !== 'timetable' && targetKey !== 'exams') {
                   setTimeout(() => {
                     const activeView = views[targetKey];
                     if (activeView) {
@@ -2062,6 +2200,19 @@
             async function loadTimetableForDate(date) {
               const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
               const dayName = days[date.getDay()];
+              const activeNav = document.querySelector('.calendar-nav-item.active');
+              const activeView = activeNav?.getAttribute('data-calendar-nav');
+
+              if (activeView === 'exams' && window.studentCalendar) {
+                try {
+                  console.log('[DatePicker] Loading exams for week of:', date);
+                  await window.studentCalendar.fetchAndRenderExamsForWeek(date);
+                  console.log('[DatePicker] Exams loaded successfully');
+                } catch (e) {
+                  console.error('[DatePicker] Error loading data:', e);
+                }
+                return;
+              }
               
               // If weekend, show empty
               if (dayName === 'sunday' || dayName === 'saturday') {
@@ -2075,10 +2226,12 @@
               if (window.studentCalendar) {
                 try {
                   console.log('[DatePicker] Loading timetable for day:', dayName);
+                  
+                  // Load timetable
                   await window.studentCalendar.fetchAndRenderTimetable(dayName);
                   console.log('[DatePicker] Timetable loaded successfully');
                 } catch (e) {
-                  console.error('[DatePicker] Error loading timetable:', e);
+                  console.error('[DatePicker] Error loading data:', e);
                 }
               } else {
                 console.warn('[DatePicker] studentCalendar not available');
@@ -2209,13 +2362,32 @@
                   if (isToday) dayEl.classList.add('today');
                   
                   // Highlight selected date
-                  const isSelected = i === displayDate.getDate() && displayDate.getMonth() === displayDate.getMonth() && displayDate.getFullYear() === displayDate.getFullYear();
+                  const selectedBase = window.calendarUserSelectedDate || displayDate;
+                  const isSelected = i === selectedBase.getDate() && displayDate.getMonth() === selectedBase.getMonth() && displayDate.getFullYear() === selectedBase.getFullYear();
                   if (isSelected) dayEl.classList.add('selected');
+
+                  if (window.calendarActiveView === 'exams') {
+                    const dayDate = new Date(displayDate.getFullYear(), displayDate.getMonth(), i);
+                    const { start, end } = getWeekRange(selectedBase);
+                    if (dayDate >= start && dayDate <= end) {
+                      dayEl.classList.add('selected');
+                    }
+                  }
 
                   dayEl.addEventListener('click', async () => {
                     const selected = new Date(displayDate.getFullYear(), displayDate.getMonth(), i);
-                    updateDateDisplay(selected);
-                    await loadTimetableForDate(selected);
+                    displayDate = new Date(selected);
+                    // Mark that user has selected a custom date
+                    if (window.calendarActiveView === 'exams') {
+                      const { start } = getWeekRange(selected);
+                      window.calendarUserSelectedDate = new Date(start);
+                      updateDateDisplay(selected);
+                      await loadTimetableForDate(selected);
+                    } else {
+                      window.calendarUserSelectedDate = new Date(selected);
+                      updateDateDisplay(selected);
+                      await loadTimetableForDate(selected);
+                    }
                     datePickerOpen = false;
                     customDatePicker.classList.remove('open');
                     if (datePickerIcon) datePickerIcon.style.transform = 'rotate(0deg)';
@@ -2237,13 +2409,17 @@
               }
 
               function updateDateDisplay(date) {
+                // Refresh translations each time to handle language changes
+                const currentMonthNames = getMonthNames();
+                const currentDayNames = getDayNames();
+                
                 const year = date.getFullYear();
                 const month = date.getMonth();
                 const day = date.getDate();
-                const dayName = dayNames[date.getDay()];
-                const monthText = monthNames[month];
+                const dayName = currentDayNames[date.getDay()];
+                const monthText = currentMonthNames[month];
                 
-                const dateStr = `${monthText} ${String(day).padStart(2, '0')}. - ${dayName}`;
+                let dateStr = `${monthText} ${String(day).padStart(2, '0')}. - ${dayName}`;
                 if (dateTextEl) {
                   dateTextEl.textContent = dateStr;
                   dateTextEl.setAttribute('data-translate-fallback', dateStr);
@@ -2251,7 +2427,17 @@
                   // Update month text
                   const monthEl = document.querySelector('.calendar-month-text');
                   if (monthEl) {
-                    const monthStr = `${monthText} ${year}.`;
+                    let monthStr = `${monthText} ${year}.`;
+                    if (window.calendarActiveView === 'exams') {
+                      const { start, end } = getWeekRange(date);
+                      const startMonthName = currentMonthNames[start.getMonth()];
+                      const startDay = String(start.getDate()).padStart(2, '0');
+                      const endDay = String(end.getDate()).padStart(2, '0');
+                      dateStr = `${startMonthName} ${startDay}. - ${endDay}.`;
+                      monthStr = `${monthText} ${String(day).padStart(2, '0')}. - ${dayName}`;
+                      dateTextEl.textContent = dateStr;
+                      dateTextEl.setAttribute('data-translate-fallback', dateStr);
+                    }
                     monthEl.textContent = monthStr;
                     monthEl.setAttribute('data-translate-fallback', monthStr);
                   }
@@ -2281,11 +2467,16 @@
 
               // Previous month
               datePickerPrev?.addEventListener('click', async () => {
-                displayDate.setMonth(displayDate.getMonth() - 1);
+                const currentDay = displayDate.getDate();
+                const newMonth = displayDate.getMonth() - 1;
+                const newYear = newMonth < 0 ? displayDate.getFullYear() - 1 : displayDate.getFullYear();
+                const adjustedMonth = newMonth < 0 ? 11 : newMonth;
+                
                 // Keep the same day if possible
-                const daysInNewMonth = new Date(displayDate.getFullYear(), displayDate.getMonth() + 1, 0).getDate();
-                const newDate = new Date(displayDate.getFullYear(), displayDate.getMonth(), Math.min(displayDate.getDate(), daysInNewMonth));
-                displayDate = newDate;
+                const daysInNewMonth = new Date(newYear, adjustedMonth + 1, 0).getDate();
+                const newDate = new Date(newYear, adjustedMonth, Math.min(currentDay, daysInNewMonth));
+                displayDate = new Date(newDate);
+                window.calendarUserSelectedDate = new Date(newDate);
                 updateDateDisplay(newDate);
                 await loadTimetableForDate(newDate);
                 renderCalendar();
@@ -2293,11 +2484,16 @@
 
               // Next month
               datePickerNext?.addEventListener('click', async () => {
-                displayDate.setMonth(displayDate.getMonth() + 1);
+                const currentDay = displayDate.getDate();
+                const newMonth = displayDate.getMonth() + 1;
+                const newYear = newMonth > 11 ? displayDate.getFullYear() + 1 : displayDate.getFullYear();
+                const adjustedMonth = newMonth > 11 ? 0 : newMonth;
+                
                 // Keep the same day if possible
-                const daysInNewMonth = new Date(displayDate.getFullYear(), displayDate.getMonth() + 1, 0).getDate();
-                const newDate = new Date(displayDate.getFullYear(), displayDate.getMonth(), Math.min(displayDate.getDate(), daysInNewMonth));
-                displayDate = newDate;
+                const daysInNewMonth = new Date(newYear, adjustedMonth + 1, 0).getDate();
+                const newDate = new Date(newYear, adjustedMonth, Math.min(currentDay, daysInNewMonth));
+                displayDate = new Date(newDate);
+                window.calendarUserSelectedDate = new Date(newDate);
                 updateDateDisplay(newDate);
                 await loadTimetableForDate(newDate);
                 renderCalendar();
@@ -2306,9 +2502,11 @@
               // Today button
               datePickerToday?.addEventListener('click', async () => {
                 const today = new Date();
+                displayDate = new Date(today);
+                // Clear user selection - back to auto mode
+                window.calendarUserSelectedDate = null;
                 updateDateDisplay(today);
                 await loadTimetableForDate(today);
-                displayDate = new Date(today);
                 datePickerOpen = false;
                 customDatePicker.classList.remove('open');
                 if (datePickerIcon) datePickerIcon.style.transform = 'rotate(0deg)';
@@ -2351,6 +2549,7 @@
                   
                   // Refresh month/day names from current language
                   const currentMonthNames = getMonthNames();
+                  const currentDayNames = getDayNames();
                   
                   // Try to parse the date from the text
                   // Expected format: "Month DD. - DayName"
@@ -2367,9 +2566,28 @@
                     // Find month index from current language monthNames
                     const monthIndex = currentMonthNames.findIndex(m => m.trim().toLowerCase() === monthStr.trim().toLowerCase());
                     
+                    // Find day index to validate
+                    const dayIndex = currentDayNames.findIndex(d => d.trim().toLowerCase() === dayNameStr.trim().toLowerCase());
+                    
                     if (monthIndex !== -1 && day >= 1 && day <= 31) {
-                      parsedDate = new Date(displayDate.getFullYear(), monthIndex, day);
-                      console.log('[DatePicker] Parsed date:', parsedDate);
+                      // Try current year first
+                      let testDate = new Date(displayDate.getFullYear(), monthIndex, day);
+                      
+                      // If day of week doesn't match, try previous/next year
+                      if (dayIndex !== -1 && testDate.getDay() !== dayIndex) {
+                        // Try previous year
+                        testDate = new Date(displayDate.getFullYear() - 1, monthIndex, day);
+                        if (testDate.getDay() !== dayIndex) {
+                          // Try next year
+                          testDate = new Date(displayDate.getFullYear() + 1, monthIndex, day);
+                        }
+                      }
+                      
+                      // Validate the date is valid
+                      if (testDate.getDate() === day && testDate.getMonth() === monthIndex) {
+                        parsedDate = testDate;
+                        console.log('[DatePicker] Parsed date:', parsedDate);
+                      }
                     } else {
                       console.warn('[DatePicker] Month not found. Input:', monthStr, 'Available:', currentMonthNames);
                     }
@@ -2377,7 +2595,8 @@
                   
                   if (parsedDate) {
                     // Update display with parsed date
-                    displayDate = parsedDate;
+                    displayDate = new Date(parsedDate);
+                    window.calendarUserSelectedDate = new Date(parsedDate);
                     updateDateDisplay(parsedDate);
                     await loadTimetableForDate(parsedDate);
                     renderCalendar(); // Re-render calendar to show selected day
@@ -2689,7 +2908,7 @@
                 const typeEl = card.querySelector('.suggestion-meta-label--type');
                 const avatarEl = card.querySelector('.suggestion-meta-avatar');
 
-                console.log(`[Suggestions] 🎯 Processing card[${index}] (data-card-index=${cardIndex}), payload:`, payload ? { id: payload.id, title: payload.data?.title } : 'EMPTY');
+                console.log(`[Suggestions] 🎯 Processing card[${index}] (data-card-index=${cardIndex}), payload:`, payload ? { id: payload.id, title: payload.data?.title, ownerId: payload.data?.ownerId } : 'EMPTY');
                 console.log(`[Suggestions] 🔍 Card elements: title=${!!titleEl}, desc=${!!descEl}, author=${!!authorEl}, type=${!!typeEl}, avatar=${!!avatarEl}`);
 
                 if (!payload) {
@@ -2718,17 +2937,29 @@
                 if (authorEl) authorEl.textContent = owner.name || unknownUser;
                 if (typeEl) typeEl.textContent = data.hive ? getTranslation('youhub.suggestions.card.type_hive', 'Hive') : getTranslation('youhub.suggestions.card.type_suggestion', 'Javaslat');
                 if (avatarEl) {
-                  if (owner.picture) {
-                    avatarEl.style.backgroundImage = `url('${owner.picture}')`;
-                    avatarEl.style.backgroundSize = 'cover';
-                    avatarEl.style.backgroundPosition = 'center';
-                  } else if (data.ownerId) {
-                    // Try to load from Firebase Storage
-                    avatarEl.style.backgroundColor = '#7B7F78';
-                    loadProfilePicture(data.ownerId, avatarEl);
+                  // Check if data.ownerId exists and looks like a normalized name
+                  const looksLikeNormalizedName = data.ownerId && /^[a-z_]+$/.test(data.ownerId);
+
+                  if (data.ownerId) {
+                    if (looksLikeNormalizedName) {
+                      console.log('[Suggestions] Loading profile picture for normalizedName from data.ownerId:', data.ownerId, 'in card:', cardIndex);
+                      // data.ownerId is already a normalized name from the document
+                      loadProfilePicture(data.ownerId, avatarEl, true);
+                    } else {
+                      console.log('[Suggestions] Loading profile picture for userId from data.ownerId:', data.ownerId, 'in card:', cardIndex);
+                      // data.ownerId is a direct userId
+                      loadProfilePicture(data.ownerId, avatarEl, false);
+                    }
+                  } else if (owner.name && owner.name !== unknownUser) {
+                    // Fallback: create normalized name from ownerProfile name
+                    const normalizedName = owner.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, '_');
+                    console.log('[Suggestions] Loading profile picture for normalizedName from owner.name:', normalizedName, 'from owner name:', owner.name, 'in card:', cardIndex);
+                    loadProfilePicture(normalizedName, avatarEl, true);
                   } else {
+                    console.log('[Suggestions] No ownerId or valid owner name found for card:', cardIndex, 'data:', data, 'owner:', owner);
+                    // No owner info available - use fallback
+                    avatarEl.classList.remove('has-photo');
                     avatarEl.style.backgroundImage = '';
-                    avatarEl.style.backgroundColor = '#7B7F78';
                   }
                 }
               }
@@ -5418,7 +5649,8 @@
                     if (avatar.url) {
                       return `<div class="notification-detail-avatar-small" style="background-image: url('${avatar.url}'); background-size: cover; background-position: center;"></div>`;
                     } else {
-                      return `<div class="notification-detail-avatar-small" style="background: #808080;"></div>`;
+                      // Let loadProfilePicture try profilePhotos/{userId}.jpg via Cloud Function
+                      return `<div class="notification-detail-avatar-small" data-userid="${avatar.userId}"></div>`;
                     }
                   }).join('')}
               </div>
@@ -5437,32 +5669,15 @@
             } else {
               // sentTo is a userid
               try {
-                // Load picture from public/users/profilePictures/{sentTo}
-                const pictureRef = doc(window.db, `public/users/profilePictures/${sentTo}`);
-                const pictureSnap = await getDoc(pictureRef);
-                if (pictureSnap.exists()) {
-                  const pictureData = pictureSnap.data();
-                  const picture = pictureData.profilePictureUrl;
-
-                  if (picture) {
-                    showAvatars = true;
-                    recipientsHtml = `
+                // Render placeholder and let loadProfilePicture() fill it from Storage (profilePhotos/{uid}.jpg)
+                showAvatars = true;
+                recipientsHtml = `
               <div class="notification-detail-recipients">
                 <div class="notification-detail-avatars">
-                          <div class="notification-detail-avatar-small" style="background-image: url('${picture}'); background-size: cover; background-position: center;"></div>
+                  <div class="notification-detail-avatar-small" data-userid="${sentTo}"></div>
                 </div>
-                </div>
-                    `;
-                  } else {
-                    const unknownUsers = getTranslation('general.unknown_user', 'Ismeretlen felhasználó(k)');
-                    const sentToLabel = getTranslation('youhub.notifications.detail.sent_to', 'Kiküldve:');
-                    sentToText = `${sentToLabel} ${unknownUsers}`;
-                  }
-                } else {
-                  const unknownUsers = getTranslation('general.unknown_user', 'Ismeretlen felhasználó(k)');
-                  const sentToLabel = getTranslation('youhub.notifications.detail.sent_to', 'Kiküldve:');
-                  sentToText = `${sentToLabel} ${unknownUsers}`;
-                }
+              </div>
+                `;
               } catch (err) {
                 console.warn('[Notifications] Error loading recipient user:', err);
                 const unknownUsers = getTranslation('general.unknown_user', 'Ismeretlen felhasználó(k)');
@@ -5480,8 +5695,8 @@
 
           // Build avatar style for sender
           const senderAvatarStyle = senderImageUrl
-            ? `background-image: url('${senderImageUrl}'); background-size: cover; background-position: center;`
-            : 'background: #808080;';
+            ? `background-image: url('${senderImageUrl}'); background-size: cover; background-position: center; background-repeat: no-repeat;`
+            : '';
 
           // Render detail view
           if (detailView && rightEmptyState) {
@@ -5513,6 +5728,26 @@
               </button>
             </div>
           `;
+
+            // If the notification doc has ownerId, prefer Storage profile photo over legacy Firestore profilePictures doc
+            try {
+              if (notifData?.ownerId) {
+                const avatarEl = detailView.querySelector('.notification-detail-avatar');
+                if (avatarEl) loadProfilePicture(notifData.ownerId, avatarEl);
+              }
+            } catch (e) {
+              /* no-op */
+            }
+
+            // Also load recipient avatars (participants) via the same profilePhotos path
+            try {
+              detailView.querySelectorAll('.notification-detail-avatar-small[data-userid]').forEach((el) => {
+                const uid = el.getAttribute('data-userid');
+                if (uid) loadProfilePicture(uid, el);
+              });
+            } catch (e) {
+              /* no-op */
+            }
 
             // Add delete button handler
             const deleteBtn = detailView.querySelector('.notification-detail-action-btn--delete');
@@ -5645,7 +5880,8 @@
       };
 
       function generateNotificationItems() {
-        const list = document.querySelector('.notifications-list');
+        // IMPORTANT: target the main notifications list, not the history popup list
+        const list = document.getElementById('notificationsList');
         if (!list) return;
 
         list.innerHTML = '';
@@ -5723,14 +5959,14 @@
       function openNotificationHistoryPopup() {
         const popup = document.getElementById('notificationHistoryPopup');
         const historyList = document.getElementById('notificationHistoryList');
-        const detailContent = document.getElementById('notificationHistoryDetailContent');
+        const detailView = document.getElementById('notificationHistoryDetailView');
         const emptyState = document.getElementById('notificationHistoryEmptyState');
         if (!popup || !historyList) return;
 
         historyList.innerHTML = '';
         
         // Reset detail view to empty state
-        if (detailContent) detailContent.style.display = 'none';
+        if (detailView) detailView.style.display = 'none';
         if (emptyState) emptyState.style.display = 'flex';
 
         if (!window.notificationsData || window.notificationsData.length === 0) {
@@ -5769,11 +6005,35 @@
             item.appendChild(avatar);
             item.appendChild(content);
 
-            item.addEventListener('click', () => {
+            item.addEventListener('click', async () => {
               // Show detail in popup's right column
               document.querySelectorAll('#notificationHistoryList .notification-item').forEach(it => it.classList.remove('notification-item--active'));
               item.classList.add('notification-item--active');
-              updateHistoryDetailView(notif);
+
+              // Reuse the canonical renderer so the history popup detail matches 1:1
+              try {
+                window.selectedNotificationId = notif.id;
+                await updateNotificationDetailView();
+
+                const mainDetail = document.getElementById('notificationsDetailView');
+                const historyDetail = document.getElementById('notificationHistoryDetailView');
+                const historyEmpty = document.getElementById('notificationHistoryEmptyState');
+
+                if (mainDetail && historyDetail) {
+                  if (historyEmpty) historyEmpty.style.display = 'none';
+                  historyDetail.style.display = 'flex';
+                  historyDetail.innerHTML = mainDetail.innerHTML;
+
+                  // If main view used inline avatar style, but ownerId exists, ensure we try the Storage photo too
+                  if (notif?.data?.ownerId) {
+                    const avatarEl = historyDetail.querySelector('.notification-detail-avatar');
+                    if (avatarEl) loadProfilePicture(notif.data.ownerId, avatarEl);
+                  }
+                }
+              } catch (e) {
+                console.warn('[HistoryPopup] Failed to render detail view:', e);
+                updateHistoryDetailView(notif);
+              }
             });
 
             historyList.appendChild(item);
@@ -5781,43 +6041,88 @@
         }
 
         popup.style.display = 'flex';
-        
-        // Scroll to top
-        popup.scrollTop = 0;
-        historyList.scrollTop = 0;
+
+        // Scroll popup content to the very top (needs to run after layout)
+        requestAnimationFrame(() => {
+          try { popup.scrollTop = 0; popup.scrollTo?.(0, 0); } catch (e) { /* no-op */ }
+          try { historyList.scrollTop = 0; historyList.scrollTo?.(0, 0); } catch (e) { /* no-op */ }
+          try {
+            const content = popup.querySelector('.permission-content');
+            if (content) { content.scrollTop = 0; content.scrollTo?.(0, 0); }
+          } catch (e) { /* no-op */ }
+          try {
+            const container = popup.querySelector('.permission-container');
+            if (container) { container.scrollTop = 0; container.scrollTo?.(0, 0); }
+          } catch (e) { /* no-op */ }
+          try {
+            const cols = popup.querySelector('.notification-history-columns');
+            if (cols) { cols.scrollTop = 0; cols.scrollTo?.(0, 0); }
+          } catch (e) { /* no-op */ }
+          try {
+            const leftCol = popup.querySelector('.notification-history-left-col');
+            if (leftCol) { leftCol.scrollTop = 0; leftCol.scrollTo?.(0, 0); }
+          } catch (e) { /* no-op */ }
+          try {
+            const rightCol = popup.querySelector('.notifications-column--right');
+            if (rightCol) { rightCol.scrollTop = 0; rightCol.scrollTo?.(0, 0); }
+          } catch (e) { /* no-op */ }
+        });
       }
       
-      function updateHistoryDetailView(notif) {
-        const detailContent = document.getElementById('notificationHistoryDetailContent');
+      async function updateHistoryDetailView(notif) {
+        const detailView = document.getElementById('notificationHistoryDetailView');
         const emptyState = document.getElementById('notificationHistoryEmptyState');
-        if (!detailContent || !notif) return;
+        if (!detailView || !notif) return;
         
         if (emptyState) emptyState.style.display = 'none';
-        detailContent.style.display = 'flex';
+        detailView.style.display = 'flex';
+        
+        const title = notif.data.title || '';
+        const content = notif.data.content || notif.data.description || '';
+        const sender = notif.data.sender || '';
+        const sentTo = notif.data.sent_to || '';
         
         const dateValue = notif.data.date || notif.data.timestamp;
-        let dateStr = '';
+        let dateText = '';
         if (dateValue && dateValue.toDate) {
           const dateObj = dateValue.toDate();
-          dateStr = dateObj.toLocaleDateString('hu-HU', { year: 'numeric', month: '2-digit', day: '2-digit' });
+          dateText = dateObj.toLocaleDateString('hu-HU', { year: 'numeric', month: '2-digit', day: '2-digit' });
         }
         
         // Same structure as main notifications detail view
-        detailContent.innerHTML = `
+        const senderAvatarStyle = '';
+        const getTranslation = (key, fallback) => window.translationManager?.getTranslation(key) || fallback;
+        
+        // Build sent_to text
+        const sentToLabel = getTranslation('youhub.notifications.detail.sent_to', 'Kiküldve:');
+        const sentToText = sentTo ? `${sentToLabel} ${sentTo}` : '';
+        
+        detailView.innerHTML = `
           <div class="notification-detail-header">
+            <div class="notification-detail-avatar" id="historyDetailAvatar" style="${senderAvatarStyle}"></div>
             <div class="notification-detail-header-text">
-              <p class="notification-detail-title">${notif.data.title || 'Értesítés'}</p>
-              <p class="notification-detail-date">${dateStr}</p>
-              <p class="notification-detail-sender">${notif.data.sender || 'Ismeretlen'}</p>
+              <p class="notification-detail-title">${title}</p>
+              <p class="notification-detail-date">${dateText}</p>
+              <p class="notification-detail-sender">${sender}</p>
             </div>
-            <div class="notification-detail-avatar" id="historyDetailAvatar"></div>
           </div>
           <div class="notification-detail-content-container">
-            <p class="notification-detail-message">${notif.data.content || notif.data.description || ''}</p>
+            <p class="notification-detail-message">${content}</p>
+            <p class="notification-detail-sent-to">${sentToText}</p>
+          </div>
+          <div class="notification-detail-actions">
+            <button class="notification-detail-action-btn notification-detail-action-btn--delete" data-notification-id="${notif.id}">
+              <img src="assets/youhub/notifications/trahscan.svg" alt="${getTranslation('youhub.notifications.detail.delete', 'Törlés')}" class="notification-detail-action-icon">
+              <span class="notification-detail-action-text">${getTranslation('youhub.notifications.detail.delete', 'Törlés')}</span>
+            </button>
+            <button class="notification-detail-action-btn notification-detail-action-btn--snooze" data-notification-id="${notif.id}">
+              <img src="assets/youhub/notifications/snooze.svg" alt="${getTranslation('youhub.notifications.detail.snooze', 'Elhalasztás')}" class="notification-detail-action-icon">
+              <span class="notification-detail-action-text">${getTranslation('youhub.notifications.detail.snooze', 'Elhalasztás')}</span>
+            </button>
           </div>
         `;
         
-        // Load profile picture for avatar
+        // Load profile picture for avatar if ownerId exists
         if (notif.data.ownerId) {
           const avatarEl = document.getElementById('historyDetailAvatar');
           if (avatarEl) loadProfilePicture(notif.data.ownerId, avatarEl);

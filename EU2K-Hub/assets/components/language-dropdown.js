@@ -6,8 +6,21 @@ class LanguageDropdown {
   constructor(container, options = {}) {
     this.container = container;
     this._options = options.options || ['Magyar', 'English'];
-    this.selectedIndex = options.selectedIndex || 0;
     this.onChange = options.onChange || null;
+    this.placeholder = options.placeholder || null;
+    
+    // Handle initialValue (find index by value) or selectedIndex
+    if (options.initialValue !== undefined) {
+      const foundIndex = this._options.findIndex(opt => {
+        if (typeof opt === 'object' && opt !== null) {
+          return opt.value === options.initialValue;
+        }
+        return opt === options.initialValue;
+      });
+      this.selectedIndex = foundIndex >= 0 ? foundIndex : 0;
+    } else {
+      this.selectedIndex = options.selectedIndex || 0;
+    }
     
     this.isOpen = false;
     this.isSingleItem = true;
@@ -16,9 +29,39 @@ class LanguageDropdown {
   }
   
   init() {
+    // Clear container first to avoid duplicates
+    this.container.innerHTML = '';
     this.createDropdown();
     this.attachEvents();
     this.updateDisplay();
+  }
+  
+  destroy() {
+    // Remove all dropdown elements from container
+    if (this.trigger && this.trigger.parentNode) {
+      this.trigger.parentNode.removeChild(this.trigger);
+    }
+    if (this.menu && this.menu.parentNode) {
+      this.menu.parentNode.removeChild(this.menu);
+    }
+    // Clear container
+    this.container.innerHTML = '';
+  }
+  
+  // Helper to get display text from option (supports both string and {label} object)
+  getOptionLabel(option) {
+    if (typeof option === 'object' && option !== null && option.label) {
+      return option.label;
+    }
+    return String(option);
+  }
+  
+  // Helper to get value from option (supports both string and {value} object)
+  getOptionValue(option) {
+    if (typeof option === 'object' && option !== null && option.value !== undefined) {
+      return option.value;
+    }
+    return option;
   }
   
   createDropdown() {
@@ -62,7 +105,7 @@ class LanguageDropdown {
       
       const content = document.createElement('div');
       content.className = 'language-dropdown-item-content';
-      content.textContent = option;
+      content.textContent = this.getOptionLabel(option);
       
       item.appendChild(content);
       this.menuWrapper.appendChild(item);
@@ -189,9 +232,10 @@ class LanguageDropdown {
     // Close dropdown
     this.close();
     
-    // Call onChange callback
+    // Call onChange callback with value (for object options) or the option itself (for string options)
     if (this.onChange) {
-      this.onChange(this.options[this.selectedIndex], this.selectedIndex);
+      const option = this.options[this.selectedIndex];
+      this.onChange(this.getOptionValue(option), this.selectedIndex);
     }
   }
   
@@ -217,7 +261,7 @@ class LanguageDropdown {
         
         const content = document.createElement('div');
         content.className = 'language-dropdown-item-content';
-        content.textContent = option;
+        content.textContent = this.getOptionLabel(option);
         
         item.appendChild(content);
         this.menuWrapper.appendChild(item);
@@ -248,7 +292,7 @@ class LanguageDropdown {
       
       const content = document.createElement('div');
       content.className = 'language-dropdown-item-content';
-      content.textContent = option;
+      content.textContent = this.getOptionLabel(option);
       
       item.appendChild(content);
       this.menu.appendChild(item);
@@ -265,10 +309,29 @@ class LanguageDropdown {
   }
   
   updateDisplay() {
-    this.textSpan.textContent = this.options[this.selectedIndex];
+    const option = this.options[this.selectedIndex];
+    if (option !== undefined) {
+      const label = this.getOptionLabel(option);
+      const value = this.getOptionValue(option);
+      // Show placeholder if value is empty and placeholder is set
+      if (this.placeholder && (value === '' || value === null || value === undefined)) {
+        this.textSpan.textContent = this.placeholder;
+      } else {
+        this.textSpan.textContent = label;
+      }
+    } else if (this.placeholder) {
+      this.textSpan.textContent = this.placeholder;
+    } else {
+      this.textSpan.textContent = '';
+    }
   }
   
   getSelected() {
+    const option = this.options[this.selectedIndex];
+    return this.getOptionValue(option);
+  }
+  
+  getSelectedOption() {
     return this.options[this.selectedIndex];
   }
   
@@ -301,7 +364,7 @@ class LanguageDropdown {
       
       const content = document.createElement('div');
       content.className = 'language-dropdown-item-content';
-      content.textContent = option;
+      content.textContent = this.getOptionLabel(option);
       
       item.appendChild(content);
       item.addEventListener('click', (e) => {
