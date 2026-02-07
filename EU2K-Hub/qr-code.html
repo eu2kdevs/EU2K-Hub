@@ -8,6 +8,7 @@
   <title data-translate="pages.qr.title" data-translate-fallback="QR-Kód">QR-Kód</title>
   <link rel="stylesheet" href="qrcode.css">
   <link rel="stylesheet" href="assets/css/consent-banner.css">
+  <link rel="stylesheet" href="assets/css/mobile-layout.css">
   <link rel="icon" href="favicon.ico">
   <script src="assets/js/consent-banner.js"></script>
 
@@ -312,6 +313,28 @@
               <img src="assets/navbar/qr_code.svg" class="welcome-icon" alt="Welcome">
               <span class="welcome-text" data-translate="pages.qr.title">QR-Kód</span>
             </div>
+            <!-- Staff timer helye (ha van) -->
+            <!-- Hamburger menü gomb bal oldalán (staff timer után, kamera indikátor után) -->
+            <button class="hamburger-menu-btn" id="hamburgerMenuBtn" aria-label="Menü">
+              <img src="assets/general/menu.svg" alt="Menü">
+            </button>
+            <!-- Hamburger menü overlay -->
+            <div class="hamburger-menu-overlay" id="hamburgerMenuOverlay"></div>
+            <!-- Hamburger menü dropdown -->
+            <div class="hamburger-menu-dropdown" id="hamburgerMenuDropdown">
+              <a href="settings.html" class="hamburger-menu-item" id="hamburgerSettings">
+                <img src="assets/general/settings.svg" alt="Beállítások">
+                <span class="hamburger-menu-item-text" data-translate="pages.settings.title" data-translate-fallback="Beállítások">Beállítások</span>
+              </a>
+              <div class="hamburger-menu-item" id="hamburgerAccount" style="display: none;">
+                <img src="assets/general/account.svg" alt="Fiók">
+                <span class="hamburger-menu-item-text" data-translate="pages.general.account" data-translate-fallback="Fiók">Fiók</span>
+              </div>
+              <button class="hamburger-menu-item hamburger-menu-btn-login" id="hamburgerLogin" data-translate="pages.general.login" style="display: none;">
+                <span class="hamburger-menu-item-text" data-translate="pages.general.login" data-translate-fallback="Bejelentkezés">Bejelentkezés</span>
+              </button>
+            </div>
+            <!-- Desktop header icons (hidden on mobile) -->
             <div class="header-icon-container">
               <div class="header-icon-gradient">
                 <div class="header-icon-wrapper" id="headerSettingsWrapper">
@@ -328,6 +351,7 @@
                   style="display: none;">
                   Bejelentkezés
                 </button>
+                <!-- Kamera indikátor (mobilban hamburger menü gomb stílusa) -->
                 <button class="header-camera-indicator" id="headerCameraIndicator" style="display: none;">
                   <img class="header-camera-indicator-icon" src="assets/general/notifications/cam.svg" alt="Camera">
                   <span class="header-camera-indicator-text" data-translate="pages.qr.camera_in_use">A kamera
@@ -396,18 +420,18 @@
                 <span data-translate="pages.qr.auth">Részvétel Igazolása</span>
               </button>
 
+              <!-- Camera Disable Button - közvetlenül a Részvétel Igazolása alatt -->
+              <button class="qr-control-btn qr-btn-small qr-btn-blue qr-btn-camera-disable" onclick="disableCamera()">
+                <img src="assets/qr-code/cam_disable.svg" class="qr-control-icon-small" alt="Kamera Kikapcsolása">
+                <span data-translate="pages.qr.off_camera">Kamera Kikapcsolása</span>
+              </button>
+
               <!-- Top Right: Small buttons container -->
               <div class="qr-small-buttons-container">
                 <!-- Camera Switch Button -->
                 <button class="qr-control-btn qr-btn-small qr-btn-green qr-btn-camera-switch" onclick="switchCamera()">
                   <img src="assets/qr-code/cam_switch.svg" class="qr-control-icon" alt="Kamera Fordítása">
                   <span data-translate="pages.qr.switch_camera">Kamera Fordítása</span>
-                </button>
-
-                <!-- Camera Disable Button -->
-                <button class="qr-control-btn qr-btn-small qr-btn-blue qr-btn-camera-disable" onclick="disableCamera()">
-                  <img src="assets/qr-code/cam_disable.svg" class="qr-control-icon-small" alt="Kamera Kikapcsolása">
-                  <span data-translate="pages.qr.off_camera">Kamera Kikapcsolása</span>
                 </button>
               </div>
 
@@ -1589,6 +1613,7 @@
   <script src="assets/js/footer.js"></script>
   <script src="assets/js/staff-timer.js"></script>
   <script src="assets/js/staff-nav-items.js"></script>
+  <script src="assets/js/mobile-layout.js"></script>
 </body>
 
 </html>

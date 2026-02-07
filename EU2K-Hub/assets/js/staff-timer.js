@@ -203,6 +203,14 @@
       timerElement.style.opacity = '1';
       console.log('[StaffTimer] Timer element already exists, displaying');
     }
+    
+    // Mobil timer megjelenítése is
+    if (window.innerWidth <= 700) {
+      createMobileTimerElement();
+      if (mobileTimerElement) {
+        mobileTimerElement.style.display = 'flex';
+      }
+    }
 
     // Start countdown
     if (timerInterval) {
@@ -239,6 +247,11 @@
     // Hide timer element completely when stopped
     if (timerElement) {
       timerElement.style.display = 'none';
+    }
+    
+    // Hide mobile timer element too
+    if (mobileTimerElement) {
+      mobileTimerElement.style.display = 'none';
     }
 
     syncCounter = 0;
@@ -325,6 +338,20 @@
         }
       }
       
+      // Mobilban: timer hozzáadása a hamburger menühöz is
+      if (window.innerWidth <= 700) {
+        createMobileTimerElement();
+      }
+      
+      // Resize listener a mobil timer megjelenítéséhez/elrejtéséhez
+      window.addEventListener('resize', () => {
+        if (window.innerWidth <= 700 && timerElement) {
+          createMobileTimerElement();
+        } else if (window.innerWidth > 700) {
+          removeMobileTimerElement();
+        }
+      });
+      
       // Make sure timer element is stored
       if (timerElement) {
         console.log('[StaffTimer] Timer element ID:', timerElement.id, 'Display:', timerElement.style.display);
@@ -332,6 +359,77 @@
     };
     
     tryCreate();
+  }
+
+  /**
+   * Create mobile timer element in hamburger menu
+   */
+  let mobileTimerElement = null;
+  function createMobileTimerElement() {
+    // Ha már létezik, ne hozzuk létre újra
+    if (mobileTimerElement && document.getElementById('staffSessionTimerMobile')) {
+      return;
+    }
+    
+    const hamburgerMenu = document.getElementById('hamburgerMenuDropdown');
+    if (!hamburgerMenu) {
+      // Várjunk egy kicsit, ha még nincs a hamburger menü
+      setTimeout(createMobileTimerElement, 100);
+      return;
+    }
+    
+    // Ha már létezik a mobil timer, ne hozzuk létre újra
+    if (document.getElementById('staffSessionTimerMobile')) {
+      mobileTimerElement = document.getElementById('staffSessionTimerMobile');
+      return;
+    }
+    
+    // Létrehozzuk a mobil timer elemet
+    mobileTimerElement = document.createElement('div');
+    mobileTimerElement.id = 'staffSessionTimerMobile';
+    mobileTimerElement.style.cssText = `
+      display: none;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      background: #D3FFA1;
+      border-radius: 16px;
+      padding: 6px 12px;
+      margin-bottom: 8px;
+      color: #182C0E;
+      font-size: 14px;
+      font-weight: 600;
+      width: 100%;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    `;
+    
+    mobileTimerElement.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="8" cy="8" r="7" stroke="#182C0E" stroke-width="2"/>
+        <path d="M8 4V8L11 11" stroke="#182C0E" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span id="staffTimerTextMobile">15:00</span>
+    `;
+    
+    // Beszúrjuk a hamburger menü elejére (bal oldal)
+    hamburgerMenu.insertBefore(mobileTimerElement, hamburgerMenu.firstChild);
+    console.log('[StaffTimer] ✅ Mobile timer element created in hamburger menu');
+    
+    // Ha a desktop timer látható, akkor a mobil is legyen
+    if (timerElement && timerElement.style.display !== 'none') {
+      mobileTimerElement.style.display = 'flex';
+    }
+  }
+  
+  /**
+   * Remove mobile timer element
+   */
+  function removeMobileTimerElement() {
+    if (mobileTimerElement && mobileTimerElement.parentElement) {
+      mobileTimerElement.remove();
+      mobileTimerElement = null;
+    }
   }
 
   /**
@@ -361,22 +459,40 @@
     const minutes = Math.floor(remaining / 60000);
     const seconds = Math.floor((remaining % 60000) / 1000);
 
-    // Update display
+    // Update display (desktop)
     const timerText = document.getElementById('staffTimerText');
     if (timerText) {
       timerText.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
+    
+    // Update display (mobile)
+    const timerTextMobile = document.getElementById('staffTimerTextMobile');
+    if (timerTextMobile) {
+      timerTextMobile.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
 
     // Change color when < 5 minutes
-    if (minutes < 5 && timerElement) {
-      timerElement.style.background = '#FFD3A1';
-      timerElement.style.color = '#4A2000';
+    if (minutes < 5) {
+      if (timerElement) {
+        timerElement.style.background = '#FFD3A1';
+        timerElement.style.color = '#4A2000';
+      }
+      if (mobileTimerElement) {
+        mobileTimerElement.style.background = '#FFD3A1';
+        mobileTimerElement.style.color = '#4A2000';
+      }
     }
 
     // Change to red when < 2 minutes
-    if (minutes < 2 && timerElement) {
-      timerElement.style.background = '#FF9A9A';
-      timerElement.style.color = '#4A0000';
+    if (minutes < 2) {
+      if (timerElement) {
+        timerElement.style.background = '#FF9A9A';
+        timerElement.style.color = '#4A0000';
+      }
+      if (mobileTimerElement) {
+        mobileTimerElement.style.background = '#FF9A9A';
+        mobileTimerElement.style.color = '#4A0000';
+      }
     }
   }
 

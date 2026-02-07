@@ -1,0 +1,63 @@
+.m3-carousel-container {
+  font-family: 'Roboto', sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.m3-carousel-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  touch-action: pan-y; /* Allow vertical scroll but prevent horizontal on mobile */
+}
+
+.m3-carousel-scroll:active {
+  cursor: grabbing !important;
+}
+
+.m3-carousel-scroll::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.m3-carousel-item {
+  position: relative;
+  transition: transform 0.3s ease;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  pointer-events: auto;
+}
+
+.m3-carousel-item:hover {
+  transform: scale(1.02);
+}
+
+.m3-carousel-item:active {
+  cursor: grabbing;
+}
+
+/* Material 3 ripple effect simulation */
+.m3-carousel-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.m3-carousel-item:active::before {
+  opacity: 1;
+}

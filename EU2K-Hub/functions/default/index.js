@@ -1247,53 +1247,160 @@ exports.saveOnboardingNames = onCall({ region }, async (request) => {
 
 /**
  * Get profile picture URL from Firebase Storage
- * Checks if profile picture exists and returns the download URL
+ * Accepts either userId directly or normalizedName to look up userId from usrlookup
+ * Checks if profile picture exists and returns a usable download URL:
+ * - Prefer Firebase download token URL (works with typical Storage rules)
+ * - Fallback to a signed URL if token is missing
  */
 exports.getProfilePicture = onCall({ region }, async (request) => {
   try {
-    const { userId } = request.data;
+    const { userId, normalizedName } = request.data;
 
-    if (!userId || typeof userId !== 'string') {
-      throw new HttpsError('invalid-argument', 'userId is required');
+    let actualUserId = userId;
+
+    // If normalizedName provided, look up the userId from usrlookup
+    if (normalizedName && !userId) {
+      console.log(`[getProfilePicture] Looking up userId for normalizedName: ${normalizedName}`);
+
+      // The usrlookup structure is: usrlookup/names/{normalizedName}/{userId}
+      // So we need to get all documents in the subcollection usrlookup/names/{normalizedName}
+      // Each document ID in that subcollection is a userId
+
+      let foundUserId = null;
+
+      try {
+        console.log(`[getProfilePicture] Checking usrlookup/names/${normalizedName}`);
+
+        // Try usrlookup/names/{normalizedName}
+        const namesRef = db.collection('usrlookup').doc('names').collection(normalizedName);
+        const namesSnap = await namesRef.get();
+
+        console.log(`[getProfilePicture] namesSnap.empty: ${namesSnap.empty}, docs count: ${namesSnap.docs.length}`);
+
+        if (!namesSnap.empty) {
+          // Take the first userId found (document ID is the userId)
+          const firstDoc = namesSnap.docs[0];
+          foundUserId = firstDoc.id;
+          console.log(`[getProfilePicture] Found userId ${foundUserId} in usrlookup/names/${normalizedName}`);
+        } else {
+          console.log(`[getProfilePicture] No documents in usrlookup/names/${normalizedName}, trying teachers`);
+
+          // Try usrlookup/teachers/{normalizedName}
+          const teachersRef = db.collection('usrlookup').doc('teachers').collection(normalizedName);
+          const teachersSnap = await teachersRef.get();
+
+          console.log(`[getProfilePicture] teachersSnap.empty: ${teachersSnap.empty}, docs count: ${teachersSnap.docs.length}`);
+
+          if (!teachersSnap.empty) {
+            const firstDoc = teachersSnap.docs[0];
+            foundUserId = firstDoc.id;
+            console.log(`[getProfilePicture] Found userId ${foundUserId} in usrlookup/teachers/${normalizedName}`);
+          } else {
+            console.log(`[getProfilePicture] No documents in usrlookup/teachers/${normalizedName} either`);
+          }
+        }
+      } catch (error) {
+        console.error(`[getProfilePicture] Error looking up normalizedName ${normalizedName}:`, error);
+      }
+
+      if (foundUserId) {
+        actualUserId = foundUserId;
+      } else {
+        console.log(`[getProfilePicture] No userId found for normalizedName: ${normalizedName}`);
+        return { success: true, url: null, exists: false };
+      }
     }
 
-    const bucket = admin.storage().bucket();
-    
+    if (!actualUserId || typeof actualUserId !== 'string') {
+      throw new HttpsError('invalid-argument', 'userId or normalizedName is required');
+    }
+
+    // IMPORTANT:
+    // The project uses storageBucket = "eu2k-hub.firebasestorage.app" on the client.
+    // Some Firebase Admin environments default to the .appspot.com bucket, which would make
+    // exists() return false even though the file exists. So we try multiple buckets.
+    const defaultBucket = admin.storage().bucket();
+    const configuredBucketName =
+      (admin.app()?.options && admin.app().options.storageBucket) ? admin.app().options.storageBucket : null;
+
+    const bucketNamesToTry = [
+      defaultBucket?.name,
+      configuredBucketName,
+      'eu2k-hub.firebasestorage.app',
+      'eu2k-hub.appspot.com',
+    ].filter(Boolean);
+
+    const uniqueBucketNames = Array.from(new Set(bucketNamesToTry));
+    const bucketsToTry = uniqueBucketNames.map((name) => admin.storage().bucket(name));
+
+    async function buildUrlForFile(bucketToUse, filePath) {
+      const file = bucketToUse.file(filePath);
+      const [exists] = await file.exists();
+      if (!exists) return null;
+
+      // 1) Prefer Firebase download token URL (matches your example)
+      try {
+        const [metadata] = await file.getMetadata();
+        const tokensRaw = metadata?.metadata?.firebaseStorageDownloadTokens || '';
+        const token = tokensRaw.split(',')[0]?.trim();
+        if (token) {
+          const url = `https://firebasestorage.googleapis.com/v0/b/${bucketToUse.name}/o/${encodeURIComponent(filePath)}?alt=media&token=${token}`;
+          return url;
+        }
+      } catch (e) {
+        // ignore, try signed URL fallback
+      }
+
+      // 2) Fallback: signed URL (should still work for <img> / CSS background)
+      try {
+        const [signedUrl] = await file.getSignedUrl({
+          action: 'read',
+          expires: Date.now() + 60 * 60 * 1000, // 1 hour
+        });
+        return signedUrl;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    async function findUrlAcrossBuckets(filePath) {
+      for (const b of bucketsToTry) {
+        const url = await buildUrlForFile(b, filePath);
+        if (url) {
+          return { bucketName: b.name, url };
+        }
+      }
+      return { bucketName: null, url: null };
+    }
+
     // Try with .jpg extension first
-    const filePathJpg = `profilePhotos/${userId}.jpg`;
-    const fileJpg = bucket.file(filePathJpg);
-    
-    const [existsJpg] = await fileJpg.exists();
-    
-    if (existsJpg) {
-      // Get signed URL (valid for 1 hour)
-      const [url] = await fileJpg.getSignedUrl({
-        action: 'read',
-        expires: Date.now() + 60 * 60 * 1000 // 1 hour
-      });
-      
-      console.log(`[getProfilePicture] Found profile picture for user ${userId} (jpg)`);
-      return { success: true, url, exists: true };
+    const jpgCandidates = [
+      `profilePhotos/${actualUserId}.jpg`,
+      `profilePictures/${actualUserId}.jpg`, // legacy/alternate folder name
+    ];
+    for (const filePath of jpgCandidates) {
+      const found = await findUrlAcrossBuckets(filePath);
+      if (found.url) {
+        console.log(`[getProfilePicture] Found profile picture for user ${actualUserId} (${filePath}) in bucket ${found.bucketName}`);
+        return { success: true, url: found.url, exists: true };
+      }
     }
-    
+
     // Try without extension
-    const filePath = `profilePhotos/${userId}`;
-    const file = bucket.file(filePath);
-    
-    const [exists] = await file.exists();
-    
-    if (exists) {
-      const [url] = await file.getSignedUrl({
-        action: 'read',
-        expires: Date.now() + 60 * 60 * 1000
-      });
-      
-      console.log(`[getProfilePicture] Found profile picture for user ${userId} (no ext)`);
-      return { success: true, url, exists: true };
+    const noExtCandidates = [
+      `profilePhotos/${actualUserId}`,
+      `profilePictures/${actualUserId}`,
+    ];
+    for (const filePath of noExtCandidates) {
+      const found = await findUrlAcrossBuckets(filePath);
+      if (found.url) {
+        console.log(`[getProfilePicture] Found profile picture for user ${actualUserId} (${filePath}) in bucket ${found.bucketName}`);
+        return { success: true, url: found.url, exists: true };
+      }
     }
-    
+
     // No profile picture found
-    console.log(`[getProfilePicture] No profile picture for user ${userId}`);
+    console.log(`[getProfilePicture] No profile picture for user ${actualUserId}`);
     return { success: true, url: null, exists: false };
 
   } catch (error) {

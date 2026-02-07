@@ -8,6 +8,7 @@
   <title data-translate="pages.settings.title" data-translate-fallback="Beállítások">Beállítások</title>
   <link rel="stylesheet" href="settings.css">
   <link rel="stylesheet" href="assets/css/consent-banner.css">
+  <link rel="stylesheet" href="assets/css/mobile-layout.css">
   <link rel="stylesheet" href="assets/components/language-dropdown.css">
   <link rel="icon" href="favicon.ico">
   <script type="importmap">
@@ -69,6 +70,7 @@
   <script src="assets/js/staff-access.js"></script>
   <script src="assets/js/staff-timer.js"></script>
   <script src="assets/js/staff-nav-items.js"></script>
+  <script src="assets/js/mobile-layout.js"></script>
   <script>
     // Globális init, hogy minden render után biztosan legyen fordítás
     document.addEventListener('DOMContentLoaded', async () => {
@@ -91,6 +93,35 @@
           console.error('[Settings] storage translation error', e);
         }
       }
+    });
+  </script>
+  <script>
+    // Névjegy kártya - Haladó információk toggle (mobil layout)
+    document.addEventListener('DOMContentLoaded', () => {
+      const aboutCard = document.getElementById('aboutCard');
+      const toggleBtn = document.getElementById('aboutAdvancedToggle');
+      if (!aboutCard || !toggleBtn) return;
+
+      const getShowLabel = () =>
+        (window.translationManager && window.translationManager.getTranslation?.('pages.settings.about.advanced_toggle_show'))
+        || 'Haladó információk';
+
+      const getHideLabel = () =>
+        (window.translationManager && window.translationManager.getTranslation?.('pages.settings.about.advanced_toggle_hide'))
+        || 'Haladó információk elrejtése';
+
+      const updateLabel = () => {
+        const isShown = aboutCard.classList.contains('show-advanced');
+        toggleBtn.textContent = isShown ? getHideLabel() : getShowLabel();
+      };
+
+      toggleBtn.addEventListener('click', () => {
+        aboutCard.classList.toggle('show-advanced');
+        updateLabel();
+      });
+
+      // Kezdeti felirat
+      updateLabel();
     });
   </script>
   <script src="assets/js/auth-state.js"></script>
@@ -171,12 +202,24 @@
       const loginBtn = document.getElementById('headerLoginBtn');
       if (!accountWrapper || !loginBtn) return;
 
+      // Hamburger menü elemek
+      const hamburgerAccount = document.getElementById('hamburgerAccount');
+      const hamburgerLogin = document.getElementById('hamburgerLogin');
+
       if (loggedIn) {
         accountWrapper.style.display = 'flex';
         loginBtn.style.display = 'none';
+        
+        // Hamburger menü frissítése
+        if (hamburgerAccount) hamburgerAccount.style.display = 'flex';
+        if (hamburgerLogin) hamburgerLogin.style.display = 'none';
       } else {
         accountWrapper.style.display = 'none';
         loginBtn.style.display = 'flex';
+        
+        // Hamburger menü frissítése
+        if (hamburgerAccount) hamburgerAccount.style.display = 'none';
+        if (hamburgerLogin) hamburgerLogin.style.display = 'flex';
       }
     }
 
@@ -227,6 +270,14 @@
       const loginBtnEl = document.getElementById('headerLoginBtn');
       if (loginBtnEl) {
         loginBtnEl.addEventListener('click', () => {
+          window.location.href = 'onboarding.html';
+        });
+      }
+      
+      // Hamburger menü bejelentkezés gomb
+      const hamburgerLoginEl = document.getElementById('hamburgerLogin');
+      if (hamburgerLoginEl) {
+        hamburgerLoginEl.addEventListener('click', function () {
           window.location.href = 'onboarding.html';
         });
       }
@@ -294,6 +345,34 @@
               <!-- A cím szöveget mindig a showPage() állítja be: "Beállítások - {Aktuális lap}" többnyelvűen -->
               <span class="welcome-text" id="settingsPageTitle">Beállítások</span>
             </div>
+            <button class="hamburger-menu-btn" id="hamburgerMenuBtn" aria-label="Menü">
+              <img src="assets/general/menu.svg" alt="Menü">
+            </button>
+            <!-- Hamburger menü overlay -->
+            <div class="hamburger-menu-overlay" id="hamburgerMenuOverlay"></div>
+            <!-- Hamburger menü dropdown -->
+            <div class="hamburger-menu-dropdown" id="hamburgerMenuDropdown">
+              <!-- Első sor: Alkalmazás + Account (50% + 50%) -->
+              <div class="hamburger-menu-row">
+                <button class="hamburger-menu-item" id="hamburgerApp" style="opacity: 0.5; pointer-events: none;">
+                  <img src="assets/youhub/suggestions/check_dark.svg" alt="Alkalmazás">
+                  <span class="hamburger-menu-item-text" data-translate="pages.settings.apply" data-translate-fallback="Alkalmazás">Alkalmazás</span>
+                </button>
+                <div class="hamburger-menu-item" id="hamburgerAccount" style="display: none;">
+                  <img src="assets/general/account.svg" alt="Fiók">
+                  <span class="hamburger-menu-item-text" data-translate="pages.general.account" data-translate-fallback="Fiók">Fiók</span>
+                </div>
+                <button class="hamburger-menu-item hamburger-menu-btn-login" id="hamburgerLogin" data-translate="pages.general.login" style="display: none;">
+                  <span class="hamburger-menu-item-text" data-translate="pages.general.login" data-translate-fallback="Bejelentkezés">Bejelentkezés</span>
+                </button>
+              </div>
+              <!-- Második sor: Vissza gomb (100%) -->
+              <button class="hamburger-menu-item" id="hamburgerBack">
+                <img src="assets/onboarding/back_arrow.svg" alt="Vissza">
+                <span class="hamburger-menu-item-text" id="hamburgerBackText">Vissza</span>
+              </button>
+            </div>
+            <!-- Desktop header icons (hidden on mobile) -->
             <div class="header-icon-container">
               <div class="header-icon-gradient">
                 <div class="header-icon-wrapper" id="headerAccountWrapper" style="display: none;">
@@ -378,7 +457,7 @@
                 </div>
 
                 <!-- Színséma kártya -->
-                <div class="settings-item">
+                <div class="settings-item theme-card">
                   <div class="settings-card-content">
                     <div class="settings-card-text">
                       <h2 data-translate="pages.settings.theme_title">Színséma</h2>
@@ -403,7 +482,7 @@
                 </div>
 
                 <!-- Névjegy kártya -->
-                <div class="settings-item about-card">
+                <div class="settings-item about-card" id="aboutCard">
                   <!-- Text konténer - cím és leírás (felülre) -->
                   <div class="about-card-text">
                     <h2 class="about-title" data-translate="pages.settings.about.title">Névjegy</h2>
@@ -526,6 +605,12 @@
                           </div>
                         </div>
                       </div>
+                    </div>
+                    <!-- Haladó információk váltó gomb (mobil layoutra) -->
+                    <div class="about-advanced-toggle-wrapper">
+                      <button class="about-advanced-toggle-btn" id="aboutAdvancedToggle"
+                        data-translate="pages.settings.about.advanced_toggle_show"
+                        data-translate-fallback="Haladó információk">Haladó információk</button>
                     </div>
                   </div>
                 </div>
@@ -3748,6 +3833,110 @@
     window.saveAiTranslationSettings = saveAiTranslationSettings;
     
     document.addEventListener('DOMContentLoaded', initAiTranslationSettings);
+  </script>
+  
+  <!-- Hamburger menü és navbar scroll logika mobilra -->
+  <script>
+    window.addEventListener('load', () => {
+      // Hamburger menü toggle
+      const hamburgerMenuBtn = document.getElementById('hamburgerMenuBtn');
+      const hamburgerMenuDropdown = document.getElementById('hamburgerMenuDropdown');
+      const hamburgerMenuOverlay = document.getElementById('hamburgerMenuOverlay');
+      
+      if (hamburgerMenuBtn && hamburgerMenuDropdown && hamburgerMenuOverlay) {
+        hamburgerMenuBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const isActive = hamburgerMenuDropdown.classList.toggle('active');
+          hamburgerMenuOverlay.classList.toggle('active', isActive);
+        });
+
+        // Overlay kattintásra bezárás
+        hamburgerMenuOverlay.addEventListener('click', function() {
+          hamburgerMenuDropdown.classList.remove('active');
+          hamburgerMenuOverlay.classList.remove('active');
+        });
+
+        // Menü bezárása kattintásra kívülre
+        document.addEventListener('click', function(e) {
+          if (!hamburgerMenuDropdown.contains(e.target) && !hamburgerMenuBtn.contains(e.target)) {
+            hamburgerMenuDropdown.classList.remove('active');
+            hamburgerMenuOverlay.classList.remove('active');
+          }
+        });
+      }
+
+      // Settings oldal speciális: Alkalmazás és Vissza gombok kezelése
+      const hamburgerApp = document.getElementById('hamburgerApp');
+      const hamburgerBack = document.getElementById('hamburgerBack');
+      const settingsApplyBtn = document.getElementById('settingsApplyBtn');
+      const settingsBackBtn = document.getElementById('settingsBackBtn');
+
+      if (hamburgerApp && settingsApplyBtn) {
+        hamburgerApp.addEventListener('click', () => {
+          if (settingsApplyBtn && !settingsApplyBtn.style.pointerEvents) {
+            settingsApplyBtn.click();
+          }
+        });
+        
+        // Szinkronizáljuk az Alkalmazás gomb állapotát
+        if (window.setApplyEnabled) {
+          const originalSetApplyEnabled = window.setApplyEnabled;
+          window.setApplyEnabled = function(enabled) {
+            originalSetApplyEnabled(enabled);
+            if (hamburgerApp) {
+              hamburgerApp.style.opacity = enabled ? '1' : '0.5';
+              hamburgerApp.style.pointerEvents = enabled ? 'auto' : 'none';
+            }
+          };
+        }
+      }
+
+      if (hamburgerBack && settingsBackBtn) {
+        hamburgerBack.addEventListener('click', () => {
+          settingsBackBtn.click();
+        });
+      }
+
+      // Navbar scroll logika mobilra
+      const sidebar = document.querySelector('.sidebar');
+      const mainScrollArea = document.querySelector('.main-scroll-area');
+      const appBg = document.querySelector('.app-bg');
+      if (!sidebar || !mainScrollArea || !appBg) return;
+
+      let lastScrollTop = 0;
+      let scrollTimeout = null;
+
+      const handleScroll = () => {
+        if (window.innerWidth > 700) return; // Csak mobilra
+
+        const currentScrollTop = mainScrollArea.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Clear timeout
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout);
+        }
+
+        // Delay a scroll reagálásra
+        scrollTimeout = setTimeout(() => {
+          if (currentScrollTop > lastScrollTop && currentScrollTop > 50) {
+            // Lefelé görgetés - elrejtés
+            sidebar.classList.add('hidden');
+            mainScrollArea.classList.add('navbar-hidden');
+            appBg.classList.add('navbar-hidden');
+          } else if (currentScrollTop < lastScrollTop) {
+            // Felfelé görgetés - megjelenítés
+            sidebar.classList.remove('hidden');
+            mainScrollArea.classList.remove('navbar-hidden');
+            appBg.classList.remove('navbar-hidden');
+          }
+          
+          lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+        }, 10);
+      };
+
+      mainScrollArea.addEventListener('scroll', handleScroll, { passive: true });
+      window.addEventListener('scroll', handleScroll, { passive: true });
+    });
   </script>
 </body>
 

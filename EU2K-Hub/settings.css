@@ -1276,9 +1276,713 @@ body {
   .main-content { margin-left: 0; }
 }
 @media (max-width: 700px) {
-  .sidebar { display: none; }
-  .main-content { border-radius: 32px; margin: 8px; box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container); }
-  .main-area { margin-left: 0; }
+  /* App-bg padding optimalizálás mobilra */
+  .app-bg {
+    padding: 8px;
+    flex-direction: column;
+    padding-bottom: 80px; /* Hely a bottom navbar-nak */
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    transition: padding-bottom 0.3s ease-in-out;
+  }
+
+  .app-bg.navbar-hidden {
+    padding-bottom: 8px;
+  }
+
+  /* Sidebar átalakítása bottom navbar-ra mobilra */
+  .sidebar {
+    position: fixed;
+    bottom: 0;
+    right: 8px;
+    width: calc(100% - 16px);
+    height: 72px;
+    background: #16210B;
+    border-radius: 24px 24px 0 0;
+    padding: 8px 16px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.3);
+    flex-direction: row;
+    box-sizing: border-box;
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .sidebar.hidden {
+    transform: translateY(100%);
+  }
+
+  .nav-frame {
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .nav-shell {
+    width: 100%;
+    background: transparent;
+    box-sizing: border-box;
+  }
+
+  .nav-rail {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .rail-item {
+    flex: 0 0 56px;
+    min-width: 0;
+    width: 56px !important;
+    max-width: 56px !important;
+    height: 56px;
+    min-height: 56px;
+    margin: 0;
+    padding: 2px;
+    gap: 6px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  .rail-item.is-active {
+    height: 56px;
+    min-height: 56px;
+    width: auto !important;
+    flex: 1 1 auto;
+    max-width: none !important;
+    min-width: 56px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px;
+  }
+
+  .rail-item.is-active .rail-label {
+    font-size: 12px;
+  }
+
+  .rail-item.nav-btn:active {
+    height: 52px;
+  }
+
+  .rail-item.nav-btn.is-active:active {
+    height: 56px;
+  }
+
+  .rail-icon {
+    width: 32px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rail-icon img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .rail-item.is-active .rail-icon img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .rail-label {
+    font-size: 10px;
+    line-height: 1;
+    text-align: center;
+  }
+
+  .rail-item:not(.is-active) .rail-label {
+    display: none;
+  }
+
+  /* Main scroll area padding csökkentése mobilra */
+  .main-scroll-area {
+    padding: 22px 8px;
+    padding-bottom: 94px; /* 22px + 72px (navbar height) */
+    transition: padding-bottom 0.3s ease-in-out;
+  }
+
+  .main-scroll-area.navbar-hidden {
+    padding-bottom: 22px;
+  }
+
+  /* Main area optimalizálás */
+  .main-area {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .main-content {
+    border-radius: 32px;
+    padding: 0 4px 16px 4px;
+    box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container);
+  }
+
+  /* Header optimalizálás mobilra */
+  .header-content {
+    flex-direction: row;
+    gap: 12px;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .welcome-container {
+    margin-top: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1;
+    margin-left: 6px;
+  }
+
+  .welcome-icon {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    max-width: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    margin-bottom: 0;
+  }
+
+  .welcome-text {
+    font-size: 18px;
+    margin-top: 0;
+  }
+
+  /* Hamburger menü gomb */
+  .hamburger-menu-btn {
+    width: 60px;
+    height: 50px;
+    min-width: 60px;
+    min-height: 50px;
+    max-width: 60px;
+    max-height: 50px;
+    border-radius: 16px;
+    background: #D3FFA1;
+    border: 1px solid #57703B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background .12s ease;
+    padding: 0;
+    box-sizing: border-box;
+    flex-shrink: 0;
+  }
+
+  .hamburger-menu-btn:hover {
+    background: #DEFFBA;
+  }
+
+  .hamburger-menu-btn img {
+    width: 22px;
+    height: 22px;
+    display: block;
+  }
+
+  /* Hamburger menü overlay */
+  .hamburger-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(11, 15, 11, 0.65);
+    z-index: 1000;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .hamburger-menu-overlay.active {
+    display: block;
+    opacity: 1;
+  }
+
+  /* Hamburger menü dropdown */
+  .hamburger-menu-dropdown {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #16210B;
+    border-radius: 0 0 24px 24px;
+    padding: 16px;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .hamburger-menu-dropdown.active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Settings oldal speciális: első sor gombok (Alkalmazás + Account) */
+  .hamburger-menu-dropdown .hamburger-menu-row {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
+  }
+
+  #hamburgerApp {
+    width: 50% !important;
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+    min-width: 0 !important;
+    background: #D3FFA1;
+    border: 1px solid #57703B;
+    border-radius: 16px;
+    height: 52px;
+    min-height: 52px;
+    max-height: 52px;
+    justify-content: center;
+  }
+
+  #hamburgerApp:hover {
+    background: #DEFFBA;
+  }
+
+  #hamburgerApp img {
+    filter: brightness(0) saturate(100%) invert(12%) sepia(41%) saturate(776%) hue-rotate(57deg) brightness(95%) contrast(94%);
+  }
+
+  #hamburgerAccount {
+    width: 50% !important;
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+    min-width: 0 !important;
+    background: #D3FFA1;
+    border: 1px solid #57703B;
+    border-radius: 16px;
+    height: 52px;
+    min-height: 52px;
+    max-height: 52px;
+    justify-content: center;
+  }
+
+  #hamburgerAccount:hover {
+    background: #DEFFBA;
+  }
+
+  #hamburgerAccount img {
+    filter: brightness(0) saturate(100%) invert(12%) sepia(41%) saturate(776%) hue-rotate(57deg) brightness(95%) contrast(94%);
+  }
+
+  /* Vissza gomb (100% szélesség) */
+  #hamburgerBack {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    background: #D3FFA1;
+    border: 1px solid #57703B;
+    border-radius: 16px;
+    height: 52px;
+    min-height: 52px;
+    max-height: 52px;
+    justify-content: center;
+  }
+
+  #hamburgerBack:hover {
+    background: #DEFFBA;
+  }
+
+  #hamburgerBack img {
+    filter: brightness(0) saturate(100%) invert(12%) sepia(41%) saturate(776%) hue-rotate(57deg) brightness(95%) contrast(94%);
+  }
+
+  .hamburger-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+    border-radius: 999px;
+    background: transparent;
+    text-decoration: none;
+    color: inherit;
+    transition: width .12s cubic-bezier(.2,.0,.2,1), border-radius .12s cubic-bezier(.2,.0,.2,1), background .12s ease;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    max-width: 52px;
+    min-height: 52px;
+    max-height: 52px;
+    justify-content: center;
+  }
+
+  .hamburger-menu-item:hover {
+    width: 68px;
+    min-width: 68px;
+    max-width: 68px;
+    border-radius: 16px;
+    background: #DEFFBA;
+  }
+
+  .hamburger-menu-item img {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    max-width: 22px;
+    min-height: 22px;
+    max-height: 22px;
+    flex-shrink: 0;
+    display: block;
+    object-fit: contain;
+  }
+
+  #hamburgerSettings {
+    background: #D3FFA1;
+    border: 1px solid #57703B;
+  }
+
+  #hamburgerSettings:hover {
+    background: #DEFFBA;
+  }
+
+  #hamburgerSettings img {
+    filter: brightness(0) saturate(100%) invert(12%) sepia(41%) saturate(776%) hue-rotate(57deg) brightness(95%) contrast(94%);
+  }
+
+  .hamburger-menu-btn-login {
+    flex: 1 1 auto;
+    width: auto !important;
+    min-width: 140px;
+    max-width: none;
+    height: 52px;
+    min-height: 52px;
+    max-height: 52px;
+    border-radius: 16px !important;
+    background: #84B3FF;
+    color: #08152C;
+    border: 1px solid #282F3A;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: var(--font-weight-semibold);
+    justify-content: center;
+    white-space: nowrap;
+  }
+
+  .hamburger-menu-btn-login {
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hamburger-menu-btn-login:hover {
+      background: #42587B;
+      color: #DBE8FF;
+      border-radius: 16px !important;
+      width: auto !important;
+      flex: 1 1 auto;
+    }
+  }
+
+  .hamburger-menu-item-text {
+    display: none;
+  }
+
+  .hamburger-menu-btn-login .hamburger-menu-item-text {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .hamburger-menu-item img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .hamburger-menu-item-text {
+    font-size: 14px;
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .hamburger-menu-btn-login {
+    background: #84B3FF;
+    color: #08152C;
+    border: 1px solid #282F3A;
+  }
+
+  .hamburger-menu-btn-login:hover {
+    background: #42587B;
+    color: #DBE8FF;
+  }
+
+  .header-icon-container {
+    display: none; /* Elrejtjük desktop header ikonokat mobilra */
+  }
+
+  /* Hamburger menü gomb megjelenítése mobilra */
+  .hamburger-menu-btn {
+    display: flex;
+  }
+
+  .header-icon-btn {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+  }
+
+  .header-icon-btn img {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    max-width: 18px;
+    min-height: 18px;
+    max-height: 18px;
+  }
+
+  .header-icon-btn:hover {
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+  }
+
+  .header-login-btn {
+    font-size: 13px;
+    padding: 10px 16px;
+    min-width: auto;
+    flex: 1;
+    height: 40px;
+  }
+
+  /* Footer mobilra */
+  .site-footer,
+  #site-footer {
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px 0 32px 0;
+    margin-top: 24px;
+  }
+
+  .footer-left,
+  .footer-right {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .footer-section-first,
+  .footer-section {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 16px;
+  }
+
+  .footer-section-items {
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .footer-item {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  /* Account tooltip mobil layoutban mindig a tooltip-es verziót mutassa */
+  .header-icon-wrapper #headerAccountBtn {
+    /* A tooltip mindig látható legyen mobilon */
+  }
+
+  /* Account button mobil layoutban - mindig a tooltip verzió (név, osztály, profilkép) */
+  .header-icon-wrapper #headerAccountBtn img:not(.account-expanded-avatar) {
+    display: none !important;
+  }
+  
+  .header-icon-wrapper #headerAccountBtn .account-expanded-content {
+    display: flex !important;
+  }
+  
+  /* Account button alapértelmezett expanded állapot mobilban */
+  .header-icon-wrapper #headerAccountBtn {
+    background: rgb(211, 255, 161) !important;
+    border-radius: 16px !important;
+    padding: 6px 12px !important;
+    min-width: 160px !important;
+    max-width: 220px !important;
+  }
+
+  /* Banner spacing - több hely header és banner között */
+  .header {
+    margin-bottom: 16px !important;
+  }
+
+  /* Banner padding nagyobb mobilban */
+  .info-banner,
+  .warning-banner {
+    padding: 20px !important;
+  }
+
+  .banner-actions,
+  .warning-banner-actions {
+    padding: 16px !important;
+  }
+
+  /* Banner mobil változat */
+  .info-banner,
+  .warning-banner {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .banner-content {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .banner-texts {
+    padding-right: 0;
+    width: 100%;
+  }
+
+  .banner-actions-wrapper {
+    width: 100%;
+    align-self: stretch;
+  }
+
+  .banner-actions,
+  .warning-banner-actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 8px;
+    height: auto;
+  }
+
+  .banner-btn {
+    width: 100% !important;
+    height: 44px;
+    font-size: 14px;
+  }
+
+  /* Settings kártyák mobilon: maradjanak sorban, a szöveg tölti ki a helyet, a vezérlő "hugolja" a tartalmat */
+  .settings-card-content {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .settings-card-text {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+  }
+
+  .settings-card-control {
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+
+  .settings-card-control .language-dropdown,
+  .settings-card-control select {
+    width: auto;
+    min-width: fit-content;
+    max-width: 60%;
+  }
+
+  /* Színséma kártya: dropdownok a szöveg alatt, egymás alatt */
+  .settings-item.theme-card .settings-card-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .settings-item.theme-card .settings-card-control {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .settings-item.theme-card .settings-control-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  /* Navbar animáció mobilban is */
+  .rail-item {
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                flex 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                flex-direction 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  .rail-item.is-active {
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                flex 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                flex-direction 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  .rail-label {
+    transition: opacity 0.2s ease, display 0.2s ease !important;
+  }
+
+  /* Navbar szabály: ha >4 elem, akkor az aktívnak se látszódjon a szövege */
+  .nav-rail:has(.rail-item:nth-child(5)) .rail-item.is-active {
+    width: 56px !important;
+    flex: 0 0 56px !important;
+    max-width: 56px !important;
+    flex-direction: column !important;
+  }
+
+  .nav-rail:has(.rail-item:nth-child(5)) .rail-item.is-active .rail-label {
+    display: none !important;
+  }
+
+  /* Hamburger menü gombok szövege maradjon meg settings oldalon */
+  #hamburgerApp .hamburger-menu-item-text,
+  #hamburgerAccount .hamburger-menu-item-text,
+  #hamburgerBack .hamburger-menu-item-text {
+    display: block !important;
+    font-size: 14px;
+    font-weight: var(--font-weight-semibold);
+    margin-left: 8px;
+  }
 }
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-thumb { background: #8BC34A; border-radius: 4px; }
@@ -1960,6 +2664,9 @@ body {
   color: #E5FDCB;
   font-weight: 400;
   margin: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .settings-card-control {
@@ -2014,9 +2721,9 @@ body {
 
 .notifications-sort-control {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
 }
 
 .notifications-sort-label {
@@ -2027,15 +2734,19 @@ body {
 .notifications-sort-control-column {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
+  align-items: stretch;
+  gap: 4px;
 }
 
 .notifications-sort-row {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+}
+
+.notifications-sort-control .language-dropdown {
+  width: 100%;
 }
 
 .notifications-channels-card {
@@ -2378,7 +3089,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .about-advanced-title {
@@ -2386,24 +3097,24 @@ body {
   font-size: 14px;
   font-weight: 700;
   margin-bottom: 4px;
-  text-align: right;
+  text-align: center;
   width: 100%;
 }
 
 .about-advanced-item {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 8px;
-  align-items: baseline;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
   width: 100%;
 }
 
 .about-advanced-label-wrapper {
   flex: 1 1 auto;
-  text-align: right;
+  text-align: center;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   min-width: 0;
 }
 
@@ -2411,19 +3122,23 @@ body {
   color: #E5FDCB;
   font-size: 14px;
   font-weight: 400;
-  text-align: right;
-  white-space: nowrap;
+  text-align: center;
+  white-space: normal;
   display: inline-block;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .about-advanced-value {
   color: #E5FDCB;
   font-size: 14px;
   font-weight: 400;
-  text-align: right;
-  white-space: nowrap;
+  text-align: center;
+  white-space: normal;
   flex: 0 0 auto;
-  margin-left: auto;
+  margin-left: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .about-card-text {
@@ -2446,6 +3161,75 @@ body {
   font-size: 14px;
   font-weight: 400;
   margin: 0;
+}
+
+/* Haladó információk toggle gomb (alapból desktopon elrejtve) */
+.about-advanced-toggle-wrapper {
+  display: none;
+  margin-top: 16px;
+  justify-content: center;
+}
+
+.about-advanced-toggle-btn {
+  min-width: 160px;
+  height: 44px;
+  border-radius: 16px;
+  border: 1px solid #282F3A;
+  background: #84B3FF;
+  color: #08152C;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.about-advanced-toggle-btn:hover {
+  background: #42587B;
+  color: #DBE8FF;
+}
+
+@media (max-width: 700px) {
+  /* About kártya mobil layout */
+  .about-card-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .about-card-columns {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .about-column-left {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .about-logo-container {
+    width: 100%;
+  }
+
+  /* Haladó oszlop alapból rejtve mobilon */
+  .about-column-advanced {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .about-card.show-advanced .about-column-advanced {
+    display: flex;
+  }
+
+  .about-advanced-title,
+  .about-advanced-item,
+  .about-advanced-label,
+  .about-advanced-value {
+    text-align: center;
+  }
+
+  .about-advanced-toggle-wrapper {
+    display: flex;
+  }
 }
 
 /* Pages konténerek */

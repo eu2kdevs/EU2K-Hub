@@ -686,6 +686,198 @@ body {
   .sidebar { display: none; }
   .main-content { border-radius: 32px; margin: 8px; box-shadow: inset -8px 0 0 var(--md-extended-color-system-regular-color-container), inset 0 -8px 0 var(--md-extended-color-system-regular-color-container); }
   .main-area { margin-left: 0; }
+  
+  /* Kamera indikátor hamburger menü gomb stílusa */
+  .header-camera-indicator {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 60px;
+    height: 50px;
+    min-width: 60px;
+    min-height: 50px;
+    max-width: 60px;
+    max-height: 50px;
+    border-radius: 16px;
+    background: #D3FFA1;
+    border: 1px solid #57703B;
+    padding: 0;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background .12s ease;
+  }
+  
+  .header-camera-indicator:hover {
+    background: #DEFFBA;
+  }
+  
+  .header-camera-indicator-icon {
+    width: 22px;
+    height: 22px;
+    filter: brightness(0) saturate(100%) invert(12%) sepia(41%) saturate(776%) hue-rotate(57deg) brightness(95%) contrast(94%);
+  }
+  
+  .header-camera-indicator-text {
+    display: none;
+  }
+  
+  /* Hamburger menü gomb bal oldalán (staff timer után, kamera indikátor után) */
+  .header-content {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .hamburger-menu-btn {
+    order: 1;
+    margin-left: 0;
+  }
+  
+  /* Staff timer után jelenjen meg a hamburger gomb */
+  .header-icon-gradient:has(#staffSessionTimer) + .hamburger-menu-btn {
+    margin-left: 8px;
+  }
+  
+  /* Kamera indikátor után jelenjen meg a hamburger gomb */
+  .header-icon-gradient:has(#headerCameraIndicator[style*="display: flex"]) + .hamburger-menu-btn {
+    margin-left: 8px;
+  }
+  
+  /* Ha van staff timer ÉS kamera indikátor, akkor a hamburger gomb után */
+  .header-icon-gradient:has(#staffSessionTimer):has(#headerCameraIndicator[style*="display: flex"]) + .hamburger-menu-btn {
+    margin-left: 8px;
+  }
+  
+  /* Main content padding kisebb, középre igazítás */
+  .main-content {
+    padding: 8px !important;
+    align-items: center !important;
+  }
+  
+  /* Scanner konténer padding kisebb, középre igazítás */
+  .qr-scanner-container {
+    padding: 12px !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 16px;
+    width: 100% !important;
+  }
+  
+  .qr-scanner {
+    margin-left: 0 !important;
+    width: 160px;
+    height: 160px;
+  }
+  
+  .corner {
+    width: 40px;
+    height: 40px;
+  }
+  
+  /* QR control gombok scanner alatt */
+  .qr-controls-container {
+    order: 2;
+    width: 100%;
+    max-width: 100%;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px;
+    padding: 16px;
+    grid-template-columns: none !important;
+    grid-template-rows: none !important;
+    margin-top: 0;
+  }
+  
+  /* QR scanner konténerben a scanner és a controls elrendezése */
+  .qr-scanner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .qr-scanner {
+    order: 1;
+  }
+  
+  .qr-controls-container {
+    order: 2;
+  }
+  
+  /* QR control group gombok egymás alatt, teljes szélesség */
+  .qr-control-btn {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 52px !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 12px;
+    border-radius: 16px !important;
+    font-size: 14px;
+    font-weight: var(--font-weight-semibold);
+    padding: 12px 16px !important;
+  }
+  
+  /* Mindegyik gomb kis qr control btn stílusa (qr-control-btn-smol) */
+  .qr-control-btn,
+  .qr-btn-participation,
+  .qr-btn-restart,
+  .qr-btn-game,
+  .qr-btn-small,
+  .qr-btn-camera-switch,
+  .qr-btn-camera-disable {
+    background: #272B26 !important;
+    border: 1px solid #445A2D !important;
+    color: var(--text-main) !important;
+    padding: 12px 16px !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px;
+    border-radius: 16px !important;
+    font-size: 14px;
+    font-weight: var(--font-weight-semibold);
+    transition: all 0.2s ease;
+  }
+  
+  .qr-btn-green,
+  .qr-btn-participation.qr-btn-green,
+  .qr-btn-game.qr-btn-green,
+  .qr-btn-camera-switch.qr-btn-green {
+    background: #C1EA93 !important;
+    border: 2px solid #57703B !important;
+    color: #334521 !important;
+  }
+  
+  .qr-btn-blue,
+  .qr-btn-restart.qr-btn-blue,
+  .qr-btn-camera-disable.qr-btn-blue {
+    background: #84B3FF !important;
+    border: 2px solid #282F3A !important;
+    color: #08152C !important;
+  }
+  
+  .qr-small-buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+  
+  .qr-control-icon,
+  .qr-control-icon-small {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
 }
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-thumb { background: #8BC34A; border-radius: 4px; }
@@ -1141,6 +1333,7 @@ body {
   z-index: 1;
   border-top: 2px solid #445A2D;
   padding-top: 32px;
+  box-sizing: border-box;
 }
 
 .qr-scanner-container {
@@ -1154,6 +1347,26 @@ body {
   width: 95%;
   padding: 32px;
   border-top: 2px solid #445A2D;
+}
+
+@media (max-width: 700px) {
+  .qr-scanner-container {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 16px;
+    width: 100% !important;
+    padding: 12px !important;
+  }
+  
+  .qr-scanner {
+    order: 1;
+    margin-left: 0 !important;
+  }
+  
+  .qr-controls-container {
+    order: 2;
+  }
 }
 
 .qr-scanner {
