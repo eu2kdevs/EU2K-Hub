@@ -328,6 +328,17 @@ body {
   box-sizing: border-box;
 }
 
+/* Hamburger menü gomb alapértelmezetten elrejtve desktop nézetben */
+.hamburger-menu-btn {
+  display: none;
+}
+
+/* Hamburger menü overlay és dropdown alapértelmezetten elrejtve desktop nézetben */
+.hamburger-menu-overlay,
+.hamburger-menu-dropdown {
+  display: none;
+}
+
 /* Header icon gradient container - hug content, fills height */
 .header-icon-gradient {
   width: fit-content;
@@ -785,12 +796,13 @@ body {
     width: 100%;
     max-width: 100%;
     display: flex !important;
-    flex-direction: column !important;
+    flex-direction: row !important;
     gap: 12px;
     padding: 16px;
     grid-template-columns: none !important;
     grid-template-rows: none !important;
     margin-top: 0;
+    flex-wrap: wrap;
   }
   
   /* QR scanner konténerben a scanner és a controls elrendezése */
@@ -1381,11 +1393,48 @@ body {
   background: #223013;
   border-radius: 32px;
   padding: 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 18px;
   flex: 1;
+}
+
+/* Desktop módban grid elrendezés */
+@media (min-width: 701px) {
+  .qr-controls-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 18px;
+  }
+  
+  /* Bal felső: Részvétel igazolása */
+  .qr-btn-participation {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  
+  /* Bal alsó: Kamera újraindítása */
+  .qr-btn-restart {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  
+  /* Jobb felső: Kisebb gombok konténer */
+  .qr-small-buttons-container {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  /* Jobb alsó: Játék indítása */
+  .qr-btn-game {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  
 }
 
 .qr-small-buttons-container {
@@ -1405,6 +1454,28 @@ body {
   transition: background 0.12s ease, transform 0.12s ease;
   font-size: 16px;
   font-weight: 600;
+  min-height: 60px;
+}
+
+/* Desktop módban: gombok magassága */
+@media (min-width: 701px) {
+  /* Részvétel igazolása, kamera újraindítása és játék indítása: ugyanakkora magasság (60px) */
+  .qr-btn-participation,
+  .qr-btn-restart,
+  .qr-btn-game {
+    min-height: 60px;
+  }
+  
+  /* Kamera kikapcsolása és kamera fordítása: 25%-kal kisebbek (45px) */
+  .qr-btn-small {
+    min-height: 45px; /* 60px * 0.75 = 25%-kal kisebb */
+  }
+  
+  /* QR controls container magassága hugolja a tartalmat */
+  .qr-controls-container {
+    height: auto;
+    min-height: auto;
+  }
 }
 
 /* Green buttons */
@@ -1416,6 +1487,11 @@ body {
 
 .qr-btn-green:hover {
   background: #DEFFBA;
+  transform: scaleY(1.12);
+}
+
+.qr-btn-green:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
 }
 
 /* Blue buttons */
@@ -1428,6 +1504,11 @@ body {
 .qr-btn-blue:hover {
   background: #42587B;
   color: #DBE8FF;
+  transform: scaleY(1.12);
+}
+
+.qr-btn-blue:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
 }
 
 /* Big buttons hover - vertical grow */
@@ -1574,6 +1655,10 @@ body {
   width: 68px;
   border-radius: 16px;
   background: #DEFFBA;
+}
+
+.permission-close-btn:active {
+  animation: qr-btn-pop 0.16s cubic-bezier(0.2, 0, 0.2, 1) forwards;
 }
 
 .permission-hand-icon {
@@ -2124,4 +2209,301 @@ body {
 .disabled {
   pointer-events: none !important;
   opacity: 0.5 !important;
+}
+
+/* ===================== AUTH METHOD PICKER POPUP ===================== */
+.auth-popup-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 32px;
+  gap: 5px;
+  isolation: isolate;
+  width: 90%;
+  max-width: 625px;
+  background: #111B07;
+  border-radius: 32px;
+  box-sizing: border-box;
+}
+
+/* Close button */
+.auth-popup-close-btn {
+  position: absolute;
+  top: 17px;
+  right: 17px;
+  width: 47px;
+  height: 47px;
+  background: #D3FFA1;
+  border: 1px solid #4B6231;
+  border-radius: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  z-index: 2;
+  transition: background .12s ease, transform .12s ease;
+  flex-shrink: 0;
+}
+
+.auth-popup-close-btn img {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.auth-popup-close-btn:hover {
+  background: #DEFFBA;
+  transform: scale(1.06);
+}
+
+.auth-popup-close-btn:active {
+  animation: qr-btn-pop 0.16s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+}
+
+/* Header */
+.auth-popup-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  z-index: 0;
+}
+
+.auth-popup-icon {
+  width: 35px;
+  height: 34px;
+}
+
+.auth-popup-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: -0.02em;
+  color: #CEFF97;
+  margin: 0;
+}
+
+/* Content area */
+.auth-popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 8px;
+  gap: 24px;
+  width: 100%;
+  z-index: 1;
+}
+
+/* Top row: 2 cards side by side */
+.auth-popup-top-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 24px;
+  width: 100%;
+}
+
+/* Bottom row: full-width card */
+.auth-popup-bottom-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  width: 100%;
+}
+
+/* Card base styles */
+.auth-popup-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 6px;
+  gap: 4px;
+  border-radius: 19px;
+  cursor: pointer;
+  transition: transform .12s ease, filter .12s ease;
+  flex: 1;
+  min-height: 140px;
+}
+
+.auth-popup-card:hover {
+  transform: scale(1.02);
+}
+
+.auth-popup-card:active {
+  animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards;
+}
+
+/* Blue card */
+.auth-popup-card-blue {
+  background: #84B3FF;
+  border: 1px solid #282F3A;
+  transition: background .12s ease;
+}
+
+/* Blue card hover - kamera újraindítása gomb animációi */
+.auth-popup-card-blue:hover {
+  background: #42587B;
+}
+
+.auth-popup-card-blue:hover .auth-popup-card-title,
+.auth-popup-card-blue:hover .auth-popup-card-desc {
+  color: #DBE8FF;
+}
+
+/* Green card */
+.auth-popup-card-green {
+  background: #D3FFA1;
+  border: 1px solid #4B6231;
+  transition: background .12s ease;
+}
+
+/* Green card hover - részvétel igazolása gomb animációi */
+.auth-popup-card-green:hover {
+  background: #DEFFBA;
+}
+
+/* Card title and desc transition */
+.auth-popup-card-title,
+.auth-popup-card-desc {
+  transition: color .12s ease;
+}
+
+/* Full-width card (bottom) */
+.auth-popup-card-full {
+  flex: none;
+  width: 100%;
+}
+
+/* Card inner content */
+.auth-popup-card-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 0;
+  gap: 5px;
+  flex: 1;
+  align-self: stretch;
+}
+
+/* Card icon */
+.auth-popup-card-icon {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+}
+
+/* Card texts container */
+.auth-popup-card-texts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  max-width: 232px;
+  width: 100%;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+
+/* Card title (blue card) */
+.auth-popup-card-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 120%;
+  text-align: center;
+  letter-spacing: -0.02em;
+  color: #08152C;
+}
+
+/* Card title (green card) */
+.auth-popup-card-title-green {
+  color: #243114;
+}
+
+/* Card description (blue card) */
+.auth-popup-card-desc {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 120%;
+  text-align: center;
+  color: #08152C;
+}
+
+/* Card description (green card) */
+.auth-popup-card-desc-green {
+  color: #243114;
+}
+
+/* ===== Auth Popup Mobile Responsive ===== */
+@media (max-width: 700px) {
+  .auth-popup-container {
+    padding: 24px 16px;
+    border-radius: 24px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .auth-popup-close-btn {
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  .auth-popup-close-btn img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .auth-popup-title {
+    font-size: 18px;
+    max-width: calc(100% - 60px);
+  }
+
+  .auth-popup-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .auth-popup-content {
+    gap: 16px;
+  }
+
+  .auth-popup-top-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .auth-popup-card {
+    min-height: 120px;
+    border-radius: 16px;
+  }
+
+  .auth-popup-card-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .auth-popup-card-title {
+    font-size: 14px;
+  }
+
+  .auth-popup-card-desc {
+    font-size: 10px;
+  }
+
+  .auth-popup-card-inner {
+    padding: 12px 0;
+  }
 }

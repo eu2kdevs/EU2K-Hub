@@ -1,4 +1,12 @@
 /* Közös mobil layout CSS - minden oldalra vonatkozik */
+
+/* Hamburger menü gomb alapértelmezetten elrejtve desktop nézetben */
+.hamburger-menu-btn,
+.hamburger-menu-overlay,
+.hamburger-menu-dropdown {
+  display: none;
+}
+
 /* Csak @media (max-width: 700px) blokkban */
 
 @media (max-width: 700px) {

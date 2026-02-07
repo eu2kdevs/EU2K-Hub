@@ -775,6 +775,20 @@ body {
   transition: var(--transition);
 }
 
+/* Arrow container elrejtése desktop nézetben, csak mobilon jelenjen meg */
+@media (min-width: 701px) {
+  .arrow-container {
+    display: none !important;
+  }
+}
+
+/* Arrow container megjelenítése mobil nézetben */
+@media (max-width: 700px) {
+  .arrow-container {
+    display: flex !important;
+  }
+}
+
 .arrow-container:hover {
   background-color: var(--card-bg);
 }

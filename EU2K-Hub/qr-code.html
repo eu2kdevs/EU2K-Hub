@@ -7,6 +7,7 @@
   <meta name="description" content="Olvass be QR-Kódokat egyszerűen, és kapj egyesekért menő jutalmakat!">
   <title data-translate="pages.qr.title" data-translate-fallback="QR-Kód">QR-Kód</title>
   <link rel="stylesheet" href="qrcode.css">
+  <link rel="stylesheet" href="qrcode_scan_auth.css">
   <link rel="stylesheet" href="assets/css/consent-banner.css">
   <link rel="stylesheet" href="assets/css/mobile-layout.css">
   <link rel="icon" href="favicon.ico">
@@ -415,19 +416,18 @@
             <!-- Control Buttons Container on the right -->
             <div class="qr-controls-container">
               <!-- Top Left: Participation Confirmation Button -->
-              <button class="qr-control-btn qr-btn-green qr-btn-participation disabled" onclick="startAuth()">
+              <button class="qr-control-btn qr-btn-green qr-btn-participation" onclick="startAuth()">
                 <img src="assets/qr-code/auth.svg" class="qr-control-icon" alt="Részvétel Igazolása">
                 <span data-translate="pages.qr.auth">Részvétel Igazolása</span>
               </button>
 
-              <!-- Camera Disable Button - közvetlenül a Részvétel Igazolása alatt -->
-              <button class="qr-control-btn qr-btn-small qr-btn-blue qr-btn-camera-disable" onclick="disableCamera()">
-                <img src="assets/qr-code/cam_disable.svg" class="qr-control-icon-small" alt="Kamera Kikapcsolása">
-                <span data-translate="pages.qr.off_camera">Kamera Kikapcsolása</span>
-              </button>
-
               <!-- Top Right: Small buttons container -->
               <div class="qr-small-buttons-container">
+                <!-- Camera Disable Button -->
+                <button class="qr-control-btn qr-btn-small qr-btn-blue qr-btn-camera-disable" onclick="disableCamera()">
+                  <img src="assets/qr-code/cam_disable.svg" class="qr-control-icon-small" alt="Kamera Kikapcsolása">
+                  <span data-translate="pages.qr.off_camera">Kamera Kikapcsolása</span>
+                </button>
                 <!-- Camera Switch Button -->
                 <button class="qr-control-btn qr-btn-small qr-btn-green qr-btn-camera-switch" onclick="switchCamera()">
                   <img src="assets/qr-code/cam_switch.svg" class="qr-control-icon" alt="Kamera Fordítása">
@@ -547,17 +547,109 @@
           </div>
         </div>
 
-        <!-- Auth Popup (overlays main-scroll-area) -->
+        <!-- Auth Method Picker Popup (overlays main-scroll-area) -->
         <div id="authPopup" class="permission-overlay-scroll-area" style="display: none;">
-          <div class="permission-container">
-            <div class="permission-close-btn" onclick="closeAuthPopup()">
+          <div class="auth-popup-container">
+            <!-- Close button -->
+            <button class="permission-close-btn" onclick="closeAuthPopup()">
               <img src="assets/general/close.svg" alt="Bezárás">
+            </button>
+
+            <!-- Header: icon + title -->
+            <div class="auth-popup-header">
+              <img src="assets/qr-code/auth/auth.svg" class="auth-popup-icon" alt="Auth">
+              <h2 class="auth-popup-title" data-translate="pages.qr.auth_choose">Válassz igazolási módszert</h2>
             </div>
-            <div class="permission-content">
-              <img src="assets/qr-code/auth_light.svg" class="permission-hand-icon" alt="Auth">
-              <h2 data-translate="pages.qr.auth" class="permission-title">Részvétel Igazolása</h2>
-              <p data-translate="pages.qr.auth_notice" class="permission-text">A Részvétel Igazolása funkció nemsokára
-                elérhető lesz.</p>
+
+            <!-- Content: option cards -->
+            <div class="auth-popup-content">
+              <!-- Top row: 2 cards side by side -->
+              <div class="auth-popup-top-row">
+                <!-- QR-Kód beolvasása (blue) -->
+                <button class="auth-popup-card auth-popup-card-blue" onclick="selectAuthMethod('scan_qr')">
+                  <div class="auth-popup-card-inner">
+                    <img src="assets/qr-code/auth/scan_qr.svg" class="auth-popup-card-icon" alt="QR-Kód beolvasása">
+                    <div class="auth-popup-card-texts">
+                      <span class="auth-popup-card-title" data-translate="pages.qr.auth_scan_qr">QR-Kód beolvasása</span>
+                      <span class="auth-popup-card-desc" data-translate="pages.qr.auth_scan_qr_desc">Az esemény bejáratánál keress egy Auth Hub ikonnal jelzett QR-Kód állomást, majd olvasd be a QR-Kódot hogy igazold a jelenlétedet.</span>
+                    </div>
+                  </div>
+                </button>
+
+                <!-- Kód beírása (green) -->
+                <button class="auth-popup-card auth-popup-card-green" onclick="selectAuthMethod('code')">
+                  <div class="auth-popup-card-inner">
+                    <img src="assets/qr-code/auth/code.svg" class="auth-popup-card-icon" alt="Kód beírása">
+                    <div class="auth-popup-card-texts">
+                      <span class="auth-popup-card-title auth-popup-card-title-green" data-translate="pages.qr.auth_code">Kód beírása</span>
+                      <span class="auth-popup-card-desc auth-popup-card-desc-green" data-translate="pages.qr.auth_code_desc">Az esemény bejáratánál keress egy Auth Hub ikonnal jelzett Kódbeíró állomást, majd írd be a jelszavadat. Válaszd ezt az opciót ha nincs kamerája az eszközödnek, vagy nem működik a többi igazolási opció.</span>
+                    </div>
+                  </div>
+                </button>
+              </div>
+
+              <!-- Bottom row: full-width card -->
+              <div class="auth-popup-bottom-row">
+                <!-- QR-Kód bemutatása (blue) -->
+                <button class="auth-popup-card auth-popup-card-blue auth-popup-card-full" onclick="selectAuthMethod('show_qr')">
+                  <div class="auth-popup-card-inner">
+                    <img src="assets/qr-code/auth/show_qr.svg" class="auth-popup-card-icon" alt="QR-Kód bemutatása">
+                    <div class="auth-popup-card-texts">
+                      <span class="auth-popup-card-title" data-translate="pages.qr.auth_show_qr">QR-Kód bemutatása</span>
+                      <span class="auth-popup-card-desc" data-translate="pages.qr.auth_show_qr_desc">Az esemény bejáratánál keress egy Auth Hub ikonnal jelzett QR-Kód állomást, majd az olvasónak mutasd meg a QR-Kódod. Nem minden esemény támogatja ezt az igazolási opciót.</span>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QR Scan Auth Popup (overlays main-scroll-area) -->
+        <div id="scanAuthPopup" class="permission-overlay-scroll-area" style="display: none;">
+          <div class="scan-auth-popup-container">
+            <!-- Close button -->
+            <button class="permission-close-btn" onclick="closeScanAuthPopup()">
+              <img src="assets/general/close.svg" alt="Bezárás">
+            </button>
+
+            <!-- Header with icon and texts -->
+            <div class="scan-auth-popup-header">
+              <img src="assets/qr-code/auth/scan_qr_green.svg" class="scan-auth-popup-icon" alt="QR-Kód beolvasása">
+              <div class="scan-auth-popup-header-texts">
+                <h2 class="scan-auth-popup-title" data-translate="pages.qr.scan_auth_title">QR-Kód beolvasása - Igazolás</h2>
+                <p class="scan-auth-popup-subtitle" data-translate="pages.qr.scan_auth_subtitle">Kérlek olvasd be az igazolókódot az Auth Hub pontnál.</p>
+              </div>
+            </div>
+
+            <!-- QR Scanner Frame -->
+            <div class="scan-auth-popup-content">
+              <div class="scan-auth-scanner-wrapper">
+                <div class="qr-scanner" id="scanAuthQrScanner">
+                  <video id="scanAuthVideo" autoplay muted playsinline style="transform: scaleX(-1);"></video>
+                  <img src="assets/qr-code/scanner/corner1.svg" class="corner top-left" alt="">
+                  <img src="assets/qr-code/scanner/corner2.svg" class="corner top-right" alt="">
+                  <img src="assets/qr-code/scanner/corner3.svg" class="corner bottom-left" alt="">
+                  <img src="assets/qr-code/scanner/corner4.svg" class="corner bottom-right" alt="">
+                </div>
+              </div>
+
+              <!-- User info and buttons -->
+              <div class="scan-auth-user-info">
+                <p class="scan-auth-user-text"><strong id="scanAuthUserName">Turóczi Ádám</strong><span style="font-weight: 400;">ként fogod magad igazolni.</span></p>
+                <div class="scan-auth-buttons">
+                  <a href="#" class="scan-auth-link" data-translate="pages.qr.scan_auth_not_you">Nem <span id="scanAuthUserNameLink">Turóczi Ádám</span> vagy?</a>
+                  <button class="header-login-btn" data-translate="pages.qr.scan_auth_switch">Felhasználóváltás</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom buttons -->
+            <div class="scan-auth-bottom-buttons">
+              <button class="scan-auth-back-btn" onclick="backToAuthMethodPicker()">
+                <img src="assets/qr-code/auth/back.svg" alt="Vissza">
+                <span data-translate="pages.qr.scan_auth_back">Vissza</span>
+              </button>
             </div>
           </div>
         </div>
@@ -1583,7 +1675,7 @@
     }
 
     function startAuth() {
-      console.log('Auth clicked');
+      console.log('Auth clicked - opening method picker');
       const popup = document.getElementById('authPopup');
       const scrollArea = document.querySelector('.main-scroll-area');
 
@@ -1607,6 +1699,74 @@
         scrollArea.classList.remove('no-scroll');
         scrollArea.classList.remove('popup-active');
       }
+    }
+
+    function selectAuthMethod(method) {
+      console.log('Auth method selected:', method);
+      closeAuthPopup();
+
+      switch (method) {
+        case 'scan_qr':
+          console.log('Scan QR selected - opening scan auth popup...');
+          openScanAuthPopup();
+          break;
+        case 'code':
+          console.log('Code entry selected - opening code input...');
+          // Future: show code entry dialog
+          break;
+        case 'show_qr':
+          console.log('Show QR selected - displaying user QR code...');
+          // Future: show user's own QR code
+          break;
+      }
+    }
+
+    function openScanAuthPopup() {
+      console.log('Opening scan auth popup');
+      const popup = document.getElementById('scanAuthPopup');
+      const scrollArea = document.querySelector('.main-scroll-area');
+
+      if (popup && scrollArea) {
+        scrollArea.scrollTop = 0;
+        scrollArea.classList.add('no-scroll');
+        scrollArea.classList.add('popup-active');
+
+        setTimeout(() => {
+          popup.style.display = 'flex';
+          // Get user name from account tooltip
+          try {
+            const userName = localStorage.getItem('eu2k-user-name') || 'Turóczi Ádám';
+            const userNameSpan = document.getElementById('scanAuthUserName');
+            const userNameLink = document.getElementById('scanAuthUserNameLink');
+            if (userNameSpan) userNameSpan.textContent = userName;
+            if (userNameLink) userNameLink.textContent = userName;
+          } catch (e) {
+            console.log('Could not get user name:', e);
+          }
+        }, 50);
+      }
+    }
+
+    function closeScanAuthPopup() {
+      console.log('Closing scan auth popup');
+      const popup = document.getElementById('scanAuthPopup');
+      const scrollArea = document.querySelector('.main-scroll-area');
+
+      if (popup) popup.style.display = 'none';
+      if (scrollArea) {
+        scrollArea.classList.remove('no-scroll');
+        scrollArea.classList.remove('popup-active');
+      }
+    }
+
+    function backToAuthMethodPicker() {
+      console.log('Going back to auth method picker');
+      // Close scan auth popup
+      closeScanAuthPopup();
+      // Open auth method picker popup
+      setTimeout(() => {
+        startAuth();
+      }, 100);
     }
 
   </script>
