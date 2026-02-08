@@ -1,0 +1,38 @@
+/* Account Tooltip Popup */
+.account-tooltip-popup {
+  position: fixed;
+  display: none;
+  flex-direction: column;
+  z-index: 10000;
+  width: fit-content;
+  height: fit-content;
+  min-width: 0;
+}
+
+.account-tooltip-popup-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: #111B07;
+  border-radius: 16px;
+  border: 1px solid #4B6231;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  width: fit-content;
+  min-width: 180px;
+}
+
+.account-tooltip-popup-btn {
+  width: 100%;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .account-tooltip-popup-content {
+    min-width: 160px;
+    padding: 12px;
+    gap: 8px;
+  }
+}
+

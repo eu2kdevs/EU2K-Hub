@@ -1,0 +1,203 @@
+:root {
+    --transition: 0.2s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes banner-btn-pop {
+    0%   { transform: scaleY(1.00); }
+    70%  { transform: scaleY(1.32); } /* overshoot */
+    100% { transform: scaleY(1.25); } /* settle */
+}
+
+.header-login-btn {
+    flex: 0 0 auto;
+    min-width: 140px; /* minimum szélesség a szövegnek */
+    height: 52px; /* fix magasság az ikon gombokkal egyező */
+    background: #84B3FF;
+    border: 1px solid #282F3A;
+    border-radius: 16px; /* adjusted rounding */
+    border-left: none;
+    color: #08152C;
+    font-weight: var(--font-weight-semibold);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background .12s ease, color .12s ease, transform .12s ease;
+    padding: 0 20px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .header-login-btn:hover {
+    background: #42587B;
+    color: #DBE8FF;
+    transform: scaleY(1.12); /* stronger vertical grow on hover */
+  }
+  
+  /* Click pop animation same as banner buttons */
+  .header-login-btn:active { animation: banner-btn-pop .16s cubic-bezier(.2,0,.2,1) forwards; }
+
+/* Change User Popup Container */
+.change-user-popup-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 32px;
+  gap: 16px;
+  isolation: isolate;
+  width: 625px;
+  max-width: min(625px, calc(100vw - 64px));
+  min-width: 0;
+  background: #111B07;
+  border-radius: 32px;
+  box-sizing: border-box;
+}
+
+/* Close button */
+.change-user-popup-close-btn {
+  position: absolute;
+  top: 17px;
+  right: 17px;
+  width: 49px;
+  height: 47px;
+  background: #D3FFA1;
+  border: 1px solid #4B6231;
+  border-radius: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 999;
+  transition: background .12s ease, transform .12s ease;
+  flex-shrink: 0;
+  pointer-events: all;
+}
+
+.change-user-popup-close-btn img {
+  width: 18px;
+  height: 18px;
+}
+
+/* Header */
+.change-user-popup-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+.change-user-popup-icon {
+  width: 34.5px;
+  height: 34.5px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.change-user-popup-header-texts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  gap: 6px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.change-user-popup-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: -0.02em;
+  color: #CEFF97;
+  margin: 0;
+}
+
+.change-user-popup-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 120%;
+  color: #CEFF97;
+  margin: 0;
+}
+
+/* Content area */
+.change-user-popup-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0 0;
+  gap: 16px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+/* Button */
+.change-user-popup-button-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  gap: 24px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Button uses .header-login-btn class, no custom styles needed */
+
+/* Mobile responsive */
+@media (max-width: 700px) {
+  .change-user-popup-container {
+    width: 95%;
+    max-width: calc(100vw - 32px);
+    padding: 16px;
+    gap: 12px;
+    border-radius: 24px;
+  }
+
+  .change-user-popup-close-btn {
+    top: 8px;
+    right: 8px;
+    width: 40px;
+    height: 38px;
+  }
+
+  .change-user-popup-close-btn img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .change-user-popup-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .change-user-popup-title {
+    font-size: 18px;
+  }
+
+  .change-user-popup-subtitle {
+    font-size: 14px;
+  }
+
+  /* Button uses .header-login-btn class, no custom mobile styles needed */
+}
+

@@ -2217,14 +2217,42 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 32px;
-  gap: 5px;
+  padding: 0;
+  gap: 0;
   isolation: isolate;
-  width: 90%;
-  max-width: 625px;
+  width: fit-content;
+  max-width: min(625px, 90vw);
+  height: calc(100vh - 64px);
   background: #111B07;
   border-radius: 32px;
   box-sizing: border-box;
+}
+
+/* Scrollable content wrapper */
+.auth-popup-scrollable {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 32px;
+  width: fit-content;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #445A2D #16210B;
+}
+
+.auth-popup-scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.auth-popup-scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.auth-popup-scrollable::-webkit-scrollbar-thumb {
+  background: #445A2D;
+  border-radius: 4px;
 }
 
 /* Close button */
@@ -2304,6 +2332,11 @@ body {
   align-items: stretch;
   gap: 24px;
   width: 100%;
+}
+
+.auth-popup-top-row .auth-popup-card {
+  flex: 1;
+  min-width: 0;
 }
 
 /* Bottom row: full-width card */
@@ -2446,11 +2479,15 @@ body {
 /* ===== Auth Popup Mobile Responsive ===== */
 @media (max-width: 700px) {
   .auth-popup-container {
-    padding: 24px 16px;
+    height: calc(100vh - 32px);
     border-radius: 24px;
     width: 95%;
-    max-height: 90vh;
-    overflow-y: auto;
+    max-width: 95vw;
+  }
+
+  .auth-popup-scrollable {
+    padding: 24px 16px;
+    width: 100%;
   }
 
   .auth-popup-close-btn {
@@ -2481,8 +2518,9 @@ body {
   }
 
   .auth-popup-top-row {
-    flex-direction: column;
-    gap: 16px;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
   }
 
   .auth-popup-card {

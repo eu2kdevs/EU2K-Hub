@@ -7,8 +7,10 @@
   padding: 32px;
   gap: 16px;
   isolation: isolate;
-  width: 90%;
-  max-width: 625px;
+  width: 519px;
+  max-width: min(519px, calc(100vw - 64px));
+  min-width: 0;
+  height: calc(100vh - 64px);
   background: #111B07;
   border-radius: 32px;
   box-sizing: border-box;
@@ -18,8 +20,8 @@
 .scan-auth-popup-close-btn {
   position: absolute;
   top: 17px;
-  right: 17px;
-  width: 47px;
+  right: -32px;
+  width: 49px;
   height: 47px;
   background: #D3FFA1;
   border: 1px solid #4B6231;
@@ -28,15 +30,47 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 0;
-  z-index: 2;
+  padding: 8px;
+  z-index: 999;
   transition: background .12s ease, transform .12s ease;
   flex-shrink: 0;
+  pointer-events: all;
+}
+
+/* Scrollable content wrapper */
+.scan-auth-popup-scrollable {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #445A2D #16210B;
+  box-sizing: border-box;
+}
+
+.scan-auth-popup-scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scan-auth-popup-scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scan-auth-popup-scrollable::-webkit-scrollbar-thumb {
+  background: #445A2D;
+  border-radius: 4px;
 }
 
 .scan-auth-popup-close-btn img {
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   display: block;
 }
 
@@ -57,12 +91,15 @@
   padding: 0;
   gap: 12px;
   width: 100%;
-  z-index: 0;
+  max-width: 100%;
+  min-width: 0;
+  z-index: 1;
+  box-sizing: border-box;
 }
 
 .scan-auth-popup-icon {
-  width: 35px;
-  height: 35px;
+  width: 34.5px;
+  height: 34.5px;
   flex-shrink: 0;
 }
 
@@ -73,6 +110,9 @@
   padding: 0;
   gap: 6px;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .scan-auth-popup-title {
@@ -100,63 +140,191 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 16px 0 0;
-  gap: 16px;
+  padding: 0;
+  gap: 24px;
   width: 100%;
-  z-index: 1;
+  max-width: 100%;
+  min-width: 0;
+  z-index: 2;
+  box-sizing: border-box;
 }
 
 /* Scanner frame - uses existing QR scanner styles */
 .scan-auth-scanner-wrapper {
   position: relative;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  padding: 49px;
+  gap: 48px;
   width: 100%;
-  padding: 48px 0;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: 300px;
 }
 
-#scanAuthQrScanner {
+#scanAuthQrScanner,
+#showQrCodeContainer {
   position: relative;
-  width: 240px;
-  height: 240px;
-  background: #223013;
-  border-radius: 42px;
+  width: 221px;
+  height: 221px;
+  background: #243114;
+  border-radius: 32px;
+}
+
+/* Code entry container */
+#codeEntryContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  gap: 0;
+  width: 100%;
+  max-width: 366px;
+  height: auto;
+  min-height: 200px;
+  background: transparent;
+  border-radius: 32px;
+  box-sizing: border-box;
+}
+
+.code-entry-digits {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: fit-content;
+  height: fit-content;
+}
+
+.code-digit {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 120%;
+  text-align: center;
+  letter-spacing: -0.03em;
+  text-decoration-line: underline;
+  color: #CEFF97;
+  flex: none;
 }
 
 #scanAuthQrScanner video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 42px;
+  border-radius: 32px;
   background: #000;
   display: block;
 }
 
 #scanAuthQrScanner .corner {
   position: absolute;
-  width: 60px;
-  height: 60px;
+  width: 71.25px;
+  height: 71.25px;
 }
 
 #scanAuthQrScanner .corner.top-left {
-  top: -40px;
-  left: -40px;
+  top: -49px;
+  left: -49px;
 }
 
 #scanAuthQrScanner .corner.top-right {
-  top: -40px;
-  right: -40px;
+  top: -49px;
+  right: -49px;
 }
 
 #scanAuthQrScanner .corner.bottom-left {
-  bottom: -40px;
-  left: -40px;
+  bottom: -49px;
+  left: -49px;
 }
 
 #scanAuthQrScanner .corner.bottom-right {
-  bottom: -40px;
-  right: -40px;
+  bottom: -49px;
+  right: -49px;
+}
+
+/* Auth State Containers (Success/Failed) */
+.auth-state-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  gap: 16px;
+  width: fit-content;
+  height: fit-content;
+  min-width: 0;
+  box-sizing: border-box;
+  z-index: 5;
+  margin: 0 auto; /* Center the container */
+}
+
+.auth-state-icon-circle {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  gap: 8px;
+  width: 205px;
+  height: 205px;
+  background: #D3FFA1;
+  border: 1px solid #4B6231;
+  border-radius: 9999px;
+  flex: none;
+  flex-grow: 0;
+  position: relative;
+}
+
+.auth-state-icon {
+  width: 132px;
+  height: 132px;
+  flex: none;
+  flex-grow: 0;
+  object-fit: contain;
+}
+
+/* Success state text */
+.auth-success-state ~ .scan-auth-user-info .scan-auth-user-text,
+.scan-auth-user-info:has(~ .auth-success-state) .scan-auth-user-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 120%;
+  text-align: center;
+  letter-spacing: -0.02em;
+  color: #CEFF97;
+}
+
+/* Failed state text */
+.auth-failed-state ~ .scan-auth-user-info .scan-auth-user-text,
+.scan-auth-user-info:has(~ .auth-failed-state) .scan-auth-user-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 120%;
+  text-align: center;
+  letter-spacing: -0.02em;
+  color: #CEFF97;
+}
+
+.auth-failed-state ~ .scan-auth-user-info .scan-auth-link,
+.scan-auth-user-info:has(~ .auth-failed-state) .scan-auth-link {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 120%;
+  text-align: center;
+  letter-spacing: -0.02em;
+  color: #B3D0FE;
 }
 
 /* User info */
@@ -179,6 +347,19 @@
   color: #CEFF97;
   margin: 0;
   width: 100%;
+  pointer-events: auto;
+  position: relative;
+  z-index: 10;
+}
+
+.scan-auth-user-text span {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.scan-auth-user-text span[style*="text-decoration: underline"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
 }
 
 /* Buttons row */
@@ -188,7 +369,7 @@
   justify-content: center;
   align-items: center;
   padding: 0;
-  gap: 16px;
+  gap: 32px;
   width: 100%;
 }
 
@@ -209,61 +390,64 @@
   color: #DBE8FF;
 }
 
-/* Felhasználóváltás button - using header-login-btn style, smaller */
-.scan-auth-switch-btn {
-  flex: 0 0 auto;
-  min-width: 120px;
-  height: 38px;
-  border-radius: 16px;
+/* Felhasználóváltás button - override all header-login-btn styles */
+.scan-auth-buttons .header-login-btn {
+  width: 134.5px !important;
+  height: 31px !important;
+  min-width: 134.5px !important;
+  min-height: 31px !important;
+  max-width: 134.5px !important;
+  max-height: 31px !important;
+  border-radius: 6px !important;
   background: #84B3FF !important;
-  border: 2px solid #282F3A !important;
-  color: #08152C;
-  font-weight: 600;
-  font-size: 12px;
-  cursor: pointer;
-  transition: background .12s ease, color .12s ease, transform .12s ease;
-  padding: 0 16px;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 1px solid #282F3A !important;
+  border-left: 1px solid #282F3A !important;
+  color: #08152C !important;
+  font-weight: 600 !important;
+  font-size: 10px !important;
+  padding: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background .12s ease, transform .12s ease !important;
+  flex: none !important;
+  white-space: nowrap !important;
 }
 
-.scan-auth-switch-btn:hover {
-  background: #42587B;
-  color: #DBE8FF;
-  transform: scaleY(1.08);
+.scan-auth-buttons .header-login-btn:hover {
+  background: #5A8FE0 !important;
+  color: #08152C !important;
+  transform: scaleY(1.08) !important;
 }
 
-.scan-auth-switch-btn:active {
-    animation: qr-btn-pop 0.16s cubic-bezier(0.2, 0, 0.2, 1) forwards;
-}
-
-@keyframes qr-btn-pop {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(0.92); }
+.scan-auth-buttons .header-login-btn:active {
+  animation: qr-btn-pop 0.16s cubic-bezier(0.2, 0, 0.2, 1) forwards !important;
 }
 
 /* Bottom buttons */
 .scan-auth-bottom-buttons {
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 0;
-  gap: 8px;
+  gap: 5px;
   width: 100%;
-  margin-top: 16px;
+  flex-shrink: 0;
+  z-index: 3;
 }
+
+/* Gradient removed */
 
 .scan-auth-back-btn {
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 8px 32px;
+  padding: 6px 24px;
   gap: 8px;
-  width: auto;
-  height: 52px;
+  width: fit-content;
+  height: 56.5px;
   background: #D3FFA1;
   border: 1px solid #4B6231;
   border-radius: 16px;
@@ -272,15 +456,15 @@
 }
 
 .scan-auth-back-btn img {
-  width: 20px;
-  height: 20px;
+  width: 21.5px;
+  height: 21.5px;
   flex-shrink: 0;
 }
 
 .scan-auth-back-btn span {
   font-family: 'Inter', sans-serif;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 120%;
   text-align: center;
   letter-spacing: -0.02em;
@@ -296,15 +480,29 @@
     animation: qr-btn-pop 0.16s cubic-bezier(0.2, 0, 0.2, 1) forwards;
 }
 
+@keyframes qr-btn-pop {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(0.92); }
+}
+
 /* Mobile responsive */
 @media (max-width: 700px) {
   .scan-auth-popup-container {
-    padding: 24px 16px;
-    border-radius: 24px;
+    height: calc(100vh - 32px);
+    border-radius: 32px;
     width: 95%;
-    max-height: 90vh;
-    overflow-y: auto;
+    max-width: calc(100vw - 32px);
+    min-width: 0;
+    padding: 32px 16px;
+    box-sizing: border-box;
+  }
+
+  .scan-auth-popup-scrollable {
     gap: 24px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
   }
 
   .scan-auth-popup-close-btn {
@@ -344,26 +542,59 @@
     font-size: 16px;
   }
 
-  .scan-auth-scanner-frame {
+  .scan-auth-scanner-wrapper {
     width: 100%;
-    height: auto;
     padding: 24px;
     gap: 32px;
   }
 
-  .scan-auth-scanner-corners {
-    width: 280px;
-    height: 280px;
+  #scanAuthQrScanner,
+  #showQrCodeContainer,
+  #codeEntryContainer {
+    width: 240px;
+    height: 240px;
+    border-radius: 42px;
   }
 
-  .scan-auth-corner {
+  #codeEntryContainer {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    min-height: 200px;
+    padding: 20px;
+  }
+
+  .code-digit {
+    font-size: 48px;
+  }
+
+  #scanAuthQrScanner video {
+    border-radius: 42px;
+  }
+
+  #scanAuthQrScanner .corner {
     width: 60px;
     height: 60px;
   }
 
-  .scan-auth-camera-placeholder {
-    width: 200px;
-    height: 200px;
+  #scanAuthQrScanner .corner.top-left {
+    top: -40px;
+    left: -40px;
+  }
+
+  #scanAuthQrScanner .corner.top-right {
+    top: -40px;
+    right: -40px;
+  }
+
+  #scanAuthQrScanner .corner.bottom-left {
+    bottom: -40px;
+    left: -40px;
+  }
+
+  #scanAuthQrScanner .corner.bottom-right {
+    bottom: -40px;
+    right: -40px;
   }
 
   .scan-auth-user-info {
@@ -385,10 +616,20 @@
     font-size: 16px;
   }
 
-  .scan-auth-switch-btn {
+  .scan-auth-buttons .header-login-btn {
     width: 100%;
     height: 52px;
     font-size: 16px;
+  }
+
+  .scan-auth-bottom-buttons {
+    padding: 0;
+  }
+
+  .scan-auth-bottom-buttons::before {
+    height: 200px;
+    left: -16px;
+    right: -16px;
   }
 
   .scan-auth-back-btn {

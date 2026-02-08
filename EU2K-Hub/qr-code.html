@@ -8,6 +8,7 @@
   <title data-translate="pages.qr.title" data-translate-fallback="QR-Kód">QR-Kód</title>
   <link rel="stylesheet" href="qrcode.css">
   <link rel="stylesheet" href="qrcode_scan_auth.css">
+  <link rel="stylesheet" href="assets/css/change-user-popup.css">
   <link rel="stylesheet" href="assets/css/consent-banner.css">
   <link rel="stylesheet" href="assets/css/mobile-layout.css">
   <link rel="icon" href="favicon.ico">
@@ -555,51 +556,54 @@
               <img src="assets/general/close.svg" alt="Bezárás">
             </button>
 
-            <!-- Header: icon + title -->
-            <div class="auth-popup-header">
-              <img src="assets/qr-code/auth/auth.svg" class="auth-popup-icon" alt="Auth">
-              <h2 class="auth-popup-title" data-translate="pages.qr.auth_choose">Válassz igazolási módszert</h2>
-            </div>
-
-            <!-- Content: option cards -->
-            <div class="auth-popup-content">
-              <!-- Top row: 2 cards side by side -->
-              <div class="auth-popup-top-row">
-                <!-- QR-Kód beolvasása (blue) -->
-                <button class="auth-popup-card auth-popup-card-blue" onclick="selectAuthMethod('scan_qr')">
-                  <div class="auth-popup-card-inner">
-                    <img src="assets/qr-code/auth/scan_qr.svg" class="auth-popup-card-icon" alt="QR-Kód beolvasása">
-                    <div class="auth-popup-card-texts">
-                      <span class="auth-popup-card-title" data-translate="pages.qr.auth_scan_qr">QR-Kód beolvasása</span>
-                      <span class="auth-popup-card-desc" data-translate="pages.qr.auth_scan_qr_desc">Az esemény bejáratánál keress egy Auth Hub ikonnal jelzett QR-Kód állomást, majd olvasd be a QR-Kódot hogy igazold a jelenlétedet.</span>
-                    </div>
-                  </div>
-                </button>
-
-                <!-- Kód beírása (green) -->
-                <button class="auth-popup-card auth-popup-card-green" onclick="selectAuthMethod('code')">
-                  <div class="auth-popup-card-inner">
-                    <img src="assets/qr-code/auth/code.svg" class="auth-popup-card-icon" alt="Kód beírása">
-                    <div class="auth-popup-card-texts">
-                      <span class="auth-popup-card-title auth-popup-card-title-green" data-translate="pages.qr.auth_code">Kód beírása</span>
-                      <span class="auth-popup-card-desc auth-popup-card-desc-green" data-translate="pages.qr.auth_code_desc">Az esemény bejáratánál keress egy Auth Hub ikonnal jelzett Kódbeíró állomást, majd írd be a jelszavadat. Válaszd ezt az opciót ha nincs kamerája az eszközödnek, vagy nem működik a többi igazolási opció.</span>
-                    </div>
-                  </div>
-                </button>
+            <!-- Scrollable content -->
+            <div class="auth-popup-scrollable">
+              <!-- Header: icon + title -->
+              <div class="auth-popup-header">
+                <img src="assets/qr-code/auth/auth.svg" class="auth-popup-icon" alt="Auth">
+                <h2 class="auth-popup-title" data-translate="pages.qr.auth_choose" data-translate-fallback="Válassz igazolási módszert">Válassz igazolási módszert</h2>
               </div>
 
-              <!-- Bottom row: full-width card -->
-              <div class="auth-popup-bottom-row">
-                <!-- QR-Kód bemutatása (blue) -->
-                <button class="auth-popup-card auth-popup-card-blue auth-popup-card-full" onclick="selectAuthMethod('show_qr')">
-                  <div class="auth-popup-card-inner">
-                    <img src="assets/qr-code/auth/show_qr.svg" class="auth-popup-card-icon" alt="QR-Kód bemutatása">
-                    <div class="auth-popup-card-texts">
-                      <span class="auth-popup-card-title" data-translate="pages.qr.auth_show_qr">QR-Kód bemutatása</span>
-                      <span class="auth-popup-card-desc" data-translate="pages.qr.auth_show_qr_desc">Az esemény bejáratánál keress egy Auth Hub ikonnal jelzett QR-Kód állomást, majd az olvasónak mutasd meg a QR-Kódod. Nem minden esemény támogatja ezt az igazolási opciót.</span>
+              <!-- Content: option cards -->
+              <div class="auth-popup-content">
+                <!-- Top row: 2 cards side by side -->
+                <div class="auth-popup-top-row">
+                  <!-- QR-Kód beolvasása (blue) -->
+                  <button class="auth-popup-card auth-popup-card-blue" onclick="selectAuthMethod('scan_qr')">
+                    <div class="auth-popup-card-inner">
+                      <img src="assets/qr-code/auth/scan_qr.svg" class="auth-popup-card-icon" alt="QR-Kód beolvasása">
+                      <div class="auth-popup-card-texts">
+                        <span class="auth-popup-card-title" data-translate="pages.qr.auth_scan_qr" data-translate-fallback="QR-Kód beolvasása">QR-Kód beolvasása</span>
+                        <span class="auth-popup-card-desc" data-translate="pages.qr.auth_scan_qr_desc" data-translate-fallback="Az esemény bejáratánál keress egy Auth Hub ikonnal jelzett QR-Kód állomást, majd olvasd be a QR-Kódot hogy igazold a jelenlétedet.">Az esemény bejáratánál keress egy Auth Hub ikonnal jelzett QR-Kód állomást, majd olvasd be a QR-Kódot hogy igazold a jelenlétedet.</span>
+                      </div>
                     </div>
-                  </div>
-                </button>
+                  </button>
+
+                  <!-- Kód beírása (green) -->
+                  <button class="auth-popup-card auth-popup-card-green" onclick="selectAuthMethod('code')">
+                    <div class="auth-popup-card-inner">
+                      <img src="assets/qr-code/auth/code.svg" class="auth-popup-card-icon" alt="Kód beírása">
+                      <div class="auth-popup-card-texts">
+                        <span class="auth-popup-card-title auth-popup-card-title-green" data-translate="pages.qr.auth_code" data-translate-fallback="Kód beírása">Kód beírása</span>
+                        <span class="auth-popup-card-desc auth-popup-card-desc-green" data-translate="pages.qr.auth_code_desc" data-translate-fallback="Az esemény bejáratánál keress egy Auth Hub ikonnal jelzett Kódbeíró állomást, majd írd be a jelszavadat. Válaszd ezt az opciót ha nincs kamerája az eszközödnek, vagy nem működik a többi igazolási opció.">Az esemény bejáratánál keress egy Auth Hub ikonnal jelzett Kódbeíró állomást, majd írd be a jelszavadat. Válaszd ezt az opciót ha nincs kamerája az eszközödnek, vagy nem működik a többi igazolási opció.</span>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+
+                <!-- Bottom row: full-width card -->
+                <div class="auth-popup-bottom-row">
+                  <!-- QR-Kód bemutatása (blue) -->
+                  <button class="auth-popup-card auth-popup-card-blue auth-popup-card-full" onclick="selectAuthMethod('show_qr')">
+                    <div class="auth-popup-card-inner">
+                      <img src="assets/qr-code/auth/show_qr.svg" class="auth-popup-card-icon" alt="QR-Kód bemutatása">
+                      <div class="auth-popup-card-texts">
+                        <span class="auth-popup-card-title" data-translate="pages.qr.auth_show_qr" data-translate-fallback="QR-Kód bemutatása">QR-Kód bemutatása</span>
+                        <span class="auth-popup-card-desc" data-translate="pages.qr.auth_show_qr_desc" data-translate-fallback="Az esemény bejáratánál keress egy Auth Hub ikonnal jelzett QR-Kód állomást, majd az olvasónak mutasd meg a QR-Kódod. Nem minden esemény támogatja ezt az igazolási opciót.">Az esemény bejáratánál keress egy Auth Hub ikonnal jelzett QR-Kód állomást, majd az olvasónak mutasd meg a QR-Kódod. Nem minden esemény támogatja ezt az igazolási opciót.</span>
+                      </div>
+                    </div>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -613,43 +617,217 @@
               <img src="assets/general/close.svg" alt="Bezárás">
             </button>
 
-            <!-- Header with icon and texts -->
-            <div class="scan-auth-popup-header">
-              <img src="assets/qr-code/auth/scan_qr_green.svg" class="scan-auth-popup-icon" alt="QR-Kód beolvasása">
-              <div class="scan-auth-popup-header-texts">
-                <h2 class="scan-auth-popup-title" data-translate="pages.qr.scan_auth_title">QR-Kód beolvasása - Igazolás</h2>
-                <p class="scan-auth-popup-subtitle" data-translate="pages.qr.scan_auth_subtitle">Kérlek olvasd be az igazolókódot az Auth Hub pontnál.</p>
-              </div>
-            </div>
-
-            <!-- QR Scanner Frame -->
-            <div class="scan-auth-popup-content">
-              <div class="scan-auth-scanner-wrapper">
-                <div class="qr-scanner" id="scanAuthQrScanner">
-                  <video id="scanAuthVideo" autoplay muted playsinline style="transform: scaleX(-1);"></video>
-                  <img src="assets/qr-code/scanner/corner1.svg" class="corner top-left" alt="">
-                  <img src="assets/qr-code/scanner/corner2.svg" class="corner top-right" alt="">
-                  <img src="assets/qr-code/scanner/corner3.svg" class="corner bottom-left" alt="">
-                  <img src="assets/qr-code/scanner/corner4.svg" class="corner bottom-right" alt="">
+            <!-- Scrollable content -->
+            <div class="scan-auth-popup-scrollable">
+              <!-- Header with icon and texts -->
+              <div class="scan-auth-popup-header">
+                <img src="assets/qr-code/auth/scan_qr_green.svg" class="scan-auth-popup-icon" alt="QR-Kód beolvasása">
+                <div class="scan-auth-popup-header-texts">
+                  <h2 class="scan-auth-popup-title" data-translate="pages.qr.scan_auth_title" data-translate-fallback="QR-Kód beolvasása - Igazolás">QR-Kód beolvasása - Igazolás</h2>
+                  <p class="scan-auth-popup-subtitle" data-translate="pages.qr.scan_auth_subtitle" data-translate-fallback="Kérlek olvasd be az igazolókódot az Auth Hub pontnál.">Kérlek olvasd be az igazolókódot az Auth Hub pontnál.</p>
                 </div>
               </div>
 
-              <!-- User info and buttons -->
-              <div class="scan-auth-user-info">
-                <p class="scan-auth-user-text"><strong id="scanAuthUserName">Turóczi Ádám</strong><span style="font-weight: 400;">ként fogod magad igazolni.</span></p>
-                <div class="scan-auth-buttons">
-                  <a href="#" class="scan-auth-link" data-translate="pages.qr.scan_auth_not_you">Nem <span id="scanAuthUserNameLink">Turóczi Ádám</span> vagy?</a>
-                  <button class="header-login-btn" data-translate="pages.qr.scan_auth_switch">Felhasználóváltás</button>
+              <!-- QR Scanner Frame -->
+              <div class="scan-auth-popup-content">
+                <div class="scan-auth-scanner-wrapper">
+                  <!-- Scanner (default state) -->
+                  <div class="qr-scanner" id="scanAuthQrScanner">
+                    <video id="scanAuthVideo" autoplay muted playsinline style="transform: scaleX(-1);"></video>
+                    <canvas id="scanAuthCanvas" style="display: none;"></canvas>
+                    <img src="assets/qr-code/scanner/corner1.svg" class="corner top-left" alt="">
+                    <img src="assets/qr-code/scanner/corner2.svg" class="corner top-right" alt="">
+                    <img src="assets/qr-code/scanner/corner3.svg" class="corner bottom-left" alt="">
+                    <img src="assets/qr-code/scanner/corner4.svg" class="corner bottom-right" alt="">
+                  </div>
+                  <!-- Auth Success State -->
+                  <div class="auth-state-container auth-success-state" id="scanAuthSuccessState" style="display: none;">
+                    <div class="auth-state-icon-circle">
+                      <img src="assets/qr-code/auth/success.svg" alt="Sikeres" class="auth-state-icon">
+                    </div>
+                  </div>
+                  <!-- Auth Failed State -->
+                  <div class="auth-state-container auth-failed-state" id="scanAuthFailedState" style="display: none;">
+                    <div class="auth-state-icon-circle">
+                      <img src="assets/qr-code/auth/error.svg" alt="Sikertelen" class="auth-state-icon">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- User info and buttons -->
+                <div class="scan-auth-user-info">
+                  <p class="scan-auth-user-text" id="scanAuthUserText"><strong id="scanAuthUserName"></strong><span id="scanAuthUserTextSuffix" style="font-weight: 400;" data-translate="pages.qr.scan_auth_user_text" data-translate-fallback="ként fogod magad igazolni.">ként fogod magad igazolni.</span></p>
+                  <div class="scan-auth-buttons">
+                    <a href="#" class="scan-auth-link" id="scanAuthNotYouLink" data-translate="pages.qr.scan_auth_not_you" data-translate-fallback="Nem {name} vagy?">Nem <span id="scanAuthUserNameLink"></span> vagy?</a>
+                    <button class="header-login-btn" data-translate="pages.qr.scan_auth_switch" onclick="openChangeUserPopup('scanAuthPopup')">Felhasználóváltás</button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- Bottom buttons -->
+            <!-- Bottom buttons (fixed) -->
             <div class="scan-auth-bottom-buttons">
               <button class="scan-auth-back-btn" onclick="backToAuthMethodPicker()">
                 <img src="assets/qr-code/auth/back.svg" alt="Vissza">
                 <span data-translate="pages.qr.scan_auth_back">Vissza</span>
               </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- QR Show Popup (overlays main-scroll-area) -->
+        <div id="showQrPopup" class="permission-overlay-scroll-area" style="display: none;">
+          <div class="scan-auth-popup-container">
+            <!-- Close button -->
+            <button class="permission-close-btn" onclick="closeShowQrPopup()">
+              <img src="assets/general/close.svg" alt="Bezárás">
+            </button>
+
+            <!-- Scrollable content -->
+            <div class="scan-auth-popup-scrollable">
+              <!-- Header with icon and texts -->
+              <div class="scan-auth-popup-header">
+                <img src="assets/qr-code/auth/show_qr_green.svg" class="scan-auth-popup-icon" alt="QR-Kód bemutatása">
+                <div class="scan-auth-popup-header-texts">
+                  <h2 class="scan-auth-popup-title" data-translate="pages.qr.show_qr_title" data-translate-fallback="QR-Kód bemutatása - Igazolás">QR-Kód bemutatása - Igazolás</h2>
+                  <p class="scan-auth-popup-subtitle" data-translate="pages.qr.show_qr_subtitle" data-translate-fallback="Kérlek mutasd be a QR-Kódod az Auth Hub olvasónál.">Kérlek mutasd be a QR-Kódod az Auth Hub olvasónál.</p>
+                </div>
+              </div>
+
+              <!-- QR Code Frame -->
+              <div class="scan-auth-popup-content">
+                <div class="scan-auth-scanner-wrapper">
+                  <!-- QR Code Image (default state) -->
+                  <div class="qr-scanner" id="showQrCodeContainer">
+                    <img id="showQrCodeImage" src="assets/qr-code/auth/placehodler_qr.svg" alt="QR-Kód" style="width: 100%; height: 100%; object-fit: contain; border-radius: 32px;">
+                  </div>
+                  <!-- Auth Success State -->
+                  <div class="auth-state-container auth-success-state" id="showQrSuccessState" style="display: none;">
+                    <div class="auth-state-icon-circle">
+                      <img src="assets/qr-code/auth/success.svg" alt="Sikeres" class="auth-state-icon">
+                    </div>
+                  </div>
+                  <!-- Auth Failed State -->
+                  <div class="auth-state-container auth-failed-state" id="showQrFailedState" style="display: none;">
+                    <div class="auth-state-icon-circle">
+                      <img src="assets/qr-code/auth/error.svg" alt="Sikertelen" class="auth-state-icon">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- User info and buttons -->
+                <div class="scan-auth-user-info">
+                  <p class="scan-auth-user-text" id="showQrUserText"><strong id="showQrUserName"></strong><span id="showQrUserTextSuffix" style="font-weight: 400;" data-translate="pages.qr.scan_auth_user_text" data-translate-fallback="ként fogod magad igazolni.">ként fogod magad igazolni.</span></p>
+                  <div class="scan-auth-buttons">
+                    <a href="#" class="scan-auth-link" id="showQrNotYouLink" data-translate="pages.qr.scan_auth_not_you" data-translate-fallback="Nem {name} vagy?">Nem <span id="showQrUserNameLink"></span> vagy?</a>
+                    <button class="header-login-btn" data-translate="pages.qr.scan_auth_switch" onclick="openChangeUserPopup('scanAuthPopup')">Felhasználóváltás</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom buttons (fixed) -->
+            <div class="scan-auth-bottom-buttons">
+              <button class="scan-auth-back-btn" onclick="backToAuthMethodPicker()">
+                <img src="assets/qr-code/auth/back.svg" alt="Vissza">
+                <span data-translate="pages.qr.scan_auth_back">Vissza</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Code Entry Popup (overlays main-scroll-area) -->
+        <div id="codeEntryPopup" class="permission-overlay-scroll-area" style="display: none;">
+          <div class="scan-auth-popup-container">
+            <!-- Close button -->
+            <button class="permission-close-btn" onclick="closeCodeEntryPopup()">
+              <img src="assets/general/close.svg" alt="Bezárás">
+            </button>
+
+            <!-- Scrollable content -->
+            <div class="scan-auth-popup-scrollable">
+              <!-- Header with icon and texts -->
+              <div class="scan-auth-popup-header">
+                <img src="assets/qr-code/auth/code_green.svg" class="scan-auth-popup-icon" alt="Kód beírása">
+                <div class="scan-auth-popup-header-texts">
+                  <h2 class="scan-auth-popup-title" data-translate="pages.qr.code_title" data-translate-fallback="Kód beírása - Igazolás">Kód beírása - Igazolás</h2>
+                  <p class="scan-auth-popup-subtitle" data-translate="pages.qr.code_subtitle" data-translate-fallback="Kérlek írd be ezt a kódot az Auth Hub beírópontnál.">Kérlek írd be ezt a kódot az Auth Hub beírópontnál.</p>
+                </div>
+              </div>
+
+              <!-- Code Display Frame -->
+              <div class="scan-auth-popup-content">
+                <div class="scan-auth-scanner-wrapper">
+                  <!-- Code Entry (default state) -->
+                  <div class="code-entry-container" id="codeEntryContainer">
+                    <div class="code-entry-digits" id="codeEntryDigits">
+                      <span class="code-digit">1</span>
+                      <span class="code-digit">0</span>
+                      <span class="code-digit">3</span>
+                      <span class="code-digit">9</span>
+                      <span class="code-digit">9</span>
+                      <span class="code-digit">6</span>
+                    </div>
+                  </div>
+                  <!-- Auth Success State -->
+                  <div class="auth-state-container auth-success-state" id="codeEntrySuccessState" style="display: none;">
+                    <div class="auth-state-icon-circle">
+                      <img src="assets/qr-code/auth/success.svg" alt="Sikeres" class="auth-state-icon">
+                    </div>
+                  </div>
+                  <!-- Auth Failed State -->
+                  <div class="auth-state-container auth-failed-state" id="codeEntryFailedState" style="display: none;">
+                    <div class="auth-state-icon-circle">
+                      <img src="assets/qr-code/auth/error.svg" alt="Sikertelen" class="auth-state-icon">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- User info and buttons -->
+                <div class="scan-auth-user-info">
+                  <p class="scan-auth-user-text" id="codeEntryUserTextContainer"><span id="codeEntryUserText" data-translate="pages.qr.code_entry_user_text" data-translate-fallback="Ez a kód {name}é. Ne oszd meg vagy mutasd meg senkinek.">Ez a kód <strong id="codeEntryUserName"></strong>é. Ne oszd meg vagy mutasd meg senkinek.</span></p>
+                  <div class="scan-auth-buttons">
+                    <a href="#" class="scan-auth-link" id="codeEntryNotYouLink" data-translate="pages.qr.code_entry_not_you" data-translate-fallback="Nem {name} vagy?">Nem <span id="codeEntryUserNameLink"></span> vagy?</a>
+                    <button class="header-login-btn" data-translate="pages.qr.scan_auth_switch" onclick="openChangeUserPopup('scanAuthPopup')">Felhasználóváltás</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom buttons (fixed) -->
+            <div class="scan-auth-bottom-buttons">
+              <button class="scan-auth-back-btn" onclick="backToAuthMethodPicker()">
+                <img src="assets/qr-code/auth/back.svg" alt="Vissza">
+                <span data-translate="pages.qr.scan_auth_back">Vissza</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Change User Popup (overlays main-scroll-area) -->
+        <div id="changeUserPopup" class="permission-overlay-scroll-area" style="display: none;">
+          <div class="change-user-popup-container">
+            <!-- Close button -->
+            <button class="change-user-popup-close-btn" onclick="closeChangeUserPopup()">
+              <img src="assets/general/close.svg" alt="Bezárás">
+            </button>
+
+            <!-- Header with icon and texts -->
+            <div class="change-user-popup-header">
+              <img src="assets/global/qm_green.svg" class="change-user-popup-icon" alt="Felhasználóváltás">
+              <div class="change-user-popup-header-texts">
+                <h2 class="change-user-popup-title" data-translate="pages.qr.change_user_title">Tényleg ki szeretnél jelentkezni?</h2>
+                <p class="change-user-popup-subtitle" data-translate="pages.qr.change_user_subtitle">Minden nem mentett adatod el fog veszni és újra be kell majd jelentkezned ha el szeretnéd érni őket.</p>
+              </div>
+            </div>
+
+            <!-- Content area -->
+            <div class="change-user-popup-content">
+              <div class="change-user-popup-button-container">
+                <button class="header-login-btn change-user-popup-button" onclick="handleChangeUser()">
+                  <span data-translate="pages.qr.change_user_button">Felhasználóváltás</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1711,14 +1889,114 @@
           openScanAuthPopup();
           break;
         case 'code':
-          console.log('Code entry selected - opening code input...');
-          // Future: show code entry dialog
+          console.log('Code entry selected - opening code entry popup...');
+          openCodeEntryPopup();
           break;
         case 'show_qr':
           console.log('Show QR selected - displaying user QR code...');
-          // Future: show user's own QR code
+          openShowQrPopup();
           break;
       }
+    }
+
+    // QR Scanner variables for scan auth popup
+    let scanAuthStream = null;
+    let isScanAuthScanning = false;
+
+    async function initializeScanAuthQRScanner() {
+      try {
+        console.log('Initializing Scan Auth QR Scanner...');
+
+        // Stop main scanner if running
+        if (currentStream) {
+          currentStream.getTracks().forEach(track => track.stop());
+          currentStream = null;
+        }
+        if (isScanning) {
+          isScanning = false;
+        }
+
+        // Get available cameras
+        await getAvailableCameras();
+
+        // Start camera with first available camera for scan auth
+        const video = document.getElementById('scanAuthVideo');
+        const deviceId = availableCameras[currentCameraIndex]?.deviceId;
+
+        const constraints = {
+          video: {
+            deviceId: deviceId ? { exact: deviceId } : undefined,
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            facingMode: deviceId ? undefined : 'environment'
+          }
+        };
+
+        scanAuthStream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = scanAuthStream;
+
+        // Start video playback
+        await video.play();
+
+        // Wait for video to be ready
+        await new Promise((resolve) => {
+          video.onloadedmetadata = resolve;
+        });
+
+        // Start QR scanning
+        startScanAuthQRScanning();
+
+      } catch (error) {
+        console.error('Failed to initialize scan auth QR scanner:', error);
+      }
+    }
+
+    function startScanAuthQRScanning() {
+      if (isScanAuthScanning) return;
+
+      isScanAuthScanning = true;
+      const video = document.getElementById('scanAuthVideo');
+      const canvas = document.getElementById('scanAuthCanvas');
+      const context = canvas.getContext('2d');
+
+      function scanFrame() {
+        if (!isScanAuthScanning) return;
+
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+          const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+          const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+          if (code) {
+            console.log('Scan Auth QR Code detected:', code.data);
+            handleScanAuthQRCodeDetected(code.data);
+            return; // Stop scanning after detection
+          }
+        }
+
+        requestAnimationFrame(scanFrame);
+      }
+
+      scanFrame();
+    }
+
+    async function handleScanAuthQRCodeDetected(qrData) {
+      console.log('Scan Auth QR Code URL detected:', qrData);
+      
+      // Stop scanning
+      isScanAuthScanning = false;
+
+      // Stop camera
+      if (scanAuthStream) {
+        scanAuthStream.getTracks().forEach(track => track.stop());
+        scanAuthStream = null;
+      }
+
+      // TODO: Handle the auth QR code (send to backend, etc.)
+      alert('QR-kód beolvasva: ' + qrData);
     }
 
     function openScanAuthPopup() {
@@ -1731,17 +2009,82 @@
         scrollArea.classList.add('no-scroll');
         scrollArea.classList.add('popup-active');
 
-        setTimeout(() => {
+        setTimeout(async () => {
           popup.style.display = 'flex';
-          // Get user name from account tooltip
+          
+          // Get user name from Firebase Auth
           try {
-            const userName = localStorage.getItem('eu2k-user-name') || 'Turóczi Ádám';
+            const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
+            const auth = getAuth();
+            const user = auth.currentUser;
+            
+            let userName = 'Vendég';
+            if (user) {
+              // Try displayName first, then email, then UID
+              userName = user.displayName || user.email?.split('@')[0] || `Felhasználó ${user.uid.substring(0, 6)}`;
+            }
+            
             const userNameSpan = document.getElementById('scanAuthUserName');
             const userNameLink = document.getElementById('scanAuthUserNameLink');
-            if (userNameSpan) userNameSpan.textContent = userName;
-            if (userNameLink) userNameLink.textContent = userName;
+            const userTextSpan = document.getElementById('scanAuthUserTextSuffix');
+            const notYouLink = document.getElementById('scanAuthNotYouLink');
+            
+            // Get translation function
+            const getTranslation = (key, fallback) => {
+              try {
+                return window.translationManager?.getTranslation(key) || fallback;
+              } catch {
+                return fallback;
+              }
+            };
+            
+            if (user) {
+              // User is logged in
+              if (userNameSpan) userNameSpan.textContent = userName;
+              if (userNameLink) userNameLink.textContent = userName;
+              if (notYouLink) {
+                const notYouText = getTranslation('pages.qr.scan_auth_not_you', 'Nem {name} vagy?');
+                // Replace {name} with the actual name
+                const parts = notYouText.split('{name}');
+                if (parts.length === 2) {
+                  notYouLink.innerHTML = `${parts[0]}<span id="scanAuthUserNameLink">${userName}</span>${parts[1]}`;
+                } else {
+                  // Fallback if format is different
+                  notYouLink.innerHTML = `${notYouText.replace('{name}', '')}<span id="scanAuthUserNameLink">${userName}</span>${notYouText.includes('vagy') ? ' vagy?' : ''}`;
+                }
+                // Apply translations to the link
+                if (window.translationManager) {
+                  window.translationManager.applyTranslationsToElement(notYouLink);
+                }
+              }
+              // Don't override the suffix - it has data-translate attribute, let the translation system handle it
+              // Apply translations to ensure it's translated
+              if (userTextSpan && window.translationManager) {
+                window.translationManager.applyTranslationsToElement(userTextSpan);
+              }
+            } else {
+              // User is NOT logged in
+              if (userNameSpan) {
+                userNameSpan.textContent = '';
+                userNameSpan.style.display = 'none';
+              }
+              if (userTextSpan) {
+                const loginRequiredText = getTranslation('pages.qr.login_required', 'Jelentkezz be az igazoláshoz.');
+                userTextSpan.textContent = loginRequiredText;
+              }
+              // Hide the "Nem {name} vagy?" section
+              const authButtons = document.querySelector('.scan-auth-buttons');
+              if (authButtons) authButtons.style.display = 'none';
+            }
           } catch (e) {
             console.log('Could not get user name:', e);
+          }
+
+          // Initialize QR scanner for scan auth popup
+          try {
+            await initializeScanAuthQRScanner();
+          } catch (e) {
+            console.log('Could not initialize scan auth QR scanner:', e);
           }
         }, 50);
       }
@@ -1751,6 +2094,13 @@
       console.log('Closing scan auth popup');
       const popup = document.getElementById('scanAuthPopup');
       const scrollArea = document.querySelector('.main-scroll-area');
+
+      // Stop scan auth scanner
+      isScanAuthScanning = false;
+      if (scanAuthStream) {
+        scanAuthStream.getTracks().forEach(track => track.stop());
+        scanAuthStream = null;
+      }
 
       if (popup) popup.style.display = 'none';
       if (scrollArea) {
@@ -1763,10 +2113,222 @@
       console.log('Going back to auth method picker');
       // Close scan auth popup
       closeScanAuthPopup();
+      // Close show qr popup
+      closeShowQrPopup();
+      // Close code entry popup
+      closeCodeEntryPopup();
       // Open auth method picker popup
       setTimeout(() => {
         startAuth();
       }, 100);
+    }
+
+    function openShowQrPopup() {
+      console.log('Opening show QR popup');
+      const popup = document.getElementById('showQrPopup');
+      const scrollArea = document.querySelector('.main-scroll-area');
+
+      if (popup && scrollArea) {
+        scrollArea.scrollTop = 0;
+        scrollArea.classList.add('no-scroll');
+        scrollArea.classList.add('popup-active');
+
+        setTimeout(async () => {
+          popup.style.display = 'flex';
+          
+          // Get user name from Firebase Auth
+          try {
+            const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
+            const auth = getAuth();
+            const user = auth.currentUser;
+            
+            let userName = 'Vendég';
+            if (user) {
+              // Try displayName first, then email, then UID
+              userName = user.displayName || user.email?.split('@')[0] || `Felhasználó ${user.uid.substring(0, 6)}`;
+            }
+            
+            const userNameSpan = document.getElementById('showQrUserName');
+            const userNameLink = document.getElementById('showQrUserNameLink');
+            const userTextSpan = document.getElementById('showQrUserTextSuffix');
+            const notYouLink = document.getElementById('showQrNotYouLink');
+            
+            // Get translation function
+            const getTranslation = (key, fallback) => {
+              try {
+                return window.translationManager?.getTranslation(key) || fallback;
+              } catch {
+                return fallback;
+              }
+            };
+            
+            if (user) {
+              // User is logged in
+              if (userNameSpan) userNameSpan.textContent = userName;
+              if (userNameLink) userNameLink.textContent = userName;
+              if (notYouLink) {
+                const notYouText = getTranslation('pages.qr.scan_auth_not_you', 'Nem {name} vagy?');
+                // Replace {name} with the actual name
+                const parts = notYouText.split('{name}');
+                if (parts.length === 2) {
+                  notYouLink.innerHTML = `${parts[0]}<span id="showQrUserNameLink">${userName}</span>${parts[1]}`;
+                } else {
+                  // Fallback if format is different
+                  notYouLink.innerHTML = `${notYouText.replace('{name}', '')}<span id="showQrUserNameLink">${userName}</span>${notYouText.includes('vagy') ? ' vagy?' : ''}`;
+                }
+                // Apply translations to the link
+                if (window.translationManager) {
+                  window.translationManager.applyTranslationsToElement(notYouLink);
+                }
+              }
+              // Apply translations to the suffix - it has data-translate attribute
+              if (userTextSpan && window.translationManager) {
+                window.translationManager.applyTranslationsToElement(userTextSpan);
+              }
+            } else {
+              // User is NOT logged in
+              if (userNameSpan) {
+                userNameSpan.textContent = '';
+                userNameSpan.style.display = 'none';
+              }
+              if (userTextSpan) {
+                const loginRequiredText = getTranslation('pages.qr.login_required', 'Jelentkezz be az igazoláshoz.');
+                userTextSpan.textContent = loginRequiredText;
+              }
+              // Hide the "Nem {name} vagy?" section
+              const authButtons = document.querySelector('#showQrPopup .scan-auth-buttons');
+              if (authButtons) authButtons.style.display = 'none';
+            }
+
+            // TODO: Load QR code from API
+            // For now, show placeholder (already set in HTML)
+          } catch (e) {
+            console.log('Could not get user name:', e);
+          }
+        }, 50);
+      }
+    }
+
+    function closeShowQrPopup() {
+      console.log('Closing show QR popup');
+      const popup = document.getElementById('showQrPopup');
+      const scrollArea = document.querySelector('.main-scroll-area');
+
+      if (popup) popup.style.display = 'none';
+      if (scrollArea) {
+        scrollArea.classList.remove('no-scroll');
+        scrollArea.classList.remove('popup-active');
+      }
+    }
+
+    function openCodeEntryPopup() {
+      console.log('Opening code entry popup');
+      const popup = document.getElementById('codeEntryPopup');
+      const scrollArea = document.querySelector('.main-scroll-area');
+
+      if (popup && scrollArea) {
+        scrollArea.scrollTop = 0;
+        scrollArea.classList.add('no-scroll');
+        scrollArea.classList.add('popup-active');
+
+        setTimeout(async () => {
+          popup.style.display = 'flex';
+          
+          // Get user name from Firebase Auth
+          try {
+            const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js");
+            const auth = getAuth();
+            const user = auth.currentUser;
+            
+            let userName = 'Vendég';
+            if (user) {
+              // Try displayName first, then email, then UID
+              userName = user.displayName || user.email?.split('@')[0] || `Felhasználó ${user.uid.substring(0, 6)}`;
+            }
+            
+            const userNameSpan = document.getElementById('codeEntryUserName');
+            const userNameLink = document.getElementById('codeEntryUserNameLink');
+            const userTextSpan = document.getElementById('codeEntryUserText');
+            const notYouLink = document.getElementById('codeEntryNotYouLink');
+            
+            // Get translation function
+            const getTranslation = (key, fallback) => {
+              try {
+                return window.translationManager?.getTranslation(key) || fallback;
+              } catch {
+                return fallback;
+              }
+            };
+            
+            if (user) {
+              // User is logged in
+              if (userNameSpan) userNameSpan.textContent = userName;
+              if (userNameLink) userNameLink.textContent = userName;
+              if (notYouLink) {
+                const notYouText = getTranslation('pages.qr.code_entry_not_you', 'Nem {name} vagy?');
+                // Replace {name} with the actual name
+                const parts = notYouText.split('{name}');
+                if (parts.length === 2) {
+                  notYouLink.innerHTML = `${parts[0]}<span id="codeEntryUserNameLink">${userName}</span>${parts[1]}`;
+                } else {
+                  // Fallback if format is different
+                  notYouLink.innerHTML = `${notYouText.replace('{name}', '')}<span id="codeEntryUserNameLink">${userName}</span>${notYouText.includes('vagy') ? ' vagy?' : ''}`;
+                }
+                // Apply translations to the link
+                if (window.translationManager) {
+                  window.translationManager.applyTranslationsToElement(notYouLink);
+                }
+              }
+              if (userTextSpan) {
+                const codeText = getTranslation('pages.qr.code_entry_user_text', 'Ez a kód {name}é. Ne oszd meg vagy mutasd meg senkinek.');
+                // Replace {name} with the actual name wrapped in strong tag
+                const parts = codeText.split('{name}');
+                if (parts.length === 2) {
+                  userTextSpan.innerHTML = `${parts[0]}<strong id="codeEntryUserName">${userName}</strong>${parts[1]}`;
+                } else {
+                  // Fallback if format is different
+                  userTextSpan.innerHTML = codeText.replace('{name}', `<strong id="codeEntryUserName">${userName}</strong>`);
+                }
+                // Apply translations to ensure it's translated
+                if (window.translationManager) {
+                  window.translationManager.applyTranslationsToElement(userTextSpan);
+                }
+              }
+            } else {
+              // User is NOT logged in
+              if (userTextSpan) {
+                const loginRequiredText = getTranslation('pages.qr.login_required', 'Jelentkezz be az igazoláshoz.');
+                userTextSpan.textContent = loginRequiredText;
+              }
+              // Hide the "Nem {name} vagy?" section
+              const authButtons = document.querySelector('#codeEntryPopup .scan-auth-buttons');
+              if (authButtons) authButtons.style.display = 'none';
+            }
+
+            // TODO: Load code from API
+            // For now, show test code (103996)
+            const codeDigits = document.getElementById('codeEntryDigits');
+            if (codeDigits) {
+              // Code will be loaded from API later
+              // Currently showing test code: 103996
+            }
+          } catch (e) {
+            console.log('Could not get user name:', e);
+          }
+        }, 50);
+      }
+    }
+
+    function closeCodeEntryPopup() {
+      console.log('Closing code entry popup');
+      const popup = document.getElementById('codeEntryPopup');
+      const scrollArea = document.querySelector('.main-scroll-area');
+
+      if (popup) popup.style.display = 'none';
+      if (scrollArea) {
+        scrollArea.classList.remove('no-scroll');
+        scrollArea.classList.remove('popup-active');
+      }
     }
 
   </script>
@@ -1774,6 +2336,7 @@
   <script src="assets/js/staff-timer.js"></script>
   <script src="assets/js/staff-nav-items.js"></script>
   <script src="assets/js/mobile-layout.js"></script>
+  <script src="assets/js/change-user-popup.js"></script>
 </body>
 
 </html>

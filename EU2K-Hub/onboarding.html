@@ -119,6 +119,15 @@
         transform: rotate(360deg);
       }
     }
+    
+    @keyframes loaderAnim {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
   </style>
   <div class="app-bg">
     <main class="main-area">
@@ -292,9 +301,24 @@
             <div class="login-container">
               <div class="login-left-column">
                 <div class="looks-preview-container">
-                  <div class="looks-preview-circle" id="looksPreviewCircle">
+                  <div class="looks-preview-circle" id="looksPreviewCircle" style="width: 200px; height: 200px; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                    <div id="looksPreviewLoader" class="onboarding-loader" style="
+                      width: 80px;
+                      aspect-ratio: 1;
+                      border: 10px solid #0000;
+                      padding: 5px;
+                      box-sizing: border-box;
+                      background: 
+                        radial-gradient(farthest-side,#fff 98%,#0000 ) 0 0/20px 20px no-repeat,
+                        conic-gradient(from 90deg at 10px 10px,#0000 90deg,#fff 0) content-box,
+                        conic-gradient(from -90deg at 40px 40px,#0000 90deg,#fff 0) content-box,
+                        #000;
+                      filter: blur(4px) contrast(10);
+                      animation: loaderAnim 2s infinite;
+                      display: none;
+                    "></div>
                     <img id="looksPreviewImage"
-                      style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"
+                      style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; position: absolute; top: 0; left: 0;"
                       alt="Profile Preview">
                   </div>
                 </div>
@@ -368,7 +392,7 @@
               <div class="name-right-column">
                 <label class="name-label" for="birthDateInput" data-translate="onboarding.personal_info.title"
                   data-translate-fallback="Add meg a születési dátumod">Add meg a születési dátumod</label>
-                <input type="date" id="birthDateInput" class="name-input" placeholder="">
+                <input type="text" id="birthDateInput" class="name-input" placeholder="éééé.hh.nn" maxlength="10" inputmode="numeric">
                 <p class="name-hint" data-translate="onboarding.personal_info.description"
                   data-translate-fallback="Ez az információ a tanáraidnak szükséges, rajtad és a tanáraidon kívül nem fogja látni senki.">
                   Ez az információ a tanáraidnak szükséges, rajtad és a tanáraidon kívül nem fogja látni senki.</p>
@@ -2994,6 +3018,16 @@
           // SECURITY: Graph token NEM kerül localStorage-ba, csak a profilkép blob
           console.log('🎯 Attempting to fetch Microsoft profile picture automatically via Firebase Function...');
           setTimeout(async () => {
+            // Show loading animation
+            const looksPreviewLoader = document.getElementById('looksPreviewLoader');
+            const previewImg = document.getElementById('looksPreviewImage');
+            if (looksPreviewLoader) {
+              looksPreviewLoader.style.display = 'block';
+            }
+            if (previewImg) {
+              previewImg.style.display = 'none';
+            }
+            
             try {
               const blob = await fetchMicrosoftProfilePicture();
               if (blob) {
@@ -3007,16 +3041,28 @@
 
                   // Profilkép megjelenítése a looks screen-en
                   const imageUrl = URL.createObjectURL(blob);
-                  const previewImg = document.getElementById('looksPreviewImage');
                   if (previewImg) {
                     previewImg.src = imageUrl;
                     previewImg.style.display = 'block';
                   }
+                  // Hide loading animation
+                  if (looksPreviewLoader) {
+                    looksPreviewLoader.style.display = 'none';
+                  }
                 };
                 reader.readAsDataURL(blob);
+              } else {
+                // Hide loading animation if no blob
+                if (looksPreviewLoader) {
+                  looksPreviewLoader.style.display = 'none';
+                }
               }
             } catch (error) {
               console.error('❌ Auto-fetch profile picture failed:', error);
+              // Hide loading animation on error
+              if (looksPreviewLoader) {
+                looksPreviewLoader.style.display = 'none';
+              }
             }
           }, 500); // Small delay to ensure looks screen is loaded
 
@@ -3741,7 +3787,44 @@
         }
 
         console.log('✅ Profile selection saved');
-        navigateWithLoading('#name');
+        
+        // Show loading screen and wait for profile image to load if using school profile
+        if (finalUseSchoolProfile && profileImageBlob) {
+          // Show loading overlay
+          const loadingOverlay = document.getElementById('onboardingLoadingOverlay');
+          if (loadingOverlay) {
+            loadingOverlay.style.display = 'flex';
+            loadingOverlay.classList.add('visible');
+          }
+          
+          // Wait for image to load
+          const imageUrl = URL.createObjectURL(profileImageBlob);
+          const img = new Image();
+          img.onload = () => {
+            // Image loaded, navigate to name screen
+            if (loadingOverlay) {
+              loadingOverlay.classList.remove('visible');
+              setTimeout(() => {
+                loadingOverlay.style.display = 'none';
+              }, 300);
+            }
+            navigateWithLoading('#name');
+          };
+          img.onerror = () => {
+            // Image failed to load, navigate anyway
+            if (loadingOverlay) {
+              loadingOverlay.classList.remove('visible');
+              setTimeout(() => {
+                loadingOverlay.style.display = 'none';
+              }, 300);
+            }
+            navigateWithLoading('#name');
+          };
+          img.src = imageUrl;
+        } else {
+          // No profile image, navigate immediately
+          navigateWithLoading('#name');
+        }
       }
 
       if (looksDefaultContinueBtn) {
@@ -3763,6 +3846,15 @@
             looksDefaultContinue.style.display = 'flex';
           }
 
+          // Show loading animation
+          const looksPreviewLoader = document.getElementById('looksPreviewLoader');
+          if (looksPreviewLoader) {
+            looksPreviewLoader.style.display = 'block';
+          }
+          if (looksPreviewImage) {
+            looksPreviewImage.style.display = 'none';
+          }
+
           if (!profileImageBlob) {
             const blob = await fetchMicrosoftProfilePicture();
             if (blob) {
@@ -3770,7 +3862,15 @@
               const imageUrl = URL.createObjectURL(blob);
               looksPreviewImage.src = imageUrl;
               looksPreviewImage.style.display = 'block';
+              // Hide loading animation
+              if (looksPreviewLoader) {
+                looksPreviewLoader.style.display = 'none';
+              }
             } else {
+              // Hide loading animation if no blob
+              if (looksPreviewLoader) {
+                looksPreviewLoader.style.display = 'none';
+              }
               console.log('⚠️ No profile picture available');
             }
           } else {
@@ -3978,22 +4078,79 @@
       const personalInfoContinueBtn = document.getElementById('personalInfoContinueBtn');
       const birthDateInput = document.getElementById('birthDateInput');
 
+      // Format birth date input: éééé.hh.nn (max 4 digits for year)
+      if (birthDateInput) {
+        let previousValue = '';
+        birthDateInput.addEventListener('input', (e) => {
+          let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+          
+          // Limit to 8 digits (4 for year, 2 for month, 2 for day)
+          if (value.length > 8) {
+            value = value.substring(0, 8);
+          }
+          
+          // Format: éééé.hh.nn
+          let formatted = '';
+          if (value.length > 0) {
+            // Always take first 4 digits as year
+            formatted = value.substring(0, Math.min(4, value.length));
+            if (value.length > 4) {
+              formatted += '.' + value.substring(4, Math.min(6, value.length)); // Month
+            }
+            if (value.length > 6) {
+              formatted += '.' + value.substring(6, Math.min(8, value.length)); // Day
+            }
+          }
+          
+          // Only update if the formatted value is different from previous
+          if (formatted !== previousValue) {
+            e.target.value = formatted;
+            previousValue = formatted;
+          }
+        });
+        
+        birthDateInput.addEventListener('keydown', (e) => {
+          // Allow backspace, delete, arrow keys, tab
+          if ([8, 9, 37, 38, 39, 40, 46].includes(e.keyCode)) {
+            return;
+          }
+          // Only allow numbers
+          if (!/[0-9]/.test(e.key)) {
+            e.preventDefault();
+          }
+        });
+      }
+
       console.log('[Onboarding] personalInfoContinueBtn:', !!personalInfoContinueBtn);
 
       if (personalInfoContinueBtn) {
         console.log('[Onboarding] Adding click handler to personalInfoContinueBtn');
         personalInfoContinueBtn.addEventListener('click', async () => {
           console.log('[Onboarding] personalInfoContinueBtn clicked!');
-          const birthDateValue = birthDateInput?.value || '';
+          let birthDateValue = birthDateInput?.value || '';
           console.log('[Onboarding] birthDateValue:', birthDateValue);
 
-          // Validate birthdate
+          // Validate birthdate format: éééé.hh.nn
           if (!birthDateValue) {
             console.log('[Onboarding] Empty birthdate, showing toast...');
             if (window.showToastDirectly) {
               window.showToastDirectly('Hiányzó mező', 'Kérlek add meg a születési dátumod!', 'warning', 'info');
             } else {
               alert('Kérlek add meg a születési dátumod!');
+            }
+            birthDateInput?.focus();
+            return;
+          }
+          
+          // Convert to ISO format (YYYY-MM-DD) for storage
+          const parts = birthDateValue.split('.');
+          if (parts.length === 3 && parts[0].length === 4 && parts[1].length === 2 && parts[2].length === 2) {
+            birthDateValue = `${parts[0]}-${parts[1]}-${parts[2]}`;
+          } else {
+            if (window.showToastDirectly) {
+              window.showToastDirectly('Hibás formátum', 'A dátum formátuma: éééé.hh.nn (pl. 2011.12.01)', 'warning', 'info');
+            } else {
+              alert('A dátum formátuma: éééé.hh.nn (pl. 2011.12.01)');
             }
             birthDateInput?.focus();
             return;
